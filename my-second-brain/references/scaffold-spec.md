@@ -4,7 +4,7 @@ This is the exact structure Setup mode creates. The principle is **full wiring**
 
 All `mkdir` operations use `mkdir -p` (idempotent; a vault that already has PARA folders is fine, nothing gets overwritten). **Never overwrite an existing file** during scaffold; skip and report instead.
 
-Replace `{{BUSINESS}}` with the business folder name (English, hyphenated, e.g. `Aroma-Coffee`), `{{BUSINESS_NAME}}` with the display name, `{{DATE}}` with today. **Scope exception:** inside the files written to `99_Meta/Templates/`, keep `{{DATE}}` literal; those are starter shapes for future notes and the date is filled when each note is created. `{{CHILD_LINE}}` in the MOC pattern = for a room with child MOCs, a newline plus `Down: [[child MOC]] · [[child MOC]]`; omit entirely for leaf rooms.
+Replace `{{BUSINESS}}` with the business folder name (English, hyphenated, e.g. `Aroma-Coffee`), `{{BUSINESS_NAME}}` with the display name, `{{DATE}}` with today. **Scope exception:** inside the files written to `99_Meta/Templates/`, keep `{{DATE}}` literal; those are starter shapes for future notes and the date is filled when each note is created. `{{CHILD_LINE}}` in the MOC pattern = for a room with child MOCs THAT EXIST at write time, a newline plus `Down: [[child MOC]] · [[child MOC]]`; omit entirely for leaf rooms and for empty subfolders that have no MOC yet (e.g. R-and-D's `Product/`/`System/`). Never link a MOC that does not exist. Direct children of the business root (`_Assets-MOC`, `_SOP-MOC`, `_Daily-Log-MOC`, `_Business-Projects-MOC`, `_R-and-D-MOC`) all point Up to `[[_Map]]`.
 
 ## Full tree
 
@@ -94,7 +94,7 @@ Untoggled rooms are simply not created. Any of them can be proposed later during
 
 ## Personal wing pre-open question
 
-Ask once during setup: "Personal wing rooms (Family, Health, Personal Finance, Property, Vehicles, People): pre-open them now, or start with just the business wing and add these when you first need them?" Record the answer. If skipped, create only `_Areas-MOC.md` and `_Resources-MOC.md` plus the `04_Resources` subfolders (they serve the business wing's learning inlet too). `02_Projects/` and `_Projects-MOC.md` are always created regardless of this answer.
+Ask once during setup (including existing-vault runs, unless those rooms already exist there): "Personal wing rooms (Family, Health, Personal Finance, Property, Vehicles, People): pre-open them now, or start with just the business wing and add these when you first need them?" Record the answer. If skipped, create only `_Areas-MOC.md` and `_Resources-MOC.md` plus the `04_Resources` subfolders (they serve the business wing's learning inlet too). `02_Projects/` and `_Projects-MOC.md` are always created regardless of this answer.
 
 ## File skeletons
 
@@ -184,7 +184,7 @@ Door-sign lines and filing tests per room are in the room guide files ([rooms-as
 
 `_SOP-MOC.md` additionally carries the two-cut view: a list by intent (the folders) and a note that by-function views come from the `function:` field, plus the SOP frontmatter contract (`function:` + `owner:` + `last-verified:` required). It also carries an `## Observations` section: insights from SOP-room captures land here whenever the specific SOP room has no MOC of its own yet.
 
-`_Daily-Log-MOC.md` is the business cockpit: sections for This business's recent Decisions (filter: domain), Action log highlights, Renewal deadlines (from `renew-by:` fields in Company-Docs / Outlets / Equipment). Until Bases views are added, keep these as maintained lists refreshed during maintenance.
+`_Daily-Log-MOC.md` is the business cockpit: sections for This business's recent Decisions (filter: domain), Action log highlights, Renewal deadlines (from `renew-by:` fields in Company-Docs / Outlets / Equipment). Until Bases views are added, keep these as maintained lists refreshed during maintenance. Mention only rooms that exist: drop Equipment/Outlets from the renewals line when their toggle is off.
 
 ### `01_Assets/Business-Profile.md`
 
@@ -238,7 +238,7 @@ From [templates/CLAUDE.template.md](../templates/CLAUDE.template.md), all placeh
 
 ## Wiring check (run after scaffold, before the graph moment)
 
-1. Every created folder with content has its `_<Name>-MOC.md` and the MOC's Up link resolves.
+1. Every created folder with content has its `_<Name>-MOC.md` and the MOC's Up link resolves. Any Down links written at scaffold time must resolve too; a link to a not-yet-born MOC is a wiring failure.
 2. `Home.md` reaches both wings in 2 hops or fewer.
 3. `03_Methodology/` contains its four subfolders and zero `.md` files.
 4. `Command-Base.base` parses (open it in Obsidian later; at minimum the YAML loads).
