@@ -1,6 +1,6 @@
 # Note Templates
 
-Setup writes each block below into its own file under `<vault>/99_Meta/Templates/`. Capture and command-base sessions start every new record from the matching template. Templater-free on purpose: the AI fills the values, so no plugin is required. Dates `YYYY-MM-DD` unquoted; multi-word keys `underscore_case`.
+Setup writes each block below into its own file under `<vault>/99_Meta/Templates/`. Capture and command-base sessions start every new record from the matching template. Templater-free on purpose: the AI fills the values, so no plugin is required. Dates `YYYY-MM-DD` unquoted; multi-word keys `underscore_case`. `{{DATE}}` stays literal inside `99_Meta/Templates/` (it is filled at note-creation time, not at scaffold time).
 
 ## Client.md
 
@@ -159,7 +159,7 @@ last_verified: {{DATE}}
 tags: []
 ---
 
-# SOP -- <What this process achieves>
+# SOP: <What this process achieves>
 
 ## When this runs
 
@@ -258,7 +258,7 @@ started: {{DATE}}
 tags: []
 ---
 
-# <Client> -- <Engagement>
+# <Client>: <Engagement>
 
 ## Scope
 
@@ -282,7 +282,7 @@ confirmed_by_owner: false
 tags: []
 ---
 
-# Lesson -- <one line>
+# Lesson: <one line>
 
 ## What happened
 
@@ -300,7 +300,7 @@ confirmed_by_owner: false
 tags: []
 ---
 
-# Playbook -- <the play>
+# Playbook: <the play>
 
 ## When to run it
 

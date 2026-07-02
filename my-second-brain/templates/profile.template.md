@@ -5,7 +5,7 @@ last_updated: {{DATE}}
 maintained_by: AI (with owner approval)
 ---
 
-# {{YOUR_NAME}} -- Profile
+# {{YOUR_NAME}}: Profile
 
 > The AI's evolving understanding of who the owner is. Built from the Create-My-Jarvis interview and refined through lived sessions.
 >
@@ -47,4 +47,4 @@ maintained_by: AI (with owner approval)
 
 ## Revision log
 
-- **{{DATE}}** -- v0 from the Create-My-Jarvis profile interview.
+- **{{DATE}}**: v0 from the Create-My-Jarvis profile interview.

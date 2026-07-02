@@ -10,7 +10,7 @@ created: {{DATE}}
 last_updated: {{DATE}}
 ---
 
-# Business Profile -- {{BUSINESS_NAME}}
+# Business Profile: {{BUSINESS_NAME}}
 
 > The core file of the business wing. Every AI session anchors on this. Filled by a short guided conversation (about five minutes, speaking is fine); grows over time. The frontmatter fields above are the stable schema; keep them accurate and future tools can read them directly.
 

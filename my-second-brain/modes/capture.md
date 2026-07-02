@@ -79,7 +79,7 @@ This is the payoff. Calibration is strict:
   - An SOP room: "Of the six steps you described, three can only be done by you. That is the fragile part of this process."
 - The two questions are questions the OWNER is now equipped to think about, not tasks. ("If a referral mechanism existed, who would be the first person it should thank?" / "What would a mid-priced offer even be, in your business?")
 - **Honesty rules:** never promise analytics this data cannot support (no cashflow-gap claims, no trend claims from one night of capture). Never verdict ("your problem is..."); always map ("your next breakthrough point might be..."). If the capture genuinely surfaced nothing, say so plainly and give the two questions anyway; a thin room is itself an honest observation.
-- Land the insight in two places: say it in chat, AND write it (with today's date) into the room MOC's "Observations" section.
+- Land the insight in two places: say it in chat, AND write it (with today's date) into the room MOC's "Observations" section. If the room has no MOC yet (a first SOP capture in a starter room), land it in the layer MOC's Observations (`_SOP-MOC.md`); it moves to the room MOC when that MOC is born.
 
 For Chinese sessions, write the insight natively. Sample register (shape, not script): "你刚搬进来的三个客户里, 两个是转介绍来的。但整个流程里没有一个转介绍机制, 它是发生在你身上, 不是你在经营它。两个问题给你想: ..."
 

@@ -17,9 +17,9 @@ One vault, two wings, one home.
 
 - **Personal wing** (`02_Projects` / `03_Areas` / `04_Resources` / `05_Archive`): sorted by **actionability** (the PARA logic). Time-bounded with a deliverable is a Project; ongoing with no end date is an Area; reference material is a Resource; done or dormant is Archive.
 - **Business wing** (`07_<Business-Name>/`): sorted by **knowledge type**, three layers:
-  - `01_Assets` -- what the business is made of (facts, records, materials)
-  - `02_SOP` -- how things get done (processes)
-  - `03_Methodology` -- why decisions go the way they go (judgment)
+  - `01_Assets`: what the business is made of (facts, records, materials)
+  - `02_SOP`: how things get done (processes)
+  - `03_Methodology`: why decisions go the way they go (judgment)
 - **Shared rooms**: `00_Inbox` (capture anything, sort later), `01_Daily` (personal timeline), `06_Command-Base` (the OS command center), `99_Meta` (system files).
 - A second business becomes `08_<Name>/`, same internal shape.
 
@@ -108,4 +108,4 @@ Precedents for the two-way calls. When a filing matches a row here, follow the r
 
 ## Revision log
 
-- **{{DATE}}** -- v1, written at vault setup.
+- **{{DATE}}**: v1, written at vault setup.

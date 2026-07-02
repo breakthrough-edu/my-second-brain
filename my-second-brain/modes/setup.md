@@ -8,7 +8,7 @@ One combined opening question (keep it to a few lines): confirm they want to set
 
 ## Step 2 -- Obsidian (viewing deck)
 
-Check if Obsidian is installed:
+Check if Obsidian is installed. If the user simply says it is already installed, take their word and skip the checks:
 
 - macOS: `[ -d "/Applications/Obsidian.app" ]` (also try `~/Applications`)
 - Windows: `winget list Obsidian.Obsidian` or check `%LOCALAPPDATA%\Programs\Obsidian`
@@ -28,7 +28,7 @@ Note for later (step 8 and the dashboard): the dashboard uses Obsidian **Bases**
 
 Ask: existing Obsidian vault, or new one?
 
-- **New:** propose `~/Documents/<Name>-Second-Brain/` (their name or business name, English, hyphenated). They can pick any path. `mkdir -p` it.
+- **New:** propose `~/Documents/<Name>-Second-Brain/` (their name or business name, English, hyphenated; if the business name has not come up yet, ask it here and reuse the answer in step 4). They can pick any path. `mkdir -p` it.
 - **Existing vault:** get the path. The scaffold is idempotent (`mkdir -p`, never overwrite an existing file), so a vault with PARA folders already in place is fine; we add what is missing.
 - **Existing vault built by an earlier personal-AI-OS bootstrap** (signature: `06_MOCs/` exists, or `03_Areas/Command-Base/` exists): do NOT migrate, rename, or rebuild what they have. Their `06_MOCs` and command-base keep working. Add the business wing (`07_...`), `99_Meta` doctrine + state files, and the business-wing pieces only. Tell them plainly what you are adding and what you are leaving untouched, and offer a short routing note they can paste into their existing command-base skill: business decisions and business daily logs live in the business wing; the doctrine file now governs filing.
 

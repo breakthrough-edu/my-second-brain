@@ -53,4 +53,4 @@ version: 1.0
 
 ## Revision log
 
-- **{{DATE}}** -- v1.0 written at setup.
+- **{{DATE}}**: v1.0 written at setup.

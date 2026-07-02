@@ -53,7 +53,7 @@ At every session start under this skill:
 1. **Detect state.** Look for a vault: check the current working directory and ask if unclear. Inside a candidate vault, read `99_Meta/bootstrap-progress.md` (setup state, interaction language) and `99_Meta/capture-progress.md` (what has been moved in) if they exist.
 2. **No vault or unfinished setup** -> offer Setup mode with one question, then run it.
 3. **Vault exists** -> route by what the user asked for. Ambiguous ("let's continue", "what now") -> read capture-progress and propose the next move (usually the next room to capture).
-4. **Staleness check (every entry, any mode).** Read `99_Meta/maintenance-state.md`. If the last tidy or distill is more than 7 days old, offer once: "Last maintenance was N days ago. Want to run a quick tidy first, or carry on?" Offer once, never nag. If the user declines, proceed and do not raise it again this session.
+4. **Staleness check (every entry, any mode).** Read `99_Meta/maintenance-state.md`. Its dates are seeded with the setup date, so a simple comparison works from day one; if the file is missing or a date is empty, treat maintenance as due. If the last tidy or distill is more than 7 days old, offer once: "Last maintenance was N days ago. Want to run a quick tidy first, or carry on?" Offer once, never nag. If the user declines, proceed and do not raise it again this session.
 
 ## Interaction language
 

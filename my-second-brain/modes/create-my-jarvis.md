@@ -64,7 +64,7 @@ If an answer lands generic, one targeted follow-up to pull the specific version 
 
 ## Part C -- Build and wire
 
-1. Fill [../templates/companion-soul-SKILL.template.md](../templates/companion-soul-SKILL.template.md) with the interview material, near verbatim where marked. Show the draft; the owner rules; iterate.
+1. Fill [../templates/companion-soul-SKILL.template.md](../templates/companion-soul-SKILL.template.md) with the interview material, near verbatim where marked. Replace every placeholder AND delete the parenthetical guidance notes; the finished skill contains only the owner's content. Show the draft; the owner rules; iterate.
 2. Write to `<vault>/04_Resources/Skills/<slug>-companion-soul/SKILL.md` and install the same way the command-base was installed (symlink on macOS/Linux into `~/.claude/skills/`; copy on Windows).
 3. The command-base skill already loads `<slug>-companion-soul` last at session start when it exists; nothing to edit. Confirm the slug matches what the command-base expects (check its SKILL.md; fix the name if the owner changed slugs).
 4. Initialize `99_Meta/memory.md` if absent (current-reality sentences from the owner).

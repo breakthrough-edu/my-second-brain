@@ -21,7 +21,7 @@ Run these in parallel, then respond:
 3. Read yesterday's `{{VAULT_PATH}}/01_Daily/YYYY-MM-DD.md`.
 4. Read `{{VAULT_PATH}}/07_{{BUSINESS}}/_Map.md` (business one-pager).
 5. Sweep `cb:` state by grepping frontmatter (recipe below), apply the boot windows.
-6. **Maintenance doorbell:** read `{{VAULT_PATH}}/99_Meta/maintenance-state.md`. If `last_tidy` or `last_distill` is more than 7 days old (or empty), mention it once in the morning brief: "Maintenance is N days overdue. Say the word and I will run the second-brain distill." The distill engine lives in the `my-second-brain` skill, not here; this skill only rings the doorbell. Offer once, never nag.
+6. **Maintenance doorbell:** read `{{VAULT_PATH}}/99_Meta/maintenance-state.md`. If `last_tidy` or `last_distill` is more than 7 days old, mention it once in the morning brief (the dates are seeded at setup, so day one never fires; a missing file or empty date means maintenance is due): "Maintenance is N days overdue. Say the word and I will run the second-brain distill." The distill engine lives in the `my-second-brain` skill, not here; this skill only rings the doorbell. Offer once, never nag.
 7. If a companion-soul skill exists ({{COMPANION_SOUL_NAME}}), load it LAST so the character is the freshest context. If it does not exist yet, skip silently. (Create it any time with the `my-second-brain` skill's Create-My-Jarvis mode.)
 
 Skip the full load only when clearly mid-conversation.

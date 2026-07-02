@@ -4,7 +4,7 @@ This is the exact structure Setup mode creates. The principle is **full wiring**
 
 All `mkdir` operations use `mkdir -p` (idempotent; a vault that already has PARA folders is fine, nothing gets overwritten). **Never overwrite an existing file** during scaffold; skip and report instead.
 
-Replace `{{BUSINESS}}` with the business folder name (English, hyphenated, e.g. `Aroma-Coffee`), `{{BUSINESS_NAME}}` with the display name, `{{DATE}}` with today.
+Replace `{{BUSINESS}}` with the business folder name (English, hyphenated, e.g. `Aroma-Coffee`), `{{BUSINESS_NAME}}` with the display name, `{{DATE}}` with today. **Scope exception:** inside the files written to `99_Meta/Templates/`, keep `{{DATE}}` literal; those are starter shapes for future notes and the date is filled when each note is created. `{{CHILD_LINE}}` in the MOC pattern = for a room with child MOCs, a newline plus `Down: [[child MOC]] · [[child MOC]]`; omit entirely for leaf rooms.
 
 ## Full tree
 
@@ -62,7 +62,7 @@ Replace `{{BUSINESS}}` with the business folder name (English, hyphenated, e.g. 
 │   │   └── (NO MOC files anywhere in 03_Methodology -- the empty layer is the point)
 │   ├── 04_Projects/
 │   │   └── _Business-Projects-MOC.md
-│   └── 05_R&D/
+│   └── 05_R-and-D/
 │       ├── _R-and-D-MOC.md
 │       ├── Product/  System/
 └── 99_Meta/
@@ -93,7 +93,7 @@ Untoggled rooms are simply not created. Any of them can be proposed later during
 
 ## Personal wing pre-open question
 
-Ask once during setup: "Personal wing rooms (Family, Health, Personal Finance, Property, Vehicles, People): pre-open them now, or start with just the business wing and add these when you first need them?" Record the answer. If skipped, create only `_Areas-MOC.md` and `_Resources-MOC.md` plus the `04_Resources` subfolders (they serve the business wing's learning inlet too).
+Ask once during setup: "Personal wing rooms (Family, Health, Personal Finance, Property, Vehicles, People): pre-open them now, or start with just the business wing and add these when you first need them?" Record the answer. If skipped, create only `_Areas-MOC.md` and `_Resources-MOC.md` plus the `04_Resources` subfolders (they serve the business wing's learning inlet too). `02_Projects/` and `_Projects-MOC.md` are always created regardless of this answer.
 
 ## File skeletons
 
@@ -110,19 +110,19 @@ last-refreshed: {{DATE}}
 The front door of this vault. Both wings at a glance.
 
 ## Business wing
-- [[_Map]] -- {{BUSINESS_NAME}} full map
-- [[_Daily-Log-MOC]] -- business cockpit (decisions, actions, deadlines)
+- [[_Map]]: {{BUSINESS_NAME}} full map
+- [[_Daily-Log-MOC]]: business cockpit (decisions, actions, deadlines)
 
 ## Personal wing
 - [[_Projects-MOC]] · [[_Areas-MOC]] · [[_Resources-MOC]]
 
 ## Command center
-- [[Command-Base.base|Dashboard]] -- open inside Obsidian
+- [[Command-Base.base|Dashboard]]: open inside Obsidian
 - Decisions live in `06_Command-Base/Decisions/` (one decision, one note)
 
 ## System
-- [[structure-doctrine]] -- the constitution. Every filing follows it.
-- [[tagging-vocabulary]] -- the controlled tag list.
+- [[structure-doctrine]]: the constitution. Every filing follows it.
+- [[tagging-vocabulary]]: the controlled tag list.
 ```
 
 ### `07_{{BUSINESS}}/_Map.md` (AI-first, one page, refreshed at maintenance)
@@ -134,7 +134,7 @@ business: {{BUSINESS_NAME}}
 last-refreshed: {{DATE}}
 ---
 
-# {{BUSINESS_NAME}} -- Map
+# {{BUSINESS_NAME}}: Map
 
 One-page overview for any AI session working on this business. Refreshed during maintenance; treat as a build artifact.
 
@@ -142,9 +142,9 @@ One-page overview for any AI session working on this business. Refreshed during 
 (filled from Business-Profile after first capture)
 
 ## The three layers
-- [[_Assets-MOC|01 Assets]] -- what the business is made of. (empty)
-- [[_SOP-MOC|02 SOP]] -- how things get done. (empty)
-- 03 Methodology -- why decisions go the way they go. (empty, and that is deliberate: this layer fills from reviewed judgment, not from capture)
+- [[_Assets-MOC|01 Assets]]: what the business is made of. (empty)
+- [[_SOP-MOC|02 SOP]]: how things get done. (empty)
+- 03 Methodology: why decisions go the way they go. (empty, and that is deliberate: this layer fills from reviewed judgment, not from capture)
 
 ## Current state
 - Rooms moved in: none yet
@@ -170,7 +170,7 @@ last-refreshed: {{DATE}}
 **Files here when:** <the room's filing test, one sentence from the doctrine.>
 
 ## Inventory
-(empty -- nothing moved in yet)
+(empty: nothing moved in yet)
 
 ## Observations
 (insights about this room land here after capture sessions)
@@ -181,7 +181,7 @@ Up: [[<parent MOC>]]{{CHILD_LINE}}
 
 Door-sign lines and filing tests per room are in the room guide files ([rooms-assets.md](rooms-assets.md), [rooms-functions.md](rooms-functions.md), [rooms-sop.md](rooms-sop.md)); copy each room's door sign from its guide header so menu, MOC, and guide always say the same thing.
 
-`_SOP-MOC.md` additionally carries the two-cut view: a list by intent (the folders) and a note that by-function views come from the `function:` field, plus the SOP frontmatter contract (`function:` + `owner:` + `last-verified:` required).
+`_SOP-MOC.md` additionally carries the two-cut view: a list by intent (the folders) and a note that by-function views come from the `function:` field, plus the SOP frontmatter contract (`function:` + `owner:` + `last-verified:` required). It also carries an `## Observations` section: insights from SOP-room captures land here whenever the specific SOP room has no MOC of its own yet.
 
 `_Daily-Log-MOC.md` is the business cockpit: sections for This business's recent Decisions (filter: domain), Action log highlights, Renewal deadlines (from `renew-by:` fields in Company-Docs / Outlets / Equipment). Until Bases views are added, keep these as maintained lists refreshed during maintenance.
 
@@ -225,7 +225,7 @@ Append-only. One line per AI filing action: date · what · where · rule applie
 
 `capture-progress.md` (frontmatter: `profile_captured: false`, `rooms_captured: []`; body: a table of room · date · items moved · insight given, plus `next_suggestion:`).
 
-`maintenance-state.md` (frontmatter: `last_tidy:`, `last_distill:`, both empty at scaffold; body: one-line history log appended per maintenance run).
+`maintenance-state.md` (frontmatter: `last_tidy: {{DATE}}`, `last_distill: {{DATE}}`, both seeded with the setup date so staleness math needs no empty-value case; body: one-line history log, first line noting the dates were seeded at setup, then appended per maintenance run).
 
 ### `99_Meta/Templates/` note templates
 
