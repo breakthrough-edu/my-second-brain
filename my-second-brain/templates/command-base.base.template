@@ -1,0 +1,105 @@
+filters:
+  and:
+    - file.folder != "99_Meta/Templates"
+views:
+  - type: table
+    name: This Week
+    filters:
+      and:
+        - cb == "task"
+        - status != "done"
+        - status != "cancelled"
+    order:
+      - file.name
+      - status
+      - due
+      - domain
+      - function
+    sort:
+      - property: due
+        direction: ASC
+    columnSize:
+      file.name: 328
+  - type: table
+    name: Today
+    filters:
+      and:
+        - cb == "task"
+        - due <= today()
+        - status != "done"
+        - status != "cancelled"
+    order:
+      - file.name
+      - status
+      - due
+      - domain
+    sort:
+      - property: due
+        direction: ASC
+  - type: table
+    name: Waiting For
+    filters:
+      and:
+        - cb == "task"
+        - status == "waiting-for"
+    order:
+      - file.name
+      - waiting_on
+      - due
+      - domain
+  - type: table
+    name: Red Flags
+    filters:
+      and:
+        - cb == "task"
+        - due < today()
+        - status != "done"
+        - status != "cancelled"
+    order:
+      - file.name
+      - due
+      - domain
+    sort:
+      - property: due
+        direction: ASC
+  - type: table
+    name: By Domain
+    filters:
+      and:
+        - cb == "task"
+        - status != "done"
+        - status != "cancelled"
+    groupBy:
+      property: domain
+      direction: ASC
+    order:
+      - file.name
+      - status
+      - due
+      - function
+  - type: table
+    name: Sessions
+    filters:
+      and:
+        - cb == "session"
+    order:
+      - file.name
+      - session_type
+      - status
+      - date
+    sort:
+      - property: date
+        direction: ASC
+  - type: table
+    name: Decisions
+    filters:
+      and:
+        - cb == "decision"
+    order:
+      - file.name
+      - date
+      - domain
+      - function
+    sort:
+      - property: date
+        direction: DESC
