@@ -49,6 +49,15 @@ Execute [../references/scaffold-spec.md](../references/scaffold-spec.md) in one 
 
 Run the wiring check at the end of the spec. Report one line: "Scaffolded N folders, M files. Navigation is live from Home."
 
+## Step 5.5 -- Vault CLAUDE.md (the always-on context layer)
+
+Skills wake on trigger words; `CLAUDE.md` at the vault root loads into EVERY Claude Code session started there, unconditionally. Without it, a session opened tomorrow with a casual first message has no idea this is a structured vault, and the constitution is just a file lying in `99_Meta`. This step is what makes the rules self-announcing.
+
+- **No `CLAUDE.md` at the vault root** (the normal case): write one from [../templates/CLAUDE.template.md](../templates/CLAUDE.template.md), replacing `{{YOUR_NAME}}`, `{{BUSINESS}}`, `{{BUSINESS_NAME}}`, `{{SLUG}}`, `{{LANGUAGE}}` (the step 1 choice, written as `English` or `中文`), `{{DATE}}`. Write once; later sessions read it but never rewrite it.
+- **`CLAUDE.md` already exists** (existing-vault users): **never overwrite and never edit what is there.** Show the user a ready-to-append `## My Second Brain` section (the template's content demoted one heading level, minus the top title) and ask one question: append it for them, or leave it for them to place manually? Append only on an explicit yes.
+
+Record the outcome in `bootstrap-progress.md` (`claude_md: written | appended | left-to-user`).
+
 ## Step 6 -- Generate their command-base skill
 
 From [../templates/command-base-SKILL.template.md](../templates/command-base-SKILL.template.md), replace `{{YOUR_NAME}}`, `{{SLUG}}` (their name or business, kebab-case), `{{VAULT_PATH}}`, `{{BUSINESS}}` (folder name), `{{BUSINESS_NAME}}`, `{{BUSINESS_TAG}}`, `{{COMPANION_SOUL_NAME}}` (`<slug>-companion-soul`; the skill handles its absence until Create-My-Jarvis runs). Zero interview; every value already exists from steps 1 to 4.

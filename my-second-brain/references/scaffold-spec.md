@@ -10,6 +10,7 @@ Replace `{{BUSINESS}}` with the business folder name (English, hyphenated, e.g. 
 
 ```
 <vault>/
+├── CLAUDE.md                       (always-on session context; setup step 5.5, write-once, NEVER overwrite an existing one)
 ├── 00_Inbox/
 ├── 01_Daily/
 ├── 02_Projects/
@@ -221,7 +222,7 @@ Append-only. One line per AI filing action: date · what · where · rule applie
 - {{DATE}} · vault scaffolded · (setup) · structure-doctrine v1
 ```
 
-`bootstrap-progress.md` (frontmatter: `language:`, `vault_path:`, `business_name:`, `toggles:` [outlets/equipment/importing booleans], `personal_wing_preopened:`, `obsidian_installed:`, `command_base_generated:`, `companion_skills_offered:`, `setup_complete:`) plus a body checklist of setup steps done.
+`bootstrap-progress.md` (frontmatter: `language:`, `vault_path:`, `business_name:`, `toggles:` [outlets/equipment/importing booleans], `personal_wing_preopened:`, `obsidian_installed:`, `claude_md:` [written | appended | left-to-user], `command_base_generated:`, `companion_skills_offered:`, `setup_complete:`) plus a body checklist of setup steps done.
 
 `capture-progress.md` (frontmatter: `profile_captured: false`, `rooms_captured: []`; body: a table of room · date · items moved · insight given, plus `next_suggestion:`).
 
@@ -231,6 +232,10 @@ Append-only. One line per AI filing action: date · what · where · rule applie
 
 Copy each block from [templates/note-templates.md](../templates/note-templates.md) into its own file. These are the starter shapes capture mode writes from. Templater-free on purpose; the AI fills values.
 
+### `<vault>/CLAUDE.md`
+
+From [templates/CLAUDE.template.md](../templates/CLAUDE.template.md), all placeholders replaced (`{{LANGUAGE}}` = the setup language choice, `English` or `中文`). **Write-once, and never overwrite or edit an existing `CLAUDE.md`**: if one exists, the append-proposal flow in setup step 5.5 applies instead. This file is the always-on layer that tells every future session what this vault is and where the constitution lives; without it the doctrine is invisible until a skill happens to fire.
+
 ## Wiring check (run after scaffold, before the graph moment)
 
 1. Every created folder with content has its `_<Name>-MOC.md` and the MOC's Up link resolves.
@@ -238,4 +243,5 @@ Copy each block from [templates/note-templates.md](../templates/note-templates.m
 3. `03_Methodology/` contains its four subfolders and zero `.md` files.
 4. `Command-Base.base` parses (open it in Obsidian later; at minimum the YAML loads).
 5. `99_Meta` state files all exist.
-6. Report the file count created. Then the graph moment (setup mode step 8).
+6. `CLAUDE.md` exists at the vault root with zero `{{` placeholders left (or, for an existing-vault user, the append/leave choice is recorded in `bootstrap-progress.md`).
+7. Report the file count created. Then the graph moment (setup mode step 8).
