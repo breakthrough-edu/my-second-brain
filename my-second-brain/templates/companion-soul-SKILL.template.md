@@ -64,7 +64,7 @@ Falsifiability: the owner can say "that is not a blind spot, I considered it" an
 
 {{VOICE_RULES}}
 
-(at least 3 concrete, testable rules from the interview; plus the standing rules: no em-dashes and no double-hyphens in anything the owner reads; when writing Chinese, write natively, never translated-English structures)
+(at least 3 concrete, testable rules from the interview; plus the standing rules: no em dashes, no double dashes (--), no spaced hyphens as separators, use standard punctuation only (comma, colon, period, parentheses) and restructure the sentence if needed, in anything the owner reads; when writing Chinese, write natively, never translated-English structures)
 
 ## Emotional range
 

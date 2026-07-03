@@ -1,4 +1,4 @@
-# Room Guides -- Layer 1 function rooms
+# Room Guides: Layer 1 function rooms
 
 Function rooms are home addresses for each function's materials, logs, and reports. They are NOT departments and they never hold procedures (how-to lives in Layer 2, iron law). Each has an `Action-Log.md`; decisions go to the central Decisions room. Same capture rules as everywhere: one question at a time, 3 to 5 items is a full first capture, rows iron law applies hard in these rooms (reports and summaries in, transaction streams out).
 

@@ -1,4 +1,4 @@
-# Create-My-Jarvis Mode -- give the AI a person to be
+# Create-My-Jarvis Mode: give the AI a person to be
 
 Slow-cooker mode, best done at home, 45 to 60 minutes total. Two interviews and a build:
 
@@ -10,7 +10,7 @@ Sequence is fixed: profile first (the soul calibrates against it), soul second, 
 
 Also initialize `99_Meta/memory.md` (from [../templates/memory.template.md](../templates/memory.template.md)) at the end if it does not exist: ask for 2 to 3 sentences of current reality, leave the rest to accumulate.
 
-## Part A -- Profile interview
+## Part A: Profile interview
 
 Frame in one line: "Ten questions about how you actually operate. The AI reads this file every morning; the more true it is, the less generic the AI is."
 
@@ -33,7 +33,7 @@ Handling answers: **transcribe, do not interpret.** Near-verbatim into the profi
 
 Show the full draft. On approval, write `99_Meta/profile.md`.
 
-## Part B -- Soul interview
+## Part B: Soul interview
 
 Frame: "Now the other side: not who you are, but who the AI should be with you. You are authoring a character."
 
@@ -62,7 +62,7 @@ FAIL example: "Be clear and concise." PASS example: "Never open with 'Great ques
 
 If an answer lands generic, one targeted follow-up to pull the specific version ("what would that look like in one sentence, said to you on a bad Tuesday?"). Keep going until the gate passes; say why, once: a generic soul produces the same AI they already had.
 
-## Part C -- Build and wire
+## Part C: Build and wire
 
 1. Fill [../templates/companion-soul-SKILL.template.md](../templates/companion-soul-SKILL.template.md) with the interview material, near verbatim where marked. Replace every placeholder AND delete the parenthetical guidance notes; the finished skill contains only the owner's content. Show the draft; the owner rules; iterate.
 2. Write to `<vault>/04_Resources/Skills/<slug>-companion-soul/SKILL.md` and install the same way the command-base was installed (symlink on macOS/Linux into `~/.claude/skills/`; copy on Windows).

@@ -1,4 +1,4 @@
-# Capture Mode -- moving the business in, one room at a time
+# Capture Mode: moving the business in, one room at a time
 
 The move-in ritual. Each run: pick one room, the AI asks one thing at a time, the owner talks (typing or voice, both fine), notes land in the right places, and the session ends with one observation the owner had not noticed plus two good questions. Total 15 to 20 minutes for a first room; regulars finish in 10.
 
@@ -13,7 +13,7 @@ Everything files by `99_Meta/structure-doctrine.md`. Every filing appends to `99
    - Profile done -> show the **room menu** (Stage 2) with a suggestion.
    - Mid-room progress recorded -> offer to resume that room.
 
-## Stage 1 -- Business Profile (everyone starts here, ~5 minutes)
+## Stage 1: Business Profile (everyone starts here, ~5 minutes)
 
 Frame it honestly, then interview. Sample opening (adapt, don't recite; Chinese version if `language: zh`):
 
@@ -41,7 +41,7 @@ The profile itself deserves a micro-insight (one observation only, no question p
 
 Then go straight to the room menu.
 
-## Stage 2 -- Room menu
+## Stage 2: Room menu
 
 Show the map compactly, with move-in state from `capture-progress.md`:
 
@@ -55,7 +55,7 @@ Show the map compactly, with move-in state from `capture-progress.md`:
 
 Suggestion logic (from the profile, one line of reasoning): service business or few-big-clients -> Clients; product or menu business -> Products-Services; has staff and owner mentioned being stretched -> an SOP room (usually the one process they described doing themselves); everything else -> Clients. The user always outranks the suggestion.
 
-## Stage 3 -- Guided capture (~8 to 10 minutes)
+## Stage 3: Guided capture (~8 to 10 minutes)
 
 Load the chosen room's guide from [../references/rooms-assets.md](../references/rooms-assets.md), [../references/rooms-functions.md](../references/rooms-functions.md), or [../references/rooms-sop.md](../references/rooms-sop.md). The guide gives the door sign, the filing test, the question set, and the insight angles. Rules that apply in every room:
 
@@ -67,7 +67,7 @@ Load the chosen room's guide from [../references/rooms-assets.md](../references/
 - **Rows iron law watch.** If the owner starts reading out transactions ("then invoice 4512, then 4513..."), catch it warmly: point to where those rows live (their POS or accounting tool), capture the pointer plus any exception stories, move on.
 - **New room proposals.** If material clearly needs a room that does not exist (e.g. imports paperwork with no Importing room), propose it with a reason, owner approves, create it, log it.
 
-## Stage 4 -- Insight (~2 to 3 minutes, observation level)
+## Stage 4: Insight (~2 to 3 minutes, observation level)
 
 This is the payoff. Calibration is strict:
 
@@ -83,7 +83,7 @@ This is the payoff. Calibration is strict:
 
 For Chinese sessions, write the insight natively. Sample register (shape, not script): "你刚搬进来的三个客户里, 两个是转介绍来的。但整个流程里没有一个转介绍机制, 它是发生在你身上, 不是你在经营它。两个问题给你想: ..."
 
-## Stage 5 -- The three-layer closing screen
+## Stage 5: The three-layer closing screen
 
 Always end a capture session with this screen, rendered as plain indented text in chat (both languages follow the same shape):
 

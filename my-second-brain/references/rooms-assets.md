@@ -1,4 +1,4 @@
-# Room Guides -- Layer 1 entity rooms
+# Room Guides: Layer 1 entity rooms
 
 For each room: the door sign (also used on its MOC), the filing test, the guided question set, and insight angles. Ask ONE question at a time; every question is answerable by talking for 20 seconds. 3 to 5 items is a full first capture. Insight formula and honesty rules live in capture mode Stage 4; the angles here are raw material for it, not scripts.
 

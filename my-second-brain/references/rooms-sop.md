@@ -1,4 +1,4 @@
-# Room Guides -- Layer 2 SOP rooms
+# Room Guides: Layer 2 SOP rooms
 
 SOP rooms are named by INTENT (what the process achieves), never by department. Capturing an SOP = the owner talks through how it happens today (the honest version, not the ideal version); the AI writes it as a numbered SOP note from the `SOP.md` template (`function:`, `owner:`, `last_verified:` filled). The **only-the-boss-can-do** section is mandatory in every SOP capture; it is where the insight usually lives.
 

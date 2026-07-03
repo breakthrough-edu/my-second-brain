@@ -1,4 +1,4 @@
-# Scaffold Spec -- the fully wired vault (tree v5)
+# Scaffold Spec: the fully wired vault (tree v5)
 
 This is the exact structure Setup mode creates. The principle is **full wiring**: not bare folders but every front-desk MOC pre-built, every navigation link live on day zero, every template in place. The AI always has a firm anchor to file against; the user never faces a blank page. Keep every generated file light: a door sign, a filing test, an empty inventory, nav links. No tutorials inside MOCs.
 

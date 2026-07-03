@@ -7,7 +7,7 @@ One home, two wings: personal life in PARA (`02_Projects` to `05_Archive`), the 
 - **Filing, naming, and tag rules live in the constitution: `99_Meta/structure-doctrine.md`.** Read it before filing or creating anything. Two-way calls are settled by its canonical rulings table; do not relitigate them. Every AI filing appends one line to `99_Meta/filing-log.md`.
 - **Interaction language: {{LANGUAGE}}.** Folder and file names stay English.
 - High-frequency transaction rows (invoices, POs, attendance) never enter this vault; pointers, exceptions, and monthly snapshots only.
-- No em-dashes and no double-hyphens in anything written for the owner to read, including vault note bodies.
+- No em dashes, no double dashes (--), no spaced hyphens as separators; use standard punctuation only (comma, colon, period, parentheses); restructure the sentence if needed. Applies to anything written for the owner to read, including vault note bodies.
 
 ## Navigation
 
