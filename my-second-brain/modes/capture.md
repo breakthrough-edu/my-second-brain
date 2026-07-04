@@ -12,6 +12,7 @@ Everything files by `99_Meta/structure-doctrine.md`. Every filing appends to `99
    - `profile_captured: false` -> run **Stage 1, Business Profile** (everyone's first move-in).
    - Profile done -> show the **room menu** (Stage 2) with a suggestion.
    - Mid-room progress recorded -> offer to resume that room.
+   - Owner signals existing material (a folder, an export, "it's all in files already") -> offer the fork: guided room-by-room, or bulk move-in (Stage 3B). Guided stays the default when they shrug.
 
 ## Stage 1: Business Profile (everyone starts here, ~5 minutes)
 
@@ -66,6 +67,17 @@ Load the chosen room's guide from [../references/rooms-assets.md](../references/
 - **Update as you go:** the room MOC inventory after each note, a filing-log line per filing, `capture-progress.md` at room close.
 - **Rows iron law watch.** If the owner starts reading out transactions ("then invoice 4512, then 4513..."), catch it warmly: point to where those rows live (their POS or accounting tool), capture the pointer plus any exception stories, move on.
 - **New room proposals.** If material clearly needs a room that does not exist (e.g. imports paperwork with no Importing room), propose it with a reason, owner approves, create it, log it.
+
+## Stage 3B: Bulk move-in (when the owner hands over existing material)
+
+For the owner who already has a folder, an export, or a pile of files and would rather hand it all over than be interviewed. Offer this fork whenever they signal existing material; never force the interview on someone holding a hard drive.
+
+1. **Take everything first.** Paths, pastes, drops. Scan it all before proposing anything; a mapping built off half the material gets relitigated.
+2. **Produce ONE mapping table:** item · proposed destination · doctrine rule or ruling cited, one line each. An item no rule covers gets an honest "needs a ruling" row, never a silent guess (and becomes a candidate rulings-table row, per SKILL.md rule 6).
+3. **The owner rules** with the same grammar as the tidy report: file all, file by group, or walk item by item. Nothing moves before the ruling.
+4. **Execute what was approved:** one entity one note from the matching templates where they fit, room MOC inventories updated as you go, one filing-log line per filing, `capture-progress.md` room rows updated at the end.
+5. **Rows iron law still applies.** Transactional exports (invoice lists, POS dumps, attendance sheets) do not get imported; capture the pointer plus any exception stories, and say why in one line.
+6. **The ritual payoff survives the shortcut:** still end with Stage 4 (one observation + two questions; bulk material usually gives the observation MORE to work with) and Stage 5 (the closing screen).
 
 ## Stage 4: Insight (~2 to 3 minutes, observation level)
 

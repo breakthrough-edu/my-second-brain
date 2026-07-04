@@ -8,7 +8,7 @@ Slow-cooker mode, best done at home, 45 to 60 minutes total. Two interviews and 
 
 Sequence is fixed: profile first (the soul calibrates against it), soul second, wire-up last. Both interviews can pause anytime; note progress in `99_Meta/bootstrap-progress.md` (`jarvis_progress:` field) and resume cleanly.
 
-Also initialize `99_Meta/memory.md` (from [../templates/memory.template.md](../templates/memory.template.md)) at the end if it does not exist: ask for 2 to 3 sentences of current reality, leave the rest to accumulate.
+`99_Meta/memory.md` is scaffolded at setup, so it normally already exists. At the end of this mode, fill its Current reality section with 2 to 3 sentences from the owner if it is still empty. (Backstop for vaults set up before memory.md was scaffolded: if the file is missing, create it from [../templates/memory.template.md](../templates/memory.template.md) first.)
 
 ## Part A: Profile interview
 
@@ -67,5 +67,5 @@ If an answer lands generic, one targeted follow-up to pull the specific version 
 1. Fill [../templates/companion-soul-SKILL.template.md](../templates/companion-soul-SKILL.template.md) with the interview material, near verbatim where marked. Replace every placeholder AND delete the parenthetical guidance notes; the finished skill contains only the owner's content. Show the draft; the owner rules; iterate.
 2. Write to `<vault>/04_Resources/Skills/<slug>-companion-soul/SKILL.md` and install the same way the command-base was installed (symlink on macOS/Linux into `~/.claude/skills/`; copy on Windows).
 3. The command-base skill already loads `<slug>-companion-soul` last at session start when it exists; nothing to edit. Confirm the slug matches what the command-base expects (check its SKILL.md; fix the name if the owner changed slugs).
-4. Initialize `99_Meta/memory.md` if absent (current-reality sentences from the owner).
+4. Fill `99_Meta/memory.md`'s Current reality with the owner's sentences if still empty (create the file from the template first only on older vaults where setup did not scaffold it).
 5. Close honestly: "Expect to revise the soul several times in the first weeks. That is lived use shaping it, not a failure. Edit the vault copy; the symlink keeps it live. Tomorrow morning, open a session and say 'morning'; if the greeting sounds like {{AI_NAME}} and not like a generic assistant, it worked."

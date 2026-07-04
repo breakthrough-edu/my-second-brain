@@ -23,4 +23,4 @@ One home, two wings: personal life in PARA (`02_Projects` to `05_Archive`), the 
 
 **Owner:** {{YOUR_NAME}} · **Business:** {{BUSINESS_NAME}} · **Created:** {{DATE}}
 
-Written once at setup. Later sessions read this file; they do not rewrite it.
+Written once at setup. Later sessions never rewrite it silently; amendments are proposed during weekly maintenance and approved by the owner, same discipline as doctrine amendments.

@@ -45,7 +45,7 @@ Plus one: pre-open the personal wing rooms (Family, Health, Personal Finance, Pr
 
 ## Step 5: The scaffold burst
 
-Execute [../references/scaffold-spec.md](../references/scaffold-spec.md) in one go: all folders, all MOCs, Home, `_Map`, `Business-Profile` (empty schema), doctrine (from [../templates/structure-doctrine.template.md](../templates/structure-doctrine.template.md)), tagging vocabulary (from [../templates/tagging-vocabulary.template.md](../templates/tagging-vocabulary.template.md)), note templates (from [../templates/note-templates.md](../templates/note-templates.md)), dashboard `.base` (verbatim from [../templates/command-base.base.template](../templates/command-base.base.template)), and the three state files. Methodology stays a folder of empty folders; no MOC there, on purpose.
+Execute [../references/scaffold-spec.md](../references/scaffold-spec.md) in one go: all folders, all MOCs, Home, `_Map`, `Business-Profile` (empty schema), doctrine (from [../templates/structure-doctrine.template.md](../templates/structure-doctrine.template.md)), tagging vocabulary (from [../templates/tagging-vocabulary.template.md](../templates/tagging-vocabulary.template.md)), note templates (from [../templates/note-templates.md](../templates/note-templates.md)), dashboard `.base` (verbatim from [../templates/command-base.base.template](../templates/command-base.base.template)), and the state files, including working memory `99_Meta/memory.md` (from [../templates/memory.template.md](../templates/memory.template.md); this is what the command-base skill reads and appends every session, so it exists from day one). Methodology stays a folder of empty folders; no MOC there, on purpose.
 
 Run the wiring check at the end of the spec. Report one line: "Scaffolded N folders, M files. Navigation is live from Home."
 
@@ -53,7 +53,7 @@ Run the wiring check at the end of the spec. Report one line: "Scaffolded N fold
 
 Skills wake on trigger words; `CLAUDE.md` at the vault root loads into EVERY Claude Code session started there, unconditionally. Without it, a session opened tomorrow with a casual first message has no idea this is a structured vault, and the constitution is just a file lying in `99_Meta`. This step is what makes the rules self-announcing.
 
-- **No `CLAUDE.md` at the vault root** (the normal case): write one from [../templates/CLAUDE.template.md](../templates/CLAUDE.template.md), replacing `{{YOUR_NAME}}`, `{{BUSINESS}}`, `{{BUSINESS_NAME}}`, `{{SLUG}}`, `{{LANGUAGE}}` (the step 1 choice, written as `English` or `中文`), `{{DATE}}`. Write once; later sessions read it but never rewrite it.
+- **No `CLAUDE.md` at the vault root** (the normal case): write one from [../templates/CLAUDE.template.md](../templates/CLAUDE.template.md), replacing `{{YOUR_NAME}}`, `{{BUSINESS}}`, `{{BUSINESS_NAME}}`, `{{SLUG}}`, `{{LANGUAGE}}` (the step 1 choice, written as `English` or `中文`), `{{DATE}}`. Write once; later sessions never rewrite it silently (it evolves only through propose-and-approve during maintenance).
 - **`CLAUDE.md` already exists** (existing-vault users): **never overwrite and never edit what is there.** Show the user a ready-to-append `## My Second Brain` section (the template's content demoted one heading level, minus the top title) and ask one question: append it for them, or leave it for them to place manually? Append only on an explicit yes.
 
 Record the outcome in `bootstrap-progress.md` (`claude_md: written | appended | left-to-user`).
@@ -69,9 +69,9 @@ Write it to `<vault>/04_Resources/Skills/<slug>-command-base/SKILL.md`, then ins
 
 One line on what they just got: "From now on, in any session, say 'morning' or 'log a decision' and this skill runs your day on top of the vault."
 
-## Step 7: Companion skills (optional, recommended)
+## Step 7: Official Obsidian skills (optional, recommended)
 
-Offer once: the Obsidian team publishes official skills (Bases syntax, Obsidian-flavored markdown, web clipping) that make the AI sharper inside Obsidian. Install with `npx skills add kepano/obsidian-skills`. Recommended yes; a no costs nothing tonight. Record the answer.
+Offer once: the Obsidian team publishes official skills (Bases syntax, Obsidian-flavored markdown, web clipping) that make the AI sharper inside Obsidian. Install with `npx skills add kepano/obsidian-skills`. Recommended yes; a no costs nothing tonight. Record the answer in `bootstrap-progress.md` (`obsidian_skills_offered:`).
 
 ## Step 8: The graph moment
 

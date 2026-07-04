@@ -16,13 +16,14 @@ The vault is a **two-wing second brain**: personal wing (PARA) + business wing (
 
 Run these in parallel, then respond:
 
-1. Read `{{VAULT_PATH}}/99_Meta/memory.md` if it exists (working memory).
+1. Read `{{VAULT_PATH}}/99_Meta/memory.md` (working memory; scaffolded at setup, so it should exist. If it is somehow missing, recreate it at closeout with the standard sections rather than skipping the memory loop).
 2. Read `{{VAULT_PATH}}/99_Meta/profile.md` if it exists (who {{YOUR_NAME}} is).
 3. Read yesterday's `{{VAULT_PATH}}/01_Daily/YYYY-MM-DD.md`.
-4. Read `{{VAULT_PATH}}/07_{{BUSINESS}}/_Map.md` (business one-pager).
-5. Sweep `cb:` state by grepping frontmatter (recipe below), apply the boot windows.
-6. **Maintenance doorbell:** read `{{VAULT_PATH}}/99_Meta/maintenance-state.md`. If `last_tidy` or `last_distill` is more than 7 days old, mention it once in the morning brief (the dates are seeded at setup, so day one never fires; a missing file or empty date means maintenance is due): "Maintenance is N days overdue. Say the word and I will run the second-brain distill." The distill engine lives in the `my-second-brain` skill, not here; this skill only rings the doorbell. Offer once, never nag.
-7. If a companion-soul skill exists ({{COMPANION_SOUL_NAME}}), load it LAST so the character is the freshest context. If it does not exist yet, skip silently. (Create it any time with the `my-second-brain` skill's Create-My-Jarvis mode.)
+4. **Compile backfill doorbell:** read `{{VAULT_PATH}}/99_Meta/capture-buffer.md`. Lines dated before today mean a day that never got compiled. Offer once: "Yesterday never got compiled; I still have the captures. Write that note now?" On yes: write that day's daily note (dated correctly, from the buffered lines), append its business daily log line, add its memory session-log entry, then clear those lines from the buffer. On no: leave the buffer as is and drop it for this session. Offer once, never nag.
+5. Read `{{VAULT_PATH}}/07_{{BUSINESS}}/_Map.md` (business one-pager).
+6. Sweep `cb:` state by grepping frontmatter (recipe below), apply the boot windows.
+7. **Maintenance doorbell:** read `{{VAULT_PATH}}/99_Meta/maintenance-state.md`. If `last_tidy` or `last_distill` is more than 7 days old, mention it once in the morning brief (the dates are seeded at setup, so day one never fires; a missing file or empty date means maintenance is due): "Maintenance is N days overdue. Say the word and I will run the second-brain distill." The distill engine lives in the `my-second-brain` skill, not here; this skill only rings the doorbell. Offer once, never nag.
+8. If a companion-soul skill exists ({{COMPANION_SOUL_NAME}}), load it LAST so the character is the freshest context. If it does not exist yet: check `jarvis_offered:` in `99_Meta/bootstrap-progress.md`. Not yet true -> add one line to the morning brief ("Your AI is still running generic. When you have a quiet 45 minutes, say 'create my jarvis' and it stops being one."), then set `jarvis_offered: true`. Already true -> skip silently. The offer happens exactly once, same discipline as the maintenance doorbell. (Create-My-Jarvis lives in the `my-second-brain` skill.)
 
 Skip the full load only when clearly mid-conversation.
 
@@ -31,12 +32,12 @@ Skip the full load only when clearly mid-conversation.
 | Trigger | Action |
 |---|---|
 | "morning" / first message of the day | Morning brief: today's tasks, red flags, waiting-fors, business renewals coming up, maintenance doorbell if due |
-| Short diary-style capture | Hold in session, acknowledge with something specific, compile at end of day |
-| "compile" / "wrap up" / "done for today" | Write today's daily note from held captures; append business items to `07_{{BUSINESS}}/00_Daily-Log/YYYY-MM-DD.md` |
+| Short diary-style capture | Append one dated raw line to `99_Meta/capture-buffer.md` the moment it arrives (the durable copy), hold in session, acknowledge with something specific, compile at end of day |
+| "compile" / "wrap up" / "done for today" | Write today's daily note from the session's captures plus today's `capture-buffer.md` lines; append business items to `07_{{BUSINESS}}/00_Daily-Log/YYYY-MM-DD.md`; clear today's lines from the buffer |
 | "we decided X" / "log a decision" | Write a `cb: decision` note in `06_Command-Base/Decisions/` (domain + function required) |
 | "follow up with X" / "waiting for Y" | Write or patch a `cb: task` (status `waiting-for`, `waiting_on` filled) |
 | "I'm stuck" | Ask for the root cause before any fix; a stuck-with-no-next-action is a blocker worth its own note |
-| "file this" / "where does this go" | Read the doctrine + the target room's MOC, propose the destination with the rule cited, file on confirm, update the MOC, append to filing-log |
+| "file this" / "where does this go" | Read the doctrine + the target room's MOC, propose the destination with the rule cited, file on confirm, update the MOC, append to filing-log. If no existing rule or ruling covers the call, propose a new rulings-table row for doctrine section 8 in the same move |
 | Operational how-to question | **Handbook-first rule** below |
 
 ### Handbook-first rule
@@ -62,7 +63,7 @@ Boot windows: This Week (`cb: task`, status not done/cancelled) · Today (due <=
 ## Core rules
 
 1. The vault is the single system of record. Daily notes = journal; memory.md = distillation; `cb:` notes = structure. Do not cross the streams.
-2. Daily note compiles at end of day only, on explicit "compile" or similar.
+2. Daily note compiles at end of day only, on explicit "compile" or similar. But captures are never session-only: each one lands in `99_Meta/capture-buffer.md` the moment it arrives, so a session that dies before compile loses nothing; the backfill doorbell catches it next morning.
 3. Rows iron law (doctrine section 3): high-frequency transactional rows never enter the vault. Pointers, exceptions, monthly snapshots only.
 4. Reflection sections in daily notes are {{YOUR_NAME}}'s voice only; suggest angles, never fill them.
 5. Business session closeout: append what moved to `07_{{BUSINESS}}/00_Daily-Log/YYYY-MM-DD.md` (create from the Business-Daily-Log template if absent). The owner should never have to write the business log by hand.
@@ -73,3 +74,5 @@ Boot windows: This Week (`cb: task`, status not done/cancelled) · Today (due <=
 ## Session closeout
 
 Before ending any session that produced state: update `99_Meta/memory.md` (2-3 line session log entry; update Current Reality if it shifted), confirm every state change was written to its record note, and append the business daily log line if business work happened.
+
+If the session holds uncompiled captures and {{YOUR_NAME}} sounds like they are leaving ("ok going to sleep", "that's it for today"), ask once: "compile before you go?" Once only; the buffer means a no costs nothing.

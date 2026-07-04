@@ -10,7 +10,7 @@ Replace `{{BUSINESS}}` with the business folder name (English, hyphenated, e.g. 
 
 ```
 <vault>/
-├── CLAUDE.md                       (always-on session context; setup step 5.5, write-once, NEVER overwrite an existing one)
+├── CLAUDE.md                       (always-on session context; setup step 5.5, written once at setup, evolves only by propose-and-approve, NEVER silently overwritten)
 ├── 00_Inbox/
 ├── 01_Daily/
 ├── 02_Projects/
@@ -73,6 +73,8 @@ Replace `{{BUSINESS}}` with the business folder name (English, hyphenated, e.g. 
     ├── bootstrap-progress.md
     ├── capture-progress.md
     ├── maintenance-state.md
+    ├── memory.md                    (from templates/memory.template.md)
+    ├── capture-buffer.md            (durable staging for in-the-moment captures)
     └── Templates/
         ├── Client.md  Vendor.md  Employee.md  Product-Service.md
         ├── Company-Doc.md  Equipment.md  Outlet.md
@@ -222,11 +224,15 @@ Append-only. One line per AI filing action: date · what · where · rule applie
 - {{DATE}} · vault scaffolded · (setup) · structure-doctrine v1
 ```
 
-`bootstrap-progress.md` (frontmatter: `language:`, `vault_path:`, `business_name:`, `toggles:` [outlets/equipment/importing booleans], `personal_wing_preopened:`, `obsidian_installed:`, `claude_md:` [written | appended | left-to-user], `command_base_generated:`, `companion_skills_offered:`, `setup_complete:`) plus a body checklist of setup steps done.
+`bootstrap-progress.md` (frontmatter: `language:`, `vault_path:`, `business_name:`, `toggles:` [outlets/equipment/importing booleans], `personal_wing_preopened:`, `obsidian_installed:`, `claude_md:` [written | appended | left-to-user], `command_base_generated:`, `obsidian_skills_offered:` (the setup step 7 offer of the official kepano/obsidian-skills bundle), `jarvis_offered: false` (flipped by the command-base skill after its one-time Create-My-Jarvis offer), `setup_complete:`) plus a body checklist of setup steps done.
 
 `capture-progress.md` (frontmatter: `profile_captured: false`, `rooms_captured: []`; body: a table of room · date · items moved · insight given, plus `next_suggestion:`).
 
 `maintenance-state.md` (frontmatter: `last_tidy: {{DATE}}`, `last_distill: {{DATE}}`, both seeded with the setup date so staleness math needs no empty-value case; body: one-line history log, first line noting the dates were seeded at setup, then appended per maintenance run).
+
+`memory.md` (from [templates/memory.template.md](../templates/memory.template.md), `{{DATE}}` filled; the seeded session-log line "Vault set up." stays). This is the working memory the generated command-base skill reads at session start and appends to at closeout; scaffolding it here is what makes that loop live from day one. Old session-log entries rotate out during weekly maintenance (distill mode), not here.
+
+`capture-buffer.md` (header line only at scaffold: "Append-only staging. The command-base skill lands every in-the-moment capture here as one dated raw line the moment it arrives; compile drains the day's lines into the daily note."). This is the safety net for the day the owner never says "compile": the captures survive the session, and the next morning's backfill doorbell writes that day's note from these lines. A system file, not user content.
 
 ### `99_Meta/Templates/` note templates
 
@@ -234,7 +240,7 @@ Copy each block from [templates/note-templates.md](../templates/note-templates.m
 
 ### `<vault>/CLAUDE.md`
 
-From [templates/CLAUDE.template.md](../templates/CLAUDE.template.md), all placeholders replaced (`{{LANGUAGE}}` = the setup language choice, `English` or `中文`). **Write-once, and never overwrite or edit an existing `CLAUDE.md`**: if one exists, the append-proposal flow in setup step 5.5 applies instead. This file is the always-on layer that tells every future session what this vault is and where the constitution lives; without it the doctrine is invisible until a skill happens to fire.
+From [templates/CLAUDE.template.md](../templates/CLAUDE.template.md), all placeholders replaced (`{{LANGUAGE}}` = the setup language choice, `English` or `中文`). **Written once at setup, never silently rewritten**: later amendments go through propose-and-approve at the distill-mode close, same discipline as doctrine amendments. If a `CLAUDE.md` already exists at setup time, never overwrite or edit it; the append-proposal flow in setup step 5.5 applies instead. This file is the always-on layer that tells every future session what this vault is and where the constitution lives; without it the doctrine is invisible until a skill happens to fire.
 
 ## Wiring check (run after scaffold, before the graph moment)
 

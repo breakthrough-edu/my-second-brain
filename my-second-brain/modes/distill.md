@@ -6,13 +6,15 @@ Two halves, always in this order (clean room first, then think):
 
 ## Half 1: Tidy (structure hygiene)
 
-Scan the vault and build ONE report. Do not fix anything yet. The five checks:
+Scan the vault and build ONE report. Do not fix anything yet. The seven checks:
 
 1. **Orphans:** notes reachable from no MOC and carrying no inbound links (skip `99_Meta`, `05_Archive`, daily notes). For each: proposed home MOC.
 2. **Misfiled:** notes whose content contradicts their room (a procedure sitting in a function room; a client note in Inbox; a filled record where a template should be). Judge by the doctrine's filing tests and rulings table; cite the rule per item.
 3. **Inbox backlog:** everything in `00_Inbox/` older than 3 days, each with a proposed destination (doctrine-cited).
-4. **Stale MOCs:** rooms whose contents changed after the MOC's `last-refreshed:`; MOC inventories listing dead links; MOCs missing files that exist.
+4. **Stale MOCs:** rooms whose contents changed after the MOC's `last-refreshed:`; MOC inventories listing dead links; MOCs missing files that exist. Cross-reference `capture-progress.md`: rooms captured once and untouched for 4+ weeks are listed as cold rooms, proposal only (revisit the room, or mark it stable).
 5. **Schema violations:** off-vocabulary tags, missing required frontmatter (`domain:` on decisions/tasks, `renew_by:` on company docs, `owner:`/`last_verified:` on SOPs), mis-cased enum values.
+6. **Memory weight:** keep `99_Meta/memory.md` lean. Session-log entries older than 30 days rotate to `99_Meta/memory-archive/YYYY-MM.md` (create the folder on first rotation; append under a dated heading, never delete). Recent decisions trimmed to the newest 10 (the full notes live in `06_Command-Base/Decisions/`). Active-initiatives rows matching no live work get flagged. Watch-for entries sighted 3+ times get proposed for promotion into `profile.md` (only if that file exists). Rotation and trimming are mechanical; promotions and flags need the owner.
+7. **Filing patterns:** read `filing-log.md` since the last tidy. Three or more filings to the same destination that has no room yet -> propose the room. Repeated filings decided by judgment with no rule to cite -> propose a canonical rulings-table row for doctrine section 8 (on approval: append the row, add a revision-log line). Report only; nothing structural gets created without the owner.
 
 Present the report compactly, grouped by check, each item one line: what, where, proposed action, rule cited. Then ask for one ruling: fix all, fix by group, or walk through item by item. Purely mechanical items (MOC refreshes, dead-link cleanup) can be pre-marked "will do unless you object". Moving or renaming anything the owner wrote needs explicit approval, always.
 
@@ -33,8 +35,9 @@ Also under pipe 3: a Playbook whose every step has stabilized gets flagged for d
 ## Close
 
 - Set `last_distill:` in `maintenance-state.md`, append the history line (proposals made / accepted).
+- Check the vault root `CLAUDE.md` against reality (a skill renamed, a second wing added, language changed, a rule amended). If it has drifted, propose the specific edit; the owner approves; never rewrite it silently.
 - If this was the first time Layer 3 received ANY content, mark the moment; one line, no ceremony: "Your third layer is no longer empty. That is the layer capture could never fill."
-- Surface next week's hook once: "Doorbell rings in 7 days. Anything you want me to watch for between now and then?"
+- Surface next week's hook once, reading `next_suggestion:` from `capture-progress.md` so the hook is concrete: "Doorbell rings in 7 days. <Next room> is the suggested next move-in. Anything you want me to watch for between now and then?"
 
 ## First-run honesty
 
