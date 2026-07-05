@@ -39,6 +39,14 @@ Your-Vault/
 
 The structural rules live in your vault (`99_Meta/structure-doctrine.md`), not in the skill, so your vault stays consistent no matter which tool or model touches it.
 
+## Function pods (when a function earns its own brain)
+
+Most business functions stay simple: a room for their materials and a log. But some functions are pure repeated judgment (marketing, pricing, what to say no to), and those deserve to *learn*. When one has built up enough real track record, the companion `pod-maker` skill (installed at setup) can **graduate** it into a pod.
+
+A pod is not a whole separate business-in-a-box. Honestly sized, a pod **owns two layers** (its own outputs, and its own learning loop of doctrine and rubric that grows from your decisions) and **reads a third** (it shares the business wing's SOP and reference material, never duplicating them). The wing stays the full three-layer map; a pod is one function's local brain bolted onto it.
+
+Two guardrails keep this from bloating your vault: `pod-maker`'s gate treats "not a pod" as the default answer (a process with a known right answer wants an SOP, not a loop), and the weekly maintenance scan proposes shrinking a pod back if it goes quiet (your learning is archived, never lost). One core pod ships ready to seed: **Marketing**, a generic marketing brain your own loop grows into something specific to your business.
+
 ## Requirements
 
 - [Claude Code](https://claude.com/claude-code)

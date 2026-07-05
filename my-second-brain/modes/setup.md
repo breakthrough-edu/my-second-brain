@@ -45,7 +45,7 @@ Plus one: pre-open the personal wing rooms (Family, Health, Personal Finance, Pr
 
 ## Step 5: The scaffold burst
 
-Execute [../references/scaffold-spec.md](../references/scaffold-spec.md) in one go: all folders, all MOCs, Home, `_Map`, `Business-Profile` (empty schema), doctrine (from [../templates/structure-doctrine.template.md](../templates/structure-doctrine.template.md)), tagging vocabulary (from [../templates/tagging-vocabulary.template.md](../templates/tagging-vocabulary.template.md)), note templates (from [../templates/note-templates.md](../templates/note-templates.md)), dashboard `.base` (verbatim from [../templates/command-base.base.template](../templates/command-base.base.template)), and the state files, including working memory `99_Meta/memory.md` (from [../templates/memory.template.md](../templates/memory.template.md); this is what the command-base skill reads and appends every session, so it exists from day one). Methodology stays a folder of empty folders; no MOC there, on purpose.
+Execute [../references/scaffold-spec.md](../references/scaffold-spec.md) in one go: all folders, all MOCs, Home, `_Map`, `Business-Profile` (empty schema), doctrine (from [../templates/structure-doctrine.template.md](../templates/structure-doctrine.template.md)), tagging vocabulary (from [../templates/tagging-vocabulary.template.md](../templates/tagging-vocabulary.template.md)), note templates (from [../templates/note-templates.md](../templates/note-templates.md)), dashboard `.base` (verbatim from [../templates/command-base.base.template](../templates/command-base.base.template)), the two pre-seeded brand-foundation rooms (`Brand-Strategy/` + `Target-Audience/` with their stubs, per the spec), and the state files, including `99_Meta/graduation-config.md` (from [../templates/graduation-config.template.md](../templates/graduation-config.template.md)) and working memory `99_Meta/memory.md` (from [../templates/memory.template.md](../templates/memory.template.md); this is what the command-base skill reads and appends every session, so it exists from day one). Methodology stays a folder of empty folders; no MOC there, on purpose.
 
 Run the wiring check at the end of the spec. Report one line: "Scaffolded N folders, M files. Navigation is live from Home."
 
@@ -69,6 +69,16 @@ Write it to `<vault>/04_Resources/Skills/<slug>-command-base/SKILL.md`, then ins
 
 One line on what they just got: "From now on, in any session, say 'morning' or 'log a decision' and this skill runs your day on top of the vault."
 
+## Step 6.6: Install the pod-maker skill (the pod surgery tool)
+
+The `pod-maker` skill ships **inside this skill's payload** as a `pod-maker/` subfolder (it is static: it reads the vault constitution and scaffold at runtime, so it needs no per-user generation). A skill nested inside another skill's folder is not independently discoverable by Claude Code, so install it by copying that subfolder up into the skills directory:
+
+- Locate this running skill's folder (the `my-second-brain` skill dir; via npx install it is `~/.claude/skills/my-second-brain/`). Its `pod-maker/` subfolder is the payload.
+- macOS / Linux: `cp -R "<my-second-brain-skill-dir>/pod-maker" ~/.claude/skills/pod-maker` (create `~/.claude/skills/` if missing; if a `pod-maker` entry already exists, ask before replacing it).
+- Windows: copy the folder the same way; the canonical copy is the payload one, so re-copy after any skill update.
+
+This is the shipping channel that always works (npx-independent copy). Record `pod_maker_installed:` in `bootstrap-progress.md`. One line to the owner, only if they ask what it is: "pod-maker is the tool that grows a busy function (marketing, sales...) into its own self-learning pod when it earns one; say 'forge a pod' or 'graduate my marketing' when the time comes."
+
 ## Step 7: Official Obsidian skills (optional, recommended)
 
 Offer once: the Obsidian team publishes official skills (Bases syntax, Obsidian-flavored markdown, web clipping) that make the AI sharper inside Obsidian. Install with `npx skills add kepano/obsidian-skills`. Recommended yes; a no costs nothing tonight. Record the answer in `bootstrap-progress.md` (`obsidian_skills_offered:`).
@@ -84,3 +94,16 @@ Close setup with the payoff:
 What they see is their second brain as a constellation: every room wired to Home, business wing on one side, personal wing on the other, all of it empty and waiting. Say it straight, in their language, something like: "That is your second brain, half built. The structure is done; the memories are not moved in yet. That is what capture mode is for, and the first ten minutes of it is your Business Profile. Want to move the first thing in now?"
 
 Set `setup_complete: true` in `bootstrap-progress.md`. If they say yes, load capture mode and go.
+
+## Step 8.5: Offer the Marketing pod (recommend-leaning, never mid-burst)
+
+After the graph moment (or at the first capture, whichever comes first), offer the core **Marketing pod** once. Placement matters: never embed this inside the scaffold burst, so the "under 10 minutes" promise holds; it comes at the close, as a clearly separate beat. Tone is **recommend-leaning**, not neutral: every business does marketing, and the pod is the one core capability that ships polished.
+
+The offer must say two things plainly, because they resolve the tension between "day 0 value" and "don't stack empty structure":
+
+1. **The seed is usable on day zero.** The Marketing pod ships with generic-but-real marketing doctrine and a loop-config, so it can do useful marketing immediately. It is not an empty shell.
+2. **The learning part waits for real activity.** The loop (the part that grows this business's own marketing judgment) only starts once there is real activity and feedback to learn from. The early-maturity rule that would send a from-scratch pod back to a thin room governs *forging* a pod with no seed; it does not govern this *pre-seeded patch*, which is why offering it on day 0 is sound.
+
+Frame it as recoverable, not a one-way door: if it turns out unused, the weekly maintenance demotion scan will notice and offer to shrink it back (learning preserved, per doctrine section 9). That safety net is what makes an early yes safe.
+
+Installing the pod runs the shared pod-install flow owned by the **`pod-maker` skill**, which was installed in step 6.6. On the owner's yes, hand off to pod-maker to load its shipped Marketing patch (`pod-maker/patches/marketing/`): mechanically this is a graduation (it grows the always-present thin `Marketing/` room into a wing-level pod, carrying the room's `Action-Log` up intact), with the patch supplying the day-0 seed brain. Do not half-build a pod by hand: if for some reason `pod-maker` is absent (an interrupted step 6.6), record the owner's answer and note the install is pending pod-maker, rather than improvising the structure. Record the outcome in `bootstrap-progress.md` (`marketing_pod_offered:` + `marketing_pod_installed:`).

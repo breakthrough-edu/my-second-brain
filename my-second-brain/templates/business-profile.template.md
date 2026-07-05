@@ -32,7 +32,7 @@ last_updated: {{DATE}}
 
 ## What the owner believes makes it different
 
-(in the owner's own words; this is raw material, not positioning work)
+(in the owner's own words; this is raw material, not positioning work. Formed brand strategy, if any, lives in `01_Assets/Brand-Strategy/`; capture asks once whether the owner has one and either guides it in or leaves those stubs empty)
 
 ## Open threads
 

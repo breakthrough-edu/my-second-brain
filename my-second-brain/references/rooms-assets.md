@@ -4,6 +4,22 @@ For each room: the door sign (also used on its MOC), the filing test, the guided
 
 ---
 
+## Brand-Strategy and Target-Audience (the brand-foundation rooms, filled by intake not interview)
+
+These two rooms are unlike the rest. They scaffold pre-populated with empty stubs (see [scaffold-spec.md](scaffold-spec.md)), and they are **not** captured through a standard question battery. Brand work is a deliberate exercise, not a 20-second answer, so capture uses a **light gate**, not an interview.
+
+**Brand-Strategy door sign:** your brand foundation, the five identity pillars (DNA, Personality, Proposition, Relationship, Sensory Cues rendered as a Style Guide); pillar 1, Positioning, lives in `03_Methodology/Positioning`.
+**Target-Audience door sign:** who this brand is for, drawn sharply enough to repel who it isn't, plus the customer journey.
+**Filing test:** descriptive brand identity (what the brand IS) lives in `Brand-Strategy/`; who it is FOR lives in `Target-Audience/`; the positioning decision lens (which shifts as the market teaches) lives in `03_Methodology/Positioning/`; how to PRODUCE branded content is SOP `Content-Production/`.
+
+**The light gate (one question, at Business-Profile close and again if a marketing pod is later offered):** "Do you have a formed brand strategy already?"
+- **Yes** -> guide them to drop it in; map what they have onto the six stubs, fill what fits, leave the rest `status: empty`.
+- **No** -> leave the stubs empty and say plainly (once, no pitch): the rooms stay as seeds; marketing and sales run generic until they are filled, and that is a real cost, not a nag. Do not run a brand-strategy exercise inside capture; that work has its own home.
+
+**Insight angle (the only one):** which stubs are still `status: empty`, and the most expensive one to leave empty given what the Business-Profile already said (a differentiation-led business with an empty Brand-DNA, say). Name it, do not fix it.
+
+---
+
 ## Clients
 
 **Door sign:** the people and companies who pay you. One client, one note.
@@ -77,7 +93,7 @@ For each room: the door sign (also used on its MOC), the filing test, the guided
 ## Content-Assets
 
 **Door sign:** content the business owns and can reuse: posts that worked, photos, videos, testimonials, brochures, decks.
-**Filing test:** the asset or a pointer to it lives here; the process of producing content lives in SOP `Content-Production/`; platform account matters live in `Marketing/`.
+**Filing test:** the asset or a pointer to it lives here; the process of producing content lives in SOP `Content-Production/`; platform account matters live in `Marketing/`. Once Marketing has graduated into a pod, an artifact that is both a pod output and a reusable asset has its source of truth in the pod's `01_Assets` judge view; this room keeps a curated pointer only, never a duplicate (doctrine section 9, rulings table).
 
 **Questions:**
 1. Where does your content live right now? (phone gallery, FB page, a designer's Google Drive...)

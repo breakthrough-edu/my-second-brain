@@ -40,6 +40,15 @@ Then:
 
 The profile itself deserves a micro-insight (one observation only, no question pair yet; save the full formula for rooms). Example shape: "You said the business is 8 years old but everything you described still routes through you personally. Noting that; we will see it again when we capture SOPs."
 
+### Brand light gate (one question, right after the profile)
+
+The two brand-foundation rooms (`Brand-Strategy/`, `Target-Audience/`) scaffolded pre-seeded with empty stubs. Brand work is a deliberate exercise, not a 20-second answer, so do NOT interview it here. Ask exactly one question: "Do you have a formed brand strategy already, positioning, personality, that kind of thing?"
+
+- **Yes** -> offer to take it (paste, file, or a pointer). Map what they give onto the six identity stubs and Target-Audience; fill what fits near-verbatim, flip those stubs' `status:` off `empty`, leave the rest empty. One filing-log line.
+- **No** (the common case) -> leave the stubs empty and say it once, plainly, no pitch: "Then I'll leave the brand rooms as seeds. Fair warning: until they're filled, any marketing or sales I write will be professional but generic, it'll sound like the category, not like you. That's a real cost, worth coming back to, not something to force tonight." Do not run a positioning exercise inside capture.
+
+Record the outcome (which stubs filled, or all left empty) in `capture-progress.md`. This is touchpoint 1; the marketing pod offer later restates the cost when it matters most.
+
 Then go straight to the room menu.
 
 ## Stage 2: Room menu

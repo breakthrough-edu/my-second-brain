@@ -278,6 +278,7 @@ tags: []
 type: lesson
 date: {{DATE}}
 source:
+function:
 confirmed_by_owner: false
 tags: []
 ---

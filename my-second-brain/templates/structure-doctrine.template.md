@@ -60,7 +60,7 @@ Every folder with content gets a front desk: `_<Name>-MOC.md` (underscore keeps 
 - A MOC is a **build artifact**: the AI may rebuild it wholesale at any time. It carries `last-refreshed:` in frontmatter.
 - Contents: one door-sign line (what lives in this room), the filing test sentence for the room, the current inventory (links), key numbers if any, and navigation links up (parent MOC) and down (child MOCs).
 - Capture and maintenance sessions refresh the MOCs they touched. Room-level insights live on the room's MOC, so the front desk gets richer as the room fills.
-- **Exception:** the three `03_Methodology` rooms carry no MOC while empty. The empty layer is meant to be felt, not furnished.
+- **Exception:** the four `03_Methodology` rooms (Positioning, Decision-Rules, Lessons, Playbooks) carry no MOC while empty. The empty layer is meant to be felt, not furnished.
 
 ## 5. Naming and format
 
@@ -105,7 +105,47 @@ Precedents for the two-way calls. When a filing matches a row here, follow the r
 | Employee personal documents (certs, vaccination, warning letters) | `Employees/<name>.md`; policies / handbook / JD -> `HR/` |
 | Privacy policy / NDA | Privacy policy -> `Company-Docs/`; outward templates like NDAs -> `Sales/Templates/` |
 | Learning material vs business intel | Generic learning -> personal wing `04_Resources`; function-specific industry intel -> that function room; distilled personal doctrine -> Methodology after owner confirms |
+| Function output vs reusable company asset (a post that worked, a testimonial) | If the function has graduated into a pod: source of truth in the pod's `01_Assets` judge view; wing `Content-Assets/` holds a curated pointer only, never a second copy. If not graduated: wing `Content-Assets/` as usual |
+| A function's own procedure once it graduates | Stays in the wing `02_SOP/` with a `function:` tag; a pod never opens its own SOP folder (section 9) |
+
+## 9. Function pods (the graduated form of a function room)
+
+A function room (Marketing, Sales, HR...) starts thin: a `_<Name>-MOC.md` and an `Action-Log.md` in `01_Assets/`, sharing the wing's Layer 2 and Layer 3. When one function accumulates enough real activity to deserve its own learning loop, it **graduates** into a pod: it moves up to a wing-level folder (`07_<Business>/<Function>/`, a sibling of `01_Assets`) and grows its own three-layer interior. Most functions never need this; graduation is earned by track record, never granted at setup. (The engine that forges and grades pods is the `pod-maker` skill; this chapter is the law it obeys.)
+
+### What a pod owns, and what it only reads (the ownership ruling)
+
+A pod owns exactly two things: **its own learning loop** (its `03_Methodology`: doctrine, rubric, loop-config, thesis, thresholds) and **its in-flight outputs** (its `01_Assets`, with a judge view). Everything else it shares:
+
+- **Shared and read-only:** the L1 constitution (this file); the wing's `02_SOP` (a pod carries no SOP folder of its own; its procedures live in the wing `02_SOP` with a `function:` tag); the wing's reference material (`01_Assets` entity rooms, the brand-foundation rooms, Business-Profile, Clients, Products-Services); the wing's `03_Methodology` (cross-function judgment); and any other pod's `03_Methodology`.
+- **Never touched:** another pod's `01_Assets` or its `Action-Log`. A pod reads other pods' judgment (their Methodology); it never reaches into their outputs or their raw experience.
+
+Stated as a contract (interface v1.1): **a pod may depend only on (a) the shared L1 constitution, (b) read-only references to any other pod's `03_Methodology`, and (c) read-only references to the wing's shared material (its `01_Assets` and its `03_Methodology`). It writes only inside itself.** Adding a pod can never break an existing pod, because the coupling surface is this one narrow, one-directional interface.
+
+The honest size of a pod, therefore: it owns **two layers** (its Assets and its Methodology) and **reads a third** (the shared SOP layer). Not a full standalone three-layer world.
+
+### Two `01_Assets`, two meanings
+
+`01_Assets` means one thing at the wing level and another inside a pod, and the difference is load-bearing:
+
+- **Wing `01_Assets`** = what the business is made of (entity rooms, records, materials). Layer 1.
+- **Pod `01_Assets`** = that pod's own outputs and deliverables, plus a judge view (`.base`) that scores them.
+
+When one artifact is both a pod output and a reusable company asset, the source of truth lives in the pod's judge view and the wing `Content-Assets` room holds a curated pointer only (rulings table, section 8). Never both.
+
+Because names repeat across pods (`doctrine.md`, `Action-Log.md`, `current-thesis.md`, `loop-config.md` exist once per pod), **every cross-pod and cross-layer reference uses a full path, never a bare `[[wikilink]]`.** A basename wikilink across pods is ambiguous and spawns ghost files.
+
+### Naming
+
+A pod is named for its **function**, identical to the thin room it graduated from (the thin `Marketing/` room becomes the `Marketing/` pod). No role words (not `CMO`), no nicknames, uniform across all pods, because a pod is one template instance and view logic breaks the moment names go decorative. The pod's front desk follows the MOC rule: `_<Function>-MOC.md`.
+
+### Graduation and demotion (both preserve learning)
+
+- **Graduation** moves the thin room up a level and grows its interior around what is already there. It **never overwrites**: the existing `Action-Log.md` is carried up intact, the three layers are added around it, and the old location keeps a `_MOVED` pointer so no inbound link dies. Because a filesystem move does not update Obsidian wikilinks, graduation must rewrite every inbound link across the vault (or leave a same-named `_MOVED` stub per moved file), not merely fix the pointers the installer itself wrote.
+- **Demotion** is the symmetric move: a pod that goes silent for a long stretch shrinks back to a thin room, or is archived. **Demotion never discards learning** (the mirror of the no-overwrite law). A pod's `doctrine.md`, `rubric/`, and `loop-config.md` are the one irreplaceable thing it grows (months of loop output), so on demotion they are archived, never deleted, and can be re-fed if the function graduates again.
+
+Both directions run propose -> approve -> log, like every structural change in this house.
 
 ## Revision log
 
 - **{{DATE}}**: v1, written at vault setup.
+- **{{DATE}}**: v1.1, added section 9 (function pods: ownership ruling, interface contract, two-`01_Assets` semantics, naming, graduation/demotion) and two pod rows to the rulings table.

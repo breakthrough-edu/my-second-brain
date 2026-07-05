@@ -28,7 +28,7 @@ One vault, two wings, one home:
 
 - **Personal wing**: PARA (Projects / Areas / Resources / Archive). Organized by actionability. Your life.
 - **Business wing** (`07_<Business-Name>/`): a three-layer knowledge map. Organized by knowledge type:
-  - **Layer 1, Assets** (家当): who and what your business is made of. Clients, vendors, employees, products, documents.
+  - **Layer 1, Assets** (家当): who and what your business is made of. Clients, vendors, employees, products, documents, plus the brand foundation (Brand-Strategy + Target-Audience), which scaffolds as seeds waiting to be filled.
   - **Layer 2, SOP** (流程): how things get done. Named by intent (what the process achieves), not by department.
   - **Layer 3, Methodology** (认知): why you decide the way you do. Starts empty on purpose. Capture cannot fill it; only reviewed judgment can.
 - **Command center** (`06_Command-Base/`): the operating system on top: Home page, central Decisions room, Tasks, Sessions, a live dashboard.
@@ -41,10 +41,12 @@ The full structural law lives in the vault itself at `99_Meta/structure-doctrine
 |---|---|---|
 | **Setup** | Install Obsidian if needed, place the vault, ask 3 industry toggles, scaffold the fully wired structure, generate the user's personal command-base skill, offer the official Obsidian skills, end on the graph view | [modes/setup.md](modes/setup.md) |
 | **Capture** | Business Profile first, then guided move-in of one room at a time (or a bulk move-in fork when the owner already has material). One question at a time, voice friendly. Ends with an observation-level insight and the three-layer closing screen | [modes/capture.md](modes/capture.md) |
-| **Distill** (includes Tidy) | Weekly maintenance ritual. Tidy scan (5 hygiene checks) then three distillation pipes proposing content for Layer 3. AI proposes, the owner rules | [modes/distill.md](modes/distill.md) |
+| **Distill** (includes Tidy) | Weekly maintenance ritual. Tidy scan (7 hygiene checks) then the distillation pipes proposing content for Layer 3 (routed to a function's pod when it has graduated, else the wing), plus a pod graduation/demotion scan. AI proposes, the owner rules | [modes/distill.md](modes/distill.md) |
 | **Create-My-Jarvis** | Two interviews (profile, then persona) that turn the generic assistant into one that knows who you are and how to be with you | [modes/create-my-jarvis.md](modes/create-my-jarvis.md) |
 
 Load exactly one mode file per entry. Do not preload the others.
+
+**Companion skill (not a mode): `pod-maker`.** Setup installs a separate `pod-maker` skill (step 6.6, copied from this skill's payload). It is the structural surgery tool that graduates a busy function room (Marketing, Sales...) into its own self-learning **pod** when it earns one, and grades whether a function should become a pod at all (most should not). It has its own trigger words ("forge a pod", "graduate my marketing") and its own lifetime; it fires on its own, not through this skill's mode router. Distill's pod-altitude scan proposes graduations and demotions; pod-maker executes them. The law both obey is `99_Meta/structure-doctrine.md` section 9.
 
 ### Mode routing
 
