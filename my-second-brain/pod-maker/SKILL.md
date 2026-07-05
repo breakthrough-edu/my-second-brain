@@ -61,4 +61,4 @@ Nothing lands on disk until the owner says yes. The install primitive's step 5 i
 
 ## Distribution note
 
-This skill ships inside the `my-second-brain` payload and is copied into the user's skills directory during Setup (it is static: it reads the vault's constitution and scaffold at runtime, so it needs no per-user generation). It has its own trigger words and its own lifetime, separate from Setup, because pod surgery recurs for as long as the vault lives.
+This skill ships inside the `my-second-brain` payload and is symlinked from there into the user's skills directory during Setup (it is static and identical for every user, a tool that reads the vault's constitution and scaffold at runtime, so it needs no per-user generation; symlinking also means an `npx` update of `my-second-brain` refreshes it automatically). It has its own trigger words and its own lifetime, separate from Setup, because pod surgery recurs for as long as the vault lives.

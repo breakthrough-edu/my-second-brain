@@ -46,7 +46,7 @@ The full structural law lives in the vault itself at `99_Meta/structure-doctrine
 
 Load exactly one mode file per entry. Do not preload the others.
 
-**Companion skill (not a mode): `pod-maker`.** Setup installs a separate `pod-maker` skill (step 6.6, copied from this skill's payload). It is the structural surgery tool that graduates a busy function room (Marketing, Sales...) into its own self-learning **pod** when it earns one, and grades whether a function should become a pod at all (most should not). It has its own trigger words ("forge a pod", "graduate my marketing") and its own lifetime; it fires on its own, not through this skill's mode router. Distill's pod-altitude scan proposes graduations and demotions; pod-maker executes them. The law both obey is `99_Meta/structure-doctrine.md` section 9.
+**Companion skill (not a mode): `pod-maker`.** Setup installs a separate `pod-maker` skill (step 6.6, symlinked from this skill's payload so it auto-updates). It is the structural surgery tool that graduates a busy function room (Marketing, Sales...) into its own self-learning **pod** when it earns one, and grades whether a function should become a pod at all (most should not). It has its own trigger words ("forge a pod", "graduate my marketing") and its own lifetime; it fires on its own, not through this skill's mode router. Distill's pod-altitude scan proposes graduations and demotions; pod-maker executes them. The law both obey is `99_Meta/structure-doctrine.md` section 9.
 
 ### Mode routing
 

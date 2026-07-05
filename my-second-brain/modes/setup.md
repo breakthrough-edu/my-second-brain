@@ -71,13 +71,13 @@ One line on what they just got: "From now on, in any session, say 'morning' or '
 
 ## Step 6.6: Install the pod-maker skill (the pod surgery tool)
 
-The `pod-maker` skill ships **inside this skill's payload** as a `pod-maker/` subfolder (it is static: it reads the vault constitution and scaffold at runtime, so it needs no per-user generation). A skill nested inside another skill's folder is not independently discoverable by Claude Code, so install it by copying that subfolder up into the skills directory:
+The `pod-maker` skill ships **inside this skill's payload** as a `pod-maker/` subfolder. It is **static and identical for every user** (a tool that reads the vault constitution and scaffold at runtime, not personalized content), which is why it is **symlinked from the payload** rather than generated into the vault the way the command-base skill is. A skill nested inside another skill's folder is not independently discoverable by Claude Code, so surface it by linking that subfolder up into the skills directory:
 
-- Locate this running skill's folder (the `my-second-brain` skill dir; via npx install it is `~/.claude/skills/my-second-brain/`). Its `pod-maker/` subfolder is the payload.
-- macOS / Linux: `cp -R "<my-second-brain-skill-dir>/pod-maker" ~/.claude/skills/pod-maker` (create `~/.claude/skills/` if missing; if a `pod-maker` entry already exists, ask before replacing it).
-- Windows: copy the folder the same way; the canonical copy is the payload one, so re-copy after any skill update.
+- Locate this running skill's folder (the `my-second-brain` skill dir; via npx install it is `~/.claude/skills/my-second-brain/`, resolved at runtime). Its `pod-maker/` subfolder is the payload.
+- macOS / Linux: `ln -s "<my-second-brain-skill-dir>/pod-maker" ~/.claude/skills/pod-maker` (create `~/.claude/skills/` if missing; if a `pod-maker` entry already exists, ask before touching it). Symlinking means an `npx` update of `my-second-brain` refreshes pod-maker automatically, and it matches the same symlink discipline the command-base skill uses.
+- Windows: symlinks often need elevation, so copy the folder instead (`pod-maker/` into `~/.claude/skills/pod-maker`) and tell them the canonical copy is the payload one, so re-copy after any skill update. Same fallback as the command-base Windows path.
 
-This is the shipping channel that always works (npx-independent copy). Record `pod_maker_installed:` in `bootstrap-progress.md`. One line to the owner, only if they ask what it is: "pod-maker is the tool that grows a busy function (marketing, sales...) into its own self-learning pod when it earns one; say 'forge a pod' or 'graduate my marketing' when the time comes."
+Record `pod_maker_installed:` in `bootstrap-progress.md` (`symlinked` on macOS / Linux, `copied` on the Windows fallback). One line to the owner, only if they ask what it is: "pod-maker is the tool that grows a busy function (marketing, sales...) into its own self-learning pod when it earns one; say 'forge a pod' or 'graduate my marketing' when the time comes."
 
 ## Step 7: Official Obsidian skills (optional, recommended)
 
