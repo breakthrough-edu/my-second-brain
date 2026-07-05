@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>collision audit</title>
+<style>
+  html,body{margin:0;background:#fff}
+  #frame{width:1920px;height:1080px;border:0;display:block}
+  #report{position:absolute;left:0;top:1090px;white-space:pre;font-family:monospace;font-size:10px}
+</style>
+</head>
+<body>
+<!-- Usage: audit.html?src=SLIDE_URL ; read the JSON report via audit_run.py -->
+<iframe id="frame"></iframe>
+<pre id="report">{"status":"pending"}</pre>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var src = params.get('src');
+  var MARGIN = 6;          // px inside the 1920x1080 edge => clipped
+  var W = 1920, H = 1080;
+  var frame = document.getElementById('frame');
+  var out = document.getElementById('report');
+
+  function write(obj){ out.textContent = JSON.stringify(obj, null, 0); }
+
+  function txt(el){
+    var s = '';
+    for (var i=0;i<el.childNodes.length;i++){
+      var n = el.childNodes[i];
+      if (n.nodeType === 3) s += n.nodeValue;
+    }
+    return s.replace(/\s+/g,' ').trim();
+  }
+  function hasDirectText(el){ return txt(el).length > 0; }
+
+  function rectOf(el, frameEl){
+    var r = el.getBoundingClientRect();
+    // coords relative to the iframe viewport == slide space (iframe at 0,0)
+    return { x:r.left, y:r.top, w:r.width, h:r.height,
+             r:r.left+r.width, b:r.top+r.height };
+  }
+  function overlap(a,b){
+    var ix = Math.min(a.r,b.r) - Math.max(a.x,b.x);
+    var iy = Math.min(a.b,b.b) - Math.max(a.y,b.y);
+    return { ix:ix, iy:iy };
+  }
+  function contains(a,b){ // a contains b
+    return a.x<=b.x+1 && a.y<=b.y+1 && a.r>=b.r-1 && a.b>=b.b-1;
+  }
+  function snip(s){ return s.length>34 ? s.slice(0,34)+'…' : s; }
+
+  function run(){
+    try {
+      var doc = frame.contentDocument;
+      var all = doc.querySelectorAll('body *');
+      var texts = [];
+      for (var i=0;i<all.length;i++){
+        var el = all[i];
+        var tag = el.tagName.toLowerCase();
+        if (tag==='script'||tag==='style'||tag==='defs') continue;
+        var isSvgText = (el.namespaceURI && el.namespaceURI.indexOf('svg')>=0 && tag==='text');
+        if (!isSvgText && !hasDirectText(el)) continue;
+        var t = txt(el);
+        if (!t) continue;
+        var rc = rectOf(el);
+        if (rc.w<1 || rc.h<1) continue;         // invisible
+        texts.push({ t:t, rc:rc, tag:tag, el:el });
+      }
+
+      // text vs text overlaps (real 2D intersection, ignore DOM nesting)
+      var overlaps = [];
+      for (var a=0;a<texts.length;a++){
+        for (var b=a+1;b<texts.length;b++){
+          // skip any ancestor/descendant pair (an <em>/<strong> inside its line)
+          if (texts[a].el.contains(texts[b].el) || texts[b].el.contains(texts[a].el)) continue;
+          var A=texts[a].rc, B=texts[b].rc;
+          if (contains(A,B) || contains(B,A)) continue;
+          var o = overlap(A,B);
+          if (o.ix>6 && o.iy>6){
+            overlaps.push({ a:snip(texts[a].t), b:snip(texts[b].t),
+              ix:Math.round(o.ix), iy:Math.round(o.iy),
+              ar:[Math.round(A.x),Math.round(A.y),Math.round(A.r),Math.round(A.b)],
+              br:[Math.round(B.x),Math.round(B.y),Math.round(B.r),Math.round(B.b)] });
+          }
+        }
+      }
+
+      // out of bounds (clipped at the slide edge)
+      var oob = [];
+      for (var c=0;c<texts.length;c++){
+        var R=texts[c].rc;
+        if (R.x < MARGIN || R.y < MARGIN || R.r > W-MARGIN || R.b > H-MARGIN){
+          oob.push({ t:snip(texts[c].t),
+            rc:[Math.round(R.x),Math.round(R.y),Math.round(R.r),Math.round(R.b)] });
+        }
+      }
+
+      // SVG tile overlaps: distinct big rects that collide
+      var doc2 = frame.contentDocument;
+      var rects = doc2.querySelectorAll('svg rect');
+      var tiles = [];
+      for (var r1=0;r1<rects.length;r1++){
+        var rr = rectOf(rects[r1]);
+        if (rr.w>=70 && rr.h>=40) tiles.push(rr);
+      }
+      var tileOverlaps = [];
+      for (var t1=0;t1<tiles.length;t1++){
+        for (var t2=t1+1;t2<tiles.length;t2++){
+          var T1=tiles[t1], T2=tiles[t2];
+          var cx1=(T1.x+T1.r)/2, cy1=(T1.y+T1.b)/2;
+          var cx2=(T2.x+T2.r)/2, cy2=(T2.y+T2.b)/2;
+          if (Math.abs(cx1-cx2)<20 && Math.abs(cy1-cy2)<20) continue; // same tile cluster
+          var o2 = overlap(T1,T2);
+          if (o2.ix>3 && o2.iy>3){
+            tileOverlaps.push({ ix:Math.round(o2.ix), iy:Math.round(o2.iy),
+              a:[Math.round(T1.x),Math.round(T1.y),Math.round(T1.r),Math.round(T1.b)],
+              b:[Math.round(T2.x),Math.round(T2.y),Math.round(T2.r),Math.round(T2.b)] });
+          }
+        }
+      }
+
+      // SVG viewBox overflow: any geometry drawn past its own <svg> box gets
+      // silently clipped (rects/text bottoms beyond viewBox). Catch it.
+      var svgClip = [];
+      var svgs = frame.contentDocument.querySelectorAll('svg');
+      for (var si=0; si<svgs.length; si++){
+        var sv = rectOf(svgs[si]);
+        var kids = svgs[si].querySelectorAll('rect,text,line,circle,path,image');
+        for (var ki=0; ki<kids.length; ki++){
+          var kr = rectOf(kids[ki]);
+          if (kr.w<1 && kr.h<1) continue;
+          var over = 0;
+          if (kr.x < sv.x-2) over=1; if (kr.y < sv.y-2) over=1;
+          if (kr.r > sv.r+2) over=1; if (kr.b > sv.b+2) over=1;
+          if (over){
+            var lbl = (kids[ki].tagName.toLowerCase()==='text') ? snip(txt(kids[ki])) : kids[ki].tagName.toLowerCase();
+            svgClip.push({ el:lbl,
+              rc:[Math.round(kr.x),Math.round(kr.y),Math.round(kr.r),Math.round(kr.b)],
+              svg:[Math.round(sv.x),Math.round(sv.y),Math.round(sv.r),Math.round(sv.b)] });
+          }
+        }
+      }
+
+      write({ status:'ok', src:src, textCount:texts.length,
+        overlaps:overlaps, oob:oob, tileOverlaps:tileOverlaps, svgClip:svgClip,
+        clean:(overlaps.length===0 && oob.length===0 && tileOverlaps.length===0 && svgClip.length===0) });
+    } catch(e){
+      write({ status:'error', src:src, error:String(e) });
+    }
+  }
+
+  frame.addEventListener('load', function(){
+    var fd = frame.contentDocument;
+    var go = function(){ setTimeout(run, 1400); };   // settle after fonts
+    if (fd && fd.fonts && fd.fonts.ready) { fd.fonts.ready.then(go); setTimeout(go, 4000); }
+    else go();
+  });
+  if (!src){ write({status:'error', error:'no ?src='}); }
+  else { frame.src = src; }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>16 · Setup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .su { display: grid; grid-template-rows: auto auto auto 1fr; height: 100%; gap: 30px; }
+  .head { margin-top: 44px; }
+  .head .kicker { margin-bottom: 16px; }
+  .su-title { font-family: var(--font-display-cn); font-weight: 500; font-size: var(--fs-title); line-height: 1.12; letter-spacing: var(--track-tight); color: var(--ink); }
+  .su-title em { font-style: normal; color: var(--rust); }
+
+  /* horizontal step rail */
+  .rail {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    align-items: stretch;
+    gap: 0;
+    max-width: 1680px; margin: 0 auto; width: 100%;
+  }
+  .step {
+    position: relative;
+    display: flex; flex-direction: column; gap: 12px;
+    padding: 22px 22px 22px 0;
+  }
+  /* connector arrow between steps */
+  .step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 33px;
+    right: 4px;
+    width: 12px; height: 12px;
+    border-top: 1.5px solid var(--rule-strong);
+    border-right: 1.5px solid var(--rule-strong);
+    transform: rotate(45deg);
+  }
+  .s-num {
+    font-family: var(--font-mono); font-size: 15px; font-weight: 500;
+    letter-spacing: 2px; color: var(--ink-faint);
+  }
+  .step--last .s-num { color: var(--rust); }
+  .s-cn {
+    font-family: var(--font-display-cn); font-weight: 600; font-size: 25px;
+    line-height: 1.18; color: var(--ink); letter-spacing: var(--track-tight);
+  }
+  .step--last .s-cn { color: var(--rust); }
+  .s-en {
+    font-family: var(--font-display-en); font-style: italic; font-size: 16px;
+    color: var(--ink-faint); line-height: 1.3;
+  }
+
+  /* answers block: the 3 industry toggles + 4 business questions */
+  .answers {
+    display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px;
+    max-width: 1680px; margin: 0 auto; width: 100%;
+    align-items: stretch;
+  }
+  .panel {
+    border: 1px solid var(--rule-strong); background: var(--bg);
+    padding: 26px 32px 24px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .p-label {
+    font-family: var(--font-mono); font-size: var(--fs-micro);
+    letter-spacing: var(--track-loose); text-transform: uppercase;
+    color: var(--ink-muted); display: flex; align-items: center; gap: 14px;
+  }
+  .p-label .dash { width: 26px; height: 1px; background: var(--rule-strong); display: inline-block; }
+
+  .toggles { display: flex; flex-wrap: wrap; gap: 14px; }
+  .toggle {
+    display: inline-flex; align-items: center; gap: 12px;
+    border: 1px dashed var(--rule-strong); background: var(--bg-soft);
+    padding: 12px 20px;
+    font-family: var(--font-body-cn); font-size: 24px; color: var(--ink);
+  }
+  .toggle .q {
+    font-family: var(--font-mono); font-size: 15px; letter-spacing: 1px;
+    color: var(--ink-faint); text-transform: uppercase;
+  }
+
+  .qlist { display: flex; flex-direction: column; gap: 10px; }
+  .qrow {
+    display: grid; grid-template-columns: 30px 1fr; align-items: baseline; gap: 14px;
+    font-family: var(--font-body-cn); font-size: 23px; color: var(--ink); line-height: 1.3;
+  }
+  .qrow .k { font-family: var(--font-mono); font-size: 15px; color: var(--ink-faint); letter-spacing: 1px; }
+
+  /* payoff callout */
+  .payoff {
+    align-self: end;
+    display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 30px;
+    border: 2px solid var(--rust); background: var(--bg-soft);
+    padding: 26px 40px;
+    max-width: 1680px; margin: 0 auto 0; width: 100%;
+  }
+  .payoff .badge {
+    font-family: var(--font-mono); font-size: var(--fs-micro);
+    letter-spacing: var(--track-loose); text-transform: uppercase;
+    color: var(--rust); writing-mode: horizontal-tb; white-space: nowrap;
+  }
+  .payoff .rule-v { width: 1px; align-self: stretch; background: var(--rust); }
+  .payoff .msg {
+    font-family: var(--font-display-cn); font-weight: 500; font-size: 30px;
+    line-height: 1.4; color: var(--ink); letter-spacing: var(--track-tight);
+  }
+  .payoff .msg strong { color: var(--rust); font-weight: 600; }
+  .payoff .msg .en {
+    display: block; margin-top: 8px;
+    font-family: var(--font-display-en); font-style: italic; font-weight: 400;
+    font-size: 20px; color: var(--ink-muted); letter-spacing: 0.01em;
+  }
+</style>
+</head>
+<body>
+
+<div class="slide su">
+
+  <div class="slide-meta">
+    <span>16 · Setup · 结束在星图</span>
+    <span class="counter">16 / 24</span>
+  </div>
+
+  <div class="head">
+    <div class="kicker"><span class="dash"></span><span>Mode 01 · Setup</span></div>
+    <h2 class="su-title">十分钟，从<em>空机器</em>到一张星图</h2>
+  </div>
+
+  <div class="rail">
+    <div class="step">
+      <div class="s-num">01</div>
+      <div class="s-cn">选语言</div>
+      <div class="s-en">Pick language</div>
+    </div>
+    <div class="step">
+      <div class="s-num">02</div>
+      <div class="s-cn">装 Obsidian</div>
+      <div class="s-en">Install</div>
+    </div>
+    <div class="step">
+      <div class="s-num">03</div>
+      <div class="s-cn">选 vault 位置</div>
+      <div class="s-en">Choose vault</div>
+    </div>
+    <div class="step">
+      <div class="s-num">04</div>
+      <div class="s-cn">答 3 开关<br>+ 4 问题</div>
+      <div class="s-en">Answer prompts</div>
+    </div>
+    <div class="step">
+      <div class="s-num">05</div>
+      <div class="s-cn">一次性 scaffold</div>
+      <div class="s-en">Folders · MOC · Home · 模板</div>
+    </div>
+    <div class="step">
+      <div class="s-num">06</div>
+      <div class="s-cn">生成指挥中心 skill</div>
+      <div class="s-en">Command Base</div>
+    </div>
+    <div class="step step--last">
+      <div class="s-num">07</div>
+      <div class="s-cn">打开 graph view</div>
+      <div class="s-en">See the constellation</div>
+    </div>
+  </div>
+
+  <div class="answers">
+    <div class="panel">
+      <div class="p-label"><span class="dash"></span>3 个行业开关 · Industry toggles</div>
+      <div class="toggles">
+        <span class="toggle"><span class="q">Q1</span>有门店？</span>
+        <span class="toggle"><span class="q">Q2</span>有设备？</span>
+        <span class="toggle"><span class="q">Q3</span>进口货？</span>
+      </div>
+      <div class="p-label" style="margin-top:6px"><span class="dash"></span>Scaffold 生成什么</div>
+      <div class="qlist">
+        <div class="qrow"><span class="k">out</span><span>文件夹 / MOC / Home / 模板 / 仪表盘 / CLAUDE.md，一次性铺好</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="p-label"><span class="dash"></span>4 个生意问题 · Business</div>
+      <div class="qlist">
+        <div class="qrow"><span class="k">01</span><span>你做的是什么生意</span></div>
+        <div class="qrow"><span class="k">02</span><span>谁是你的客户</span></div>
+        <div class="qrow"><span class="k">03</span><span>钱怎么进来</span></div>
+        <div class="qrow"><span class="k">04</span><span>你亲手管着哪几摊</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="payoff">
+    <span class="badge">Payoff</span>
+    <span class="rule-v"></span>
+    <div class="msg">
+      那就是你的第二大脑，<strong>搭好了一半</strong>。结构齐了，记忆还没搬进来。
+      <span class="en">Ends on the graph view: your half-built brain, as a constellation.</span>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>23 · Install</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .ins { display: grid; grid-template-rows: auto 1fr auto; height: 100%; gap: 34px; }
+  .head { margin-top: 46px; }
+  .head .kicker { margin-bottom: 18px; }
+  .ins-title { font-family: var(--font-display-cn); font-weight: 500; font-size: var(--fs-title); line-height: 1.14; letter-spacing: var(--track-tight); color: var(--ink); }
+  .ins-title em { font-style: normal; color: var(--rust); }
+
+  .body {
+    align-self: center; width: 100%; max-width: 1680px; margin: 0 auto;
+    display: grid; grid-template-columns: 1.28fr 1fr; gap: 56px; align-items: stretch;
+  }
+
+  /* left: the code + spoken prompt */
+  .run { display: flex; flex-direction: column; gap: 26px; }
+
+  .code {
+    border: 1px solid var(--rust);
+    background: var(--bg-soft);
+    padding: 34px 40px 32px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .code-label {
+    font-family: var(--font-mono); font-size: var(--fs-micro);
+    letter-spacing: var(--track-loose); text-transform: uppercase;
+    color: var(--ink-muted); display: flex; align-items: center; gap: 14px;
+  }
+  .code-label .dash { width: 26px; height: 1px; background: var(--rule-strong); display: inline-block; }
+  .code-cmd {
+    font-family: var(--font-mono); font-size: 34px; font-weight: 500;
+    line-height: 1.25; color: var(--ink); letter-spacing: 0.005em;
+    display: flex; align-items: baseline; gap: 18px;
+  }
+  .code-cmd .caret { color: var(--rust); font-weight: 500; }
+
+  .prompt {
+    border: 1px dashed var(--rule-strong);
+    background: var(--bg);
+    padding: 26px 34px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .prompt-lead {
+    font-family: var(--font-body-cn); font-size: 22px; color: var(--ink-muted); line-height: 1.4;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .prompt-lead .arrow { color: var(--rust); font-family: var(--font-mono); font-size: 20px; }
+  .prompt-say {
+    font-family: var(--font-display-en); font-style: italic; font-weight: 400;
+    font-size: 38px; line-height: 1.2; color: var(--ink);
+  }
+  .prompt-say .q { color: var(--ink-faint); font-style: normal; }
+
+  /* right: requirements */
+  .reqs {
+    border: 1px solid var(--rule-strong); background: var(--bg);
+    padding: 32px 38px 30px; display: flex; flex-direction: column; gap: 4px;
+  }
+  .reqs-label {
+    font-family: var(--font-mono); font-size: var(--fs-micro);
+    letter-spacing: var(--track-loose); text-transform: uppercase;
+    color: var(--rust); display: flex; align-items: center; gap: 14px;
+    margin-bottom: 18px;
+  }
+  .reqs-label .dash { width: 26px; height: 1px; background: var(--rust); display: inline-block; }
+  .req {
+    display: grid; grid-template-columns: 172px 1fr; align-items: baseline; gap: 20px;
+    padding: 16px 0; border-top: 1px solid var(--rule);
+  }
+  .req:first-of-type { border-top: none; }
+  .req .rk {
+    font-family: var(--font-display-cn); font-weight: 600; font-size: 25px;
+    color: var(--ink); line-height: 1.2;
+  }
+  .req .rk .en { font-family: var(--font-display-en); font-style: italic; font-weight: 400; font-size: 17px; color: var(--ink-faint); display: block; margin-top: 2px; }
+  .req .rv {
+    font-family: var(--font-body-cn); font-size: 21px; color: var(--ink-muted); line-height: 1.4;
+  }
+  .req .rv .rust { color: var(--rust); }
+
+  .ins-caption {
+    display: flex; align-items: center; gap: 18px;
+    font-family: var(--font-body-cn); font-size: var(--fs-caption); color: var(--ink-muted);
+    padding-top: 24px; border-top: 1px solid var(--rule);
+  }
+  .ins-caption .lic { font-family: var(--font-mono); font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
+  .ins-caption .hr { display: inline-block; width: 30px; height: 1px; background: var(--rule-strong); vertical-align: middle; }
+  .ins-caption em { font-style: italic; font-family: var(--font-display-en); color: var(--rust); }
+</style>
+</head>
+<body>
+
+<div class="slide ins">
+
+  <div class="slide-meta">
+    <span>23 · 开始 · Install</span>
+    <span class="counter">23 / 24</span>
+  </div>
+
+  <div class="head">
+    <div class="kicker"><span class="dash"></span><span>Get Started · Install</span></div>
+    <h2 class="ins-title">一行命令，<em>开始搭</em></h2>
+  </div>
+
+  <div class="body">
+
+    <div class="run">
+      <div class="code">
+        <div class="code-label"><span class="dash"></span>在终端里跑一次</div>
+        <div class="code-cmd">
+          <span class="caret">$</span>
+          <span>npx skills add breakthrough-edu/my-second-brain</span>
+        </div>
+      </div>
+
+      <div class="prompt">
+        <div class="prompt-lead"><span class="arrow">&rarr;</span>然后在 Claude Code 里，直接说</div>
+        <div class="prompt-say"><span class="q">&ldquo;</span>set up my second brain<span class="q">&rdquo;</span></div>
+      </div>
+    </div>
+
+    <div class="reqs">
+      <div class="reqs-label"><span class="dash"></span>你需要什么</div>
+
+      <div class="req">
+        <div class="rk">Claude Code<span class="en">The host</span></div>
+        <div class="rv">已经在用就行</div>
+      </div>
+
+      <div class="req">
+        <div class="rk">Obsidian<span class="en">The vault</span></div>
+        <div class="rv">免费，<span class="rust">可代装</span>；开启 Bases 插件</div>
+      </div>
+
+      <div class="req">
+        <div class="rk">系统<span class="en">Platform</span></div>
+        <div class="rv">macOS · Windows · Linux</div>
+      </div>
+
+      <div class="req">
+        <div class="rk">语言<span class="en">Language</span></div>
+        <div class="rv">English 或 中文，setup 时选</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="ins-caption">
+    <span class="lic">MIT License</span>
+    <span class="hr"></span>
+    <span>Built and maintained by <em>Breakthrough EDU</em>。开源，随便改，改成你自己的。</span>
+  </div>
+
+</div>
+
+</body>
+</html>

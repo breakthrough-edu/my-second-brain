@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>03 · What's Scarce</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .sc { display: grid; grid-template-rows: auto 1fr auto; height: 100%; gap: 40px; }
+  .head { margin-top: 46px; }
+  .head .kicker { margin-bottom: 18px; }
+  .sc-title {
+    font-family: var(--font-display-cn); font-weight: 500;
+    font-size: var(--fs-title); line-height: 1.14;
+    letter-spacing: var(--track-tight); color: var(--ink);
+  }
+  .sc-title em { font-style: normal; color: var(--rust); }
+
+  /* the hinge: two balanced rows, good over bad */
+  .hinge {
+    align-self: center; display: flex; flex-direction: column; gap: 34px;
+    width: 100%; max-width: 1560px; margin: 0 auto;
+  }
+
+  .row { display: grid; grid-template-columns: 116px 1fr; align-items: center; gap: 48px; }
+
+  .tag {
+    font-family: var(--font-mono); font-size: var(--fs-micro);
+    letter-spacing: 0.14em; text-transform: uppercase; line-height: 1.5;
+  }
+  .tag--good { color: var(--rust); }
+  .tag--bad  { color: var(--ink-faint); }
+
+  .line {
+    font-family: var(--font-display-cn); font-weight: 400;
+    line-height: 1.32; letter-spacing: var(--track-tight);
+  }
+  .line--good { font-size: 42px; color: var(--ink); }
+  .line--bad  { font-size: 38px; color: var(--ink-faint); }
+
+  /* rust arrow / verb only on the good side = single focal accent */
+  .arrow { font-family: var(--font-body-cn); font-weight: 500; color: var(--rust); }
+  .line--good b { font-weight: 500; color: var(--ink); }
+  .line--bad  s { text-decoration: none; }
+
+  .divider {
+    display: flex; align-items: center; gap: 22px;
+    font-family: var(--font-mono); font-size: 15px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ink-faint);
+    padding-left: 164px;
+  }
+  .divider .hr { display: inline-block; width: 30px; height: 1px; background: var(--rule-strong); vertical-align: middle; }
+
+  .sc-caption {
+    font-family: var(--font-body-cn);
+    font-size: var(--fs-caption); line-height: 1.55;
+    color: var(--ink-muted); max-width: 1560px;
+    padding-top: 24px; border-top: 1px solid var(--rule);
+  }
+  .sc-caption strong { color: var(--ink); font-weight: 500; }
+  .sc-caption em { font-style: italic; font-family: var(--font-display-en); color: var(--rust); }
+</style>
+</head>
+<body>
+
+<div class="slide sc">
+
+  <div class="slide-meta">
+    <span>03 · 稀缺的是数据有个家</span>
+    <span class="counter">03 / 24</span>
+  </div>
+
+  <div class="head">
+    <div class="kicker"><span class="dash"></span><span>The Thesis · What's Scarce</span></div>
+    <h2 class="sc-title">稀缺的，是你的数据<em>有一个家</em></h2>
+  </div>
+
+  <div class="hinge">
+
+    <div class="row">
+      <div class="tag tag--good">有家<br>A home</div>
+      <div class="line line--good">
+        整个生意<b>住进一个结构化的 vault</b>
+        <span class="arrow">，于是</span>
+        任何 AI 都能回答关于你自己运营的真问题。
+      </div>
+    </div>
+
+    <div class="divider">
+      <span class="hr"></span><span>反过来</span><span class="hr"></span>
+    </div>
+
+    <div class="row">
+      <div class="tag tag--bad">没家<br>No home</div>
+      <div class="line line--bad">
+        散在 WhatsApp、一叠收据、某个员工的脑子里，
+        <s>再聪明的模型也帮不了你。</s>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="sc-caption">
+    差别不在模型多聪明，而在你的数据<strong>有没有一个固定的家</strong>。
+    <em>Models keep changing. Your data having a home does not.</em>
+  </p>
+
+</div>
+
+</body>
+</html>

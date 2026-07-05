@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>04 · Where It Lives Today</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .pn { display: grid; grid-template-rows: auto 1fr auto; height: 100%; gap: 40px; }
+  .head { margin-top: 46px; }
+  .head .kicker { margin-bottom: 18px; }
+  .pn-title { font-family: var(--font-display-cn); font-weight: 500; font-size: var(--fs-title); line-height: 1.14; letter-spacing: var(--track-tight); color: var(--ink); }
+  .pn-title em { font-style: normal; color: var(--rust); }
+
+  .mid { align-self: center; width: 100%; max-width: 1680px; margin: 0 auto; display: flex; flex-direction: column; gap: 44px; }
+
+  /* scattered leaky cards */
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 30px; }
+  .card {
+    border: 1px dashed var(--rule-strong);
+    background: var(--bg-soft);
+    padding: 34px 30px 30px;
+    display: flex; flex-direction: column; gap: 16px;
+    min-height: 236px;
+    opacity: 0.86;
+  }
+  .card .k {
+    font-family: var(--font-mono); font-size: var(--fs-micro);
+    letter-spacing: var(--track-loose); color: var(--ink-faint);
+  }
+  .card .cn {
+    font-family: var(--font-display-cn); font-weight: 600; font-size: 32px;
+    line-height: 1.22; color: var(--ink-muted); letter-spacing: var(--track-tight);
+  }
+  .card .en {
+    margin-top: auto;
+    font-family: var(--font-display-en); font-style: italic; font-size: 20px;
+    color: var(--ink-faint);
+  }
+  .card .drip {
+    position: absolute;
+  }
+
+  /* punch line */
+  .punch {
+    display: flex; align-items: center; gap: 26px;
+    border-top: 2px solid var(--rust);
+    padding-top: 30px;
+  }
+  .punch .line {
+    font-family: var(--font-display-cn); font-weight: 600;
+    font-size: 46px; line-height: 1.2; color: var(--ink);
+    letter-spacing: var(--track-tight);
+  }
+  .punch .line em { font-style: normal; color: var(--rust); }
+  .punch .side {
+    margin-left: auto; text-align: right;
+    font-family: var(--font-display-en); font-style: italic;
+    font-size: 22px; color: var(--ink-muted); line-height: 1.4;
+    max-width: 460px;
+  }
+
+  .pn-caption {
+    font-family: var(--font-body-cn); font-size: var(--fs-caption);
+    line-height: 1.55; color: var(--ink-muted);
+    max-width: 1560px; padding-top: 24px; border-top: 1px solid var(--rule);
+  }
+  .pn-caption strong { color: var(--ink); font-weight: 500; }
+  .pn-caption em { font-style: italic; font-family: var(--font-display-en); color: var(--rust); }
+</style>
+</head>
+<body>
+
+<div class="slide pn">
+
+  <div class="slide-meta">
+    <span>04 · 你的生意现在住在哪</span>
+    <span class="counter">04 / 24</span>
+  </div>
+
+  <div class="head">
+    <div class="kicker"><span class="dash"></span><span>The Problem · Where It Lives Today</span></div>
+    <h2 class="pn-title">现在，你的生意<em>住在哪里</em>？</h2>
+  </div>
+
+  <div class="mid">
+
+    <div class="grid">
+      <div class="card">
+        <div class="k">01</div>
+        <div class="cn">WhatsApp<br>群聊里</div>
+        <div class="en">chat threads</div>
+      </div>
+      <div class="card">
+        <div class="k">02</div>
+        <div class="cn">一叠<br>收据里</div>
+        <div class="en">a pile of receipts</div>
+      </div>
+      <div class="card">
+        <div class="k">03</div>
+        <div class="cn">到处都是的<br>Excel 里</div>
+        <div class="en">spreadsheets everywhere</div>
+      </div>
+      <div class="card">
+        <div class="k">04</div>
+        <div class="cn">某个员工<br>的脑子里</div>
+        <div class="en">one employee's head</div>
+      </div>
+      <div class="card">
+        <div class="k">05</div>
+        <div class="cn">你自己<br>的记忆里</div>
+        <div class="en">your own memory</div>
+      </div>
+    </div>
+
+    <div class="punch">
+      <div class="line">没有一个地方，是 <em>AI 读得懂</em>的。</div>
+      <div class="side">Scattered, faint, and none of it machine-readable.</div>
+    </div>
+
+  </div>
+
+  <p class="pn-caption">
+    知识散在五个地方，等于<strong>没有一个地方</strong>。你请来的模型再聪明，也接不住一句「关于我自己」的真问题。
+    <em>The vault fixes exactly this.</em>
+  </p>
+
+</div>
+
+</body>
+</html>

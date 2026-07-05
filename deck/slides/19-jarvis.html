@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>19 · Create-My-Jarvis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .jv { display: grid; grid-template-rows: auto auto 1fr auto; height: 100%; gap: 22px; }
+  .head { margin-top: 40px; }
+  .head .kicker { margin-bottom: 14px; }
+  .jv-title { font-family: var(--font-display-cn); font-weight: 500; font-size: var(--fs-title); line-height: 1.1; letter-spacing: var(--track-tight); color: var(--ink); }
+  .jv-title em { font-style: normal; color: var(--rust); }
+
+  /* two-interview strip */
+  .interviews {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    max-width: 1680px; margin: 0 auto; width: 100%;
+  }
+  .iv {
+    border: 1px solid var(--rule-strong); background: var(--bg);
+    padding: 18px 26px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 22px;
+  }
+  .iv .num { font-family: var(--font-mono); font-size: 30px; font-weight: 500; color: var(--rule-strong); letter-spacing: 1px; }
+  .iv .txt { display: flex; flex-direction: column; gap: 4px; }
+  .iv .nm { font-family: var(--font-display-cn); font-weight: 600; font-size: 27px; color: var(--ink); line-height: 1.1; }
+  .iv .nm .en { font-family: var(--font-display-en); font-style: italic; font-weight: 400; font-size: 18px; color: var(--ink-muted); margin-left: 8px; }
+  .iv .ds { font-family: var(--font-body-cn); font-size: 19px; color: var(--ink-muted); line-height: 1.35; }
+  .iv .ds b { color: var(--rust); font-weight: 500; }
+
+  /* before / after greeting cards */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-self: center; width: 100%; max-width: 1680px; margin: 0 auto; }
+  .card { border: 1px solid var(--rule-strong); background: var(--bg); padding: 26px 32px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .card--yours { border: 1px solid var(--rust); background: var(--bg-soft); }
+  .card-label { font-family: var(--font-mono); font-size: var(--fs-micro); letter-spacing: var(--track-loose); text-transform: uppercase; color: var(--ink-faint); display: flex; align-items: center; gap: 12px; }
+  .card--yours .card-label { color: var(--rust); }
+  .card-label .dash { width: 24px; height: 1px; background: currentColor; display: inline-block; }
+
+  .quote { font-family: var(--font-display-cn); font-weight: 400; font-size: 30px; line-height: 1.42; color: var(--ink-faint); }
+  .card--yours .quote { color: var(--ink); font-weight: 500; }
+  .card--yours .quote b { color: var(--rust); font-weight: 600; }
+  .quote .rule-line { font-family: var(--font-body-cn); font-size: 24px; color: var(--rust); font-weight: 500; display: block; margin-top: 8px; }
+  .card-foot { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--rule); font-family: var(--font-body-cn); font-size: 18px; color: var(--ink-muted); }
+  .card--yours .card-foot { color: var(--rust); }
+
+  /* genericness gate */
+  .gate {
+    max-width: 1680px; margin: 0 auto; width: 100%;
+    border-top: 2px solid var(--rust); padding-top: 18px;
+    display: grid; grid-template-columns: 1.55fr 1fr; gap: 40px; align-items: start;
+  }
+  .gate-head { font-family: var(--font-mono); font-size: var(--fs-micro); letter-spacing: var(--track-loose); text-transform: uppercase; color: var(--rust); margin-bottom: 10px; }
+  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 34px; }
+  .chk { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: baseline; font-family: var(--font-body-cn); font-size: 19px; color: var(--ink); line-height: 1.32; }
+  .chk .mk { color: var(--rust); font-family: var(--font-mono); font-size: 15px; }
+  .chk b { color: var(--ink); font-weight: 600; }
+
+  .calib { display: flex; flex-direction: column; gap: 8px; }
+  .cal { font-family: var(--font-body-cn); font-size: 18px; line-height: 1.35; display: grid; grid-template-columns: 62px 1fr; gap: 12px; align-items: baseline; }
+  .cal .tag { font-family: var(--font-mono); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+  .cal.fail .tag { color: var(--ink-faint); }
+  .cal.pass .tag { color: var(--rust); }
+  .cal.fail .q { color: var(--ink-faint); }
+  .cal.pass .q { color: var(--ink); }
+
+  .jv-caption {
+    font-family: var(--font-body-cn); font-size: var(--fs-caption); line-height: 1.55;
+    color: var(--ink-muted); max-width: 1560px; padding-top: 18px; border-top: 1px solid var(--rule);
+  }
+  .jv-caption strong { color: var(--ink); font-weight: 500; }
+  .jv-caption em { font-style: italic; font-family: var(--font-display-en); color: var(--rust); }
+</style>
+</head>
+<body>
+
+<div class="slide jv">
+
+  <div class="slide-meta">
+    <span>19 · Create-My-Jarvis</span>
+    <span class="counter">19 / 24</span>
+  </div>
+
+  <div class="head">
+    <div class="kicker"><span class="dash"></span><span>Mode 04 · Create-My-Jarvis</span></div>
+    <h2 class="jv-title">两场访谈，让 AI <em>不再像自动贩卖机</em></h2>
+  </div>
+
+  <div class="interviews">
+    <div class="iv">
+      <div class="num">10</div>
+      <div class="txt">
+        <div class="nm">Profile 访谈<span class="en">How you run</span></div>
+        <div class="ds">10 问，问你<b>实际怎么运作</b>。AI 每早读它，才知道今天的你在忙什么。</div>
+      </div>
+    </div>
+    <div class="iv">
+      <div class="num">8</div>
+      <div class="txt">
+        <div class="nm">Soul 访谈<span class="en">How to be with you</span></div>
+        <div class="ds">8 拍，问 AI <b>该怎么陪你</b>。语气、边界、它是谁，都在这里定。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-label"><span class="dash"></span>Generic · 谁都一样</div>
+      <div class="quote">「Good question! How can I help you today?」</div>
+      <div class="card-foot">礼貌、空、忘了你是谁</div>
+    </div>
+    <div class="card card--yours">
+      <div class="card-label"><span class="dash"></span>Yours · 有名字，有规矩</div>
+      <div class="quote">
+        「早，我是 <b>Neo</b>。今天先看一件事：
+        <span class="rule-line">先说风险，再说方案。」</span>
+      </div>
+      <div class="card-foot">用它自己选的名字，带一条能被检验的语气规则</div>
+    </div>
+  </div>
+
+  <div class="gate">
+    <div>
+      <div class="gate-head">The Genericness Gate · 硬门，过不了就重写</div>
+      <div class="checks">
+        <div class="chk"><span class="mk">01</span><span><b>名字</b>有理由，不是随手取的</span></div>
+        <div class="chk"><span class="mk">02</span><span>「在乎什么」说到<b>真实生意与利害</b></span></div>
+        <div class="chk"><span class="mk">03</span><span>至少 3 条语气规则，<b>每条一句话能被检验</b></span></div>
+        <div class="chk"><span class="mk">04</span><span>「我不是什么」用<b>你自己的话</b>写</span></div>
+      </div>
+    </div>
+    <div class="calib">
+      <div class="gate-head">Calibration</div>
+      <div class="cal fail"><span class="tag">Fail</span><span class="q">「清晰、简洁。」</span></div>
+      <div class="cal pass"><span class="tag">Pass</span><span class="q">「别用『好问题』开场；我用中文你就用中文；先说风险再说方案。」</span></div>
+    </div>
+  </div>
+
+  <p class="jv-caption">
+    这两场访谈是你 AI 的<strong>灵魂来源</strong>：Profile 说清你怎么运作，Soul 说清它怎么陪你。
+    <em>A generic soul only rebuilds the AI you already had.</em>
+  </p>
+
+</div>
+
+</body>
+</html>

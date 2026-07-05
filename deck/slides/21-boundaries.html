@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>21 · Boundaries</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .bd { display: grid; grid-template-rows: auto 1fr auto; height: 100%; gap: 32px; }
+  .head { margin-top: 46px; }
+  .head .kicker { margin-bottom: 18px; }
+  .bd-title { font-family: var(--font-display-cn); font-weight: 500; font-size: var(--fs-title); line-height: 1.14; letter-spacing: var(--track-tight); color: var(--ink); }
+  .bd-title em { font-style: normal; color: var(--rust); }
+
+  .grid {
+    align-self: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 32px;
+    width: 100%;
+    max-width: 1680px;
+    margin: 0 auto;
+  }
+
+  .card {
+    border: 1px solid var(--rule-strong);
+    background: var(--bg);
+    padding: 38px 44px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+  }
+  .not-tag {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rust);
+    border: 1px solid var(--rust);
+    background: var(--rust-soft);
+    padding: 5px 13px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .card-name {
+    font-family: var(--font-display-cn);
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 1.05;
+    letter-spacing: var(--track-tight);
+    color: var(--ink);
+  }
+  .card-name .en {
+    font-family: var(--font-display-en);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    color: var(--ink-faint);
+    margin-left: 12px;
+  }
+
+  .card-body {
+    font-family: var(--font-body-cn);
+    font-size: 25px;
+    line-height: 1.5;
+    color: var(--ink-muted);
+  }
+  .card-body strong { color: var(--ink); font-weight: 500; }
+  .card-body .div {
+    display: inline-block; width: 26px; height: 1px;
+    background: var(--rule-strong); vertical-align: middle;
+    margin: 0 8px;
+  }
+
+  .bd-caption {
+    font-family: var(--font-body-cn);
+    font-size: var(--fs-caption);
+    line-height: 1.55;
+    color: var(--ink-muted);
+    max-width: 1560px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+  .bd-caption strong { color: var(--ink); font-weight: 500; }
+  .bd-caption em { font-style: italic; font-family: var(--font-display-en); color: var(--rust); }
+</style>
+</head>
+<body>
+
+<div class="slide bd">
+
+  <div class="slide-meta">
+    <span>21 · 诚实的边界</span>
+    <span class="counter">21 / 24</span>
+  </div>
+
+  <div class="head">
+    <div class="kicker"><span class="dash"></span><span>The Honest Gate · What It Is Not</span></div>
+    <h2 class="bd-title">它<em>不是</em>什么</h2>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-top">
+        <span class="not-tag">Not</span>
+        <span class="card-name">多人 wiki<span class="en">Team Wiki</span></span>
+      </div>
+      <div class="card-body">
+        单一 <strong>owner</strong>：你 + 你的 AI。Obsidian 没有权限层，员工要用，就导出那一块给他。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="not-tag">Not</span>
+        <span class="card-name">ERP / CRM<span class="en">System of Record</span></span>
+      </div>
+      <div class="card-body">
+        高频交易流水，留在为它们建的系统里。vault 只存 <strong>pointer</strong>、例外、月度快照。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="not-tag">Not</span>
+        <span class="card-name">读心分析师<span class="en">Mind Reader</span></span>
+      </div>
+      <div class="card-body">
+        早期数据薄，它只给<strong>观察</strong>，不给定论。而且，它会主动承认自己看得还不够。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="not-tag">Not</span>
+        <span class="card-name">课程 / 漏斗<span class="en">Course · Funnel</span></span>
+      </div>
+      <div class="card-body">
+        它是一个<strong>长期活着的工具</strong>，跟着你一起长。它什么都不卖。
+      </div>
+    </div>
+
+  </div>
+
+  <p class="bd-caption">
+    把边界说清楚，是这套系统<strong>值得信任</strong>的原因。
+    <em>Honest about what it isn't.</em>
+  </p>
+
+</div>
+
+</body>
+</html>

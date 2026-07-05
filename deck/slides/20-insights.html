@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>20 · Insights</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .ins { display: grid; grid-template-rows: auto 1fr auto; height: 100%; gap: 40px; }
+  .head { margin-top: 46px; }
+  .head .kicker { margin-bottom: 18px; }
+  .ins-title { font-family: var(--font-display-cn); font-weight: 500; font-size: var(--fs-title); line-height: 1.14; letter-spacing: var(--track-tight); color: var(--ink); }
+  .ins-title em { font-style: normal; color: var(--rust); }
+
+  .pair {
+    align-self: center;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 56px;
+    width: 100%; max-width: 1600px; margin: 0 auto;
+  }
+
+  .card {
+    display: flex; flex-direction: column; gap: 26px;
+    padding: 4px 4px 4px 40px;
+  }
+  .card--obs { border-left: 4px solid var(--rust); }
+  .card--dx  { border-left: 4px solid var(--rule); }
+
+  .c-label {
+    font-family: var(--font-mono); font-size: var(--fs-micro);
+    letter-spacing: var(--track-loose); text-transform: uppercase;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .card--obs .c-label { color: var(--rust); }
+  .card--dx  .c-label { color: var(--ink-faint); }
+  .c-label .dash { width: 26px; height: 1px; display: inline-block; }
+  .card--obs .c-label .dash { background: var(--rust); }
+  .card--dx  .c-label .dash { background: var(--ink-faint); }
+
+  .c-lead {
+    font-family: var(--font-body-cn); font-size: var(--fs-lead);
+    line-height: 1.4; color: var(--ink); font-weight: 400;
+  }
+  .card--dx .c-lead { color: var(--ink-faint); }
+
+  .c-quote {
+    font-family: var(--font-display-cn); font-weight: 500;
+    font-size: 40px; line-height: 1.28; letter-spacing: var(--track-tight);
+    color: var(--ink);
+  }
+  .c-quote .rust { color: var(--rust); font-style: normal; }
+  .card--dx .c-quote { color: var(--ink-faint); }
+
+  .c-foot {
+    margin-top: 6px; padding-top: 18px; border-top: 1px solid var(--rule);
+    font-family: var(--font-body-cn); font-size: var(--fs-caption);
+    color: var(--ink-muted); line-height: 1.5;
+  }
+  .card--dx .c-foot { color: var(--ink-faint); }
+
+  .ins-caption {
+    font-family: var(--font-body-cn); font-size: var(--fs-caption);
+    line-height: 1.55; color: var(--ink-muted);
+    max-width: 1560px; padding-top: 24px; border-top: 1px solid var(--rule);
+  }
+  .ins-caption strong { color: var(--ink); font-weight: 500; }
+  .ins-caption em { font-style: italic; font-family: var(--font-display-en); color: var(--rust); }
+</style>
+</head>
+<body>
+
+<div class="slide ins">
+
+  <div class="slide-meta">
+    <span>20 · 洞察是地图不是判决</span>
+    <span class="counter">20 / 24</span>
+  </div>
+
+  <div class="head">
+    <div class="kicker"><span class="dash"></span><span>The Discipline · A Map, Not a Verdict</span></div>
+    <h2 class="ins-title">洞察是<em>地图</em>，不是判决</h2>
+  </div>
+
+  <div class="pair">
+
+    <div class="card card--obs">
+      <div class="c-label"><span class="dash"></span>观察级 · What it does</div>
+      <div class="c-lead">给你一个没注意到的点，加两个好问题。</div>
+      <div class="c-quote">「你的下一个<span class="rust">突破口</span>，可能在这里」</div>
+      <div class="c-foot">往前指路，把选择权留给你</div>
+    </div>
+
+    <div class="card card--dx">
+      <div class="c-label"><span class="dash"></span>诊断级 · What it refuses</div>
+      <div class="c-lead">替你盖章下结论。</div>
+      <div class="c-quote">「你的问题是⋯⋯」</div>
+      <div class="c-foot">它不这么说。数据还没到，它不装作到了</div>
+    </div>
+
+  </div>
+
+  <p class="ins-caption">
+    它不会承诺数据还撑不起的分析，<strong>并且会老实告诉你</strong>它撑不起。
+    <em>Early insight is an observation, and it says so honestly.</em>
+  </p>
+
+</div>
+
+</body>
+</html>

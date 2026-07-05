@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>06 · Part Two · The Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  /* dark divider · a breath between acts */
+  .div { display: grid; grid-template-rows: auto 1fr auto; height: 100%; }
+
+  .div .slide-meta { color: var(--rule-strong); }
+  .div .slide-meta .counter { color: var(--ink-faint); }
+
+  .div-stack {
+    align-self: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1400px);
+    justify-content: start;
+    gap: 48px;
+    padding-left: 4px;
+    margin-top: 64px;
+  }
+
+  .part-mark {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-loose);
+    text-transform: uppercase;
+    color: var(--rust);
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+  .part-mark .num { font-size: 22px; letter-spacing: 0.14em; }
+  .part-mark .bar { display: inline-block; width: 30px; height: 1px; background: var(--rust); }
+
+  .div-title {
+    font-family: var(--font-display-cn);
+    font-weight: 500;
+    font-size: var(--fs-hero);
+    line-height: 1.06;
+    letter-spacing: var(--track-tight);
+    color: var(--bg);
+  }
+  .div-title .en {
+    display: block;
+    font-family: var(--font-display-en);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--fs-subtitle);
+    letter-spacing: 0.01em;
+    color: var(--ink-faint);
+    margin-top: 26px;
+  }
+
+  .div-rule { width: 220px; height: 2px; background: var(--rust); border: none; }
+
+  .div-line {
+    font-family: var(--font-body-cn);
+    font-weight: 300;
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: var(--ink-faint);
+    max-width: 1200px;
+  }
+  .div-line em { font-style: normal; color: var(--rust); }
+
+  .div-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-loose);
+    text-transform: uppercase;
+    color: var(--rule-strong);
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+
+<div class="slide slide--dark div">
+
+  <div class="slide-meta">
+    <span>Part Two</span>
+    <span class="counter">06 / 24</span>
+  </div>
+
+  <div class="div-stack">
+    <div class="part-mark">
+      <span class="num">02</span>
+      <span class="bar"></span>
+      <span>Part Two</span>
+    </div>
+
+    <h1 class="div-title">
+      架构
+      <span class="en">The Architecture</span>
+    </h1>
+
+    <hr class="div-rule">
+
+    <p class="div-line">
+      一个 vault，怎么<em>同时装下</em>你的人生，和你的生意。
+    </p>
+  </div>
+
+  <div class="div-foot">
+    <span>My Second Brain</span>
+    <span>一个家，两只翼</span>
+  </div>
+
+</div>
+
+</body>
+</html>

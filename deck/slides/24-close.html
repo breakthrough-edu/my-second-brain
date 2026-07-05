@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>24 · Close</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .close { display: grid; grid-template-rows: 1fr auto; height: 100%; }
+
+  .close-stack {
+    align-self: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1480px);
+    justify-content: start;
+    gap: 52px;
+  }
+
+  .close-kicker {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-loose);
+    text-transform: uppercase;
+    color: var(--rust);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .close-kicker .dash { display: inline-block; width: 28px; height: 1px; background: var(--rust); }
+  .close-kicker::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--rule-strong);
+    max-width: 300px;
+  }
+
+  .close-title {
+    font-family: var(--font-display-cn);
+    font-weight: 500;
+    font-size: var(--fs-hero);
+    line-height: 1.14;
+    letter-spacing: var(--track-tight);
+    color: var(--ink);
+  }
+  .close-title em { font-style: normal; color: var(--rust); }
+
+  .close-sub {
+    font-family: var(--font-body-cn);
+    font-weight: 300;
+    font-size: var(--fs-subtitle);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    color: var(--ink-muted);
+    max-width: 1280px;
+  }
+  .close-sub strong { color: var(--ink); font-weight: 500; }
+
+  .prompt-echo {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    align-self: start;
+    border: 1px dashed var(--rule-strong);
+    background: var(--bg-soft);
+    padding: 16px 26px;
+    font-family: var(--font-mono);
+    font-size: 20px;
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+  }
+  .prompt-echo .caret { color: var(--rust); font-weight: 500; }
+  .prompt-echo .say { color: var(--ink); }
+
+  .close-footer {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    align-items: end;
+    gap: 44px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+  .close-footer .label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-loose);
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .close-footer .value {
+    font-family: var(--font-display-en);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--ink);
+  }
+  .close-footer .counter {
+    font-family: var(--font-mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-loose);
+    color: var(--ink-faint);
+  }
+  .pair { display: flex; flex-direction: column; gap: 6px; }
+</style>
+</head>
+<body>
+
+<div class="slide close">
+
+  <div class="slide-meta">
+    <span>24 · One home. Any AI.</span>
+    <span class="counter">24 / 24</span>
+  </div>
+
+  <div class="close-stack">
+    <div class="close-kicker">
+      <span class="dash"></span>
+      <span>Close</span>
+    </div>
+
+    <h1 class="close-title">
+      你的数据，<em>一个家</em>。<br>
+      任何 AI，真答案。
+    </h1>
+
+    <p class="close-sub">
+      AI 会一直换。你搭的这个大脑，<strong>留下来</strong>。
+    </p>
+
+    <div class="prompt-echo">
+      <span class="caret">say:</span>
+      <span class="say">set up my second brain</span>
+    </div>
+  </div>
+
+  <div class="close-footer">
+    <div class="pair">
+      <span class="label">By</span>
+      <span class="value">Jia Wei</span>
+    </div>
+    <div class="pair">
+      <span class="label">From</span>
+      <span class="value">Breakthrough EDU</span>
+    </div>
+    <div></div>
+    <div class="pair">
+      <span class="label">Next</span>
+      <span class="counter">Open discussion</span>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
