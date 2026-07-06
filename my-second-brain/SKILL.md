@@ -39,7 +39,7 @@ The full structural law lives in the vault itself at `99_Meta/structure-doctrine
 
 | Mode | What it does | Load |
 |---|---|---|
-| **Setup** | Install Obsidian if needed, place the vault, ask 3 industry toggles, scaffold the fully wired structure, generate the user's personal command-base skill, offer the official Obsidian skills, end on the graph view | [modes/setup.md](modes/setup.md) |
+| **Setup** | Install Obsidian if needed, place the vault, ask 3 industry toggles, scaffold the fully wired structure, generate the user's personal command-base skill, offer the official Obsidian skills, offer an optional calendar connection (Google one-click connector or Lark CLI) so the morning brief sees the day's schedule, end on the graph view | [modes/setup.md](modes/setup.md) |
 | **Capture** | Business Profile first, then guided move-in of one room at a time (or a bulk move-in fork when the owner already has material). One question at a time, voice friendly. Ends with an observation-level insight and the three-layer closing screen | [modes/capture.md](modes/capture.md) |
 | **Distill** (includes Tidy) | Weekly maintenance ritual. Tidy scan (7 hygiene checks) then the distillation pipes proposing content for Layer 3 (routed to a function's pod when it has graduated, else the wing), plus a pod graduation/demotion scan. AI proposes, the owner rules | [modes/distill.md](modes/distill.md) |
 | **Create-My-Jarvis** | Two interviews (profile, then persona) that turn the generic assistant into one that knows who you are and how to be with you | [modes/create-my-jarvis.md](modes/create-my-jarvis.md) |

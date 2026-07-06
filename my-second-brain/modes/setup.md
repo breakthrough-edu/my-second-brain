@@ -83,6 +83,18 @@ Record `pod_maker_installed:` in `bootstrap-progress.md` (`symlinked` on macOS /
 
 Offer once: the Obsidian team publishes official skills (Bases syntax, Obsidian-flavored markdown, web clipping) that make the AI sharper inside Obsidian. Install with `npx skills add kepano/obsidian-skills`. Recommended yes; a no costs nothing tonight. Record the answer in `bootstrap-progress.md` (`obsidian_skills_offered:`).
 
+## Step 7.5: Connect a calendar (optional, recommended)
+
+Offer once: connect a calendar so the morning brief can see today's actual schedule, not just the task list. Read-only, folded into the brief, never stored in the vault. Recommend-leaning, because a morning brief that ignores the day's meetings is half-blind, but a skip costs nothing and is reversible any time.
+
+Three choices. Do the lightweight part inline, do not stall setup on OAuth or an install:
+
+- **Google Calendar (recommended):** point them to the one-click connector. Directory panel, Connectors tab, Anthropic and Partners, Google Calendar, click `+`, authorize. Tell them to leave the read-only tools on "Always allow" so the morning read never prompts. Full steps in [../references/calendar-connect.md](../references/calendar-connect.md). Record `calendar_provider: google`.
+- **Lark / Feishu:** offer to install the official CLI now (`npm install -g @larksuite/cli`, then `lark-cli config init` and `lark-cli auth login --recommend`) or to do it later. Steps in the reference. Record `calendar_provider: lark` on success (plus `calendar_lark_bin:` if not on PATH); if they defer, record `none` and note where to come back.
+- **Skip / later:** record `calendar_provider: none`.
+
+Always record the outcome in `bootstrap-progress.md` (`calendar_offered: true` + `calendar_provider:`). Offer once, never nag; the command-base skill reads the flag every morning and stays silent when it is `none`.
+
 ## Step 8: The graph moment
 
 Close setup with the payoff:
