@@ -34,6 +34,18 @@ When your business lives in one structured vault, any AI can give you real answe
 
 So this skill does not try to be the smartest assistant. It builds the thing underneath the assistant: a knowledge base in plain markdown files, structured by written law, owned by you. Models keep changing; your knowledge base stays yours. Your judgment and your operation are never locked into any single AI vendor, because the data layer is just files on your disk.
 
+## Where most second brains fail
+
+The idea only works if the vault survives contact with daily life, and this is where most second brains lose. They keep dying the same few deaths; every opinionated choice in this system exists to dodge one of them. If you have built one before, at least one of these will feel familiar:
+
+| The usual death | What this system does instead |
+|---|---|
+| **Collect, never settle.** Capture keeps adding until the vault is a junk drawer nobody trusts. | A weekly distill ritual with teeth: tidy scan, proposals, you rule. See the loop section below. |
+| **One sorting logic for everything.** Life and business forced into one tree, so filing turns into guesswork. | Two wings, two axes: PARA for your life, knowledge type for your business. |
+| **Rules live in nobody's head.** Filing by mood; consistency dies the day you switch tools or models. | A written constitution inside the vault, plus a filing log. The rules outlive the model. |
+| **The AI writes your "insights".** Auto-generated methodology reads smart and belongs to no one. | Layer 3 accepts only what you reviewed and approved. AI proposes, you rule. |
+| **The vault becomes a shadow ERP.** Invoices and receipts flood in until maintenance collapses under the volume. | The rows iron law: high-frequency data stays in the systems built for it; the vault keeps pointers and exceptions. |
+
 ## What you get: four modes
 
 <p align="center">
