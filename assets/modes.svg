@@ -1,0 +1,56 @@
+<svg viewBox="0 0 1600 560" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <radialGradient id="modesglow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FF6600" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#FF6600" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="560" rx="28" fill="#0B0B0E"/>
+  <ellipse cx="800" cy="280" rx="720" ry="280" fill="url(#modesglow)"/>
+
+  <text x="800" y="78" text-anchor="middle" font-size="30" font-weight="600" letter-spacing="7" fill="#F2F2F4">FOUR MODES, ONE CONVERSATION</text>
+  <text x="800" y="116" text-anchor="middle" font-size="18" fill="#8A8A93">no interface to learn, you say the words</text>
+
+  <!-- Setup -->
+  <rect x="80" y="180" width="330" height="280" rx="18" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="245" y="238" text-anchor="middle" font-size="20" font-weight="600" letter-spacing="2" fill="#E8E8EC">SETUP</text>
+  <rect x="210" y="256" width="70" height="26" rx="13" fill="none" stroke="#7A7A85" stroke-width="1"/>
+  <text x="245" y="274" text-anchor="middle" font-size="12" letter-spacing="2" fill="#A9A9B2">ONCE</text>
+  <text x="245" y="330" text-anchor="middle" font-size="14" fill="#FF9A5C" font-family="Menlo, monospace">"set up my second brain"</text>
+  <text x="245" y="366" text-anchor="middle" font-size="14" fill="#85858E">vault built and wired,</text>
+  <text x="245" y="390" text-anchor="middle" font-size="14" fill="#85858E">your own skill generated</text>
+  <text x="245" y="428" text-anchor="middle" font-size="13" fill="#6A6A74">10 minutes</text>
+
+  <!-- Capture -->
+  <rect x="450" y="180" width="330" height="280" rx="18" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="615" y="238" text-anchor="middle" font-size="20" font-weight="600" letter-spacing="2" fill="#E8E8EC">CAPTURE</text>
+  <rect x="540" y="256" width="150" height="26" rx="13" fill="none" stroke="#7A7A85" stroke-width="1"/>
+  <text x="615" y="274" text-anchor="middle" font-size="12" letter-spacing="2" fill="#A9A9B2">ROOM BY ROOM</text>
+  <text x="615" y="330" text-anchor="middle" font-size="14" fill="#FF9A5C" font-family="Menlo, monospace">"move in a room"</text>
+  <text x="615" y="366" text-anchor="middle" font-size="14" fill="#85858E">guided move-in, one question</text>
+  <text x="615" y="390" text-anchor="middle" font-size="14" fill="#85858E">at a time, talking is fine</text>
+  <text x="615" y="428" text-anchor="middle" font-size="13" fill="#6A6A74">15 minutes per room</text>
+
+  <!-- Distill -->
+  <rect x="820" y="180" width="330" height="280" rx="18" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="985" y="238" text-anchor="middle" font-size="20" font-weight="600" letter-spacing="2" fill="#E8E8EC">DISTILL</text>
+  <rect x="937" y="256" width="96" height="26" rx="13" fill="none" stroke="#7A7A85" stroke-width="1"/>
+  <text x="985" y="274" text-anchor="middle" font-size="12" letter-spacing="2" fill="#A9A9B2">WEEKLY</text>
+  <text x="985" y="330" text-anchor="middle" font-size="14" fill="#FF9A5C" font-family="Menlo, monospace">"distill"</text>
+  <text x="985" y="366" text-anchor="middle" font-size="14" fill="#85858E">tidy scan, then proposals:</text>
+  <text x="985" y="390" text-anchor="middle" font-size="14" fill="#85858E">AI proposes, you rule</text>
+  <text x="985" y="428" text-anchor="middle" font-size="13" fill="#6A6A74">10 minutes</text>
+
+  <!-- Create-My-Jarvis -->
+  <rect x="1190" y="180" width="330" height="280" rx="18" fill="#131318" stroke="#FF6600" stroke-opacity="0.55" stroke-width="1.5"/>
+  <text x="1355" y="238" text-anchor="middle" font-size="20" font-weight="600" letter-spacing="2" fill="#FF7A26">CREATE-MY-JARVIS</text>
+  <rect x="1272" y="256" width="166" height="26" rx="13" fill="#FF6600" fill-opacity="0.12" stroke="#FF6600" stroke-opacity="0.5" stroke-width="1"/>
+  <text x="1355" y="274" text-anchor="middle" font-size="12" letter-spacing="2" fill="#FF9A5C">ONCE, AT HOME</text>
+  <text x="1355" y="330" text-anchor="middle" font-size="14" fill="#FF9A5C" font-family="Menlo, monospace">"create my jarvis"</text>
+  <text x="1355" y="366" text-anchor="middle" font-size="14" fill="#85858E">two interviews, your AI</text>
+  <text x="1355" y="390" text-anchor="middle" font-size="14" fill="#85858E">gets a real character</text>
+  <text x="1355" y="428" text-anchor="middle" font-size="13" fill="#6A6A74">45 to 60 minutes</text>
+
+  <text x="800" y="512" text-anchor="middle" font-size="15" fill="#6A6A74">modes are entries, not a sequence: the skill routes by what you say and where your vault stands</text>
+</svg>

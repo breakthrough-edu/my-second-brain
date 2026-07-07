@@ -30,6 +30,10 @@ So this skill does not try to be the smartest assistant. It builds the thing und
 
 ## What you get: four modes
 
+<p align="center">
+  <img src="assets/modes.svg" alt="Four modes, one conversation: Setup once, Capture room by room, Distill weekly, Create-My-Jarvis once at home" width="100%">
+</p>
+
 **Setup** (10 min). Installs Obsidian if needed, builds a fully wired vault (every room has a front desk, navigation live from day zero), asks 3 questions about your industry, offers an optional calendar connection so your morning brief sees the day's schedule, and generates a **personal command-base skill named after your business**. You install one skill; it builds you another one that only fits you.
 
 **Capture** (15 min per room). Your Business Profile first, then one room at a time: clients, products, SOPs, whichever you pick. One question at a time, talking is fine, and there is a bulk lane when you already have material. Every session ends with one observation about your business you had not noticed, plus two good questions.
@@ -90,6 +94,24 @@ Say "distill" once a week and four things happen, in order:
 4. **Layer 3 grows.** Approved distillations land in Methodology as your own reviewed judgment. The same scan also watches for functions that have earned a pod, or pods that have gone quiet.
 
 This is the part most tools skip, because it cannot be automated away: the loop only compounds if a human keeps ruling. Ten minutes a week is the whole price. In exchange, the answers your AI gives you stop being generic, because they are grounded in what you actually decided, reviewed, and signed off on.
+
+## Create-My-Jarvis: your AI gets a character
+
+Out of the box, every AI assistant is the same person: helpful, generic, nobody's. The fourth mode is where that ends, and it is the part owners remember.
+
+Two interviews, done at home in a quiet hour:
+
+- **The profile interview** (ten questions) writes down who you actually are: how you really make hard decisions (the pattern, not the aspiration), what kind of criticism lands with you, what money does for you. Answers are transcribed near verbatim. Thin answers make a thin profile, and the skill says so instead of inventing personality to fill the gaps.
+- **The soul interview** (eight beats) has you author a character: its name and why the name matters, what it should do first when you ship something hard, what it should do first when you are stuck, what it must never do, and at least three voice rules concrete enough to test a single sentence against.
+
+A hard **genericness gate** protects the result. "Be clear and concise" fails the gate. "Never open with 'Great question'. If I write in Chinese, answer in Chinese. Tell me the risk before the plan." passes. When an answer lands generic, the interview pushes for the specific version, because a generic soul produces the same AI you already had.
+
+What this buys you day to day:
+
+- Your morning greeting sounds like the character, and its name surfacing is your proof the soul loaded.
+- It holds your real situation in mind during routine work: the actual business, the actual stakes, in your own words.
+- It deliberately watches the angles you told it you reliably miss, instead of mirroring you.
+- The soul is a markdown file in your vault. Lived use will reshape it in the first weeks; you edit the file and the character follows.
 
 ## Design decisions
 
