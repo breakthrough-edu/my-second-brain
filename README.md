@@ -20,6 +20,12 @@ Then open Claude Code and say:
 
 Ten minutes later you are looking at the graph view of your half-built brain.
 
+Already running it? Updating to the latest version is one line, and it never touches your vault, only the skill files:
+
+```bash
+npx skills update my-second-brain
+```
+
 ## The idea underneath
 
 AI execution is cheap now. What is scarce is your data having a home.

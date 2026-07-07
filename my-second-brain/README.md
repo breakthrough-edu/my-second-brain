@@ -16,6 +16,8 @@ Then open Claude Code and say:
 
 > set up my second brain
 
+Update anytime with `npx skills update my-second-brain` (your vault is never touched, only the skill files).
+
 ## Four modes, one skill
 
 - **Setup** (10 min): builds the fully wired vault and generates your personal command-base skill, named after your business.
