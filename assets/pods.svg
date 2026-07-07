@@ -1,0 +1,59 @@
+<svg viewBox="0 0 1600 760" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <radialGradient id="podglow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FF6600" stop-opacity="0.09"/>
+      <stop offset="100%" stop-color="#FF6600" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="760" rx="28" fill="#0B0B0E"/>
+  <ellipse cx="800" cy="380" rx="720" ry="340" fill="url(#podglow)"/>
+
+  <text x="800" y="88" text-anchor="middle" font-size="30" font-weight="600" letter-spacing="7" fill="#F2F2F4">WHEN A FUNCTION EARNS ITS OWN BRAIN</text>
+  <text x="800" y="128" text-anchor="middle" font-size="18" fill="#8A8A93">a pod owns two layers and reads a third</text>
+
+  <!-- Left: the business wing -->
+  <rect x="90" y="180" width="560" height="430" rx="18" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="126" y="240" font-size="23" font-weight="600" fill="#F2F2F4">THE BUSINESS WING</text>
+  <text x="126" y="270" font-size="15" fill="#8A8A93">stays the full three-layer map</text>
+
+  <text x="126" y="330" font-size="20" fill="#E8E8EC" font-family="Menlo, monospace">01_Assets</text>
+  <text x="126" y="356" font-size="15" fill="#85858E">what the business is made of</text>
+
+  <rect x="110" y="392" width="524" height="72" rx="12" fill="#1A1A21" stroke="#3A3A44" stroke-width="1"/>
+  <text x="126" y="424" font-size="20" fill="#E8E8EC" font-family="Menlo, monospace">02_SOP</text>
+  <text x="126" y="450" font-size="15" fill="#85858E">how things get done, one copy, shared</text>
+
+  <text x="126" y="516" font-size="20" fill="#E8E8EC" font-family="Menlo, monospace">03_Methodology</text>
+  <text x="126" y="542" font-size="15" fill="#85858E">why you decide the way you do</text>
+
+  <!-- Right: the pod -->
+  <rect x="950" y="180" width="560" height="430" rx="18" fill="#131318" stroke="#FF6600" stroke-opacity="0.55" stroke-width="1.5"/>
+  <text x="986" y="240" font-size="23" font-weight="600" fill="#F2F2F4">A FUNCTION POD</text>
+  <text x="986" y="270" font-size="15" fill="#8A8A93">e.g. Marketing, bolted onto the wing</text>
+
+  <text x="986" y="330" font-size="20" fill="#E8E8EC">Outputs</text>
+  <text x="986" y="356" font-size="15" fill="#85858E">what the function produces</text>
+  <rect x="1364" y="308" width="110" height="28" rx="14" fill="#FF6600" fill-opacity="0.14" stroke="#FF6600" stroke-opacity="0.6" stroke-width="1"/>
+  <text x="1419" y="327" text-anchor="middle" font-size="13" letter-spacing="2" fill="#FF9A5C">OWNS</text>
+
+  <text x="986" y="424" font-size="20" fill="#FF7A26">Learning loop</text>
+  <text x="986" y="450" font-size="15" fill="#B08668">doctrine + rubric, grows from your rulings</text>
+  <rect x="1364" y="402" width="110" height="28" rx="14" fill="#FF6600" fill-opacity="0.14" stroke="#FF6600" stroke-opacity="0.6" stroke-width="1"/>
+  <text x="1419" y="421" text-anchor="middle" font-size="13" letter-spacing="2" fill="#FF9A5C">OWNS</text>
+
+  <rect x="970" y="492" width="524" height="72" rx="12" fill="none" stroke="#7A7A85" stroke-width="1" stroke-dasharray="6 5"/>
+  <text x="986" y="524" font-size="20" fill="#C9C9CF">SOP + reference</text>
+  <text x="986" y="550" font-size="15" fill="#85858E">shared with the wing, never duplicated</text>
+  <rect x="1364" y="502" width="110" height="28" rx="14" fill="none" stroke="#7A7A85" stroke-width="1"/>
+  <text x="1419" y="521" text-anchor="middle" font-size="13" letter-spacing="2" fill="#A9A9B2">READS</text>
+
+  <!-- Read connector: pod's read row to wing SOP row -->
+  <path d="M 970 528 C 830 528, 780 428, 634 428" fill="none" stroke="#FF6600" stroke-opacity="0.7" stroke-width="1.5" stroke-dasharray="7 6"/>
+  <circle cx="634" cy="428" r="5" fill="#FF6600"/>
+  <text x="800" y="530" text-anchor="middle" font-size="15" fill="#FF9A5C">reads, never copies</text>
+
+  <!-- Guardrail bar -->
+  <rect x="90" y="650" width="1420" height="70" rx="16" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="800" y="693" text-anchor="middle" font-size="17" fill="#9A9AA3">the graduation gate defaults to "not a pod" · a quiet pod gets proposed for demotion, its learning archived, never lost</text>
+</svg>

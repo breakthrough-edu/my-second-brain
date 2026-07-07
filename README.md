@@ -40,6 +40,10 @@ So this skill does not try to be the smartest assistant. It builds the thing und
 
 ## The structure it builds
 
+<p align="center">
+  <img src="assets/structure.svg" alt="One vault, two wings: your life in PARA on the left, your business in three layers on the right, a shared spine in the middle, one constitution underneath" width="100%">
+</p>
+
 ```
 Your-Vault/
 ├── 00_Inbox · 01_Daily            shared capture + timeline
@@ -70,6 +74,23 @@ After Setup, your daily driver is the command-base skill it generated for you. A
 
 The handbook stays alive because answering and updating are the same motion. The vault stays trustworthy because every filing decision follows written law.
 
+## The loop that keeps it alive
+
+Most second brains die the same death: capture keeps adding, nothing ever settles, and three months in, the vault is a junk drawer the owner no longer trusts. The weekly Distill ritual is this system's answer, and it is where the compounding happens.
+
+<p align="center">
+  <img src="assets/loop.svg" alt="The weekly loop: capture, tidy scan, propose, you rule, layer 3 grows, and your AI's answers get sharper week after week" width="100%">
+</p>
+
+Say "distill" once a week and four things happen, in order:
+
+1. **Tidy scan.** Seven hygiene checks across the vault: orphan notes, misfiled items, stale maps, and the rest. The AI reports; files move only after you approve.
+2. **Distillation proposals.** The AI reads the week's decisions, session logs, and daily notes, then proposes what they add up to: a decision pattern, a lesson, a rollup.
+3. **You rule.** Yes or no on each proposal. Nothing writes itself into your methodology layer, ever.
+4. **Layer 3 grows.** Approved distillations land in Methodology as your own reviewed judgment. The same scan also watches for functions that have earned a pod, or pods that have gone quiet.
+
+This is the part most tools skip, because it cannot be automated away: the loop only compounds if a human keeps ruling. Ten minutes a week is the whole price. In exchange, the answers your AI gives you stop being generic, because they are grounded in what you actually decided, reviewed, and signed off on.
+
 ## Design decisions
 
 The choices that make this hold up over months, not weeks:
@@ -93,6 +114,10 @@ The choices that make this hold up over months, not weeks:
 Most business functions stay simple: a room for their materials and a log. But some functions are pure repeated judgment (marketing, pricing, what to say no to), and those deserve to *learn*. When one has built up enough real track record, the companion `pod-maker` skill (installed at setup, symlinked so it updates with this skill) can **graduate** it into a pod.
 
 A pod is not a whole separate business-in-a-box. Honestly sized, a pod **owns two layers** (its own outputs, and its own learning loop of doctrine and rubric that grows from your decisions) and **reads a third** (it shares the business wing's SOP and reference material, never duplicating them). The wing stays the full three-layer map; a pod is one function's local brain bolted onto it.
+
+<p align="center">
+  <img src="assets/pods.svg" alt="A function pod owns its outputs and its learning loop, and reads the wing's SOP and reference material without duplicating them" width="100%">
+</p>
 
 Two guardrails keep this from bloating your vault: the graduation gate treats "not a pod" as the default answer (a process with a known right answer wants an SOP, not a learning loop), and the weekly maintenance scan proposes shrinking a pod back if it goes quiet (your learning is archived, never lost). One core pod ships ready to seed: **Marketing**, a generic marketing brain your own loop grows into something specific to your business.
 

@@ -1,0 +1,62 @@
+<svg viewBox="0 0 1600 620" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <radialGradient id="loopglow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FF6600" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#FF6600" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arrowG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6A6A74"/>
+    </marker>
+    <marker id="arrowO" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#FF6600"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="620" rx="28" fill="#0B0B0E"/>
+  <ellipse cx="800" cy="300" rx="720" ry="300" fill="url(#loopglow)"/>
+
+  <text x="800" y="78" text-anchor="middle" font-size="30" font-weight="600" letter-spacing="7" fill="#F2F2F4">THE WEEKLY LOOP</text>
+  <text x="800" y="116" text-anchor="middle" font-size="18" fill="#8A8A93">say "distill" once a week · AI proposes, you rule</text>
+
+  <!-- Station 1: Capture -->
+  <rect x="80" y="210" width="250" height="130" rx="16" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="205" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#E8E8EC">CAPTURE</text>
+  <text x="205" y="294" text-anchor="middle" font-size="14" fill="#85858E">a week of raw notes,</text>
+  <text x="205" y="316" text-anchor="middle" font-size="14" fill="#85858E">decisions, daily logs</text>
+
+  <line x1="330" y1="275" x2="368" y2="275" stroke="#6A6A74" stroke-width="1.5" marker-end="url(#arrowG)"/>
+
+  <!-- Station 2: Tidy scan -->
+  <rect x="375" y="210" width="250" height="130" rx="16" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="500" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#E8E8EC">TIDY SCAN</text>
+  <text x="500" y="294" text-anchor="middle" font-size="14" fill="#85858E">orphans, misfiles,</text>
+  <text x="500" y="316" text-anchor="middle" font-size="14" fill="#85858E">stale maps, 7 checks</text>
+
+  <line x1="625" y1="275" x2="663" y2="275" stroke="#6A6A74" stroke-width="1.5" marker-end="url(#arrowG)"/>
+
+  <!-- Station 3: Propose -->
+  <rect x="670" y="210" width="250" height="130" rx="16" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="795" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#E8E8EC">PROPOSE</text>
+  <text x="795" y="294" text-anchor="middle" font-size="14" fill="#85858E">patterns spotted</text>
+  <text x="795" y="316" text-anchor="middle" font-size="14" fill="#85858E">in your own decisions</text>
+
+  <line x1="920" y1="275" x2="958" y2="275" stroke="#6A6A74" stroke-width="1.5" marker-end="url(#arrowG)"/>
+
+  <!-- Station 4: You rule (the human gate) -->
+  <rect x="965" y="210" width="250" height="130" rx="16" fill="#131318" stroke="#FF6600" stroke-opacity="0.65" stroke-width="1.5"/>
+  <text x="1090" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#FF7A26">YOU RULE</text>
+  <text x="1090" y="294" text-anchor="middle" font-size="14" fill="#B08668">yes or no,</text>
+  <text x="1090" y="316" text-anchor="middle" font-size="14" fill="#B08668">nothing auto-writes</text>
+
+  <line x1="1215" y1="275" x2="1253" y2="275" stroke="#6A6A74" stroke-width="1.5" marker-end="url(#arrowG)"/>
+
+  <!-- Station 5: Layer 3 grows -->
+  <rect x="1260" y="210" width="250" height="130" rx="16" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="1385" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#E8E8EC">LAYER 3 GROWS</text>
+  <text x="1385" y="294" text-anchor="middle" font-size="14" fill="#85858E">your reviewed judgment,</text>
+  <text x="1385" y="316" text-anchor="middle" font-size="14" fill="#85858E">filed as methodology</text>
+
+  <!-- Return arc: the compounding payoff -->
+  <path d="M 1385 340 C 1385 500, 205 500, 205 340" fill="none" stroke="#FF6600" stroke-opacity="0.65" stroke-width="1.5" marker-end="url(#arrowO)"/>
+  <text x="795" y="502" text-anchor="middle" font-size="16" fill="#FF9A5C">your AI's answers get sharper, week after week</text>
+</svg>

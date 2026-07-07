@@ -1,0 +1,67 @@
+<svg viewBox="0 0 1600 880" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FF6600" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#FF6600" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="880" rx="28" fill="#0B0B0E"/>
+  <ellipse cx="800" cy="440" rx="720" ry="400" fill="url(#glow)"/>
+
+  <text x="800" y="92" text-anchor="middle" font-size="34" font-weight="600" letter-spacing="8" fill="#F2F2F4">ONE VAULT, TWO WINGS</text>
+  <text x="800" y="134" text-anchor="middle" font-size="19" fill="#8A8A93">two sorting logics, kept apart on purpose</text>
+
+  <!-- Left card: personal wing -->
+  <rect x="80" y="190" width="430" height="500" rx="18" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="112" y="248" font-size="24" font-weight="600" fill="#F2F2F4">YOUR LIFE</text>
+  <text x="112" y="280" font-size="16" fill="#FF9A5C">PARA · sorted by actionability</text>
+
+  <text x="112" y="342" font-size="20" fill="#E8E8EC" font-family="Menlo, monospace">02_Projects</text>
+  <text x="112" y="368" font-size="15" fill="#85858E">what you are pushing right now</text>
+
+  <text x="112" y="430" font-size="20" fill="#E8E8EC" font-family="Menlo, monospace">03_Areas</text>
+  <text x="112" y="456" font-size="15" fill="#85858E">standing responsibilities</text>
+
+  <text x="112" y="518" font-size="20" fill="#E8E8EC" font-family="Menlo, monospace">04_Resources</text>
+  <text x="112" y="544" font-size="15" fill="#85858E">reference that serves you</text>
+
+  <text x="112" y="606" font-size="20" fill="#E8E8EC" font-family="Menlo, monospace">05_Archive</text>
+  <text x="112" y="632" font-size="15" fill="#85858E">done, kept, out of the way</text>
+
+  <!-- Center column: shared spine -->
+  <rect x="580" y="190" width="440" height="230" rx="18" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="612" y="248" font-size="20" font-weight="600" fill="#F2F2F4" font-family="Menlo, monospace">06_Command-Base</text>
+  <text x="612" y="280" font-size="16" fill="#FF9A5C">the command center</text>
+  <text x="612" y="322" font-size="16" fill="#9A9AA3">Home · central Decisions · Tasks</text>
+  <text x="612" y="350" font-size="16" fill="#9A9AA3">live dashboard, never hand-written</text>
+
+  <rect x="580" y="450" width="440" height="240" rx="18" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="612" y="508" font-size="20" font-weight="600" fill="#F2F2F4" font-family="Menlo, monospace">00_Inbox · 01_Daily</text>
+  <text x="612" y="540" font-size="16" fill="#FF9A5C">shared capture + timeline</text>
+  <text x="612" y="582" font-size="16" fill="#9A9AA3">both wings feed it through the day,</text>
+  <text x="612" y="610" font-size="16" fill="#9A9AA3">compiled into daily notes at day end</text>
+
+  <!-- Right card: business wing -->
+  <rect x="1090" y="190" width="430" height="500" rx="18" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="1122" y="248" font-size="24" font-weight="600" fill="#F2F2F4">YOUR BUSINESS</text>
+  <text x="1122" y="280" font-size="16" fill="#FF9A5C">07_&lt;Your-Business&gt; · sorted by knowledge type</text>
+
+  <text x="1122" y="342" font-size="20" fill="#E8E8EC" font-family="Menlo, monospace">01_Assets</text>
+  <text x="1122" y="368" font-size="15" fill="#85858E">what it is made of:</text>
+  <text x="1122" y="390" font-size="15" fill="#85858E">clients, products, docs, people</text>
+
+  <text x="1122" y="452" font-size="20" fill="#E8E8EC" font-family="Menlo, monospace">02_SOP</text>
+  <text x="1122" y="478" font-size="15" fill="#85858E">how things get done,</text>
+  <text x="1122" y="500" font-size="15" fill="#85858E">named by intent, not department</text>
+
+  <rect x="1106" y="530" width="4" height="96" rx="2" fill="#FF6600"/>
+  <text x="1122" y="562" font-size="20" fill="#FF7A26" font-family="Menlo, monospace">03_Methodology</text>
+  <text x="1122" y="588" font-size="15" fill="#B08668">why you decide the way you do,</text>
+  <text x="1122" y="610" font-size="15" fill="#B08668">fills from reviewed judgment only</text>
+
+  <!-- Constitution bar -->
+  <rect x="80" y="730" width="1440" height="94" rx="16" fill="#FF6600" fill-opacity="0.06" stroke="#FF6600" stroke-opacity="0.75" stroke-width="1.5"/>
+  <text x="800" y="770" text-anchor="middle" font-size="20" fill="#FFB27D" font-family="Menlo, monospace">99_Meta/structure-doctrine.md</text>
+  <text x="800" y="800" text-anchor="middle" font-size="15" fill="#9A9AA3">the written constitution both wings obey: sorting axes, filing tests, iron laws, rulings table</text>
+</svg>
