@@ -4,7 +4,11 @@ A self-contained CLI that indexes every Claude Code session transcript into a
 full-text-searchable SQLite (FTS5) database, so past sessions become greppable
 across projects.
 
-- **Standard library only** (`sqlite3` + FTS5, which macOS ships). No pip installs.
+- **Standard library only** (`sqlite3` + FTS5). No pip installs. macOS, the
+  python.org builds, and the Microsoft Store build all ship SQLite with FTS5;
+  Anaconda/Miniconda does not. On startup the tool probes for FTS5 and, if it is
+  missing, fails soft with a plain-language fix (use python.org Python, not
+  Anaconda) instead of a cryptic `no such module: fts5`.
 - **`~/.claude/projects/` is read strictly read-only.** This tool never writes,
   moves, or modifies anything there. All state (the database, and with it the
   harvest bookmark) lives in `~/.my-second-brain/session-history.db`,

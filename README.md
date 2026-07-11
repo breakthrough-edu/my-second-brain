@@ -200,15 +200,35 @@ Two guardrails keep this from bloating your vault: the graduation gate treats "n
 - Single-owner system: you plus your AI. Obsidian has no permission layers; if staff need a piece, export that piece.
 - Not an ERP, not a CRM, not a multi-user wiki. Structured high-frequency data stays in the systems built for it.
 - Early insights are observations, and the skill says so honestly. Depth comes from months of captured judgment, not from week one.
-- The two machine guards are platform-gated for now: the safety lock is macOS only, session memory is macOS first. The vault, the four modes, and the inspector work everywhere.
+- The two machine guards are platform-gated for now: the safety lock is macOS only, session memory is macOS first. The vault, the four modes, and the inspector work everywhere. Windows owners who want session memory have a documented, self-driven route (see [Windows self-serve path](#windows-self-serve-path)); the safety lock is not ported, so there is no machine-level block on accidental deletes on Windows.
 
 ## Requirements
 
 - [Claude Code](https://claude.com/claude-code)
 - [Obsidian](https://obsidian.md) (free; the skill can install it for you). Enable the **Bases** core plugin for the dashboard.
-- Python 3, for the inspector and session memory (macOS ships everything they need).
-- Works on macOS, Windows, Linux. The optional machine guards are macOS-gated for now (safety lock macOS only, session memory macOS first); see Honest boundaries.
+- Python 3, for the inspector and session memory. macOS ships everything they need; on Windows use Python from python.org (not Anaconda, whose SQLite lacks the FTS5 extension session memory needs).
+- Works on macOS, Windows, Linux. The optional machine guards are macOS-gated for now (safety lock macOS only, session memory macOS first); see Honest boundaries and the [Windows self-serve path](#windows-self-serve-path) below.
 - English or 中文 interaction; your choice at setup.
+
+## Windows self-serve path
+
+The vault, the Obsidian layer, the four modes, and the inspector all work on Windows as-is. Two machine-layer pieces have platform boundaries, and this is how a Windows owner gets what is portable and knows what is not.
+
+**Session memory works on native Windows**, as long as your Python ships SQLite with the FTS5 extension. Run Claude Code on native Windows (the PowerShell or CMD installer). WSL works too, but if your vault lives on the Windows drive (reached from WSL as `/mnt/c/...`), file operations and search run 5 to 20 times slower, so native is the recommended path.
+
+1. Install Python from [python.org](https://www.python.org/) (not Anaconda). This is the one that ships SQLite with FTS5, which session memory needs. The Microsoft Store build also works.
+2. Install Claude Code for native Windows, then install this skill.
+3. Your vault path, Claude Code's session location, and project slugs are all derived automatically, so there are no manual path edits.
+4. Run the session-memory tool with the interpreter named explicitly (use `python`, not `python3`, on Windows; the tool's shebang is inert here):
+   ```
+   python "<skill>/scripts/session-history/sh" ingest
+   ```
+5. On first run the tool probes for FTS5. If it reports FTS5 missing, you are almost certainly on Anaconda; switch to python.org Python and run it again.
+6. The inspector (`checkup.py`) runs the same way and needs nothing special.
+
+**What you do NOT get on Windows: the safety lock.** It is macOS-first and is not ported, so there is no machine-level block on accidental recursive deletes of your vault or skills folder. Lean on your own backups instead.
+
+This path is best-effort and community-validated rather than officially tested on Windows: it is built on macOS and we have no Windows machine to verify against, which is why the FTS5 probe hands you a clear pass or fail rather than the skill claiming "works on Windows." If something breaks, tell us; it feeds the next iteration.
 
 ## Repo layout
 

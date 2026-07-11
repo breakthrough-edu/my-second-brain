@@ -99,6 +99,57 @@ def default_inbox_dir() -> Optional[str]:
 
 
 # --------------------------------------------------------------------------
+# FTS5 runtime probe
+# --------------------------------------------------------------------------
+#
+# The entire index is a FTS5 virtual table, so a SQLite build without the FTS5
+# extension cannot run this tool at all. Most Python builds ship FTS5
+# (python.org, the Microsoft Store build, macOS system Python, Homebrew); the
+# one common exception is Anaconda / Miniconda, whose bundled SQLite is
+# compiled without it. Rather than let `init_db` die on a cryptic
+# `no such module: fts5`, we probe once at connect time and fail soft with a
+# plain-language fix. This is a cross-platform defensive check, not a
+# Windows-only one; Windows students just hit it most often.
+
+FTS5_MISSING_MESSAGE = (
+    "session-history needs SQLite built with the FTS5 full-text extension, and "
+    "this Python does not have it.\n"
+    "This almost always means you are on Anaconda or Miniconda, whose bundled "
+    "SQLite is compiled without FTS5.\n"
+    "Fix: run session-history with Python from python.org (or the Microsoft "
+    "Store build on Windows), not Anaconda. Both ship SQLite with FTS5.\n"
+    "To see which Python you are on, run: "
+    'python -c "import sys; print(sys.executable)"'
+)
+
+
+class FTS5Unavailable(RuntimeError):
+    """Raised when the runtime SQLite lacks FTS5, carrying a human-readable fix."""
+
+    def __init__(self, message: str = FTS5_MISSING_MESSAGE):
+        super().__init__(message)
+
+
+def fts5_available() -> bool:
+    """True if this Python's SQLite was compiled with the FTS5 extension.
+
+    Probed against a throwaway in-memory database so the check never creates
+    files or touches the real index. Microseconds; safe to call on every run.
+    """
+    try:
+        probe = sqlite3.connect(":memory:")
+    except sqlite3.Error:
+        return False
+    try:
+        probe.execute("CREATE VIRTUAL TABLE _fts5_probe USING fts5(x)")
+        return True
+    except sqlite3.Error:
+        return False
+    finally:
+        probe.close()
+
+
+# --------------------------------------------------------------------------
 # Schema / connection
 # --------------------------------------------------------------------------
 
@@ -142,6 +193,11 @@ CREATE TABLE IF NOT EXISTS harvest_state (
 
 
 def connect(db_path: Optional[str] = None) -> sqlite3.Connection:
+    # Probe FTS5 before creating the state directory or opening the file, so a
+    # SQLite without FTS5 fails soft with a fix instead of a cryptic
+    # `no such module: fts5` the first time the schema builds the virtual table.
+    if not fts5_available():
+        raise FTS5Unavailable()
     path = db_path or default_db_path()
     os.makedirs(os.path.dirname(path), exist_ok=True)
     conn = sqlite3.connect(path)

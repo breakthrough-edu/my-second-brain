@@ -107,7 +107,7 @@ This step turns on **session memory**: every Claude Code conversation on this ma
 - **Where it writes:** one search database plus one small config file in `~/.my-second-brain/`. That folder sits outside the vault and outside this skill, so a skill update never wipes the index or the owner's review bookmarks.
 - **Purely local:** there is no network code in the tool at all. Nothing is uploaded anywhere. It is also not a background process; it only runs when a session invokes it.
 
-**Platform honesty.** The tool itself is standard-library Python and needs `python3` plus SQLite with FTS5, which macOS ships. It is validated on **macOS only** at this stage; on Windows or Linux, say so, skip, and record the skip. Do not improvise a port.
+**Platform honesty.** The tool itself is standard-library Python and needs `python3` plus SQLite with FTS5, which macOS ships. It is validated on **macOS only** at this stage; on Windows or Linux, say so, skip, and record the skip. Do not improvise a port here. Windows owners who want it anyway have a documented, self-driven route: point them at the **"Windows self-serve path"** section of the README (native-first, they install python.org Python and run the tool by hand, and the tool's own FTS5 probe gives them a clear pass/fail). That path is best-effort and self-validated, which is exactly why it stays out of this gated Setup step.
 
 On yes (macOS):
 

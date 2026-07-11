@@ -16,6 +16,7 @@ import os
 import sys
 
 from . import (
+    FTS5Unavailable,
     actions,
     connect,
     default_db_path,
@@ -201,7 +202,11 @@ def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
     if args.projects is None:
         args.projects = default_projects_dir()
-    conn = connect(args.db or default_db_path())
+    try:
+        conn = connect(args.db or default_db_path())
+    except FTS5Unavailable as e:
+        print(str(e), file=sys.stderr)
+        return 3
     try:
         return args.func(conn, args)
     finally:

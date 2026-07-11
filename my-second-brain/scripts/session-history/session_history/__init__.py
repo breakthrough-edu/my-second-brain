@@ -2,7 +2,10 @@
 
 from .core import (
     SCHEMA_VERSION,
+    FTS5_MISSING_MESSAGE,
+    FTS5Unavailable,
     connect,
+    fts5_available,
     init_db,
     ingest,
     search,
@@ -22,7 +25,10 @@ from .core import (
 
 __all__ = [
     "SCHEMA_VERSION",
+    "FTS5_MISSING_MESSAGE",
+    "FTS5Unavailable",
     "connect",
+    "fts5_available",
     "init_db",
     "ingest",
     "search",
