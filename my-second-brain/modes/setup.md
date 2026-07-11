@@ -79,6 +79,24 @@ The `pod-maker` skill ships **inside this skill's payload** as a `pod-maker/` su
 
 Record `pod_maker_installed:` in `bootstrap-progress.md` (`symlinked` on macOS / Linux, `copied` on the Windows fallback). One line to the owner, only if they ask what it is: "pod-maker is the tool that grows a busy function (marketing, sales...) into its own self-learning pod when it earns one; say 'forge a pod' or 'graduate my marketing' when the time comes."
 
+## Step 6.8: Safety lock (optional, recommended, macOS only)
+
+This step installs a **read-only accident net**: a Claude Code hook that blocks a recursive delete (`rm -rf` and its variants) aimed at the vault or `~/.claude/skills`. It exists because of one specific, hard-to-reverse mistake. The command-base skill and pod-maker install as **symlinks** under `~/.claude/skills/` that point INTO the vault; a plain `rm -r` on one of those links follows it and destroys the real vault content behind it. The hook stops exactly that. It is an accident net, not a security boundary: it fails open (allows) on anything it cannot parse, and it never blocks non-delete commands.
+
+**This changes the owner's `~/.claude/settings.json`, which is machine-level configuration outside the vault. Explain before you install, and install only on an explicit yes.** Say, in plain terms: what it blocks (recursive deletes hitting the vault or the skills folder), how it blocks (the command is refused with a note before it runs), and how to remove it (below). If the owner declines, record that and move on; nothing else in the system depends on it.
+
+**Platform honesty.** The install flow and the hook are validated on **macOS only** at this stage. On Windows or Linux, tell the owner it is not yet supported here, skip the install, and record the skip. Do not improvise a port.
+
+On yes (macOS):
+
+1. The hook template ships in this skill's payload at `scripts/rm-guard-hook.sh`. Read it, and replace the single placeholder token `__MSB_VAULT_PATHS__` (it appears on exactly one line, the `MSB_VAULT_PATHS=` env assignment) with the vault's absolute path from Step 3. Write the result to `~/.claude/hooks/my-second-brain-rm-guard.sh` (create `~/.claude/hooks/` if missing) and `chmod +x` it. Do not edit the payload template in place; the concrete, path-injected copy lives in `~/.claude/hooks/`.
+2. Register it in `~/.claude/settings.json` under `hooks.PreToolUse`, matcher `"Bash"`, as a `{"type": "command", "command": "~/.claude/hooks/my-second-brain-rm-guard.sh", "timeout": 10}` entry (expand `~` to the absolute path). **Use the official `update-config` skill to make this edit if it is available; only hand-edit the JSON as a fallback, and preserve any existing `PreToolUse` / `Bash` entries by appending, never overwriting.**
+3. Sanity-check: the token no longer appears in the installed file (`grep -c __MSB_VAULT_PATHS__` returns 0) and `bash -n ~/.claude/hooks/my-second-brain-rm-guard.sh` is clean.
+
+**Uninstall** (tell the owner this, once): remove that one entry from the `PreToolUse` `Bash` matcher in `~/.claude/settings.json` and delete `~/.claude/hooks/my-second-brain-rm-guard.sh`. Nothing else references it.
+
+Record `rm_guard_installed:` in `bootstrap-progress.md` (`installed` / `declined` / `skipped-platform`).
+
 ## Step 7: Official Obsidian skills (optional, recommended)
 
 Offer once: the Obsidian team publishes official skills (Bases syntax, Obsidian-flavored markdown, web clipping) that make the AI sharper inside Obsidian. Install with `npx skills add kepano/obsidian-skills`. Recommended yes; a no costs nothing tonight. Record the answer in `bootstrap-progress.md` (`obsidian_skills_offered:`).

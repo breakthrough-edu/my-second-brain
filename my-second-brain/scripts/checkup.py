@@ -96,6 +96,11 @@ DEFAULTS = {
     "staleness_days": 7,
     "filing_log_file": "filing-log.md",
     "filing_log_stale_days": 14,
+    # Safety-lock (the optional rm -rf delete-guard installed by Setup Step 6.8).
+    # Informational only. Matched by this substring in a PreToolUse Bash hook
+    # command in ~/.claude/settings.json. macOS-only, like the guard itself.
+    "safety_lock_check": True,
+    "safety_lock_marker": "rm-guard",
 }
 
 # Severity ordering for grouping/printing.
@@ -484,12 +489,40 @@ def check_freshness(vault, cfg):
     return findings, note
 
 
+def check_safety_lock(vault, cfg):
+    """Informational: is the optional rm -rf delete-guard (Setup Step 6.8)
+    registered? Reads ~/.claude/settings.json read-only. macOS-only, matching
+    the guard's own platform support; INFO severity, never an error."""
+    if not cfg.get("safety_lock_check", True):
+        return [], "disabled in config"
+    if sys.platform != "darwin":
+        return [], "non-macOS; safety-lock check skipped"
+    settings = os.path.expanduser(os.path.join("~", ".claude", "settings.json"))
+    text = _read_text(settings)
+    hint = "optional delete-guard not detected; see Setup Step 6.8 to add the rm -rf accident net"
+    if text is None:
+        return [Finding(INFO, "safety-lock", hint)], "no ~/.claude/settings.json"
+    try:
+        data = json.loads(text)
+    except (ValueError, TypeError):
+        return [], "~/.claude/settings.json did not parse; skipped"
+    marker = cfg.get("safety_lock_marker", "rm-guard")
+    pre = (data.get("hooks", {}) or {}).get("PreToolUse", []) or []
+    for entry in pre:
+        for h in (entry.get("hooks", []) or []):
+            cmdv = h.get("command", "")
+            if isinstance(cmdv, str) and marker in cmdv:
+                return [], "delete-guard installed"
+    return [Finding(INFO, "safety-lock", hint)], None
+
+
 CHECKS = [
     ("Top-level rooms", check_rooms),
     ("Required 99_Meta files", check_required_meta),
     ("Record (cb:) schema", check_record_schema),
     ("Tag vocabulary", check_tags),
     ("Freshness", check_freshness),
+    ("Safety lock (delete-guard)", check_safety_lock),
 ]
 
 
