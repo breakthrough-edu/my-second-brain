@@ -19,6 +19,7 @@ One home, two wings: personal life in PARA (`02_Projects` to `05_Archive`), the 
 
 - **`{{SLUG}}-command-base`**: the daily operating system. Say "morning", "what's on my plate", "log a decision", "compile", or "file this" and it takes over.
 - **`my-second-brain`**: built this vault. Say "move in a room" or "capture my business" (capture), "distill" or "tidy my vault" (weekly maintenance), "create my jarvis" (give the AI a persona).
+- **Session memory** (only when `99_Meta/bootstrap-progress.md` says `session_memory_installed: installed`): every Claude Code conversation on this machine is searchable. When the owner asks "how did we fix that last time", "why did we choose A over B", or anything about a past session, search history before re-deriving: the tool ships in the `my-second-brain` skill payload at `scripts/session-history/`, run `python3 "<tool>/sh" search "<query>"` (index refreshes itself). The weekly harvest of these sessions belongs to Distill, not to this line.
 
 ---
 
