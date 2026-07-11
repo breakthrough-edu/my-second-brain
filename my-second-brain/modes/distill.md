@@ -22,7 +22,7 @@ Present the report compactly, grouped by check, each item one line: what, where,
 
 Execute what was approved. Append every move to `filing-log.md`. Update every touched MOC. Set `last_tidy:` in `maintenance-state.md` and append a one-line history entry (date, items found, items fixed).
 
-## Half 2: Distill (three pipes into Layer 3)
+## Half 2: Distill (the distillation pipes)
 
 Now the thinking half. Read the week's material and bring PROPOSALS. The discipline, stated to the owner once per run: **distillation proposes, judgment rules.** Nothing enters Layer 3 unless the owner says yes; that is what keeps the third layer honest (it holds judgment, not sediment).
 
@@ -37,6 +37,16 @@ Now the thinking half. Read the week's material and bring PROPOSALS. The discipl
 Also under pipe 3: a Playbook whose every step has stabilized gets flagged for demotion into an SOP; an SOP whose pothole keeps recurring gets its pothole proposed as a Lesson. Say it when seen; the layers are a loop, not drawers.
 
 **Pipe 4, the pod loop pass (one pass, all pods).** There is a single global distill; pods do not run their own rituals or carry their own maintenance doorbells (a per-pod doorbell would make the weekly load grow with pod count and break the ten-minute promise). Instead, this one distill iterates every graduated pod, one short subsection each. Per pod: read its `03_Methodology/rubric/` against its `loop-config.md`; any candidate card that has reached its confirmation threshold is proposed for promotion into the pod's `doctrine.md`; any hardened rule its loop-config marks as no-longer-holding is proposed for `retired.md`. Promotion never happens automatically; the owner rules, same as every other pipe. If a pod carries a `_state.md`, treat it as a timestamp record this pass writes to, not as an independent reminder.
+
+**Pipe 5, the session harvest (only when session memory is installed).** Read `session_memory_installed:` from `99_Meta/bootstrap-progress.md`; unless it says `installed`, skip this pipe silently, nothing else depends on it. Session memory (setup step 6.9) keeps a searchable index of every Claude Code conversation on the machine; this pipe is the weekly pass that turns the not-yet-reviewed ones into proposed memories. Same law as every pipe, worth saying to the owner in these words once: the AI reads, the AI proposes, nothing is kept until you tick it.
+
+1. **A pending report wins.** Look in `00_Inbox/` for a file whose frontmatter says `type: harvest-report` and `status: inbox-unprocessed`. If one exists, review THAT with the owner now and do not run a new pass: each report names the exact conversations it covers, and those are only marked reviewed when the report is committed, so stacking fresh reports just re-proposes the same material.
+2. Otherwise run the tool (it ships in this skill's payload at `scripts/session-history/`; resolve the running skill's folder as setup step 6.6 does): `python3 "<tool>/sh" ingest` to refresh the index, then `python3 "<tool>/sh" harvest`. The report lands in the vault `00_Inbox/` (the tool reads the vault path from the config written at setup step 6.9).
+3. **Curate before presenting.** The raw report is a mechanical first sift, not a finished proposal. Read it; drop candidates already covered by `99_Meta/memory.md`, the doctrine, or an existing note; merge duplicates; then present what remains in the owner's language, each with its session pointer. An honest zero is fine: if nothing survives, say so, commit the report anyway (those conversations are reviewed now), and move on.
+4. On the owner's ticks, write each keeper where it lives: a **memory** candidate is appended to `99_Meta/memory.md` (a durable fact about the owner themselves belongs in `99_Meta/profile.md` when that file exists); a **decision** candidate becomes a `cb: decision` note in `06_Command-Base/Decisions/` with `domain:` and `function:` filled; a **note** candidate routes exactly like Pipe 3 material (function-local to a graduated pod's `rubric/`, cross-function to `03_Methodology/`).
+5. Close the loop: `python3 "<tool>/sh" harvest commit "<report-path>"` (the only step that marks those conversations reviewed), flip the report's `status:` to `processed-<date>`, and set `last_harvest:` in `maintenance-state.md`.
+
+If the tool errors or is missing despite the flag (a moved install, a new machine), say so plainly, skip the pipe, and never let it block the rest of the distill.
 
 ## Pod altitude scan (the graduation and demotion doorbell)
 

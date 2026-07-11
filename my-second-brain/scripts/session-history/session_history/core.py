@@ -1048,66 +1048,87 @@ def render_report(now, stats: dict, views: list[dict], candidates: dict) -> str:
     lines.append(f"# Harvest Report · {date}")
     lines.append("")
     lines.append(
-        f"Weekly harvest pass. {stats['qualified']} session(s) qualified "
-        f"(harvested=0, quiescent >24h, real conversation); "
-        f"{stats['in_report']} carried into this report, "
-        f"{stats['capped_out']} capped out for a later pass. "
-        "Nothing below is committed to memory. Tick the checkboxes you want "
-        "to keep, then a Command Base session runs `harvest commit` on this file "
-        "to mark exactly these sessions as harvested."
+        f"I read {stats['in_report']} of your past conversations (ones not yet "
+        "reviewed) and pulled out what looks worth keeping. Nothing here is "
+        "saved anywhere yet: tick the boxes you want to keep, and the next "
+        "session that processes this report will write the keepers in and mark "
+        "these conversations as reviewed."
     )
     lines.append("")
     echo = stats.get("echo_lines_filtered", 0)
     if echo:
         lines.append(
-            f"_Noise filter: {echo} boilerplate line(s) that repeated verbatim "
-            "across 3+ sessions (standing rules / injected context) were "
-            "dropped before mining._"
+            f"_Noise filter: {echo} line(s) that repeated word-for-word across "
+            "3+ conversations (standing rules, injected context) were set aside "
+            "as boilerplate._"
         )
         lines.append("")
 
+    _WHY = {
+        "correction": "you corrected the AI here",
+        "gotcha": "something broke or surprised here",
+    }
+
     mem = candidates.get("memory", [])
-    lines.append("## ① auto-memory candidates")
+    lines.append("## ① Worth remembering")
     lines.append("")
     if not mem:
         lines.append("_None surfaced this pass._")
     else:
         for m in mem:
+            why = _WHY.get(m["kind"], m["kind"])
             lines.append(
                 f"- [ ] **`{m['tag']}` · {m['name']}** {_fmt_pointer(m)}  \n"
-                f"  Why: signal from a {m['kind']}. Evidence: \"{m['evidence']}\""
+                f"  Why it surfaced: {why}. Evidence: \"{m['evidence']}\""
             )
     lines.append("")
 
     dec = candidates.get("decisions", [])
-    lines.append("## ② cb: decision candidates")
+    lines.append("## ② Decisions worth logging")
     lines.append("")
     if not dec:
         lines.append("_None surfaced this pass._")
     else:
         for d in dec:
             lines.append(
-                f"- [ ] Decision worth logging {_fmt_pointer(d)}  \n"
+                f"- [ ] A decision seems to have been locked here {_fmt_pointer(d)}  \n"
                 f"  Evidence: \"{d['evidence']}\""
             )
     lines.append("")
 
     note = candidates.get("notes", [])
-    lines.append("## ③ vault note candidates")
+    lines.append("## ③ Ideas worth a note")
     lines.append("")
     if not note:
         lines.append("_None surfaced this pass._")
     else:
         for n in note:
             lines.append(
-                f"- [ ] Methodology seed {_fmt_pointer(n)}  \n"
+                f"- [ ] An idea that could grow into its own note {_fmt_pointer(n)}  \n"
                 f"  Evidence: \"{n['evidence']}\""
             )
     lines.append("")
 
     lines.append("---")
     lines.append("")
-    lines.append("## Evidence appendix (compressed views)")
+    lines.append("## The numbers (for the curious)")
+    lines.append("")
+    lines.append(
+        f"- {stats['qualified']} conversation(s) qualified this pass: not yet "
+        "reviewed, idle for 24h+, and a real conversation (subagent transcripts "
+        "never qualify)."
+    )
+    lines.append(
+        f"- {stats['in_report']} carried into this report; "
+        f"{stats['capped_out']} held for a later pass. Held-over conversations "
+        "are never dropped: they stay unreviewed and come back next time."
+    )
+    lines.append(
+        "- The `sessions:` list in the frontmatter is the contract `harvest "
+        "commit` reads back on approval; leave it untouched."
+    )
+    lines.append("")
+    lines.append("## Evidence appendix (what was mined, per conversation)")
     lines.append("")
     for v in views:
         lines.append(f"### {v['title'][:70]}")

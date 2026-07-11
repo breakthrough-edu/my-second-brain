@@ -8,6 +8,8 @@
 
 A Claude Code skill that builds and runs a complete second brain for a business owner: one vault, two wings (your life in PARA, your business in a three-layer knowledge map), operated in plain conversation, with Obsidian as the viewing deck.
 
+And it does the two things note systems never do: it **grows its own memory** (every AI conversation becomes searchable history, and a weekly harvest proposes what is worth keeping; nothing is saved until you approve it), and it **keeps machines on guard** (a read-only structural lint, plus a safety lock that blocks the one delete you cannot undo). The rules are not just written down; they are enforced.
+
 ## Install
 
 ```bash
@@ -91,6 +93,7 @@ After Setup, your daily driver is the command-base skill it generated for you. A
 | "we decided to drop the entry-level package" | A structured decision record, filed in the central Decisions room with domain and reasoning |
 | "follow up with the printer on Friday" | A waiting-for task that will resurface on its own |
 | "how do we onboard a new hire again?" | Answered FROM your own SOP note, and if the answer reveals the SOP is stale, it gets updated in the same move |
+| "how did we fix this last time?" | Answered from your searchable session history, if session memory is installed, instead of re-deriving a solved problem |
 | "compile" (end of day) | The day's captures become a dated daily note, business items append to the business log |
 | "distill" (weekly, 10 min) | Vault hygiene scan, then distillation proposals for your methodology layer. You rule yes or no |
 
@@ -107,13 +110,32 @@ Most second brains die the same death: capture keeps adding, nothing ever settle
 Say "distill" once a week and four things happen, in order:
 
 1. **Tidy scan.** Seven hygiene checks across the vault: orphan notes, misfiled items, stale maps, and the rest. The AI reports; files move only after you approve.
-2. **Distillation proposals.** The AI reads the week's decisions, session logs, and daily notes, then proposes what they add up to: a decision pattern, a lesson, a rollup.
+2. **Distillation proposals.** The AI reads the week's decisions, session logs, and daily notes (and, when session memory is installed, your unreviewed AI conversations), then proposes what they add up to: a decision pattern, a lesson, a rollup.
 3. **You rule.** Yes or no on each proposal. Nothing writes itself into your methodology layer, ever.
 4. **Layer 3 grows.** Approved distillations land in Methodology as your own reviewed judgment. The same scan also watches for functions that have earned a pod, or pods that have gone quiet.
 
 This is the part most tools skip, because it cannot be automated away: the loop only compounds if a human keeps ruling. Ten minutes a week is the whole price. In exchange, the answers your AI gives you stop being generic, because they are grounded in what you actually decided, reviewed, and signed off on.
 
 **A machine does the hygiene half.** The mechanical checks in step 1 (stray folders outside the numbered structure, missing control files, off-vocabulary tags, records with holes in their frontmatter, maintenance that has gone stale) are run by a small read-only script, `scripts/checkup.py`, before the human scan starts. You run it with `python3 scripts/checkup.py "/path/to/your/vault"` (the Distill mode runs it for you), and it prints a report grouped by severity in a few seconds. It is strictly report-only: it never moves, renames, or deletes a single file. It finds; you rule. That is the same contract as the rest of the loop, just enforced by a script instead of your attention, so your ten minutes go to the judgment calls a machine cannot make.
+
+## It grows its own memory
+
+Most AI setups have amnesia: every conversation starts from zero, and the fix you found in April gets re-derived in July. **Session memory** (optional, offered at setup) closes that gap:
+
+- **Every conversation becomes searchable.** A small local tool indexes Claude Code's own transcripts into a full-text search database, so "how did we solve that before?" gets answered from history. It reads only the transcripts, read-only; it writes only its own database in `~/.my-second-brain/`; it is purely local, with no network code and no background process.
+- **A weekly harvest proposes memories.** During Distill, the AI reads the conversations you have not reviewed yet and brings back a short report: things worth remembering, decisions worth logging, ideas worth a note, each with a pointer to the conversation it came from. Nothing is saved until you tick it, and only your approval marks those conversations as reviewed, so a report you ignore costs nothing and nothing is ever silently skipped.
+
+Same law as everywhere else in this system, now with your own past conversations as one of the inlets: the AI proposes, you rule. That is what "grows its own memory" means here, and it is the part a notes app cannot copy, because the raw material is your working history with the AI itself.
+
+## Machines stand guard
+
+Written rules die without enforcement, so the rules that matter most are backed by machinery, all of it shipped in this skill:
+
+- **The structural lint** (`scripts/checkup.py`): read-only hygiene report over the whole vault, run before every weekly tidy.
+- **The safety lock** (optional setup step): a hook that blocks recursive deletes aimed at your vault or your skills folder, the one category of accident there is no undo for.
+- **The review bookmark** in session memory: only human approval can mark a conversation as reviewed, so the memory loop cannot quietly run away from you.
+
+One contract across all three: machines find, block, and propose. Only you rule.
 
 ## Create-My-Jarvis: your AI gets a character
 
