@@ -1,0 +1,9 @@
+# The database and any other local state live here — never commit them.
+data/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.DS_Store

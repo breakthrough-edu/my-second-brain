@@ -1,0 +1,41 @@
+"""session-history: index Claude Code session transcripts into a FTS5 SQLite DB."""
+
+from .core import (
+    SCHEMA_VERSION,
+    connect,
+    init_db,
+    ingest,
+    search,
+    show,
+    recent,
+    actions,
+    harvest,
+    harvest_commit,
+    select_harvest_candidates,
+    compressed_view,
+    filter_batch_echoes,
+    default_db_path,
+    default_projects_dir,
+    default_inbox_dir,
+    load_config,
+)
+
+__all__ = [
+    "SCHEMA_VERSION",
+    "connect",
+    "init_db",
+    "ingest",
+    "search",
+    "show",
+    "recent",
+    "actions",
+    "harvest",
+    "harvest_commit",
+    "select_harvest_candidates",
+    "compressed_view",
+    "filter_batch_echoes",
+    "default_db_path",
+    "default_projects_dir",
+    "default_inbox_dir",
+    "load_config",
+]

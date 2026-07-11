@@ -97,6 +97,29 @@ On yes (macOS):
 
 Record `rm_guard_installed:` in `bootstrap-progress.md` (`installed` / `declined` / `skipped-platform`).
 
+## Step 6.9: Session memory (optional, recommended, macOS first)
+
+This step turns on **session memory**: every Claude Code conversation on this machine becomes searchable, so future sessions can answer "how did we fix that last time?" and "why did we choose A over B?" instead of re-solving solved problems. It is also the raw material for the weekly **Harvest** in Distill mode, where the AI reads unreviewed past sessions and proposes memories for the owner to approve or reject.
+
+**Explain before you install.** Three facts, in plain terms, before asking for the yes:
+
+- **What it reads:** only Claude Code's own session transcripts (`~/.claude/projects/`), strictly read-only. It never touches the vault, notes, or any other file, and it never modifies a transcript.
+- **Where it writes:** one search database plus one small config file in `~/.my-second-brain/`. That folder sits outside the vault and outside this skill, so a skill update never wipes the index or the owner's review bookmarks.
+- **Purely local:** there is no network code in the tool at all. Nothing is uploaded anywhere. It is also not a background process; it only runs when a session invokes it.
+
+**Platform honesty.** The tool itself is standard-library Python and needs `python3` plus SQLite with FTS5, which macOS ships. It is validated on **macOS only** at this stage; on Windows or Linux, say so, skip, and record the skip. Do not improvise a port.
+
+On yes (macOS):
+
+1. The tool ships in this skill's payload at `scripts/session-history/` (self-contained, nothing to download). Resolve the running skill's folder as in step 6.6; call the tool's path `<tool>` below.
+2. Write the config so harvest reports know where the vault Inbox is: create `~/.my-second-brain/session-history.json` containing `{"vault": "<vault-path-from-step-3>"}` (create the folder if missing; if the file exists, update only the `vault` key).
+3. Build the first index: `python3 "<tool>/sh" ingest`. On a machine with a long Claude Code history this can take a little while on first run; incremental runs afterwards take seconds. Report the one-line stats it prints.
+4. Show the owner one search they can try, in their language, e.g. `python3 "<tool>/sh" search "the thing we fixed"`, and say plainly: from now on, asking "上次怎么解的 / how did we solve that before" in any session can actually be answered from history.
+
+**Uninstall** (tell the owner once): delete `~/.my-second-brain/session-history.db` and `session-history.json`. The tool has no hooks, no daemon, and no other footprint.
+
+Record `session_memory_installed:` in `bootstrap-progress.md` (`installed` / `declined` / `skipped-platform`).
+
 ## Step 7: Official Obsidian skills (optional, recommended)
 
 Offer once: the Obsidian team publishes official skills (Bases syntax, Obsidian-flavored markdown, web clipping) that make the AI sharper inside Obsidian. Install with `npx skills add kepano/obsidian-skills`. Recommended yes; a no costs nothing tonight. Record the answer in `bootstrap-progress.md` (`obsidian_skills_offered:`).

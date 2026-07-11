@@ -29,7 +29,7 @@ A companion skill, `pod-maker` (installed at setup), can graduate a judgment-hea
 
 ## What is in this folder
 
-This directory is the skill payload that `npx skills` installs as a unit: `SKILL.md` (the router), `modes/` (one file per mode), `templates/` (everything Setup scaffolds into your vault), `references/` (structure specs and room guides), `scripts/` (the read-only `checkup.py` vault linter the weekly Tidy pass runs), and `pod-maker/` (the companion skill).
+This directory is the skill payload that `npx skills` installs as a unit: `SKILL.md` (the router), `modes/` (one file per mode), `templates/` (everything Setup scaffolds into your vault), `references/` (structure specs and room guides), `scripts/` (the read-only `checkup.py` vault linter the weekly Tidy pass runs, the `rm-guard-hook.sh` safety-lock template, and the vendored `session-history/` session-memory tool), and `pod-maker/` (the companion skill).
 
 The structural rules live in your vault after setup (`99_Meta/structure-doctrine.md`), not in this skill, so your vault stays consistent no matter which tool or model touches it.
 
