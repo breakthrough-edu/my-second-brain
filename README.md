@@ -113,6 +113,8 @@ Say "distill" once a week and four things happen, in order:
 
 This is the part most tools skip, because it cannot be automated away: the loop only compounds if a human keeps ruling. Ten minutes a week is the whole price. In exchange, the answers your AI gives you stop being generic, because they are grounded in what you actually decided, reviewed, and signed off on.
 
+**A machine does the hygiene half.** The mechanical checks in step 1 (stray folders outside the numbered structure, missing control files, off-vocabulary tags, records with holes in their frontmatter, maintenance that has gone stale) are run by a small read-only script, `scripts/checkup.py`, before the human scan starts. You run it with `python3 scripts/checkup.py "/path/to/your/vault"` (the Distill mode runs it for you), and it prints a report grouped by severity in a few seconds. It is strictly report-only: it never moves, renames, or deletes a single file. It finds; you rule. That is the same contract as the rest of the loop, just enforced by a script instead of your attention, so your ten minutes go to the judgment calls a machine cannot make.
+
 ## Create-My-Jarvis: your AI gets a character
 
 Out of the box, every AI assistant is the same person: helpful, generic, nobody's. The fourth mode is where that ends, and it is the part owners remember.

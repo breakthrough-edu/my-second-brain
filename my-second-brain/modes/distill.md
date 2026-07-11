@@ -6,6 +6,8 @@ Two halves, always in this order (clean room first, then think):
 
 ## Half 1: Tidy (structure hygiene)
 
+**Run the machine pass first.** Before the human scan, run the read-only linter: `python3 <skill>/scripts/checkup.py "<vault-path>"` (add `--config <path>` if the owner keeps a private `.checkup.json` with their record-schema). It covers the mechanical half of the seven checks below (top-level rooms, required `99_Meta/` files, `cb:` schema, off-vocabulary tags, freshness) in seconds, so the human scan spends its attention on judgment (orphans, misfiling, distillation). The script is strictly report-only: it never moves, renames, or deletes anything, and its findings are proposals, not actions. Fold its output into the ONE report below; the owner still rules on every fix.
+
 Scan the vault and build ONE report. Do not fix anything yet. The seven checks:
 
 1. **Orphans:** notes reachable from no MOC and carrying no inbound links (skip `99_Meta`, `05_Archive`, daily notes). For each: proposed home MOC.

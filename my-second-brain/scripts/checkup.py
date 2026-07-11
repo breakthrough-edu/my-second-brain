@@ -132,6 +132,15 @@ _VOCAB_TAG_RE = re.compile(r"`#([A-Za-z0-9][A-Za-z0-9/_-]*)`")
 # is generic (not private) and it drops the common false positives: markdown
 # headings ('# ' has a space), hex colors (#FF6600), and C#/PascalCase anchors.
 _INLINE_TAG_RE = re.compile(r"(?:^|[\s(\[])#([a-z][a-z0-9/_-]*)")
+# Inline code spans (`...`) and markdown link targets (](url)) are stripped
+# before inline-tag scanning: both routinely carry a '#' that is NOT a tag,
+# e.g. a lowercase hex color `#e60012` or a table-of-contents anchor link
+# [Section](#section-anchor). Both are generic markdown, not private to any vault.
+_INLINE_CODE_RE = re.compile(r"`[^`]*`")
+_MD_LINK_TARGET_RE = re.compile(r"\]\([^)]*\)")
+# A lowercase hex color the tag regex would otherwise accept (#c1272d). Requiring
+# a digit keeps real 3/6-letter words (deface, facade) from being dropped.
+_HEX_COLOR_RE = re.compile(r"[0-9a-f]{3}(?:[0-9a-f]{3})?$")
 
 
 def _read_text(path):
@@ -182,8 +191,9 @@ def parse_frontmatter(text):
 
 
 def strip_code_and_frontmatter(text):
-    """Remove YAML frontmatter and fenced code blocks so inline-tag scanning
-    does not trip over `#` inside code or headings-in-code."""
+    """Remove YAML frontmatter, fenced code blocks, inline code spans, and
+    markdown link targets so inline-tag scanning does not trip over a `#` that
+    is not a tag: code, hex colors, or table-of-contents anchor links."""
     lines = text.splitlines()
     out = []
     i = 0
@@ -201,6 +211,10 @@ def strip_code_and_frontmatter(text):
             i += 1
             continue
         if not in_fence:
+            # drop inline code spans and markdown link targets so a '#' inside
+            # them (hex color, TOC anchor) is not later mistaken for a tag
+            ln = _INLINE_CODE_RE.sub(" ", ln)
+            ln = _MD_LINK_TARGET_RE.sub("]", ln)
             out.append(ln)
         i += 1
     return "\n".join(out)
@@ -402,6 +416,8 @@ def check_tags(vault, cfg):
         if cfg.get("scan_inline_tags", DEFAULTS["scan_inline_tags"]):
             body = strip_code_and_frontmatter(text)
             for m in _INLINE_TAG_RE.findall(body):
+                if _HEX_COLOR_RE.match(m) and any(c.isdigit() for c in m):
+                    continue  # a hex color, not a tag
                 found.add(m.lower())
         for t in found:
             if t not in vocab:
