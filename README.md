@@ -141,6 +141,10 @@ Same law as everywhere else in this system, now with your own past conversations
 
 Written rules die without enforcement, so the rules that matter most are backed by machinery, all of it shipped in this skill:
 
+<p align="center">
+  <img src="assets/guards.svg" alt="The three guards: the inspector finds, the safety lock blocks, the review bookmark proposes; every arrow reports to one desk, only you rule" width="100%">
+</p>
+
 - **The inspector** (`scripts/checkup.py`): a read-only hygiene sweep over the whole vault, run before every weekly tidy.
 - **The safety lock** (optional setup step, macOS only): a hook that blocks recursive deletes aimed at your vault or your skills folder, the one category of accident there is no undo for.
 - **The review bookmark** in session memory: only human approval can mark a conversation as reviewed, so the memory loop cannot quietly run away from you.
