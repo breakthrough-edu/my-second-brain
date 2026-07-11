@@ -12,7 +12,8 @@ description: >
   my second brain", "my second brain", "build my second brain", "second brain",
   "business brain", "move my business in", "capture my business", "move in a
   room", "capture mode", "distill", "tidy my vault", "weekly maintenance",
-  "maintain my brain", "create my jarvis", "give my AI a personality", or asks
+  "maintain my brain", "create my jarvis", "give my AI a personality", "add the
+  safety lock", "set up session memory", "make my sessions searchable", or asks
   to organize their business knowledge into a vault.
 ---
 
@@ -56,6 +57,7 @@ At every session start under this skill:
 2. **No vault or unfinished setup** -> offer Setup mode with one question, then run it.
 3. **Vault exists** -> route by what the user asked for. Ambiguous ("let's continue", "what now") -> read capture-progress and propose the next move (usually the next room to capture).
 4. **Staleness check (every entry, any mode).** Read `99_Meta/maintenance-state.md`. Its dates are seeded with the setup date, so a simple comparison works from day one; if the file is missing or a date is empty, treat maintenance as due. If the last tidy or distill is more than 7 days old, offer once: "Last maintenance was N days ago. Want to run a quick tidy first, or carry on?" Offer once, never nag. If the user declines, proceed and do not raise it again this session.
+5. **Retrofit a machine guard (existing vault).** The optional guards (setup step 6.8 safety lock, step 6.9 session memory) are offered during Setup, so a vault built before they shipped will not have them. When the owner asks for one by name ("add the safety lock", "set up session memory", "make my sessions searchable"), or asks why session search or the harvest is not working, check `99_Meta/bootstrap-progress.md` first: if the matching flag (`rm_guard_installed:` / `session_memory_installed:`) already says `installed`, say so and stop. Otherwise load [modes/setup.md](modes/setup.md) and run just that one step against the existing vault (vault path from state detection above), including its explain-before-install consent and its `bootstrap-progress.md` record line. Touch nothing else in the vault; this is a bolt-on, not a re-setup.
 
 ## Interaction language
 

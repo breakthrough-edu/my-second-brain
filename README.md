@@ -8,7 +8,7 @@
 
 A Claude Code skill that builds and runs a complete second brain for a business owner: one vault, two wings (your life in PARA, your business in a three-layer knowledge map), operated in plain conversation, with Obsidian as the viewing deck.
 
-And it does the two things note systems never do: it **grows its own memory** (every AI conversation becomes searchable history, and a weekly harvest proposes what is worth keeping; nothing is saved until you approve it), and it **keeps machines on guard** (a read-only structural lint, plus a safety lock that blocks the one delete you cannot undo). The rules are not just written down; they are enforced.
+And it does the two things note systems never do: it **grows its own memory** (every AI conversation becomes searchable history, and a weekly harvest proposes what is worth keeping; nothing is saved until you approve it), and it **keeps machines on guard** (a read-only inspector that sweeps the vault, plus a safety lock that blocks the one delete you cannot undo). The rules are not just written down; they are enforced.
 
 ## Install
 
@@ -28,6 +28,8 @@ Already running it? Updating to the latest version is one line, and it never tou
 npx skills update my-second-brain
 ```
 
+One thing the update command cannot do: the two machine guards (the safety lock and session memory) are offered during Setup, so a vault built before they shipped will not have them yet. Say **"add the safety lock"** or **"set up session memory"** in any session and the skill retrofits the one you asked for onto your existing vault.
+
 ## The idea underneath
 
 AI execution is cheap now. What is scarce is your data having a home.
@@ -42,10 +44,10 @@ The idea only works if the vault survives contact with daily life, and this is w
 
 | The usual death | What this system does instead |
 |---|---|
-| **Collect, never settle.** Capture keeps adding until the vault is a junk drawer nobody trusts. | A weekly distill ritual with teeth: tidy scan, proposals, you rule. See the loop section below. |
+| **Collect, never settle.** Capture keeps adding until the vault is a junk drawer nobody trusts. | A weekly distill ritual with teeth: a read-only inspector script scans first, then proposals, you rule. See the loop section below. |
 | **One sorting logic for everything.** Life and business forced into one tree, so filing turns into guesswork. | Two wings, two axes: PARA for your life, knowledge type for your business. |
-| **Rules live in nobody's head.** Filing by mood; consistency dies the day you switch tools or models. | A written constitution inside the vault, plus a filing log. The rules outlive the model. |
-| **The AI writes your "insights".** Auto-generated methodology reads smart and belongs to no one. | Layer 3 accepts only what you reviewed and approved. AI proposes, you rule. |
+| **Rules live in nobody's head.** Filing by mood; consistency dies the day you switch tools or models. | A written constitution inside the vault, plus a filing log, and the inspector checks the vault against it every week. The rules outlive the model. |
+| **The AI writes your "insights".** Auto-generated methodology reads smart and belongs to no one. | Layer 3 accepts only what you reviewed and approved, and only your approval can mark anything as reviewed. AI proposes, you rule. |
 | **The vault becomes a shadow ERP.** Invoices and receipts flood in until maintenance collapses under the volume. | The rows iron law: high-frequency data stays in the systems built for it; the vault keeps pointers and exceptions. |
 
 ## What you get: four modes
@@ -116,14 +118,22 @@ Say "distill" once a week and four things happen, in order:
 
 This is the part most tools skip, because it cannot be automated away: the loop only compounds if a human keeps ruling. Ten minutes a week is the whole price. In exchange, the answers your AI gives you stop being generic, because they are grounded in what you actually decided, reviewed, and signed off on.
 
-**A machine does the hygiene half.** The mechanical checks in step 1 (stray folders outside the numbered structure, missing control files, off-vocabulary tags, records with holes in their frontmatter, maintenance that has gone stale) are run by a small read-only script, `scripts/checkup.py`, before the human scan starts. You run it with `python3 scripts/checkup.py "/path/to/your/vault"` (the Distill mode runs it for you), and it prints a report grouped by severity in a few seconds. It is strictly report-only: it never moves, renames, or deletes a single file. It finds; you rule. That is the same contract as the rest of the loop, just enforced by a script instead of your attention, so your ten minutes go to the judgment calls a machine cannot make.
+**A machine does the hygiene half.** The mechanical checks in step 1 (stray folders outside the numbered structure, missing control files, off-vocabulary tags, records with holes in their frontmatter, maintenance that has gone stale) are run by the inspector, a small read-only script, before the human scan starts. Distill runs it for you, and it reports in seconds, grouped by severity. It is strictly report-only: it never moves, renames, or deletes a single file. It finds; you rule. That is the same contract as the rest of the loop, just enforced by a script instead of your attention, so your ten minutes go to the judgment calls a machine cannot make.
 
 ## It grows its own memory
 
-Most AI setups have amnesia: every conversation starts from zero, and the fix you found in April gets re-derived in July. **Session memory** (optional, offered at setup) closes that gap:
+Most AI setups have amnesia: every conversation starts from zero, and the fix you found in April gets re-derived in July. **Session memory** (optional, offered at setup, macOS first) closes that gap:
+
+<p align="center">
+  <img src="assets/memory.svg" alt="The memory loop: sessions are the negatives, a weekly harvest develops them, you tick what to keep, approved items become memory" width="100%">
+</p>
 
 - **Every conversation becomes searchable.** A small local tool indexes Claude Code's own transcripts into a full-text search database, so "how did we solve that before?" gets answered from history. It reads only the transcripts, read-only; it writes only its own database in `~/.my-second-brain/`; it is purely local, with no network code and no background process.
 - **A weekly harvest proposes memories.** During Distill, the AI reads the conversations you have not reviewed yet and brings back a short report: things worth remembering, decisions worth logging, ideas worth a note, each with a pointer to the conversation it came from. Nothing is saved until you tick it, and only your approval marks those conversations as reviewed, so a report you ignore costs nothing and nothing is ever silently skipped.
+
+<p align="center">
+  <img src="assets/harvest-report.svg" alt="A sample harvest report with fake data: three candidates with checkboxes and session pointers, nothing saved until you tick it" width="100%">
+</p>
 
 Same law as everywhere else in this system, now with your own past conversations as one of the inlets: the AI proposes, you rule. That is what "grows its own memory" means here, and it is the part a notes app cannot copy, because the raw material is your working history with the AI itself.
 
@@ -131,8 +141,8 @@ Same law as everywhere else in this system, now with your own past conversations
 
 Written rules die without enforcement, so the rules that matter most are backed by machinery, all of it shipped in this skill:
 
-- **The structural lint** (`scripts/checkup.py`): read-only hygiene report over the whole vault, run before every weekly tidy.
-- **The safety lock** (optional setup step): a hook that blocks recursive deletes aimed at your vault or your skills folder, the one category of accident there is no undo for.
+- **The inspector** (`scripts/checkup.py`): a read-only hygiene sweep over the whole vault, run before every weekly tidy.
+- **The safety lock** (optional setup step, macOS only): a hook that blocks recursive deletes aimed at your vault or your skills folder, the one category of accident there is no undo for.
 - **The review bookmark** in session memory: only human approval can mark a conversation as reviewed, so the memory loop cannot quietly run away from you.
 
 One contract across all three: machines find, block, and propose. Only you rule.
@@ -190,12 +200,15 @@ Two guardrails keep this from bloating your vault: the graduation gate treats "n
 - Single-owner system: you plus your AI. Obsidian has no permission layers; if staff need a piece, export that piece.
 - Not an ERP, not a CRM, not a multi-user wiki. Structured high-frequency data stays in the systems built for it.
 - Early insights are observations, and the skill says so honestly. Depth comes from months of captured judgment, not from week one.
+- The two machine guards are platform-gated for now: the safety lock is macOS only, session memory is macOS first. The vault, the four modes, and the inspector work everywhere.
 
 ## Requirements
 
 - [Claude Code](https://claude.com/claude-code)
 - [Obsidian](https://obsidian.md) (free; the skill can install it for you). Enable the **Bases** core plugin for the dashboard.
-- Works on macOS, Windows, Linux. English or 中文 interaction; your choice at setup.
+- Python 3, for the inspector and session memory (macOS ships everything they need).
+- Works on macOS, Windows, Linux. The optional machine guards are macOS-gated for now (safety lock macOS only, session memory macOS first); see Honest boundaries.
+- English or 中文 interaction; your choice at setup.
 
 ## Repo layout
 

@@ -1,0 +1,58 @@
+<svg viewBox="0 0 1600 620" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <radialGradient id="memglow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FF6600" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#FF6600" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="marrowG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6A6A74"/>
+    </marker>
+    <marker id="marrowO" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#FF6600"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="620" rx="28" fill="#0B0B0E"/>
+  <ellipse cx="800" cy="300" rx="720" ry="300" fill="url(#memglow)"/>
+
+  <text x="800" y="78" text-anchor="middle" font-size="30" font-weight="600" letter-spacing="7" fill="#F2F2F4">IT GROWS ITS OWN MEMORY</text>
+  <text x="800" y="116" text-anchor="middle" font-size="18" fill="#8A8A93">your working history, developed into memory · AI proposes, you tick</text>
+
+  <!-- Station 1: Sessions -->
+  <text x="230" y="196" text-anchor="middle" font-size="12" letter-spacing="3" fill="#6A6A74">THE NEGATIVES</text>
+  <rect x="80" y="210" width="300" height="130" rx="16" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="230" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#E8E8EC">SESSIONS</text>
+  <text x="230" y="294" text-anchor="middle" font-size="14" fill="#85858E">every AI conversation,</text>
+  <text x="230" y="316" text-anchor="middle" font-size="14" fill="#85858E">indexed, searchable, local</text>
+
+  <line x1="380" y1="275" x2="448" y2="275" stroke="#6A6A74" stroke-width="1.5" marker-end="url(#marrowG)"/>
+
+  <!-- Station 2: Harvest -->
+  <text x="605" y="196" text-anchor="middle" font-size="12" letter-spacing="3" fill="#6A6A74">THE DARKROOM</text>
+  <rect x="455" y="210" width="300" height="130" rx="16" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="605" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#E8E8EC">HARVEST</text>
+  <text x="605" y="294" text-anchor="middle" font-size="14" fill="#85858E">a weekly pass reads the</text>
+  <text x="605" y="316" text-anchor="middle" font-size="14" fill="#85858E">unreviewed ones, drafts a report</text>
+
+  <line x1="755" y1="275" x2="823" y2="275" stroke="#6A6A74" stroke-width="1.5" marker-end="url(#marrowG)"/>
+
+  <!-- Station 3: You tick (the human gate) -->
+  <text x="980" y="196" text-anchor="middle" font-size="12" letter-spacing="3" fill="#6A6A74">THE CONTACT SHEET</text>
+  <rect x="830" y="210" width="300" height="130" rx="16" fill="#131318" stroke="#FF6600" stroke-opacity="0.65" stroke-width="1.5"/>
+  <text x="980" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#FF7A26">YOU TICK</text>
+  <text x="980" y="294" text-anchor="middle" font-size="14" fill="#B08668">yes or no per candidate,</text>
+  <text x="980" y="316" text-anchor="middle" font-size="14" fill="#B08668">nothing saves itself</text>
+
+  <line x1="1130" y1="275" x2="1198" y2="275" stroke="#6A6A74" stroke-width="1.5" marker-end="url(#marrowG)"/>
+
+  <!-- Station 4: Memory -->
+  <text x="1355" y="196" text-anchor="middle" font-size="12" letter-spacing="3" fill="#6A6A74">THE ALBUM</text>
+  <rect x="1205" y="210" width="300" height="130" rx="16" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <text x="1355" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#E8E8EC">MEMORY</text>
+  <text x="1355" y="294" text-anchor="middle" font-size="14" fill="#85858E">approved items are kept,</text>
+  <text x="1355" y="316" text-anchor="middle" font-size="14" fill="#85858E">those sessions marked reviewed</text>
+
+  <!-- Return arc: the compounding payoff -->
+  <path d="M 1355 340 C 1355 500, 230 500, 230 340" fill="none" stroke="#FF6600" stroke-opacity="0.65" stroke-width="1.5" marker-end="url(#marrowO)"/>
+  <text x="795" y="502" text-anchor="middle" font-size="16" fill="#FF9A5C">the next session already knows what you chose to keep</text>
+</svg>
