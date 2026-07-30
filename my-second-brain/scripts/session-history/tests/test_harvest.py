@@ -378,3 +378,192 @@ class ConfigTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MinerCalibrationTests(unittest.TestCase):
+    """2026-07-29 recalibration: the four noise sources that made a report unusable.
+
+    Measured on the live 2,679-session index, the miner's own query was reading
+    70,653 tool_result rows against 8,258 user rows, assistant `thinking` was
+    concatenated into visible prose, sections ② and ③ printed the same evidence
+    under two headings, and resumed conversations reached the report twice.
+    """
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp(prefix="sh-miner-")
+        self.projects = os.path.join(self.tmp, "projects")
+        self.pdir = os.path.join(self.projects, "proj-m")
+        os.makedirs(self.pdir)
+        self.db = os.path.join(self.tmp, "miner.db")
+
+        self.sid = "aaaaaaaa-0000-0000-0000-000000000001"
+        path = os.path.join(self.pdir, self.sid + ".jsonl")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(mk_user(self.sid, "u1",
+                            "有没有可能 我们把这个平台延伸到 bypass agent 直接对接厂主",
+                            "2026-07-05T10:00:00Z") + "\n")
+            f.write(mk_user(self.sid, "u2",
+                            "就用 option B 吧, 拍板了",
+                            "2026-07-05T10:01:00Z") + "\n")
+            # Assistant turn carrying BOTH private reasoning and visible prose,
+            # plus a tool_use and the tool's result payload.
+            f.write(json.dumps({
+                "type": "assistant", "uuid": "a1", "sessionId": self.sid,
+                "timestamp": "2026-07-05T10:02:00Z", "cwd": "/x",
+                "gitBranch": "main", "version": "1.0.0",
+                "message": {"role": "assistant", "content": [
+                    {"type": "thinking", "thinking":
+                        "I decided the plan is to go with option C, the error here "
+                        "suggests I should lock it myself before asking."},
+                    {"type": "text", "text":
+                        "the deploy failed with a 500, turns out the anchor was wrong"},
+                    {"type": "tool_use", "name": "Read", "input": {"file_path": "/x/y.md"}},
+                ]},
+            }, ensure_ascii=False) + "\n")
+            f.write(json.dumps({
+                "type": "user", "uuid": "u3", "sessionId": self.sid,
+                "timestamp": "2026-07-05T10:02:05Z", "cwd": "/x",
+                "gitBranch": "main", "version": "1.0.0",
+                "message": {"role": "user", "content": [
+                    {"type": "tool_result", "content":
+                        "130 - 全程 Browser 回归零 error; 我们决定 rebuild 它, the problem is stale"},
+                ]},
+            }, ensure_ascii=False) + "\n")
+
+        self.conn = connect(self.db)
+        ingest(self.conn, self.projects, progress=False)
+        e = _epoch("2026-07-05T12:00:00")
+        os.utime(path, (e, e))
+        self.view = compressed_view(self.conn, self.sid)
+
+    def tearDown(self):
+        self.conn.close()
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def _all_evidence(self):
+        return " || ".join(
+            s for k in ("corrections", "decisions", "gotchas", "ideas")
+            for s in self.view.get(k, [])
+        )
+
+    def test_tool_result_payloads_never_reach_any_bucket(self):
+        self.assertNotIn("全程 Browser 回归零", self._all_evidence(),
+                         "tool_result rows carry tool_name NULL; the role filter "
+                         "is what keeps file dumps out of the buckets")
+
+    def test_thinking_never_reaches_any_bucket(self):
+        ev = self._all_evidence()
+        self.assertNotIn("top-level", ev)
+        self.assertNotIn("lock it myself", ev)
+        self.assertFalse(any("option C" in d for d in self.view["decisions"]),
+                         "the assistant's private reasoning is not the owner's decision")
+
+    def test_thinking_still_searchable(self):
+        row = self.conn.execute(
+            "SELECT text FROM messages WHERE session_id=? AND tool_name=?",
+            (self.sid, "__thinking__"),
+        ).fetchone()
+        self.assertIsNotNone(row, "thinking must stay indexed, just tagged")
+        self.assertIn("option C", row["text"])
+
+    def test_assistant_gotcha_prose_still_mined(self):
+        self.assertTrue(any("500" in g for g in self.view["gotchas"]),
+                        "real assistant-side gotchas are signal, keep them")
+
+    def test_owner_decision_and_idea_are_separate_sources(self):
+        self.assertTrue(any("拍板" in d for d in self.view["decisions"]))
+        self.assertTrue(any("有没有可能" in i for i in self.view["ideas"]))
+        from session_history.core import mine_candidates
+        cand = mine_candidates([self.view])
+        dec_ev = {d["evidence"] for d in cand["decisions"]}
+        note_ev = {n["evidence"] for n in cand["notes"]}
+        self.assertTrue(dec_ev)
+        self.assertTrue(note_ev)
+        self.assertFalse(dec_ev & note_ev,
+                         "② and ③ must not print the same evidence line twice")
+
+    def test_long_echo_line_drops_at_two_sessions(self):
+        long_line = ("- **Command Deck (生成式仪表台, 2026-07-22 起接替 Cockpit):** "
+                     "rebuild via cb-control-tower.py, morning briefing 时 rebuild 它")
+        views = [
+            {"id": "s1", "corrections": [long_line], "decisions": [], "gotchas": [], "ideas": []},
+            {"id": "s2", "corrections": [long_line], "decisions": [], "gotchas": [], "ideas": []},
+        ]
+        views, dropped = filter_batch_echoes(views)
+        self.assertEqual(dropped, 1)
+        self.assertEqual(views[0]["corrections"], [])
+
+    def test_short_repeat_survives_two_sessions(self):
+        short = "就这样吧"
+        views = [
+            {"id": "s1", "corrections": [short], "decisions": [], "gotchas": [], "ideas": []},
+            {"id": "s2", "corrections": [short], "decisions": [], "gotchas": [], "ideas": []},
+        ]
+        views, dropped = filter_batch_echoes(views)
+        self.assertEqual(dropped, 0, "short human phrasings legitimately recur")
+
+    def test_forked_twins_collapse_but_stay_in_the_commit_contract(self):
+        from session_history.core import _dedupe_forked_sessions
+        rows = [
+            {"id": "twin-rich", "project": "p", "started_at": "2026-07-23T15:28:34.985Z",
+             "last_ts": "2026-07-23T15:49:01Z", "_user_rows": 40},
+            {"id": "twin-thin", "project": "p", "started_at": "2026-07-23T15:28:34.985Z",
+             "last_ts": "2026-07-23T15:48:13Z", "_user_rows": 12},
+            {"id": "solo", "project": "p", "started_at": "2026-07-24T09:00:00Z",
+             "last_ts": "2026-07-24T09:30:00Z", "_user_rows": 5},
+        ]
+        out = _dedupe_forked_sessions(rows)
+        self.assertEqual([r["id"] for r in out], ["twin-rich", "solo"])
+        self.assertEqual(out[0]["_fork_twins"], ["twin-thin"],
+                         "the collapsed twin must still be flipped on commit, "
+                         "or it returns every pass forever")
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+class MarkupAndDoubleCountTests(unittest.TestCase):
+    """Pasted document markup is not speech, and one line belongs to one bucket."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp(prefix="sh-markup-")
+        self.projects = os.path.join(self.tmp, "projects")
+        self.pdir = os.path.join(self.projects, "proj-k")
+        os.makedirs(self.pdir)
+        self.db = os.path.join(self.tmp, "markup.db")
+        self.sid = "bbbbbbbb-0000-0000-0000-000000000002"
+        path = os.path.join(self.pdir, self.sid + ".jsonl")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(mk_user(self.sid, "u1",
+                            "| ↳ platform marketing | 品牌级共享职能, 已经拍板了 | locked |\n"
+                            "```\nlet's go with option B, locked\n```\n"
+                            "查看我的底层代码, 是不是无法支援 HEIC 的照片? 这个错了",
+                            "2026-07-05T10:00:00Z") + "\n")
+            f.write(mk_assistant(self.sid, "a1", "ok", "2026-07-05T10:00:05Z") + "\n")
+        self.conn = connect(self.db)
+        ingest(self.conn, self.projects, progress=False)
+        e = _epoch("2026-07-05T12:00:00")
+        os.utime(path, (e, e))
+        self.view = compressed_view(self.conn, self.sid)
+
+    def tearDown(self):
+        self.conn.close()
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_table_row_never_becomes_a_decision(self):
+        self.assertFalse(any("platform marketing" in d for d in self.view["decisions"]),
+                         "a pasted markdown table row is document content, not a decision")
+
+    def test_code_fence_skipped(self):
+        self.assertFalse(any(s.startswith("```") for s in self.view["decisions"]))
+
+    def test_line_counted_once_across_buckets(self):
+        heic = [s for s in self.view["corrections"] if "HEIC" in s]
+        self.assertTrue(heic, "the HEIC line is a correction")
+        self.assertFalse(any("HEIC" in g for g in self.view["gotchas"]),
+                         "the same line must not also print as a gotcha")
+
+
+if __name__ == "__main__":
+    unittest.main()

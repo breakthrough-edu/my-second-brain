@@ -233,6 +233,12 @@ def _truncate(text: str, limit: int = MAX_TEXT_BYTES) -> str:
     return b[:limit].decode("utf-8", errors="ignore") + " …[truncated]"
 
 
+# Pseudo tool_name marking an assistant `thinking` block. Not a real tool; it
+# parks reasoning in a row the harvest query skips while `sh search` still finds
+# it. Changing this string requires a re-ingest to take effect on old rows.
+THINKING_TOOL_NAME = "__thinking__"
+
+
 def _flatten_tool_result(content) -> str:
     """tool_result content may be a string or a list of blocks."""
     if isinstance(content, str):
@@ -293,9 +299,14 @@ def _rows_for_line(obj: dict) -> Iterator[tuple]:
             if t:
                 text_parts.append(t)
         elif btype == "thinking":
+            # Own row, tagged, NOT concatenated into the visible-prose row.
+            # Merged in, the assistant's private reasoning was indistinguishable
+            # from what it actually said, and harvest mined it as owner signal.
+            # The THINKING_TOOL_NAME marker keeps it fully searchable while the
+            # harvest query (tool_name IS NULL) skips it.
             t = str(block.get("thinking", "")).strip()
             if t:
-                text_parts.append(t)
+                extra_rows.append((role, _truncate(t), THINKING_TOOL_NAME, i))
         elif btype == "tool_use":
             name = block.get("name") or "unknown"
             inp = block.get("input", {})
@@ -770,6 +781,46 @@ def _is_quiescent(path: Optional[str], cutoff_epoch: float) -> bool:
         return True
 
 
+def _dedupe_forked_sessions(qualifying: list[dict]) -> list[dict]:
+    """Collapse transcript twins produced by resuming or forking a conversation.
+
+    Resuming a session writes a SECOND jsonl for the same conversation: same
+    project, same `started_at` to the millisecond, near-identical content. Both
+    get indexed, so both reach the report and the reader sees the same evidence
+    printed twice under two different session ids (6 such pairs in the
+    2026-07-29 batch). Keep the richest twin, which is the one with the most
+    user rows (tie broken by the later `last_ts`), and hang the losers on it as
+    `_fork_twins` so the report's frontmatter still lists them: they were
+    genuinely covered, and a commit must flip them too or they return every pass
+    forever.
+    """
+    groups: dict[tuple, list[dict]] = {}
+    order: list[tuple] = []
+    for d in qualifying:
+        key = (d.get("project"), d.get("started_at"))
+        if not d.get("started_at"):  # no reliable fork key, never collapse
+            key = ("__unique__", id(d))
+        if key not in groups:
+            groups[key] = []
+            order.append(key)
+        groups[key].append(d)
+
+    survivors: list[dict] = []
+    for key in order:
+        members = groups[key]
+        if len(members) == 1:
+            survivors.append(members[0])
+            continue
+        members.sort(
+            key=lambda m: (m.get("_user_rows") or 0, m.get("last_ts") or ""),
+            reverse=True,
+        )
+        winner, losers = members[0], members[1:]
+        winner["_fork_twins"] = [m["id"] for m in losers]
+        survivors.append(winner)
+    return survivors
+
+
 def select_harvest_candidates(
     conn: sqlite3.Connection,
     now,
@@ -818,6 +869,8 @@ def select_harvest_candidates(
         d["_assistant_rows"] = a
         qualifying.append(d)
 
+    qualifying = _dedupe_forked_sessions(qualifying)
+
     selected = qualifying[:max_sessions]
     return {
         "selected": selected,
@@ -860,10 +913,32 @@ _GOTCHA_CUES = (
     "报错", "失败", "不行", "问题是", "原来", "坑", "踩坑", "无法",
 )
 
+_IDEA_CUES = (
+    "what if", "idea:", "how about", "i'm thinking", "im thinking",
+    "worth exploring", "we could maybe", "could we maybe", "brainstorm",
+    "有没有可能", "我在想", "有个想法", "点子", "或许可以", "可不可以考虑",
+    "值得试", "值得探索", "有机会延伸", "延伸到",
+)
+
 _SENTINEL_PREFIXES = (
     "[image:", "[request interrupted", "<system-reminder", "caveat:",
     "[tool ", "this session is", "<command-", "<local-command-",
 )
+
+# Document markup, not speech. Pasting a handoff doc or a schema table into a
+# message put its rows in front of the cue lexicons, and a table row that happens
+# to contain "拍板" or "locked" then shipped as "a decision seems to have been
+# locked here". Nobody says a markdown table out loud.
+_MARKUP_PREFIXES = ("|", "```", "> |", "<td", "<tr", "<span", "<div")
+
+
+def _is_markup(line: str) -> bool:
+    s = line.lstrip()
+    if s.startswith(_MARKUP_PREFIXES):
+        return True
+    # A row rendered without its leading pipe still reads as a table when it is
+    # mostly cell separators.
+    return s.count(" | ") >= 2
 
 
 def _clean_line(text: str) -> str:
@@ -892,6 +967,7 @@ def _cue_regex(cues) -> "re.Pattern":
 _CORRECTION_RE = _cue_regex(_CORRECTION_CUES)
 _DECISION_RE = _cue_regex(_DECISION_CUES)
 _GOTCHA_RE = _cue_regex(_GOTCHA_CUES)
+_IDEA_RE = _cue_regex(_IDEA_CUES)
 
 
 def compressed_view(conn: sqlite3.Connection, session_id: str, per_bucket: int = 6) -> dict:
@@ -916,11 +992,17 @@ def compressed_view(conn: sqlite3.Connection, session_id: str, per_bucket: int =
         sess.get("id", "")
     ).startswith("agent-")
 
-    # Text messages only (tool_name IS NULL); tool payloads are noise here.
+    # Conversation text only. `tool_name IS NULL` alone is NOT enough: tool_result
+    # rows are stored with tool_name NULL and role 'tool_result', so the old filter
+    # let every file read, command dump and HTTP body into the buckets (measured
+    # 2026-07-29 on a 2,679-session index: 70,653 tool_result rows vs 42,788
+    # assistant and 8,258 user, i.e. 58% of everything the miner saw was raw tool
+    # output). Pin the role explicitly.
     rows = conn.execute(
         """
         SELECT role, text FROM messages
         WHERE session_id=? AND tool_name IS NULL AND text IS NOT NULL
+          AND role IN ('user','assistant')
         ORDER BY line_index, block_index
         """,
         (session_id,),
@@ -929,6 +1011,7 @@ def compressed_view(conn: sqlite3.Connection, session_id: str, per_bucket: int =
     corrections: list[str] = []
     decisions: list[str] = []
     gotchas: list[str] = []
+    ideas: list[str] = []
     first_user = None
 
     for r in rows:
@@ -954,6 +1037,8 @@ def compressed_view(conn: sqlite3.Connection, session_id: str, per_bucket: int =
                 continue
             if any(low.startswith(p) for p in _SENTINEL_PREFIXES):
                 continue
+            if _is_markup(ln):
+                continue
             snippet = ln[:220]
             if role == "user":
                 if first_user is None:
@@ -965,10 +1050,25 @@ def compressed_view(conn: sqlite3.Connection, session_id: str, per_bucket: int =
                 ):
                     if snippet not in corrections:
                         corrections.append(snippet)
-            if len(decisions) < per_bucket and _DECISION_RE.search(ln):
-                if snippet not in decisions:
-                    decisions.append(snippet)
-            if len(gotchas) < per_bucket and _GOTCHA_RE.search(ln):
+                # Decisions and ideas are OWNER-VOICE ONLY. They used to accept
+                # assistant rows, which meant the AI's own reasoning came back as
+                # "a decision seems to have been locked here" ("I'm the top-level
+                # coordinator managing JW's approval gates...", "Before modifying
+                # the generator in phase 4, I need to..."). What the assistant
+                # thought is not what the owner decided. Gotchas stay open to
+                # assistant rows on purpose: "the render failed with a 500, turns
+                # out the anchor was wrong" is real signal whoever says it.
+                if len(decisions) < per_bucket and _DECISION_RE.search(ln):
+                    if snippet not in decisions:
+                        decisions.append(snippet)
+                if len(ideas) < per_bucket and _IDEA_RE.search(ln):
+                    if snippet not in ideas:
+                        ideas.append(snippet)
+            # One line, one bucket. A sentence can trip several lexicons at once
+            # ("是不是无法支援 HEIC 的照片?" reads as both a correction and a
+            # gotcha), and printing it twice under two headings just pads the
+            # report. Corrections win, they are the most specific read.
+            if len(gotchas) < per_bucket and snippet not in corrections and _GOTCHA_RE.search(ln):
                 if snippet not in gotchas:
                     gotchas.append(snippet)
 
@@ -982,6 +1082,7 @@ def compressed_view(conn: sqlite3.Connection, session_id: str, per_bucket: int =
         "corrections": corrections,
         "decisions": decisions,
         "gotchas": gotchas,
+        "ideas": ideas,
         "first_user": first_user,
     }
 
@@ -992,6 +1093,17 @@ def compressed_view(conn: sqlite3.Connection, session_id: str, per_bucket: int =
 # this many distinct sessions of one harvest batch.
 ECHO_MIN_SESSIONS = 3
 
+# A long line repeating byte-identical in even TWO sessions is injected context,
+# not two independent human utterances: nobody retypes 60 characters the same way
+# twice. Short lines keep the looser threshold, because "好, 就这样" legitimately
+# recurs. Calibrated 2026-07-29 after CLAUDE.md house-rule text (present in only
+# 2 sessions of the batch) survived the flat 3-session filter and shipped as a
+# "feedback" candidate.
+ECHO_LONG_LINE_CHARS = 60
+ECHO_LONG_MIN_SESSIONS = 2
+
+_ECHO_KEYS = ("corrections", "decisions", "gotchas", "ideas")
+
 
 def filter_batch_echoes(views: list[dict], min_sessions: int = ECHO_MIN_SESSIONS) -> tuple[list[dict], int]:
     """Drop evidence lines that repeat verbatim across many sessions in a batch.
@@ -1000,19 +1112,27 @@ def filter_batch_echoes(views: list[dict], min_sessions: int = ECHO_MIN_SESSIONS
     harness boilerplate) repeats byte-identical in session after session. Any
     snippet found in `min_sessions`+ distinct sessions of the batch is standing
     context echoing through the transcript, not that session's own signal, so
-    it is removed from every bucket of every view. Mutates and returns `views`
-    plus the count of distinct echo lines dropped.
+    it is removed from every bucket of every view. Lines of at least
+    `ECHO_LONG_LINE_CHARS` need only `ECHO_LONG_MIN_SESSIONS` repeats. Mutates
+    and returns `views` plus the count of distinct echo lines dropped.
     """
     seen: dict[str, set] = {}
     for v in views:
-        for key in ("corrections", "decisions", "gotchas"):
-            for s in v[key]:
+        for key in _ECHO_KEYS:
+            for s in v.get(key, ()):
                 seen.setdefault(s, set()).add(v["id"])
-    echo = {s for s, ids in seen.items() if len(ids) >= min_sessions}
+    echo = set()
+    for s, ids in seen.items():
+        threshold = (
+            ECHO_LONG_MIN_SESSIONS if len(s) >= ECHO_LONG_LINE_CHARS else min_sessions
+        )
+        if len(ids) >= threshold:
+            echo.add(s)
     if echo:
         for v in views:
-            for key in ("corrections", "decisions", "gotchas"):
-                v[key] = [s for s in v[key] if s not in echo]
+            for key in _ECHO_KEYS:
+                if key in v:
+                    v[key] = [s for s in v[key] if s not in echo]
     return views, len(echo)
 
 
@@ -1072,9 +1192,14 @@ def mine_candidates(views: list[dict]) -> dict:
                 **ptr,
                 "evidence": v["decisions"][0],
             })
+        # Section ③ used to re-print the SAME decision line as section ②, so one
+        # candidate showed up twice under two different headings and the report
+        # read three times longer than it had signal for. Ideas get their own
+        # lexicon; when a session has none, ③ simply stays quiet for it.
+        if v.get("ideas"):
             notes.append({
                 **ptr,
-                "evidence": v["decisions"][0],
+                "evidence": v["ideas"][0],
             })
     return {"memory": memory, "decisions": decisions, "notes": notes}
 
@@ -1087,7 +1212,7 @@ def _fmt_pointer(item: dict) -> str:
 
 def render_report(now, stats: dict, views: list[dict], candidates: dict) -> str:
     date = _now_date(now)
-    ids = [v["id"] for v in views]
+    ids = [v["id"] for v in views] + list(stats.get("fork_twins") or [])
     fm_sessions = "[" + ", ".join(ids) + "]"
 
     lines: list[str] = []
@@ -1192,8 +1317,9 @@ def render_report(now, stats: dict, views: list[dict], candidates: dict) -> str:
         lines.append("")
         for label, key in (("Corrections", "corrections"),
                            ("Decisions", "decisions"),
-                           ("Gotchas", "gotchas")):
-            if v[key]:
+                           ("Gotchas", "gotchas"),
+                           ("Ideas", "ideas")):
+            if v.get(key):
                 lines.append(f"- {label}:")
                 for s in v[key]:
                     lines.append(f"  - {s}")
@@ -1222,6 +1348,15 @@ def harvest(
     sel = select_harvest_candidates(conn, now, max_sessions=max_sessions)
     views = [compressed_view(conn, r["id"]) for r in sel["selected"]]
     views = [v for v in views if v]
+    kept = {v["id"] for v in views}
+    # Fork twins were collapsed out of `selected` but ARE covered by the report,
+    # so they ride along in the frontmatter contract that harvest_commit reads.
+    sel["fork_twins"] = [
+        t
+        for r in sel["selected"]
+        if r["id"] in kept
+        for t in (r.get("_fork_twins") or [])
+    ]
     views, echo_dropped = filter_batch_echoes(views)
     sel["echo_lines_filtered"] = echo_dropped
     candidates = mine_candidates(views)
@@ -1243,7 +1378,7 @@ def harvest(
         "in_report": sel["in_report"],
         "capped_out": sel["capped_out"],
         "echo_lines_filtered": echo_dropped,
-        "sessions": [v["id"] for v in views],
+        "sessions": [v["id"] for v in views] + list(sel.get("fork_twins") or []),
         "cutoff": sel["cutoff"],
         "out_path": os.path.abspath(out_path),
         "candidate_counts": {
