@@ -158,7 +158,16 @@ class HarvestTests(unittest.TestCase):
         self.assertEqual(fm_ids, {self.sids["A"], self.sids["B"]})
         self.assertEqual(set(stats["sessions"]), fm_ids)
         # frontmatter counts present
-        self.assertIn("type: harvest-report", text)
+        # The machine pass writes a DRAFT, and it must not be dressed as a
+        # deliverable: no report type, no ready-to-tick status, no checkboxes.
+        # Curation earns those. Both zero-adoption rounds happened because the
+        # raw file already looked finished and sat in the folder the owner
+        # reviews, so handing it over was cheaper than reading it.
+        self.assertIn("type: harvest-draft", text)
+        self.assertIn("status: machine-draft", text)
+        self.assertNotIn("type: harvest-report", text)
+        self.assertNotIn("- [ ]", text)
+        self.assertIn("not for the owner", text)
         self.assertIn("sessions_qualified: 2", text)
         self.assertIn("sessions_in_report: 2", text)
         self.assertIn("sessions_capped_out: 0", text)

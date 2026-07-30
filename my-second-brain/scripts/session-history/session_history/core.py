@@ -1301,23 +1301,35 @@ def render_report(now, stats: dict, views: list[dict], candidates: dict) -> str:
 
     lines: list[str] = []
     lines.append("---")
-    lines.append("type: harvest-report")
+    # A DRAFT, not a deliverable, and it must not look like one. The old
+    # rendering shipped `type: harvest-report`, `status: inbox-unprocessed` and
+    # a rendered checkbox per candidate straight into the owner's Inbox, so the
+    # machine's first sift arrived already wearing finished clothes, in the
+    # folder the owner reviews. The skill has always asked the AI to curate
+    # before presenting; that request was fighting its own artifact, and lost:
+    # 649 candidates and 26 candidates both went to the owner raw, and both were
+    # adopted at zero. The one round that went through curation first was
+    # adopted 8 of 8. Checkboxes are something curation earns.
+    lines.append("type: harvest-draft")
     lines.append(f"date: {date}")
-    lines.append("status: inbox-unprocessed")
+    lines.append("status: machine-draft")
     lines.append(f"sessions_qualified: {stats['qualified']}")
     lines.append(f"sessions_in_report: {stats['in_report']}")
     lines.append(f"sessions_capped_out: {stats['capped_out']}")
     lines.append(f"sessions: {fm_sessions}")
     lines.append("---")
     lines.append("")
-    lines.append(f"# Harvest Report · {date}")
+    lines.append(f"# Harvest Draft · {date}")
     lines.append("")
     lines.append(
-        f"I read {stats['in_report']} of your past conversations (ones not yet "
-        "reviewed) and pulled out what looks worth keeping. Nothing here is "
-        "saved anywhere yet: tick the boxes you want to keep, and the next "
-        "session that processes this report will write the keepers in and mark "
-        "these conversations as reviewed."
+        "**This file is not for the owner.** It is a mechanical first sift over "
+        f"{stats['in_report']} not-yet-reviewed conversation(s): cue words matched, "
+        "nothing judged. Read it, open the sessions behind the leads worth opening, "
+        "and write the owner a short proposal note in their Inbox: a handful of "
+        "named, typed, already-drafted entries they can approve in seconds. Carry "
+        "the `sessions:` list below into that note verbatim, because `harvest "
+        "commit` reads it back. Handing this file to the owner as-is is the "
+        "failure mode, not the shortcut."
     )
     lines.append("")
     echo = stats.get("echo_lines_filtered", 0)
@@ -1335,7 +1347,7 @@ def render_report(now, stats: dict, views: list[dict], candidates: dict) -> str:
     }
 
     mem = candidates.get("memory", [])
-    lines.append("## ① Worth remembering")
+    lines.append("## ① Leads: possibly worth remembering")
     lines.append("")
     if not mem:
         lines.append("_None surfaced this pass._")
@@ -1343,33 +1355,33 @@ def render_report(now, stats: dict, views: list[dict], candidates: dict) -> str:
         for m in mem:
             why = _WHY.get(m["kind"], m["kind"])
             lines.append(
-                f"- [ ] **`{m['tag']}` · {m['name']}** {_fmt_pointer(m)}  \n"
+                f"- **`{m['tag']}` · {m['name']}** {_fmt_pointer(m)}  \n"
                 f"  Why it surfaced: {why}. Evidence: \"{m['evidence']}\""
             )
     lines.append("")
 
     dec = candidates.get("decisions", [])
-    lines.append("## ② Decisions worth logging")
+    lines.append("## ② Leads: possible decisions")
     lines.append("")
     if not dec:
         lines.append("_None surfaced this pass._")
     else:
         for d in dec:
             lines.append(
-                f"- [ ] A decision seems to have been locked here {_fmt_pointer(d)}  \n"
+                f"- A decision may have been locked here {_fmt_pointer(d)}  \n"
                 f"  Evidence: \"{d['evidence']}\""
             )
     lines.append("")
 
     note = candidates.get("notes", [])
-    lines.append("## ③ Ideas worth a note")
+    lines.append("## ③ Leads: possible notes")
     lines.append("")
     if not note:
         lines.append("_None surfaced this pass._")
     else:
         for n in note:
             lines.append(
-                f"- [ ] An idea that could grow into its own note {_fmt_pointer(n)}  \n"
+                f"- An idea that could grow into its own note {_fmt_pointer(n)}  \n"
                 f"  Evidence: \"{n['evidence']}\""
             )
     lines.append("")

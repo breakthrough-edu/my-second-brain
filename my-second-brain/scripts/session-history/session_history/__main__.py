@@ -15,12 +15,12 @@ import datetime
 import os
 import sys
 
+from .core import DEFAULT_STATE_DIR
 from . import (
     FTS5Unavailable,
     actions,
     connect,
     default_db_path,
-    default_inbox_dir,
     default_projects_dir,
     harvest,
     harvest_commit,
@@ -112,15 +112,15 @@ def cmd_harvest(conn, args) -> int:
     now = args.now
     out = args.out
     if not out:
-        inbox = default_inbox_dir()
-        if not inbox:
-            print(
-                "harvest: no report destination. Pass --out <path>, or set the "
-                "vault (or inbox) key in ~/.my-second-brain/session-history.json.",
-                file=sys.stderr,
-            )
-            return 2
-        out = os.path.join(inbox, f"{now}-Harvest-Report.md")
+        # The draft lands in the tool's own state directory, never the vault
+        # Inbox. The Inbox is for things the owner is meant to read, and a
+        # machine sift is not one of them; putting it there made skipping
+        # curation the path of least resistance. A curated proposal note is
+        # what reaches the Inbox now, written by the session that read this.
+        # Side benefit: harvest no longer needs a configured vault to run.
+        out = os.path.join(
+            os.path.expanduser(DEFAULT_STATE_DIR), f"{now}-harvest-draft.md"
+        )
     stats = harvest(conn, now=now, out_path=out, max_sessions=args.max)
     print(
         f"harvest: {stats['qualified']} qualified, {stats['in_report']} in report, "
@@ -133,8 +133,8 @@ def cmd_harvest(conn, args) -> int:
         f"       candidates mined: {cc['memory']} memory, "
         f"{cc['decisions']} decision, {cc['notes']} note"
     )
-    print(f"       report: {stats['out_path']}")
-    print("       (harvested flags NOT changed; run `harvest commit` after approval)")
+    print(f"       draft: {stats['out_path']}")
+    print("       (a machine sift, NOT a report: curate it into a short proposal\n        note in the owner's Inbox, then `harvest commit` that note)")
     return 0
 
 
@@ -184,7 +184,7 @@ def build_parser() -> argparse.ArgumentParser:
     pd.add_argument("--now", default=today,
                     help="reference date/instant (default: today; deterministic if passed)")
     pd.add_argument("--out", default=None,
-                    help="report path (default: <configured inbox>/<now>-Harvest-Report.md)")
+                    help="draft path (default: ~/.my-second-brain/<now>-harvest-draft.md)")
     pd.add_argument("--max", type=int, default=30, help="cap on sessions in the report")
     pd.set_defaults(func=cmd_harvest)
 
