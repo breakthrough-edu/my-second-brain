@@ -628,5 +628,148 @@ class BucketExclusivityTests(unittest.TestCase):
                          f"'let's go with' is a decision, not a correction: {holders}")
 
 
+class MigrationV1ToV2Tests(unittest.TestCase):
+    """v1 rows cannot be told apart from v2 rows, so the ones we can re-parse, we do.
+
+    The dangerous version of this feature hangs off `init_db`, which `harvest`
+    and `harvest_commit` also call. The distill has a path that reviews an
+    existing report without ever ingesting, and wiping messages there would
+    empty the index with nothing queued to rebuild it. So the seam is `ingest`
+    and only `ingest`, and these tests hold that line.
+    """
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp(prefix="sh-migrate-")
+        self.projects = os.path.join(self.tmp, "projects")
+        self.pdir = os.path.join(self.projects, "proj-m")
+        os.makedirs(self.pdir)
+        self.db = os.path.join(self.tmp, "migrate.db")
+
+        self.live = "dddddddd-0000-0000-0000-00000000000a"
+        self.orphan = "dddddddd-0000-0000-0000-00000000000b"
+        self.live_path = os.path.join(self.pdir, self.live + ".jsonl")
+        with open(self.live_path, "w", encoding="utf-8") as f:
+            f.write(mk_user(self.live, "u1", "we decided to lock the pricing page",
+                            "2026-07-05T10:00:00Z") + "\n")
+            f.write(mk_assistant(self.live, "a1", "noted", "2026-07-05T10:00:05Z") + "\n")
+
+        self.conn = connect(self.db)
+        ingest(self.conn, self.projects, progress=False)
+
+        # A session whose transcript Claude Code has since deleted: indexed,
+        # bookmarked, and with no file left to re-read.
+        self.conn.execute(
+            "INSERT INTO sessions(id, project, path, title, started_at, last_ts,"
+            " line_count, byte_offset, size_at_ingest, harvested, harvested_at)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            (self.orphan, "proj-m", os.path.join(self.pdir, self.orphan + ".jsonl"),
+             "gone", "2026-06-01T10:00:00Z", "2026-06-01T11:00:00Z",
+             4, 400, 400, 1, "2026-06-02"),
+        )
+        self.conn.execute(
+            "INSERT INTO messages(session_id, ts, role, text, tool_name,"
+            " line_index, block_index) VALUES (?,?,?,?,?,?,?)",
+            (self.orphan, "2026-06-01T10:00:00Z", "user",
+             "the orphan said something worth keeping", None, 0, 0),
+        )
+        # Bookmark the live one too, to prove migration never touches bookmarks.
+        self.conn.execute(
+            "UPDATE sessions SET harvested=1, harvested_at='2026-07-06' WHERE id=?",
+            (self.live,),
+        )
+        # Pretend the whole thing was written by v1.
+        self.conn.execute("UPDATE schema_version SET version=1")
+        self.conn.commit()
+
+    def tearDown(self):
+        self.conn.close()
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def _version(self):
+        return self.conn.execute(
+            "SELECT version FROM schema_version LIMIT 1").fetchone()[0]
+
+    def _msg_count(self, sid):
+        return self.conn.execute(
+            "SELECT COUNT(*) FROM messages WHERE session_id=?", (sid,)).fetchone()[0]
+
+    def test_live_session_is_reparsed_and_version_stamped(self):
+        before = self._msg_count(self.live)
+        self.assertGreater(before, 0)
+        # A sentinel that exists only in the index, never in the transcript.
+        # Row counts alone would pass even if nothing were re-read; this row
+        # can only disappear if the migration really deleted and re-parsed.
+        self.conn.execute(
+            "INSERT INTO messages(session_id, ts, role, text, tool_name,"
+            " line_index, block_index) VALUES (?,?,?,?,?,?,?)",
+            (self.live, "2026-07-05T10:00:09Z", "user",
+             "SENTINEL stale v1 row that no transcript can produce", None, 99, 0),
+        )
+        self.conn.commit()
+        ingest(self.conn, self.projects, progress=False)
+        self.assertEqual(self._version(), 2)
+        self.assertEqual(self._msg_count(self.live), before,
+                         "re-parse should rebuild the same rows, not lose them")
+        leftover = self.conn.execute(
+            "SELECT COUNT(*) FROM messages WHERE session_id=? AND text LIKE 'SENTINEL%'",
+            (self.live,)).fetchone()[0]
+        self.assertEqual(leftover, 0, "the old rows were never actually re-parsed")
+
+    def test_orphan_rows_and_bookmark_survive(self):
+        ingest(self.conn, self.projects, progress=False)
+        self.assertEqual(self._msg_count(self.orphan), 1,
+                         "an orphan has no file to re-read: stale shape beats no content")
+        row = self.conn.execute(
+            "SELECT harvested, harvested_at, byte_offset FROM sessions WHERE id=?",
+            (self.orphan,)).fetchone()
+        self.assertEqual(row["harvested"], 1)
+        self.assertEqual(row["harvested_at"], "2026-06-02")
+        self.assertEqual(row["byte_offset"], 400,
+                         "never queue a re-parse that can never happen")
+
+    def test_harvested_bookmarks_all_survive(self):
+        ingest(self.conn, self.projects, progress=False)
+        kept = self.conn.execute(
+            "SELECT COUNT(*) FROM sessions WHERE harvested=1").fetchone()[0]
+        self.assertEqual(kept, 2, "migration is about message shape, not bookmarks")
+
+    def test_second_ingest_is_a_no_op(self):
+        ingest(self.conn, self.projects, progress=False)
+        after_first = self._msg_count(self.live)
+        ingest(self.conn, self.projects, progress=False)
+        self.assertEqual(self._version(), 2)
+        self.assertEqual(self._msg_count(self.live), after_first,
+                         "the stamp shares the transaction, so it cannot re-run")
+
+    def test_fresh_db_stamps_current_version_without_migrating(self):
+        fresh = connect(os.path.join(self.tmp, "fresh.db"))
+        try:
+            ingest(fresh, self.projects, progress=False)
+            self.assertEqual(
+                fresh.execute(
+                    "SELECT version FROM schema_version LIMIT 1").fetchone()[0], 2)
+        finally:
+            fresh.close()
+
+    def test_never_migrates_downward(self):
+        self.conn.execute("UPDATE schema_version SET version=99")
+        self.conn.commit()
+        before = self._msg_count(self.live)
+        ingest(self.conn, self.projects, progress=False)
+        self.assertEqual(self._version(), 99, "a newer writer's database is left alone")
+        self.assertEqual(self._msg_count(self.live), before)
+
+    def test_harvest_and_commit_never_trigger_migration(self):
+        """The whole reason the seam is `ingest`: this path stays non-destructive."""
+        report = os.path.join(self.tmp, "report.md")
+        harvest(self.conn, NOW, report, max_sessions=5)
+        self.assertEqual(self._version(), 1, "harvest must not migrate")
+        self.assertEqual(self._msg_count(self.live), 2)
+        harvest_commit(self.conn, report, NOW)
+        self.assertEqual(self._version(), 1, "harvest commit must not migrate")
+        self.assertEqual(self._msg_count(self.live), 2,
+                         "reviewing a pending report must never empty the index")
+
+
 if __name__ == "__main__":
     unittest.main()

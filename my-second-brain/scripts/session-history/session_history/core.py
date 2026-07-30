@@ -17,7 +17,7 @@ import sys
 import time
 from typing import Iterable, Iterator, Optional
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 # Cap on how much of any single text/tool payload we index. Never shove
 # base64 blobs or huge tool results into FTS.
@@ -218,6 +218,55 @@ def init_db(conn: sqlite3.Connection) -> None:
             "INSERT INTO harvest_state(id, last_run, sessions_harvested, notes) VALUES (1, NULL, 0, NULL)"
         )
     conn.commit()
+
+
+def _maybe_migrate(conn: sqlite3.Connection) -> int:
+    """Re-parse the sessions whose stored rows predate the current message shape.
+
+    v1 folded tool_result and thinking blocks into the same text the miner
+    reads, so a v1 row cannot be told apart from a v2 row by inspecting it.
+    Re-parsing is the only honest fix, and the only sessions that CAN be
+    re-parsed are the ones whose transcript is still on disk (Claude Code
+    deletes them after about 30 days). Orphans keep their v1 rows on purpose:
+    a stale shape beats no content, `search` still finds them, and their
+    `harvested` bookmarks stay exactly where they were.
+
+    Deliberately NOT hung off `init_db`. `harvest` and `harvest_commit` call
+    that too, and the distill has a path that reviews an existing report
+    without ever ingesting; wiping messages there would empty the index with
+    nothing queued to rebuild it.
+
+    The deletes and the version stamp share one transaction, so an interrupted
+    run self-heals rather than half-migrating: a session left at byte_offset 0
+    against a non-zero file size is exactly what the ordinary change detector
+    picks up on the next ingest, no re-run of the migration and no double
+    delete. Never migrates downward, a database written by a newer version is
+    left alone.
+
+    Returns the number of sessions queued for re-parse.
+    """
+    row = conn.execute("SELECT version FROM schema_version LIMIT 1").fetchone()
+    version = row["version"] if row else SCHEMA_VERSION
+    if version >= SCHEMA_VERSION:
+        return 0
+
+    stale = [
+        r["id"]
+        for r in conn.execute("SELECT id, path FROM sessions").fetchall()
+        if r["path"] and os.path.exists(r["path"])
+    ]
+    try:
+        for sid in stale:
+            conn.execute("DELETE FROM messages WHERE session_id=?", (sid,))
+            conn.execute(
+                "UPDATE sessions SET byte_offset=0, line_count=0 WHERE id=?", (sid,)
+            )
+        conn.execute("UPDATE schema_version SET version=?", (SCHEMA_VERSION,))
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    return len(stale)
 
 
 # --------------------------------------------------------------------------
@@ -520,6 +569,10 @@ def ingest(
     """
     projects_dir = projects_dir or default_projects_dir()
     init_db(conn)
+    migrated = _maybe_migrate(conn)
+    if migrated and progress:
+        print(f"session-history: index format v1 to v2, re-reading {migrated} "
+              f"conversation(s). One time only.", file=sys.stderr)
 
     t0 = time.time()
     files = list(_iter_transcript_files(projects_dir))
