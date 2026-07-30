@@ -1522,7 +1522,15 @@ def _parse_report_sessions(report_text: str) -> list[str]:
 
 
 def harvest_commit(conn: sqlite3.Connection, report_path: str, now) -> dict:
-    """Consume the bookmark for a report the human has approved.
+    """Consume the bookmark for a report that has been dealt with.
+
+    Not necessarily approved: on the automatic weekly path the caller commits
+    whatever the outcome, including a week where nothing cleared the bar, so
+    that an unread pass cannot silently re-propose the same conversations
+    forever. Safe because this only ever spends a dedup cursor. The text stays
+    in the index and `search` keeps finding it, and nothing here writes a word
+    into anything the owner's AI loads at session start; that gate lives in the
+    skill and still requires the owner to have read the exact words.
 
     Reads the covered session ids from the report's frontmatter and sets
     `harvested = 1`, `harvested_at = <now>` for exactly those sessions. Idempotent:

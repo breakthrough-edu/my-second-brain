@@ -9,39 +9,45 @@
   <rect x="0" y="0" width="1600" height="780" rx="28" fill="#0B0B0E"/>
   <ellipse cx="800" cy="390" rx="720" ry="340" fill="url(#hrglow)"/>
 
-  <text x="800" y="78" text-anchor="middle" font-size="30" font-weight="600" letter-spacing="7" fill="#F2F2F4">THE WEEKLY HARVEST REPORT</text>
-  <text x="800" y="116" text-anchor="middle" font-size="18" fill="#8A8A93">what session memory drops into your Inbox, once a week</text>
+  <text x="800" y="72" text-anchor="middle" font-size="30" font-weight="600" letter-spacing="7" fill="#F2F2F4">THE WEEKLY HARVEST, AS YOU SEE IT</text>
+  <text x="800" y="110" text-anchor="middle" font-size="18" fill="#8A8A93">most weeks, nothing. otherwise one line in your morning brief, and a note already written</text>
 
-  <!-- The report document -->
-  <rect x="230" y="160" width="1140" height="560" rx="18" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
+  <!-- What actually reaches you: one line in the brief -->
+  <text x="252" y="158" font-size="12" letter-spacing="3" fill="#6A6A74">IN YOUR MORNING BRIEF</text>
+  <rect x="230" y="172" width="1140" height="66" rx="14" fill="#131318" stroke="#3A3A44" stroke-width="1"/>
+  <text x="266" y="213" font-size="18" fill="#E8E8EC">"Two things from last week look worth keeping, and one memory line looks stale. Want them?"</text>
 
-  <text x="270" y="212" font-size="17" fill="#FFB27D" font-family="Menlo, monospace">00_Inbox/2026-03-08-harvest-report.md</text>
-  <rect x="1150" y="186" width="180" height="30" rx="15" fill="none" stroke="#7A7A85" stroke-width="1"/>
-  <text x="1240" y="206" text-anchor="middle" font-size="12" letter-spacing="2" fill="#A9A9B2">SAMPLE · FAKE DATA</text>
-  <line x1="270" y1="242" x2="1330" y2="242" stroke="#2A2A32" stroke-width="1"/>
+  <!-- The note it wrote for you -->
+  <rect x="230" y="266" width="1140" height="434" rx="18" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
 
-  <!-- Candidate 1: ticked -->
-  <rect x="280" y="272" width="26" height="26" rx="6" fill="#FF6600" fill-opacity="0.14" stroke="#FF6600" stroke-opacity="0.8" stroke-width="1.5"/>
-  <path d="M 286 285 l 6 7 l 12 -14" fill="none" stroke="#FF9A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="330" y="282" font-size="12" letter-spacing="2" fill="#FF9A5C">WORTH REMEMBERING</text>
-  <text x="330" y="309" font-size="17" fill="#E8E8EC">Rush orders under 48 hours get declined unless a deposit clears first.</text>
-  <text x="330" y="335" font-size="13" fill="#6A6A74" font-family="Menlo, monospace">from: pricing a rush wedding order · Tue 21:40</text>
+  <text x="270" y="312" font-size="17" fill="#FFB27D" font-family="Menlo, monospace">00_Inbox/2026-03-08-memory-proposals.md</text>
+  <rect x="1150" y="288" width="180" height="30" rx="15" fill="none" stroke="#7A7A85" stroke-width="1"/>
+  <text x="1240" y="308" text-anchor="middle" font-size="12" letter-spacing="2" fill="#A9A9B2">SAMPLE · FAKE DATA</text>
+  <line x1="270" y1="336" x2="1330" y2="336" stroke="#2A2A32" stroke-width="1"/>
 
-  <!-- Candidate 2: ticked -->
-  <rect x="280" y="402" width="26" height="26" rx="6" fill="#FF6600" fill-opacity="0.14" stroke="#FF6600" stroke-opacity="0.8" stroke-width="1.5"/>
-  <path d="M 286 415 l 6 7 l 12 -14" fill="none" stroke="#FF9A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="330" y="412" font-size="12" letter-spacing="2" fill="#FF9A5C">DECISION WORTH LOGGING</text>
-  <text x="330" y="439" font-size="17" fill="#E8E8EC">Dropped the entry-level package: margin sat below 20% for three straight months.</text>
-  <text x="330" y="465" font-size="13" fill="#6A6A74" font-family="Menlo, monospace">from: package pricing review · Wed 15:12</text>
+  <!-- Proposal 1: keep -->
+  <rect x="280" y="362" width="26" height="26" rx="6" fill="#FF6600" fill-opacity="0.14" stroke="#FF6600" stroke-opacity="0.8" stroke-width="1.5"/>
+  <path d="M 286 375 l 6 7 l 12 -14" fill="none" stroke="#FF9A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="330" y="372" font-size="12" letter-spacing="2" fill="#FF9A5C">KEEP · FEEDBACK</text>
+  <text x="330" y="399" font-size="17" fill="#E8E8EC">Rush orders under 48 hours get declined unless a deposit clears first.</text>
+  <text x="330" y="425" font-size="13" fill="#6A6A74" font-family="Menlo, monospace">from: pricing a rush wedding order · Tue 21:40</text>
 
-  <!-- Candidate 3: left unticked -->
-  <rect x="280" y="532" width="26" height="26" rx="6" fill="none" stroke="#7A7A85" stroke-width="1.5"/>
-  <text x="330" y="542" font-size="12" letter-spacing="2" fill="#FF9A5C">IDEA WORTH A NOTE</text>
-  <text x="330" y="569" font-size="17" fill="#E8E8EC">Bundle delivery with the corporate tier before year-end orders open.</text>
-  <text x="330" y="595" font-size="13" fill="#6A6A74" font-family="Menlo, monospace">from: corporate order brainstorm · Fri 10:05</text>
+  <!-- Proposal 2: keep -->
+  <rect x="280" y="458" width="26" height="26" rx="6" fill="#FF6600" fill-opacity="0.14" stroke="#FF6600" stroke-opacity="0.8" stroke-width="1.5"/>
+  <path d="M 286 471 l 6 7 l 12 -14" fill="none" stroke="#FF9A5C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="330" y="468" font-size="12" letter-spacing="2" fill="#FF9A5C">KEEP · DECISION</text>
+  <text x="330" y="495" font-size="17" fill="#E8E8EC">Dropped the entry-level package: margin sat below 20% for three straight months.</text>
+  <text x="330" y="521" font-size="13" fill="#6A6A74" font-family="Menlo, monospace">from: package pricing review · Wed 15:12</text>
+
+  <!-- Proposal 3: retire, the half nobody builds -->
+  <rect x="280" y="554" width="26" height="26" rx="6" fill="none" stroke="#7A7A85" stroke-width="1.5"/>
+  <line x1="287" y1="567" x2="299" y2="567" stroke="#A9A9B2" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="330" y="564" font-size="12" letter-spacing="2" fill="#A9A9B2">RETIRE · GONE STALE</text>
+  <text x="330" y="591" font-size="17" fill="#E8E8EC">Drop "corporate tier is blocked on the new delivery van." The van arrived three weeks ago.</text>
+  <text x="330" y="617" font-size="13" fill="#6A6A74" font-family="Menlo, monospace">from: your standing memory, written 14 Feb</text>
 
   <!-- Footer: the contract -->
-  <line x1="270" y1="630" x2="1330" y2="630" stroke="#2A2A32" stroke-width="1"/>
-  <text x="800" y="664" text-anchor="middle" font-size="14" fill="#8A8A93">6 sessions read, 3 candidates survived the sift, each with a pointer to the conversation it came from</text>
-  <text x="800" y="694" text-anchor="middle" font-size="15" fill="#FF9A5C">nothing is saved until you tick it · committing the report is what marks those sessions reviewed</text>
+  <line x1="270" y1="640" x2="1330" y2="640" stroke="#2A2A32" stroke-width="1"/>
+  <text x="800" y="672" text-anchor="middle" font-size="14" fill="#8A8A93">9 conversations read for you, 3 proposals written, each with a pointer back to where it came from</text>
+  <text x="800" y="744" text-anchor="middle" font-size="15" fill="#FF9A5C">the machine's sift never enters your vault · you approve the exact words, or nothing happens</text>
 </svg>

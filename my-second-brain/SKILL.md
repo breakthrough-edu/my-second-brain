@@ -13,8 +13,8 @@ description: >
   "business brain", "move my business in", "capture my business", "move in a
   room", "capture mode", "distill", "tidy my vault", "weekly maintenance",
   "maintain my brain", "create my jarvis", "give my AI a personality", "add the
-  safety lock", "set up session memory", "make my sessions searchable", or asks
-  to organize their business knowledge into a vault.
+  safety lock", "set up session memory", "make my sessions searchable", "update
+  my harvest doorbell", or asks to organize their business knowledge into a vault.
 ---
 
 # My Second Brain
@@ -58,6 +58,7 @@ At every session start under this skill:
 3. **Vault exists** -> route by what the user asked for. Ambiguous ("let's continue", "what now") -> read capture-progress and propose the next move (usually the next room to capture).
 4. **Staleness check (every entry, any mode).** Read `99_Meta/maintenance-state.md`. Its dates are seeded with the setup date, so a simple comparison works from day one; if the file is missing or a date is empty, treat maintenance as due. If the last tidy or distill is more than 7 days old, offer once: "Last maintenance was N days ago. Want to run a quick tidy first, or carry on?" Offer once, never nag. If the user declines, proceed and do not raise it again this session.
 5. **Retrofit a machine guard (existing vault).** The optional guards (setup step 6.8 safety lock, step 6.9 session memory) are offered during Setup, so a vault built before they shipped will not have them. When the owner asks for one by name ("add the safety lock", "set up session memory", "make my sessions searchable"), or asks why session search or the harvest is not working, check `99_Meta/bootstrap-progress.md` first: if the matching flag (`rm_guard_installed:` / `session_memory_installed:`) already says `installed`, say so and stop. Otherwise load [modes/setup.md](modes/setup.md) and run just that one step against the existing vault (vault path from state detection above), including its explain-before-install consent and its `bootstrap-progress.md` record line. Touch nothing else in the vault; this is a bolt-on, not a re-setup.
+6. **Retrofit the harvest doorbell (existing vault).** The weekly harvest rhythm lives in the command-base skill that Setup GENERATED for the owner, not in this skill, and `npx skills update` never touches generated skills. So a vault set up before the rhythm changed keeps whatever doorbell it was born with, and updating this skill will not move it. When the owner asks ("update my harvest doorbell", "why doesn't my harvest run by itself"), open their command-base skill (path from state detection), find the maintenance doorbell step, and replace only its harvest paragraphs with the current wording from [templates/command-base-SKILL.template.md](templates/command-base-SKILL.template.md), substituting their name and vault path. Everything else in that skill is theirs and stays untouched: it may carry months of their own edits. Say what changed in one line (the pass now runs itself and speaks only when it found something, `harvest_auto: false` turns the asking back on). If `session_memory_installed:` is not `installed`, do step 5 instead; a doorbell for a tool they do not have is noise.
 
 ## Interaction language
 

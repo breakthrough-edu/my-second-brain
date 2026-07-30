@@ -8,7 +8,7 @@
 
 A Claude Code skill that builds and runs a complete second brain for a business owner: one vault, two wings (your life in PARA, your business in a three-layer knowledge map), operated in plain conversation, with Obsidian as the viewing deck.
 
-And it does the two things note systems never do: it **grows its own memory** (every AI conversation becomes searchable history, and a weekly harvest proposes what is worth keeping; nothing is saved until you approve it), and it **keeps machines on guard** (a read-only inspector that sweeps the vault, plus a safety lock that blocks the one delete you cannot undo). The rules are not just written down; they are enforced.
+And it does the two things note systems never do: it **grows its own memory** (every AI conversation becomes searchable history, and once a week the AI reads what is new and hands you a handful of already-written memory proposals; nothing is kept until you approve the exact words), and it **keeps machines on guard** (a read-only inspector that sweeps the vault, plus a safety lock that blocks the one delete you cannot undo). The rules are not just written down; they are enforced.
 
 ## Install
 
@@ -29,6 +29,8 @@ npx skills update my-second-brain
 ```
 
 One thing the update command cannot do: the two machine guards (the safety lock and session memory) are offered during Setup, so a vault built before they shipped will not have them yet. Say **"add the safety lock"** or **"set up session memory"** in any session and the skill retrofits the one you asked for onto your existing vault.
+
+For the same reason, the weekly harvest rhythm lives in the command-base skill Setup generated for you, and an update never touches generated skills. A vault built before it shipped keeps the ask-first doorbell; say **"update my harvest doorbell"** to bring the new one over.
 
 ## The idea underneath
 
@@ -90,7 +92,7 @@ After Setup, your daily driver is the command-base skill it generated for you. A
 
 | You say | What happens |
 |---|---|
-| "morning" | A brief: today's schedule (if a calendar is connected), tasks due, red flags, who you are waiting on, business renewals coming up |
+| "morning" | A brief: today's schedule (if a calendar is connected), tasks due, red flags, who you are waiting on, business renewals coming up, and about once a week one line from the session harvest if it found something worth keeping |
 | "client X finally signed, closed at RM 4,500" | Captured on the spot, buffered durably, compiled into your daily note at end of day |
 | "we decided to drop the entry-level package" | A structured decision record, filed in the central Decisions room with domain and reasoning |
 | "follow up with the printer on Friday" | A waiting-for task that will resurface on its own |
@@ -129,25 +131,25 @@ Most AI setups have amnesia: every conversation starts from zero, and the fix yo
 </p>
 
 - **Every conversation becomes searchable.** A small local tool indexes Claude Code's own transcripts into a full-text search database, so "how did we solve that before?" gets answered from history. It reads only the transcripts, read-only; it writes only its own database in `~/.my-second-brain/`; it is purely local, with no network code and no background process.
-- **A weekly harvest proposes memories.** During Distill, the AI reads the conversations you have not reviewed yet and brings back a short report: things worth remembering, decisions worth logging, ideas worth a note, each with a pointer to the conversation it came from. Nothing is saved until you tick it, and only your approval marks those conversations as reviewed, so a report you ignore costs nothing and nothing is ever silently skipped.
+- **A weekly harvest proposes memories.** Once a week, while your morning brief is being prepared, the AI reads the conversations nobody has reviewed yet and curates them down to at most 3 to 5 proposals: each already written to the point where yes is the only action left, each with a pointer to the conversation it came from, plus any standing memory line that looks stale enough to retire. A quiet week ends in silence. A week with something in it costs one line in the brief and a ten-second yes. The pass marks what it read as reviewed so nothing is re-proposed forever; the conversations stay indexed and searchable either way. Nothing enters the files your AI loads at session start until you have seen the exact words. Prefer to be asked each time? Set `harvest_auto: false` in `99_Meta/bootstrap-progress.md`.
 
 <p align="center">
-  <img src="assets/harvest-report.svg" alt="A sample harvest report with fake data: three candidates with checkboxes and session pointers, nothing saved until you tick it" width="100%">
+  <img src="assets/harvest-report.svg" alt="A sample week with fake data: one line in the morning brief, then a note holding two drafted memory proposals and one stale line proposed for retirement, each with a pointer to where it came from" width="100%">
 </p>
 
-Same law as everywhere else in this system, now with your own past conversations as one of the inlets: the AI proposes, you rule. That is what "grows its own memory" means here, and it is the part a notes app cannot copy, because the raw material is your working history with the AI itself.
+Same law as everywhere else in this system, now with your own past conversations as one of the inlets: the AI proposes, you rule, including proposing what to retire, because a memory that only ever grows goes stale. That is what "grows its own memory" means here, and it is the part a notes app cannot copy, because the raw material is your working history with the AI itself.
 
 ## Machines stand guard
 
 Written rules die without enforcement, so the rules that matter most are backed by machinery, all of it shipped in this skill:
 
 <p align="center">
-  <img src="assets/guards.svg" alt="The three guards: the inspector finds, the safety lock blocks, the review bookmark proposes; every arrow reports to one desk, only you rule" width="100%">
+  <img src="assets/guards.svg" alt="The three guards: the inspector finds, the safety lock blocks, the draft firewall drafts; every arrow reports to one desk, only you rule" width="100%">
 </p>
 
 - **The inspector** (`scripts/checkup.py`): a read-only hygiene sweep over the whole vault, run before every weekly tidy.
 - **The safety lock** (optional setup step, macOS only): a hook that blocks recursive deletes aimed at your vault or your skills folder, the one category of accident there is no undo for.
-- **The review bookmark** in session memory: only human approval can mark a conversation as reviewed, so the memory loop cannot quietly run away from you.
+- **The draft firewall** in session memory: the machine's weekly sift is written to the tool's own state directory, never into your vault. Only what an AI has actually read and drafted reaches your Inbox, and only words you approved reach the memory your AI loads at session start.
 
 One contract across all three: machines find, block, and propose. Only you rule.
 
@@ -179,7 +181,7 @@ The choices that make this hold up over months, not weeks:
 
 **Insights are observations, never verdicts.** Every capture session ends with one thing you had not noticed plus two good questions. The skill will not promise analytics your data cannot support yet, and it says so.
 
-**Nothing nags.** Overdue maintenance, an uncompiled yesterday, the Jarvis offer: each is raised exactly once, then dropped. A tool that nags gets abandoned in three months, and this system is built for years.
+**Nothing nags.** Overdue maintenance, an uncompiled yesterday, the Jarvis offer: each is raised exactly once, then dropped. The weekly harvest goes one further and does not even ask: it runs quietly, speaks only when it found something worth keeping, and `harvest_auto: false` turns the asking back on. A tool that nags gets abandoned in three months, and this system is built for years.
 
 **A crashed session loses nothing.** Every capture lands in a durable buffer file the moment it arrives. If the session dies before you compile, the next morning brief offers to backfill yesterday's note from the buffer.
 
