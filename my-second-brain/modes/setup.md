@@ -120,6 +120,8 @@ On yes (macOS):
 
 Record `session_memory_installed:` in `bootstrap-progress.md` (`installed` / `declined` / `skipped-platform`).
 
+Say one sentence about the weekly rhythm so it is never a surprise: once a week the morning brief quietly runs this pass in the background, reads whatever is new, and only speaks up if something is actually worth keeping, so most weeks the owner sees nothing. Nothing is ever written into the files their AI loads at session start without them reading the exact words first. If they would rather be asked each time, set `harvest_auto: false` in `bootstrap-progress.md` and it goes back to offering; leaving the key out means automatic.
+
 ## Step 7: Official Obsidian skills (optional, recommended)
 
 Offer once: the Obsidian team publishes official skills (Bases syntax, Obsidian-flavored markdown, web clipping) that make the AI sharper inside Obsidian. Install with `npx skills add kepano/obsidian-skills`. Recommended yes; a no costs nothing tonight. Record the answer in `bootstrap-progress.md` (`obsidian_skills_offered:`).
