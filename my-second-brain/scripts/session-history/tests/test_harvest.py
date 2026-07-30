@@ -558,11 +558,74 @@ class MarkupAndDoubleCountTests(unittest.TestCase):
     def test_code_fence_skipped(self):
         self.assertFalse(any(s.startswith("```") for s in self.view["decisions"]))
 
+    def test_code_fence_CONTENT_skipped(self):
+        """The markers were never the problem, the lines between them were.
+
+        `_is_markup` only dropped the ``` rows, so a commit message or a pasted
+        snippet inside a fence still reached the lexicons. This fixture fences
+        "let's go with option B, locked", which trips the decision cues three
+        times over; none of it is speech.
+        """
+        for bucket in ("decisions", "corrections", "gotchas", "ideas"):
+            self.assertFalse(
+                any("option B" in s for s in self.view[bucket]),
+                f"fenced content leaked into {bucket}: {self.view[bucket]}",
+            )
+
     def test_line_counted_once_across_buckets(self):
         heic = [s for s in self.view["corrections"] if "HEIC" in s]
         self.assertTrue(heic, "the HEIC line is a correction")
         self.assertFalse(any("HEIC" in g for g in self.view["gotchas"]),
                          "the same line must not also print as a gotcha")
+
+
+class BucketExclusivityTests(unittest.TestCase):
+    """One line, one bucket, along the whole chain and not just at the gotcha end."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp(prefix="sh-exclusive-")
+        self.projects = os.path.join(self.tmp, "projects")
+        self.pdir = os.path.join(self.projects, "proj-x")
+        os.makedirs(self.pdir)
+        self.db = os.path.join(self.tmp, "exclusive.db")
+        self.sid = "cccccccc-0000-0000-0000-000000000003"
+        path = os.path.join(self.pdir, self.sid + ".jsonl")
+        with open(path, "w", encoding="utf-8") as f:
+            # Trips the decision lexicon ("the plan is") and the idea lexicon at
+            # once. Before the chain both sections printed it verbatim.
+            f.write(mk_user(self.sid, "u1",
+                            "the plan is what if we build a small dashboard for this",
+                            "2026-07-05T10:00:00Z") + "\n")
+            # A plain decision that used to double as a correction, because five
+            # cues were duplicated verbatim across the two lexicons.
+            f.write(mk_user(self.sid, "u2",
+                            "ok let's go with option A for the hero copy",
+                            "2026-07-05T10:01:00Z") + "\n")
+            f.write(mk_assistant(self.sid, "a1", "ok", "2026-07-05T10:01:05Z") + "\n")
+        self.conn = connect(self.db)
+        ingest(self.conn, self.projects, progress=False)
+        e = _epoch("2026-07-05T12:00:00")
+        os.utime(path, (e, e))
+        self.view = compressed_view(self.conn, self.sid)
+
+    def tearDown(self):
+        self.conn.close()
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def _buckets_holding(self, needle):
+        return [b for b in ("corrections", "decisions", "ideas", "gotchas")
+                if any(needle in s for s in self.view[b])]
+
+    def test_decision_and_idea_do_not_both_claim_a_line(self):
+        holders = self._buckets_holding("small dashboard")
+        self.assertEqual(len(holders), 1,
+                         f"one line landed in {holders}, evidence printed twice")
+        self.assertEqual(holders[0], "decisions", "decisions outrank ideas")
+
+    def test_decision_phrasing_is_not_also_a_correction(self):
+        holders = self._buckets_holding("hero copy")
+        self.assertEqual(holders, ["decisions"],
+                         f"'let's go with' is a decision, not a correction: {holders}")
 
 
 if __name__ == "__main__":

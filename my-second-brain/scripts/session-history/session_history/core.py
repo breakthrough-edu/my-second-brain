@@ -894,8 +894,12 @@ _CORRECTION_CUES = (
     "not that", "don't ", "do not ", "instead", "actually",
     "rather", "wrong", "revert", "undo", "stop", "that's not",
     "isn't what", "i said", "please don't", "avoid", "never ", "prefer ",
-    "should be", "shouldn't", "let's go with", "lets go with", "let's use",
-    "lets use", "go with option", "try option", "sry", "sorry",
+    "should be", "shouldn't", "try option", "sry", "sorry",
+    # "let's go with" / "let's use" / "go with option" used to live here AND in
+    # _DECISION_CUES verbatim. With independent buckets that printed one line as
+    # both a correction and a decision, which is where the report's duplicated
+    # evidence came from. They are decision phrasings; a real correction carries
+    # its own marker ("no, instead let's go with B" still trips "instead").
     "不是", "不要", "别 ", "应该", "其实", "错了", "改成", "而是", "换成", "不对",
 )
 _DECISION_CUES = (
@@ -929,7 +933,13 @@ _SENTINEL_PREFIXES = (
 # message put its rows in front of the cue lexicons, and a table row that happens
 # to contain "拍板" or "locked" then shipped as "a decision seems to have been
 # locked here". Nobody says a markdown table out loud.
-_MARKUP_PREFIXES = ("|", "```", "> |", "<td", "<tr", "<span", "<div")
+_MARKUP_PREFIXES = (
+    "|", "```", "> |", "<td", "<tr", "<span", "<div",
+    # Section headings from a pasted document. Nobody opens their mouth with
+    # "## ", so dropping these costs no owner voice and stops a doc's own
+    # headings ("## 拍板事项") shipping as decisions.
+    "## ", "### ", "#### ",
+)
 
 
 def _is_markup(line: str) -> bool:
@@ -1024,6 +1034,7 @@ def compressed_view(conn: sqlite3.Connection, session_id: str, per_bucket: int =
         # resets per message row; if truncation ate the closing tag, the rest
         # of the row is reminder content anyway.
         in_reminder = False
+        in_fence = False
         for ln in raw.splitlines():
             ln = _clean_line(ln)
             low = ln.lower()
@@ -1032,6 +1043,16 @@ def compressed_view(conn: sqlite3.Connection, session_id: str, per_bucket: int =
             if in_reminder:
                 if "</system-reminder>" in low:
                     in_reminder = False
+                continue
+            # Fenced blocks are pasted material, never speech. `_is_markup` only
+            # ever dropped the ``` markers, so everything between them still
+            # reached the lexicons: `git commit -m 'fix: we decided to lock the
+            # anchor scroll'` shipped as a decision. Toggle BEFORE the length
+            # gate, a bare ``` is three characters and would never be seen.
+            if ln.lstrip().startswith("```"):
+                in_fence = not in_fence
+                continue
+            if in_fence:
                 continue
             if len(ln) < 8:
                 continue
@@ -1045,11 +1066,6 @@ def compressed_view(conn: sqlite3.Connection, session_id: str, per_bucket: int =
                     first_user = snippet
                 if is_subagent:
                     continue
-                if len(corrections) < per_bucket and (
-                    low.startswith(_CORRECTION_START_CUES) or _CORRECTION_RE.search(ln)
-                ):
-                    if snippet not in corrections:
-                        corrections.append(snippet)
                 # Decisions and ideas are OWNER-VOICE ONLY. They used to accept
                 # assistant rows, which meant the AI's own reasoning came back as
                 # "a decision seems to have been locked here" ("I'm the top-level
@@ -1058,12 +1074,27 @@ def compressed_view(conn: sqlite3.Connection, session_id: str, per_bucket: int =
                 # thought is not what the owner decided. Gotchas stay open to
                 # assistant rows on purpose: "the render failed with a 500, turns
                 # out the anchor was wrong" is real signal whoever says it.
-                if len(decisions) < per_bucket and _DECISION_RE.search(ln):
-                    if snippet not in decisions:
+                #
+                # ONE LINE, ONE BUCKET, by an explicit priority chain:
+                # corrections > decisions > ideas > gotchas. Only the gotcha end
+                # of it was ever enforced, so a line tripping both the decision
+                # and idea lexicons printed identical evidence under two
+                # headings, which is the padding the report gets judged on. A
+                # line whose bucket is already full stops here rather than
+                # falling through, otherwise the overflow reappears one heading
+                # down wearing a different label.
+                if low.startswith(_CORRECTION_START_CUES) or _CORRECTION_RE.search(ln):
+                    if len(corrections) < per_bucket and snippet not in corrections:
+                        corrections.append(snippet)
+                    continue
+                if _DECISION_RE.search(ln):
+                    if len(decisions) < per_bucket and snippet not in decisions:
                         decisions.append(snippet)
-                if len(ideas) < per_bucket and _IDEA_RE.search(ln):
-                    if snippet not in ideas:
+                    continue
+                if _IDEA_RE.search(ln):
+                    if len(ideas) < per_bucket and snippet not in ideas:
                         ideas.append(snippet)
+                    continue
             # One line, one bucket. A sentence can trip several lexicons at once
             # ("是不是无法支援 HEIC 的照片?" reads as both a correction and a
             # gotcha), and printing it twice under two headings just pads the
