@@ -16,7 +16,7 @@ Then open Claude Code and say:
 
 > set up my second brain
 
-Update anytime with `npx skills update my-second-brain` (your vault is never touched, only the skill files).
+Update anytime with `npx skills update my-second-brain` (your vault is never touched, only the skill files). ⚠️ If your vault was built before August 2026 its shape predates this version, so the skill will say which parts differ and will decline to move files or open rooms until you say what you want; reading and answering carry on. See "Updating" on the repo front page.
 
 ## Four modes, one skill
 

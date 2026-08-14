@@ -22,7 +22,9 @@ Then open Claude Code and say:
 
 Ten minutes later you are looking at the graph view of your half-built brain.
 
-Already running it? Updating to the latest version is one line, and it never touches your vault, only the skill files:
+Already running it? Updating to the latest version is one line, and it never touches your vault, only the skill files.
+
+⚠️ **Read this before you update, if your vault was built before August 2026.** The vault's shape changed in that release: the business wing moved and gained an activity layer, folder doors changed name, and one frontmatter field was renamed. Because an update never touches your vault, **an older vault and a newer skill no longer describe the same house**, and the skill now notices instead of proceeding as though they matched. What that means in practice: it will tell you, in specifics, which parts differ; reading, answering, searching and the morning brief go on working; **and it will decline to move your files or open new rooms until you say what you want** (Capture and the tidy scan are the two that stop). Nothing is changed or deleted, and no migration runs behind your back. **There is no migration tool yet**: moving a house full of real content is its own piece of work, and it is not written. If your vault is fine as it is, staying on your current version is a legitimate choice.
 
 ```bash
 npx skills update my-second-brain
@@ -58,7 +60,7 @@ The idea only works if the vault survives contact with daily life, and this is w
   <img src="assets/modes.svg" alt="Four modes, one conversation: Setup once, Capture room by room, Distill weekly, Create-My-Jarvis once at home" width="100%">
 </p>
 
-**Setup** (10 min). Installs Obsidian if needed, builds a fully wired vault (every room has a front desk, navigation live from day zero), asks 3 questions about your industry, offers an optional calendar connection so your morning brief sees the day's schedule, and generates a **personal command-base skill named after your business**. You install one skill; it builds you another one that only fits you.
+**Setup** (10 min). Installs Obsidian if needed, builds a fully wired vault (every room has a front desk, navigation live from day zero), asks 3 questions (your business name, and whether you have outlets or equipment), offers an optional calendar connection so your morning brief sees the day's schedule, and generates a **personal command-base skill named after your business**. You install one skill; it builds you another one that only fits you.
 
 **Capture** (15 min per room). Your Business Profile first, then one room at a time: clients, products, SOPs, whichever you pick. One question at a time, talking is fine, and there is a bulk lane when you already have material. Every session ends with one observation about your business you had not noticed, plus two good questions.
 
@@ -242,7 +244,7 @@ This path is best-effort and community-validated rather than officially tested o
 
 ## Repo layout
 
-The skill payload lives in [`my-second-brain/`](my-second-brain/) (the nesting is what the `npx skills` installer ships as a unit: modes, templates, references, scripts). `deck/` holds presentation material about the system.
+The skill payload lives in [`my-second-brain/`](my-second-brain/) (the nesting is what the `npx skills` installer ships as a unit: modes, templates, references, scripts). `deck/` holds presentation material about the system, and ⚠️ it still describes the previous generation's layout; it has not been redrawn for the shape above.
 
 ## License
 

@@ -32,7 +32,9 @@ Run these in parallel, then respond:
 
    The harvest engine lives in the `my-second-brain` skill's distill mode; this is the trigger only. Fail-soft: if the flag is absent or anything here errors, skip silently, a doorbell must never block the brief.
 
-   <!-- doorbell-rev: 2 -->
+   ⛔ **This doorbell fires without asking, so it must not be the thing that reshapes the vault.** It reaches Pipe 5 directly, without the vault-generation check that mode routing does first, and two of Pipe 5's five steps write to addresses that a later generation of the product introduced. Pipe 5 now runs that check itself, at its own top, precisely because of this entry point. **So: never invoke Pipe 5 in a way that skips its opening gate, and never "helpfully" perform a write it declined.** A declined write is the pass working, not the pass failing.
+
+   <!-- doorbell-rev: 3 -->
    ⚠️ Leave that marker alone, and leave the number in it alone. It is not decoration: it is how a later session can tell **which version of these paragraphs this machine is actually loading**, which on a copy install is not the same file as the one in the vault. The `my-second-brain` skill sets it when it rewrites this block. Editing it by hand makes it lie.
 9. If a companion-soul skill exists ({{COMPANION_SOUL_NAME}}), load it LAST so the character is the freshest context. If it does not exist yet: check `jarvis_offered:` in `99_Meta/bootstrap-progress.md`. Not yet true -> add one line to the morning brief ("Your AI is still running generic. When you have a quiet 45 minutes, say 'create my jarvis' and it stops being one."), then set `jarvis_offered: true`. Already true -> skip silently. The offer happens exactly once, same discipline as the maintenance doorbell. (Create-My-Jarvis lives in the `my-second-brain` skill.)
 
