@@ -1,5 +1,6 @@
 ---
 type: doctrine
+doctrine_version: 2
 created: {{DATE}}
 last_updated: {{DATE}}
 maintained_by: the owner (AI proposes amendments, owner approves)
@@ -8,6 +9,8 @@ maintained_by: the owner (AI proposes amendments, owner approves)
 # Structure Doctrine
 
 Read this before creating or filing anything in this vault. This file is the single source of law for where things live. Changing it is an amendment: propose, get the owner's yes, then edit.
+
+⚠️ **`doctrine_version` in the frontmatter above is a machine marker, not decoration.** It is a bare integer, and it records **which generation of the product built this house**, so a session arriving with a newer skill can tell whether the shape it expects is the shape that is actually here. The house has changed shape before (v1 put the business wing at `07_<Business>/` with an `02_SOP` layer, MOC files as folder doors, and `function:` on decisions), and a skill update never touches a vault, so the number is the only thing standing between a new session and a confident wrong assumption. Keep amending this file freely; the number moves only when the product's structure itself moves, and only through the same propose-and-approve. ⛔ Do not edit it by hand: editing it makes it lie, and the whole point of it is that it cannot.
 
 ## 0 · Filing decision tree (run top to bottom, stop at first hit)
 
@@ -254,4 +257,4 @@ in this vault.
 
 ## Revision log
 
-- **{{DATE}}**: v2, written at vault setup. Four-layer business wing (`01_Assets` / `02_Work` / `03_SOP` / `04_Methodology`), guide files as folder doors, `02_Command-Base` as its own top-level layer, §8 as the machine-readable record schema, §9 as playbook labs.
+- **{{DATE}}**: v2, written at vault setup. Four-layer business wing (`01_Assets` / `02_Work` / `03_SOP` / `04_Methodology`), guide files as folder doors, `02_Command-Base` as its own top-level layer, §8 as the machine-readable record schema, §9 as playbook labs. The prose here is the human record; `doctrine_version: 2` in the frontmatter is the same fact in the form a machine can read, and the two say v2 together or one of them is wrong.

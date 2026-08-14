@@ -4,6 +4,10 @@ The move-in ritual. Each run: pick one room or one lane, the AI asks one thing a
 
 Everything files by `99_Meta/structure-doctrine.md`. Every filing appends to `99_Meta/filing-log.md`. Interaction language comes from `bootstrap-progress.md`.
 
+⛔ **This mode does not run in a house whose generation is not settled as the current one.** Capture is the heaviest structural writer in the product: it moves the owner's real files into `01_Assets/<Room>/`, `02_Work/<lane>/` and the brand folder, and it opens rooms. Those addresses are this generation's; an earlier one put the wing at `07_<Business>/` with `02_SOP`, and a half-migrated house has some of each. Moving somebody's actual client files to an address their house does not use is the most expensive version of this mistake in the whole skill, and unlike a stray folder it is their content that ends up in the wrong place.
+
+`SKILL.md`'s house-vintage gate (mode routing, step 1) has already run this session and it rules here without appeal: if it did not clear the house as current, ⛔ do not capture. `python3 <skill>/scripts/checkup.py "<vault>"` gives the same verdict as a `house-vintage` ERROR if you need to check. **What to do instead:** say which room the material belongs in and which address this generation would use, in words, and let the owner move it. Reading their material, listening, and giving the session's observation all stay open; ⛔ the move-in, the room-opening and the `capture-progress.md` row do not. ⚠️ An unfinished `capture-progress.md` is not a reason to override this: an older house being mid-capture is exactly how it got here.
+
 ## Entry
 
 1. Read `99_Meta/capture-progress.md` and `99_Meta/bootstrap-progress.md`.
