@@ -7,8 +7,10 @@ name: session-history
 # it has actually run on GitHub it has answered nothing, so do not cite it as
 # evidence of anything before there is a green run to point at.
 #
-# ⚠️ Scope, so this workflow is never read as more than it is: it verifies the
-# session-history tool and the inspector on a clean GitHub-hosted Windows image.
+# ⚠️ Scope, so this workflow is never read as more than it is: it runs the
+# session-history tool's own test suite on a clean GitHub-hosted Windows image.
+# The inspector gets a smoke test only (`checkup.py --help`), which proves it
+# imports and parses its arguments and nothing whatsoever about its checks.
 # It does NOT verify the rest of the product on Windows. Nothing here touches the
 # command-base skill install (the copy default and the optional junction, both in
 # modes/setup.md), the rm-guard hook, Obsidian, or Claude Code itself. Those

@@ -208,7 +208,7 @@ Opening and closing one runs on `playbook-lab`, a separate skill you install if 
 - Obsidian has no permission layers; if staff need a piece, export that piece.
 - Not an ERP and not a CRM. Structured high-frequency data stays in the systems built for it.
 - Early insights are observations, and the skill says so honestly. Depth comes from months of captured judgment, not from week one.
-- The two machine guards are platform-gated for now: the safety lock is macOS only, session memory is macOS first. The vault, the four modes, and the inspector work everywhere. Windows owners who want session memory have a documented, self-driven route (see [Windows self-serve path](#windows-self-serve-path)); the safety lock is not ported, so there is no machine-level block on accidental deletes on Windows.
+- The two machine guards are platform-gated for now: the safety lock is macOS only, session memory is macOS first. The vault, the modes, and the inspector work everywhere, with one exception worth naming rather than burying: the branch inside Setup that installs your generated command-base skill behaves differently on Windows and is not verified there (details in the Windows self-serve path below). Windows owners who want session memory have a documented, self-driven route (see [Windows self-serve path](#windows-self-serve-path)); the safety lock is not ported, so there is no machine-level block on accidental deletes on Windows.
 
 ## Requirements
 
