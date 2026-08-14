@@ -1,6 +1,6 @@
 # Calendar connect (optional integration)
 
-Connect a calendar so the morning brief can see today's actual schedule, not just the task list. This is a **read-only** integration: the calendar is read live each morning and folded into the brief. Calendar data is never stored in the vault (doctrine section 3, the rows iron law: high-frequency live data stays external, the vault holds pointers and judgment, not a mirror of your agenda).
+Connect a calendar so the morning brief can see today's actual schedule, not just the task list. This is a **read-only** integration: the calendar is read live each morning and folded into the brief. Calendar data is never stored in the vault (doctrine §4 law 1, the rows iron law: high-frequency live data stays external, the vault holds pointers and judgment, not a mirror of your agenda).
 
 Two supported providers. Google is the recommended path because it is a one-click first-party connector. Lark is for owners already living in Lark / Feishu.
 

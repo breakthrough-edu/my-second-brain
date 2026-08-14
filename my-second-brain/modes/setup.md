@@ -30,24 +30,25 @@ Ask: existing Obsidian vault, or new one?
 
 - **New:** propose `~/Documents/<Name>-Second-Brain/` (their name or business name, English, hyphenated; if the business name has not come up yet, ask it here and reuse the answer in step 4). They can pick any path. `mkdir -p` it.
 - **Existing vault:** get the path. The scaffold is idempotent (`mkdir -p`, never overwrite an existing file), so a vault with PARA folders already in place is fine; we add what is missing.
-- **Existing vault built by an earlier personal-AI-OS bootstrap** (signature: `06_MOCs/` exists, or `03_Areas/Command-Base/` exists): do NOT migrate, rename, or rebuild what they have. Their `06_MOCs` and command-base keep working. Add the business wing (`07_...`), `99_Meta` doctrine + state files, and the business-wing pieces only. Tell them plainly what you are adding and what you are leaving untouched, and offer a short routing note they can paste into their existing command-base skill: business decisions and business daily logs live in the business wing; the doctrine file now governs filing.
+- **Existing vault with a structure of its own** (signature: a PARA layout, `06_MOCs/`, an existing command base, anything the owner clearly built and uses): do NOT migrate, rename, or rebuild what they have. What works keeps working. Add only what is missing and clearly ours: the business wing (`04_<Business>-Business-Wing/`), `99_Meta` doctrine plus state files, and `02_Command-Base/` if nothing plays that role yet. Tell them plainly what you are adding and what you are leaving untouched, and be honest about the one real consequence: the doctrine describes a personal wing at `03_Personal-Wing/` that their vault does not have, so on their side the doctrine governs the business wing and the shared layers, and their own personal structure stands. ⛔ Never quietly restructure someone's existing personal folders to match the law; propose it as its own piece of work, another day, or leave it alone.
 
 ## Step 4: Business + toggles (the only interview in setup)
 
-Four quick things, one message each or one compact message, their call:
+Three quick things, one message each or one compact message, their call:
 
-1. Business name (and its folder-safe English form, e.g. 咖啡老王 -> `Laowang-Coffee`; propose, they confirm).
-2. Toggle: physical outlets? (yes -> Outlets room + Store-Open-Close SOP room)
-3. Toggle: machines or equipment? (yes -> Equipment room + Maintenance SOP room)
-4. Toggle: import goods? (yes -> Importing + Stock-Count SOP rooms)
+1. Business name (and its folder-safe English form, e.g. 咖啡老王 -> `Laowang-Coffee`; propose, they confirm). Derive the domain tag from it (`{{BUSINESS_TAG}}`, kebab-case) and confirm that too, in the same breath.
+2. Toggle: physical outlets? (yes -> `Outlets/` room)
+3. Toggle: machines or equipment? (yes -> `Equipment/` room)
 
-Plus one: pre-open the personal wing rooms (Family, Health, Personal Finance, Property, Vehicles, People), or start business-only and add them when first needed? Either is fine; record the choice.
+⛔ **Do not ask about the personal wing.** It and its six life rooms are always created; the doctrine states its contents flatly, so a vault missing them does not match its own law. There is no third toggle either: the old importing toggle only ever created SOP subfolders, and `03_SOP/` now ships empty and flat.
 
 ## Step 5: The scaffold burst
 
-Execute [../references/scaffold-spec.md](../references/scaffold-spec.md) in one go: all folders, all MOCs, Home, `_Map`, `Business-Profile` (empty schema), doctrine (from [../templates/structure-doctrine.template.md](../templates/structure-doctrine.template.md)), tagging vocabulary (from [../templates/tagging-vocabulary.template.md](../templates/tagging-vocabulary.template.md)), note templates (from [../templates/note-templates.md](../templates/note-templates.md)), dashboard `.base` (verbatim from [../templates/command-base.base.template](../templates/command-base.base.template)), the two pre-seeded brand-foundation rooms (`Brand-Strategy/` + `Target-Audience/` with their stubs, per the spec), and the state files, including `99_Meta/graduation-config.md` (from [../templates/graduation-config.template.md](../templates/graduation-config.template.md)) and working memory `99_Meta/memory.md` (from [../templates/memory.template.md](../templates/memory.template.md); this is what the command-base skill reads and appends every session, so it exists from day one). Methodology stays a folder of empty folders; no MOC there, on purpose.
+Execute [../references/scaffold-spec.md](../references/scaffold-spec.md) in one go: all folders, every door file (`_<Name>-Guide.md` per room, lane, brand subfolder and wing, plus `_SOP-Menu.md`), `Home.md` as the vault's full directory, `Business-Profile` at the wing root (empty schema), doctrine (from [../templates/structure-doctrine.template.md](../templates/structure-doctrine.template.md)), tagging vocabulary (from [../templates/tagging-vocabulary.template.md](../templates/tagging-vocabulary.template.md)), note templates (from [../templates/note-templates.md](../templates/note-templates.md)), dashboard `.base` (verbatim from [../templates/command-base.base.template](../templates/command-base.base.template)), the pre-seeded brand rooms (`Brand-Strategy/` with seven pillar stubs + `Target-Audience/` with the Journey stub, per the spec), and the state files, including `99_Meta/lab-gate-config.md` (from [../templates/lab-gate-config.template.md](../templates/lab-gate-config.template.md)) and working memory `99_Meta/memory.md` (from [../templates/memory.template.md](../templates/memory.template.md); this is what the command-base skill reads and appends every session, so it exists from day one).
 
-Run the wiring check at the end of the spec. Report one line: "Scaffolded N folders, M files. Navigation is live from Home."
+Two layers ship deliberately bare and it is worth not "fixing" them mid-burst: `03_SOP/` holds nothing but its menu, and `04_Methodology/` holds two empty folders and zero `.md` files, doors included.
+
+Run the wiring check at the end of the spec. Report one line: "Scaffolded N folders, M files. Home lists all of it."
 
 ## Step 5.5: Vault CLAUDE.md (the always-on context layer)
 
@@ -62,26 +63,31 @@ Record the outcome in `bootstrap-progress.md` (`claude_md: written | appended | 
 
 From [../templates/command-base-SKILL.template.md](../templates/command-base-SKILL.template.md), replace `{{YOUR_NAME}}`, `{{SLUG}}` (their name or business, kebab-case), `{{VAULT_PATH}}`, `{{BUSINESS}}` (folder name), `{{BUSINESS_NAME}}`, `{{BUSINESS_TAG}}`, `{{COMPANION_SOUL_NAME}}` (`<slug>-companion-soul`; the skill handles its absence until Create-My-Jarvis runs). Zero interview; every value already exists from steps 1 to 4.
 
-Write it to `<vault>/04_Resources/Skills/<slug>-command-base/SKILL.md`, then install:
+Write it to `<vault>/99_Meta/Skills/<slug>-command-base/SKILL.md`, then install:
 
-- macOS / Linux: `ln -s "<vault>/04_Resources/Skills/<slug>-command-base" ~/.claude/skills/<slug>-command-base` (create `~/.claude/skills/` if missing; if a same-named entry exists, ask before touching it). Symlink means editing the vault copy edits the live skill.
-- Windows: symlinks often need elevation; copy the folder instead and tell them the canonical copy is the vault one (re-copy after edits).
+- macOS / Linux: `ln -s "<vault>/99_Meta/Skills/<slug>-command-base" ~/.claude/skills/<slug>-command-base` (create `~/.claude/skills/` if missing; if a same-named entry exists, ask before touching it). Symlink means editing the vault copy edits the live skill.
+- **Windows, default: copy the folder**, and tell them the canonical copy is the vault one. ⛔ A copy means **every later edit to the vault copy leaves the live skill untouched until it is copied over again**, which is why the flag below exists and why the retrofit path in `SKILL.md` reads the installed file back instead of trusting that its edit landed. Staleness on this path is handled; do not reach for a link to solve it.
+- **A junction is available if the owner asks for live editing, but say the trade out loud first.** Step 6.8 installs a delete guard, and **that guard is macOS only**. The single accident it exists to stop is a `rm -r` aimed at `~/.claude/skills/` that **follows the link into the vault and destroys the real content behind it**. A copy cannot be followed, so a Windows copy install is the one shape that is safe from this by construction. A junction gives up that safety on the one platform where nothing is watching. ⛔ Do not present the junction as the recommended path, and do not install one without saying this in plain words.
+  - Mechanically: `mklink /D` (a directory symlink) needs elevation or Developer Mode; `mklink /J` makes a **junction**, which does not, and on a local disk one folder ends up with two paths. From `cmd.exe`, link first then target: `mklink /J "%USERPROFILE%\.claude\skills\<slug>-command-base" "<vault>\99_Meta\Skills\<slug>-command-base"` (create `%USERPROFILE%\.claude\skills\` first; if a same-named entry exists, ask before touching it). From PowerShell, either `cmd /c mklink /J ...` or `New-Item -ItemType Junction -Path <link> -Target <vault-path>`. **Verify before believing it:** write a marker line into the vault copy, read it back through the `~/.claude/skills/...` path, then remove the marker. If the read-back does not show it, the junction did not take; stay on the copy.
+  - **Two known ways a junction will not work.** Junctions are **local volumes only**, so a vault on a mapped network drive or a UNC path (`\\server\share\...`) cannot be junctioned. And a vault living inside a **OneDrive / Dropbox / Google Drive sync folder** can put the sync client and the junction at odds: some clients refuse to traverse it, some follow it and upload a second copy of everything behind it.
+- ⚠️ **Everything in the junction branch is untested on Windows.** This skill is developed on macOS and we have no Windows machine to verify against: the commands above, the shell they run in, and whether a Windows `rm -rf` actually follows a junction are all unverified. Treat the whole branch as best-effort, run the verify step rather than assuming, and stay on the copy without drama when anything is unclear.
+
+**Record which one happened.** Set `command_base_install: symlink | junction | copy` in `bootstrap-progress.md`. This is not bookkeeping: it tells a later session whether editing the vault copy is enough or whether a re-copy has to follow. It is a hint, not proof (the owner may have re-installed by hand since), which is why `SKILL.md`'s retrofit path reads the installed file back instead of trusting the flag. Leaving the flag out costs that session its starting guess.
 
 One line on what they just got: "From now on, in any session, say 'morning' or 'log a decision' and this skill runs your day on top of the vault."
 
-## Step 6.6: Install the pod-maker skill (the pod surgery tool)
+## Step 6.7: Name the two skills that do not ship here (one line, no install)
 
-The `pod-maker` skill ships **inside this skill's payload** as a `pod-maker/` subfolder. It is **static and identical for every user** (a tool that reads the vault constitution and scaffold at runtime, not personalized content), which is why it is **symlinked from the payload** rather than generated into the vault the way the command-base skill is. A skill nested inside another skill's folder is not independently discoverable by Claude Code, so surface it by linking that subfolder up into the skills directory:
+Two pieces of work have their own tools, and both are published separately and installed by the owner when they want them. Say this once, in one line each, and only so nothing later reads as if it were already on the machine:
 
-- Locate this running skill's folder (the `my-second-brain` skill dir; via npx install it is `~/.claude/skills/my-second-brain/`, resolved at runtime). Its `pod-maker/` subfolder is the payload.
-- macOS / Linux: `ln -s "<my-second-brain-skill-dir>/pod-maker" ~/.claude/skills/pod-maker` (create `~/.claude/skills/` if missing; if a `pod-maker` entry already exists, ask before touching it). Symlinking means an `npx` update of `my-second-brain` refreshes pod-maker automatically, and it matches the same symlink discipline the command-base skill uses.
-- Windows: symlinks often need elevation, so copy the folder instead (`pod-maker/` into `~/.claude/skills/pod-maker`) and tell them the canonical copy is the payload one, so re-copy after any skill update. Same fallback as the command-base Windows path.
+- **Writing an SOP** runs on the `sop-builder` skill. `03_SOP/` ships empty by design and hand-writing an SOP is perfectly legal (doctrine §1); the skill is the comfortable path, not the only legal writer.
+- **Opening a playbook lab** runs on the `playbook-lab` skill, and that is a rare, later thing: most playbooks never need one, and the weekly maintenance scan proposes candidacy long before the owner has to think about it.
 
-Record `pod_maker_installed:` in `bootstrap-progress.md` (`symlinked` on macOS / Linux, `copied` on the Windows fallback). One line to the owner, only if they ask what it is: "pod-maker is the tool that grows a busy function (marketing, sales...) into its own self-learning pod when it earns one; say 'forge a pod' or 'graduate my marketing' when the time comes."
+⛔ Do not install either here, and do not present them as missing pieces. Nothing in this vault breaks without them.
 
 ## Step 6.8: Safety lock (optional, recommended, macOS only)
 
-This step installs a **read-only accident net**: a Claude Code hook that blocks a recursive delete (`rm -rf` and its variants) aimed at the vault or `~/.claude/skills`. It exists because of one specific, hard-to-reverse mistake. The command-base skill and pod-maker install as **symlinks** under `~/.claude/skills/` that point INTO the vault; a plain `rm -r` on one of those links follows it and destroys the real vault content behind it. The hook stops exactly that. It is an accident net, not a security boundary: it fails open (allows) on anything it cannot parse, and it never blocks non-delete commands.
+This step installs a **read-only accident net**: a Claude Code hook that blocks a recursive delete (`rm -rf` and its variants) aimed at the vault or `~/.claude/skills`. It exists because of one specific, hard-to-reverse mistake. The command-base skill installs as a **symlink** under `~/.claude/skills/` that points INTO the vault; a plain `rm -r` on that link follows it and destroys the real vault content behind it. The hook stops exactly that. It is an accident net, not a security boundary: it fails open (allows) on anything it cannot parse, and it never blocks non-delete commands.
 
 **This changes the owner's `~/.claude/settings.json`, which is machine-level configuration outside the vault. Explain before you install, and install only on an explicit yes.** Say, in plain terms: what it blocks (recursive deletes hitting the vault or the skills folder), how it blocks (the command is refused with a note before it runs), and how to remove it (below). If the owner declines, record that and move on; nothing else in the system depends on it.
 
@@ -111,7 +117,7 @@ This step turns on **session memory**: every Claude Code conversation on this ma
 
 On yes (macOS):
 
-1. The tool ships in this skill's payload at `scripts/session-history/` (self-contained, nothing to download). Resolve the running skill's folder as in step 6.6; call the tool's path `<tool>` below.
+1. The tool ships in this skill's payload at `scripts/session-history/` (self-contained, nothing to download). Resolve the running skill's folder (via npx install it is `~/.claude/skills/my-second-brain/`, resolved at runtime); call the tool's path `<tool>` below.
 2. Write the config so harvest reports know where the vault Inbox is: create `~/.my-second-brain/session-history.json` containing `{"vault": "<vault-path-from-step-3>"}` (create the folder if missing; if the file exists, update only the `vault` key).
 3. Build the first index: `python3 "<tool>/sh" ingest`. On a machine with a long Claude Code history this can take a little while on first run; incremental runs afterwards take seconds. Report the one-line stats it prints.
 4. Show the owner one search they can try, in their language, e.g. `python3 "<tool>/sh" search "the thing we fixed"`, and say plainly: from now on, asking "上次怎么解的 / how did we solve that before" in any session can actually be answered from history.
@@ -146,19 +152,8 @@ Close setup with the payoff:
 2. One-time check: Settings -> Core plugins -> **Bases** enabled (the dashboard needs it).
 3. Open graph view (the network icon, or Ctrl/Cmd+G).
 
-What they see is their second brain as a constellation: every room wired to Home, business wing on one side, personal wing on the other, all of it empty and waiting. Say it straight, in their language, something like: "That is your second brain, half built. The structure is done; the memories are not moved in yet. That is what capture mode is for, and the first ten minutes of it is your Business Profile. Want to move the first thing in now?"
+What they see is their second brain as a constellation: every door wired to Home, business wing on one side, personal wing on the other, all of it empty and waiting. Say it straight, in their language, something like: "That is your second brain, half built. The structure is done; the memories are not moved in yet. That is what capture mode is for, and the first ten minutes of it is your Business Profile. Want to move the first thing in now?"
 
 Set `setup_complete: true` in `bootstrap-progress.md`. If they say yes, load capture mode and go.
 
-## Step 8.5: Offer the Marketing pod (recommend-leaning, never mid-burst)
-
-After the graph moment (or at the first capture, whichever comes first), offer the core **Marketing pod** once. Placement matters: never embed this inside the scaffold burst, so the "under 10 minutes" promise holds; it comes at the close, as a clearly separate beat. Tone is **recommend-leaning**, not neutral: every business does marketing, and the pod is the one core capability that ships polished.
-
-The offer must say two things plainly, because they resolve the tension between "day 0 value" and "don't stack empty structure":
-
-1. **The seed is usable on day zero.** The Marketing pod ships with generic-but-real marketing doctrine and a loop-config, so it can do useful marketing immediately. It is not an empty shell.
-2. **The learning part waits for real activity.** The loop (the part that grows this business's own marketing judgment) only starts once there is real activity and feedback to learn from. The early-maturity rule that would send a from-scratch pod back to a thin room governs *forging* a pod with no seed; it does not govern this *pre-seeded patch*, which is why offering it on day 0 is sound.
-
-Frame it as recoverable, not a one-way door: if it turns out unused, the weekly maintenance demotion scan will notice and offer to shrink it back (learning preserved, per doctrine section 9). That safety net is what makes an early yes safe.
-
-Installing the pod runs the shared pod-install flow owned by the **`pod-maker` skill**, which was installed in step 6.6. On the owner's yes, hand off to pod-maker to load its shipped Marketing patch (`pod-maker/patches/marketing/`): mechanically this is a graduation (it grows the always-present thin `Marketing/` room into a wing-level pod, carrying the room's `Action-Log` up intact), with the patch supplying the day-0 seed brain. Do not half-build a pod by hand: if for some reason `pod-maker` is absent (an interrupted step 6.6), record the owner's answer and note the install is pending pod-maker, rather than improvising the structure. Record the outcome in `bootstrap-progress.md` (`marketing_pod_offered:` + `marketing_pod_installed:`).
+⛔ **Nothing else gets offered at the close.** Setup ends on the graph and the first capture. Anything that adds structure to a vault with nothing in it yet is stacking empty rooms, and every capability in this system is earned by activity rather than granted at install.

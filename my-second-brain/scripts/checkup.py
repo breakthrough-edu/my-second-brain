@@ -58,7 +58,7 @@ import sys
 DEFAULTS = {
     # A top-level entry is an expected "room" if its name matches this pattern
     # (the numbered-room convention: 00_Inbox, 01_Daily, ... 99_Meta, plus the
-    # 07_/08_ business wings). Anything else at the top level is surfaced.
+    # 04_/05_ business wings). Anything else at the top level is surfaced.
     "room_pattern": r"^\d{2}_[A-Za-z]",
     # Extra top-level names that are allowed even though they do not match the
     # room pattern. Default covers the one file the scaffold writes to root.
@@ -76,9 +76,24 @@ DEFAULTS = {
     ],
     # Record-schema (the "cb:" frontmatter contract). Marker is the frontmatter
     # key that flags a governed record. `types` maps each marker VALUE to its
-    # required keys. Left EMPTY on purpose: the public default enforces nothing
-    # private. A vault supplies its own types map via .checkup.json to turn on
-    # required-key enforcement. See structure-doctrine.md in the vault.
+    # required keys.
+    #
+    # SOURCE OF TRUTH: section 8 of structure-doctrine.md inside the vault, and
+    # nowhere else. Whatever this checker reads is DERIVED from that section; it
+    # is never a second list maintained by hand. A vault may extend it through
+    # .checkup.json (private families the public product knows nothing about),
+    # but it may not contradict it.
+    #
+    # The shipped families are NOT optional. Every vault this product builds is
+    # born with guide / brief / menu / entity / record / process / hypothesis /
+    # lab / ritual / resources / brand-strategy already in it, so "the public
+    # default enforces nothing" (the old posture here, correct back when section
+    # 8 was only a table of precedents) would mean shipping structure with no
+    # enforcement behind it at all.
+    #
+    # NOT YET IMPLEMENTED: reading section 8 directly. Until that lands, this
+    # default stays empty rather than hardcoding a copy of the schema, because a
+    # hardcoded copy is exactly the drift this comment exists to prevent.
     "record_schema": {"marker": "cb", "types": {}},
     # Tag vocabulary: the markdown file the whitelist is parsed from, relative
     # to meta_dir. An explicit `tag_vocabulary` list in config overrides parsing.
@@ -88,7 +103,7 @@ DEFAULTS = {
     "scan_inline_tags": True,
     # Dirs whose notes are skipped when scanning for tags / schema (archive and
     # template shapes are not live content).
-    "scan_skip_dirs": ["05_Archive", "99_Meta/Templates", "99_Meta/memory-archive"],
+    "scan_skip_dirs": ["98_Archive", "99_Meta/Templates", "99_Meta/memory-archive"],
     # Freshness. Fields read from maintenance-state.md frontmatter, and the day
     # threshold past which each is called stale. If the file carries its own
     # `cadence_days`, that wins over staleness_days for the maintenance fields.

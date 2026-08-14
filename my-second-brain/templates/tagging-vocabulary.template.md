@@ -14,7 +14,7 @@ version: 1.0
 1. The AI only uses tags from this file. It does not invent tags.
 2. A new tag is proposed (literal text + definition + boundary with existing tags), the owner approves, this file is updated FIRST, then the tag is used.
 3. Format: lowercase, hyphen-separated, no spaces or special characters.
-4. The same propose-approve-first discipline governs frontmatter enum values (statuses, functions, domains).
+4. The same propose-approve-first discipline governs frontmatter enum values (statuses, lanes, domains). Those enums are declared in `99_Meta/structure-doctrine.md` §8 and nowhere else, so a new value is an amendment to that file, not a new list here.
 
 ## Domain
 
@@ -25,27 +25,25 @@ version: 1.0
 | `#personal` | Binds the owner's personal life. |
 | `#{{BUSINESS_TAG}}` | Binds {{BUSINESS_NAME}}. |
 
-## Function
+## Lane
 
-> Which part of the business a record serves. Mirrors the `function:` frontmatter enum: `Marketing` / `Sales` / `Customer-Service` / `Operations` / `HR` / `Finance` / `Personal`.
+> Which of the four lanes a record belongs to. Mirrors the `lane:` frontmatter enum in doctrine §8, and the ladder that assigns it lives in §1. ⛔ These are not departments: this vault has no departments, and nothing files by which one would own it.
 
 | Tag | Definition |
 |---|---|
-| `#marketing` | Attention, content, promotion. |
-| `#sales` | Conversion, pipeline, deals. |
-| `#customer-service` | Post-sale handling, complaints, retention actions. |
-| `#operations` | Running the operation day to day. |
-| `#hr` | Hiring, people, payroll matters. |
-| `#finance` | Money flow, statements, tax, banking. |
+| `#deliver` | Work for a specific named customer, from pursuit to handover. |
+| `#grow` | Work aimed at people who have not bought yet, addressed as an audience. |
+| `#run` | Recurring upkeep: work that would still exist if the business never grew. |
+| `#build` | Finite internal work that leaves the business different when it is done. |
 
 ## State
 
 | Tag | Definition |
 |---|---|
-| `#decision` | A logged decision (a note in `06_Command-Base/Decisions/`). Light judgments do not get this tag. |
+| `#decision` | A logged decision (a note in `02_Command-Base/Decisions/`). Light judgments do not get this tag. |
 | `#waiting-for` | Blocked on someone else; the record names who. |
-| `#renewal` | Anything with a `renew-by:` date (licenses, insurance, leases). |
-| `#lesson-candidate` | A pothole or realization flagged for the next distill run. Not yet Layer 3. |
+| `#renewal` | Anything with a `renew_by` date (licenses, insurance, leases, road tax). |
+| `#lesson-candidate` | A pothole or realization flagged for the next maintenance run. Not yet in `04_Methodology`. |
 
 ## Excluded for now
 

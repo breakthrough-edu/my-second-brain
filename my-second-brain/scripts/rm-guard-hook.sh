@@ -4,7 +4,7 @@
 #
 # Blocks recursive deletes that target your Obsidian vault or ~/.claude/skills,
 # including the symlink-passthrough case: My Second Brain installs skills (the
-# command-base skill, pod-maker) as ~/.claude/skills/<name> symlinks that point
+# command-base skill) as ~/.claude/skills/<name> symlinks that point
 # INTO your vault, and a plain `rm -r ~/.claude/skills/<name>` follows the link
 # and destroys the real vault content behind it. This guard stops that.
 #

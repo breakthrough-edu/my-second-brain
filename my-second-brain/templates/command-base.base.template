@@ -8,13 +8,11 @@ views:
       and:
         - cb == "task"
         - status != "done"
-        - status != "cancelled"
     order:
       - file.name
       - status
       - due
-      - domain
-      - function
+      - priority
     sort:
       - property: due
         direction: ASC
@@ -27,12 +25,10 @@ views:
         - cb == "task"
         - due <= today()
         - status != "done"
-        - status != "cancelled"
     order:
       - file.name
       - status
       - due
-      - domain
     sort:
       - property: due
         direction: ASC
@@ -41,12 +37,21 @@ views:
     filters:
       and:
         - cb == "task"
-        - status == "waiting-for"
+        - status == "waiting"
     order:
       - file.name
       - waiting_on
       - due
-      - domain
+  - type: table
+    name: Blocked
+    filters:
+      and:
+        - cb == "task"
+        - status == "blocked"
+    order:
+      - file.name
+      - depends_on
+      - due
   - type: table
     name: Red Flags
     filters:
@@ -54,52 +59,49 @@ views:
         - cb == "task"
         - due < today()
         - status != "done"
-        - status != "cancelled"
     order:
       - file.name
       - due
-      - domain
     sort:
       - property: due
         direction: ASC
   - type: table
-    name: By Domain
+    name: Projects
     filters:
       and:
-        - cb == "task"
-        - status != "done"
-        - status != "cancelled"
-    groupBy:
-      property: domain
-      direction: ASC
+        - type == "brief"
+        - status == "active"
     order:
       - file.name
-      - status
+      - stage
       - due
-      - function
-  - type: table
-    name: Sessions
-    filters:
-      and:
-        - cb == "session"
-    order:
-      - file.name
-      - session_type
-      - status
-      - date
+      - owner
     sort:
-      - property: date
+      - property: due
         direction: ASC
   - type: table
     name: Decisions
     filters:
       and:
         - cb == "decision"
+        - status == "active"
     order:
       - file.name
       - date
       - domain
-      - function
+      - lane
     sort:
       - property: date
         direction: DESC
+  - type: table
+    name: Renewals
+    filters:
+      and:
+        - renew_by != null
+    order:
+      - file.name
+      - type
+      - renew_by
+    sort:
+      - property: renew_by
+        direction: ASC

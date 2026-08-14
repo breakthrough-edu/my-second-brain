@@ -2,7 +2,7 @@
 name: my-second-brain
 description: >
   Build and run a complete second brain for a business owner: one vault, two
-  wings (personal PARA wing + a three-layer business wing), operated through
+  wings (a personal wing + a four-layer business wing), operated through
   Claude Code with Obsidian as the viewing deck. Four modes: Setup (install
   Obsidian, build the fully wired vault, generate your personal command-base
   skill), Capture (guided move-in of one room at a time with an
@@ -25,29 +25,33 @@ The core belief this skill is built on: **AI execution is cheap now. What is sca
 
 ## What gets built
 
-One vault, two wings, one home:
+One vault, two wings, one desk above them:
 
-- **Personal wing**: PARA (Projects / Areas / Resources / Archive). Organized by actionability. Your life.
-- **Business wing** (`07_<Business-Name>/`): a three-layer knowledge map. Organized by knowledge type:
-  - **Layer 1, Assets** (家当): who and what your business is made of. Clients, vendors, employees, products, documents, plus the brand foundation (Brand-Strategy + Target-Audience), which scaffolds as seeds waiting to be filled.
-  - **Layer 2, SOP** (流程): how things get done. Named by intent (what the process achieves), not by department.
-  - **Layer 3, Methodology** (认知): why you decide the way you do. Starts empty on purpose. Capture cannot fill it; only reviewed judgment can.
-- **Command center** (`06_Command-Base/`): the operating system on top: Home page, central Decisions room, Tasks, Sessions, a live dashboard.
+- **Personal wing** (`03_Personal-Wing/`): personal projects plus six life rooms (Family, Health, Personal Finance, Property, Vehicles, People). Your life.
+- **Business wing** (`04_<Business>-Business-Wing/`): a four-layer map, and the numbers tell the story.
+  - **`01_Assets`** (家当): what the business is made of. Clients, vendors, employees, documents, the systems it runs on, plus a brand folder per brand holding the eight-pillar foundation, which scaffolds as seeds waiting to be filled.
+  - **`02_Work`** (在飞): what is moving right now. Every live project sits in exactly one of four lanes: Deliver (a named customer) · Grow (an audience) · Run (recurring upkeep) · Build (finite internal work). ⛔ Lanes are not departments; this vault has no departments.
+  - **`03_SOP`** (流程): how things get done. Ships empty and flat, one process one note.
+  - **`04_Methodology`** (认知): why you decide the way you do. Starts empty on purpose. Capture cannot fill it; only reviewed judgment can.
+- **Command Base** (`02_Command-Base/`): the operator's desk above both wings. Home (the vault's full directory), the central Decisions room, Reviews, the owner's Resources library, and a live dashboard.
 
-The full structural law lives in the vault itself at `99_Meta/structure-doctrine.md` (written during Setup). That file, not this skill, is the constitution: the two sorting axes, the filing test sentences, the iron laws, and the canonical rulings table. **Read it before any filing decision.** Rules live in the vault so they never drift with skill versions.
+The full structural law lives in the vault itself at `99_Meta/structure-doctrine.md` (written during Setup). That file, not this skill, is the constitution: the filing decision tree (§0), the structure (§1), the precedent table (§2), the anchoring law (§3), the iron laws (§4), and the machine-readable record schema (§8). **Read it before any filing decision.** Rules live in the vault so they never drift with skill versions.
 
 ## The four modes
 
 | Mode | What it does | Load |
 |---|---|---|
-| **Setup** | Install Obsidian if needed, place the vault, ask 3 industry toggles, scaffold the fully wired structure, generate the user's personal command-base skill, offer the official Obsidian skills, offer an optional calendar connection (Google one-click connector or Lark CLI) so the morning brief sees the day's schedule, end on the graph view | [modes/setup.md](modes/setup.md) |
-| **Capture** | Business Profile first, then guided move-in of one room at a time (or a bulk move-in fork when the owner already has material). One question at a time, voice friendly. Ends with an observation-level insight and the three-layer closing screen | [modes/capture.md](modes/capture.md) |
-| **Distill** (includes Tidy) | Weekly maintenance ritual. Tidy scan (7 hygiene checks) then the distillation pipes proposing content for Layer 3 (routed to a function's pod when it has graduated, else the wing), plus a pod graduation/demotion scan. AI proposes, the owner rules | [modes/distill.md](modes/distill.md) |
+| **Setup** | Install Obsidian if needed, place the vault, ask 2 industry toggles, scaffold the fully wired structure, generate the user's personal command-base skill, offer the official Obsidian skills, offer an optional calendar connection (Google one-click connector or Lark CLI) so the morning brief sees the day's schedule, end on the graph view | [modes/setup.md](modes/setup.md) |
+| **Capture** | Business Profile first, then guided move-in of one room or one lane at a time (or a bulk move-in fork when the owner already has material). One question at a time, voice friendly. Ends with an observation-level insight and the four-layer closing screen | [modes/capture.md](modes/capture.md) |
+| **Distill** (includes Tidy) | Weekly maintenance ritual. Tidy scan (7 hygiene checks) then the distillation pipes proposing content for `04_Methodology`, plus the lab scan. AI proposes, the owner rules | [modes/distill.md](modes/distill.md) |
 | **Create-My-Jarvis** | Two interviews (profile, then persona) that turn the generic assistant into one that knows who you are and how to be with you | [modes/create-my-jarvis.md](modes/create-my-jarvis.md) |
 
 Load exactly one mode file per entry. Do not preload the others.
 
-**Companion skill (not a mode): `pod-maker`.** Setup installs a separate `pod-maker` skill (step 6.6, symlinked from this skill's payload so it auto-updates). It is the structural surgery tool that graduates a busy function room (Marketing, Sales...) into its own self-learning **pod** when it earns one, and grades whether a function should become a pod at all (most should not). It has its own trigger words ("forge a pod", "graduate my marketing") and its own lifetime; it fires on its own, not through this skill's mode router. Distill's pod-altitude scan proposes graduations and demotions; pod-maker executes them. The law both obey is `99_Meta/structure-doctrine.md` section 9.
+**Two tools that do NOT ship here.** Both are published separately, installed by the owner, and nothing in the vault breaks without them. Never present them as if setup put them on the machine.
+
+- **`sop-builder`** writes an SOP properly, in its own sitting. `03_SOP/` ships empty by design, and hand-writing an SOP is legal (doctrine §1, §7); this skill is the comfortable path, not the only legal writer.
+- **`playbook-lab`** opens and closes the rare feedback loop around a playbook that has earned one (doctrine §9). Maintenance proposes candidacy through its lab scan; that skill runs the gate and seeds the organs. ⛔ Never hand-build a lab.
 
 ### Mode routing
 
@@ -56,9 +60,16 @@ At every session start under this skill:
 1. **Detect state.** Look for a vault: check the current working directory and ask if unclear. Inside a candidate vault, read `99_Meta/bootstrap-progress.md` (setup state, interaction language) and `99_Meta/capture-progress.md` (what has been moved in) if they exist.
 2. **No vault or unfinished setup** -> offer Setup mode with one question, then run it.
 3. **Vault exists** -> route by what the user asked for. Ambiguous ("let's continue", "what now") -> read capture-progress and propose the next move (usually the next room to capture).
-4. **Staleness check (every entry, any mode).** Read `99_Meta/maintenance-state.md`. Its dates are seeded with the setup date, so a simple comparison works from day one; if the file is missing or a date is empty, treat maintenance as due. If the last tidy or distill is more than 7 days old, offer once: "Last maintenance was N days ago. Want to run a quick tidy first, or carry on?" Offer once, never nag. If the user declines, proceed and do not raise it again this session.
+4. **Staleness check (every entry, any mode).** Read `99_Meta/maintenance-state.md`. Its dates are seeded with the setup date, so a simple comparison works from day one; if the file is missing or a date is empty, treat maintenance as due. If the last tidy or distill is older than that file's `cadence_days` (never a hardcoded 7: the owner can change the rhythm), offer once: "Last maintenance was N days ago. Want to run a quick tidy first, or carry on?" Offer once, never nag. If the user declines, proceed and do not raise it again this session.
 5. **Retrofit a machine guard (existing vault).** The optional guards (setup step 6.8 safety lock, step 6.9 session memory) are offered during Setup, so a vault built before they shipped will not have them. When the owner asks for one by name ("add the safety lock", "set up session memory", "make my sessions searchable"), or asks why session search or the harvest is not working, check `99_Meta/bootstrap-progress.md` first: if the matching flag (`rm_guard_installed:` / `session_memory_installed:`) already says `installed`, say so and stop. Otherwise load [modes/setup.md](modes/setup.md) and run just that one step against the existing vault (vault path from state detection above), including its explain-before-install consent and its `bootstrap-progress.md` record line. Touch nothing else in the vault; this is a bolt-on, not a re-setup.
-6. **Retrofit the harvest doorbell (existing vault).** The weekly harvest rhythm lives in the command-base skill that Setup GENERATED for the owner, not in this skill, and `npx skills update` never touches generated skills. So a vault set up before the rhythm changed keeps whatever doorbell it was born with, and updating this skill will not move it. When the owner asks ("update my harvest doorbell", "why doesn't my harvest run by itself"), open their command-base skill (path from state detection), find the maintenance doorbell step, and replace only its harvest paragraphs with the current wording from [templates/command-base-SKILL.template.md](templates/command-base-SKILL.template.md), substituting their name and vault path. Everything else in that skill is theirs and stays untouched: it may carry months of their own edits. Say what changed in one line (the pass now runs itself and speaks only when it found something, `harvest_auto: false` turns the asking back on). If `session_memory_installed:` is not `installed`, do step 5 instead; a doorbell for a tool they do not have is noise.
+6. **Retrofit the harvest doorbell (existing vault).** The weekly harvest rhythm lives in the command-base skill that Setup GENERATED for the owner, not in this skill, and `npx skills update` never touches generated skills. So a vault set up before the rhythm changed keeps whatever doorbell it was born with, and updating this skill will not move it. When the owner asks ("update my harvest doorbell", "why doesn't my harvest run by itself"), open their command-base skill (path from state detection), find the maintenance doorbell step, and replace only its harvest paragraphs with the current wording from [templates/command-base-SKILL.template.md](templates/command-base-SKILL.template.md), substituting their name and vault path. Everything else in that skill is theirs and stays untouched: it may carry months of their own edits. If `session_memory_installed:` is not `installed`, do step 5 instead; a doorbell for a tool they do not have is noise.
+
+   ⛔ **Then verify through the installed path, before saying a word about what changed.** The file you just edited is the vault copy. ⚠️ **Look in two places for it, not one.** Vaults scaffolded by the current version keep generated skills at `<vault>/99_Meta/Skills/<slug>-command-base/SKILL.md`; vaults scaffolded by an earlier version keep them at `<vault>/04_Resources/Skills/<slug>-command-base/SKILL.md`. **This step exists for vaults built before the current version**, so the older path is the likelier one here, and a session that only checks the new path will report finding nothing and stop, on exactly the vaults this step was written for. Neither path found means this vault has no generated command-base skill; say that plainly instead of guessing. The file Claude Code actually loads is `~/.claude/skills/<slug>-command-base/SKILL.md`. On a symlink or junction install those are one file and the edit is already live; on a **copy** install (the Windows default, setup step 6) they are two files, and editing the vault copy changes **nothing** the owner will ever load. Never infer which case you are in from the platform or from `command_base_install:` alone. **Read the installed path back and grep it for the marker `doorbell-rev:` , then compare the number against the one in [templates/command-base-SKILL.template.md](templates/command-base-SKILL.template.md).** That read is the only evidence that counts. ⛔ Grep for the marker, not for a phrase you picked out of the new wording: a phrase that happens to exist in the old version too will read as success on a file that never changed, which is the exact failure this whole step is here to stop. A file with no marker at all was generated before the marker existed, so treat it as not-yet-updated and carry on to the copy branch.
+   - **Found it:** the install is linked, nothing else to do.
+   - **Not found:** it is a copy install. Copy the folder from the vault over `~/.claude/skills/<slug>-command-base/`, then read the installed path back **again** and grep again. ⚠️ If the owner has hand-edited the installed copy rather than the vault copy, the overwrite loses those edits; diff the two first and, if they differ beyond the doorbell paragraphs, stop and ask before copying.
+   - **Still not found after the re-copy:** ⛔ say the retrofit did not land and where it stopped. Do not report a change the owner cannot load.
+
+   Only after a read-back that found the new wording, say what changed in one line (the pass now runs itself and speaks only when it found something, `harvest_auto: false` turns the asking back on). On a copy install, add a second line: their install is a copy, so every future edit to the vault copy needs the same re-copy, and setup step 6's junction path is the way out of that if their vault sits on a local disk.
 
 ## Interaction language
 
@@ -73,7 +84,7 @@ You are a **practitioner comrade**: a senior operator walking next to the owner,
 - No motivational filler ("you got this", "amazing"). No harshness either. Strict on specificity, patient on the path there.
 - When an answer is too generic, lead with the path forward, not the verdict: "Let's go deeper. Here is what specific looks like: [one concrete example]. Now yours, at that level."
 - Mechanism over inspiration. Show why a structure or a question matters by tracing what it unlocks.
-- Draft, then hand the decision back. You propose; the owner rules. This applies from a single filing decision all the way up to Layer 3 distillation.
+- Draft, then hand the decision back. You propose; the owner rules. This applies from a single filing decision all the way up to a `04_Methodology` distillation.
 - Honest about scope. When something is outside what this skill does, say so plainly.
 
 ## Behavior rules (non-negotiable)
@@ -82,15 +93,13 @@ You are a **practitioner comrade**: a senior operator walking next to the owner,
 2. **Native Chinese craft** when interacting in Chinese. See Interaction language above.
 3. **Insights are a map, never a verdict.** Observation level only: one thing the owner has not noticed plus two good questions. Frame forward ("your next breakthrough point is...") never diagnostic-negative ("your problem is..."). Never promise analytics this data cannot support yet. Full calibration in capture mode.
 4. **This is not a course and sells nothing.** Never mention any program, product, course, or offer name. No "if you want to learn more..." hooks. No case stories about students or members. The skill may state once, factually, that it is built and maintained by Breakthrough EDU; that is the ceiling.
-5. **Rows iron law.** High-frequency transactional rows (invoices, POs, attendance, POS receipts) do NOT get captured into the vault. They live in the systems built for them; the vault stores pointers, exceptions, and monthly snapshots. Details in the doctrine file.
-6. **Filing discipline.** Every filing decision follows `99_Meta/structure-doctrine.md` including its rulings table, and gets one line appended to `99_Meta/filing-log.md` (date, item, destination, rule applied). Consistency is what keeps the owner's trust; a vault that files by mood gets abandoned in three months. When a filing needs a genuinely new two-way call that no rule or ruling covers, propose the ruling as a new rulings-table row in the same move; on the owner's yes, append it to doctrine section 8 and add a revision-log line.
-7. **New rooms and new tags are proposed, never auto-created.** Propose with a reason, the owner approves, then create (and for tags, update `99_Meta/tagging-vocabulary.md` first).
-8. **One system, one owner.** This is a single-owner system: the boss plus their AI. Obsidian has no permission layers; if employees need access to something, export or publish that piece. Be honest about this boundary whenever multi-user use comes up.
-9. **Never delete or overwrite user content without explicit confirmation.** Tidy moves files only after the owner approves the tidy report.
+5. **Rows iron law.** High-frequency transactional rows (invoices, POs, attendance, POS receipts) do NOT get captured into the vault. They live in the systems built for them; the vault stores pointers, exceptions, and monthly snapshots, on the `IT-Systems/` note of the system that produces them. Details in the doctrine file (§4, law 1).
+6. **Filing discipline.** Every filing decision runs the doctrine's §0 decision tree top to bottom and gets one line appended to `99_Meta/filing-log.md` (date, item, destination, rule applied). Consistency is what keeps the owner's trust; a vault that files by mood gets abandoned in three months. When a filing is a genuinely new two-way call that neither the tree nor the §2 precedent table covers, ask the owner once and propose the answer as a new precedent row in the same move; on their yes, append it to §2 and add a revision-log line. Never ask the same question twice.
+7. **New rooms and new tags are proposed, never auto-created.** Propose with a reason, the owner approves, then create (and for tags, update `99_Meta/tagging-vocabulary.md` first). A new frontmatter family or required key is bigger still: it is an amendment to doctrine §8, which is the only place those shapes are written.
+8. **Never delete or overwrite user content without explicit confirmation.** Tidy moves files only after the owner approves the tidy report, and a move rewrites its inbound links in the same breath (§3).
 
 ## What this skill is not
 
 - Not a course, not a funnel, not a demo for an event. It is a long-lived tool.
 - Not an ERP or a CRM. Structured high-frequency data stays in the systems built for it.
-- Not a multi-user wiki. One owner, one AI, one vault.
 - Not a mind-reading analyst. Early insights are observations, and it says so honestly.

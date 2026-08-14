@@ -1,0 +1,85 @@
+name: session-history
+
+# Why this exists: the README states plainly that we build on macOS and have no
+# Windows machine to verify against. The one concrete Windows question it worries
+# about (does this Python's SQLite ship the FTS5 extension the whole index is
+# built on?) is askable for free on a hosted runner. This workflow asks it. Until
+# it has actually run on GitHub it has answered nothing, so do not cite it as
+# evidence of anything before there is a green run to point at.
+#
+# ⚠️ Scope, so this workflow is never read as more than it is: it verifies the
+# session-history tool and the inspector on a clean GitHub-hosted Windows image.
+# It does NOT verify the rest of the product on Windows. Nothing here touches the
+# command-base skill install (the copy default and the optional junction, both in
+# modes/setup.md), the rm-guard hook, Obsidian, or Claude Code itself. Those
+# remain unverified on Windows.
+#
+# ⚠️ And it does not test the Python the README tells a Windows owner to install.
+# actions/setup-python provides a GitHub-hosted CPython build. The README's actual
+# claim is narrower and different: use python.org, not Anaconda, whose SQLite lacks
+# FTS5. Anaconda is never installed here, so the risk the README names is the one
+# thing this workflow cannot clear. A green run means "a mainstream CPython on
+# Windows has FTS5", which is worth knowing and is not the same sentence.
+#
+# ⚠️ The steps below run under bash (see defaults), which on Windows is Git Bash.
+# The README tells owners to run from PowerShell or CMD. Same interpreter, different
+# calling environment; a green run here does not exercise the shell they will use.
+
+on:
+  push:
+    paths:
+      - 'my-second-brain/scripts/**'
+      - '.github/workflows/session-history.yml'
+  pull_request:
+    paths:
+      - 'my-second-brain/scripts/**'
+      - '.github/workflows/session-history.yml'
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  tests:
+    name: ${{ matrix.os }} · py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        python-version: ['3.11', '3.13']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Report the SQLite build under test
+        working-directory: my-second-brain/scripts/session-history
+        run: |
+          python -c "import sys, sqlite3; print('python  ', sys.version); print('sqlite3 ', sqlite3.sqlite_version)"
+
+      - name: Probe FTS5 (the question this workflow exists to answer)
+        working-directory: my-second-brain/scripts/session-history
+        run: |
+          python -c "import sys; sys.path.insert(0, '.'); from session_history import fts5_available; ok = fts5_available(); print('FTS5 available:', ok); sys.exit(0 if ok else 1)"
+
+      - name: Unit tests
+        working-directory: my-second-brain/scripts/session-history
+        run: |
+          python -m unittest discover -s tests -v
+
+      - name: CLI entrypoint smoke test
+        working-directory: my-second-brain/scripts/session-history
+        # Named-interpreter invocation, which is exactly how the README's Windows
+        # self-serve path tells an owner to run it (`python "<skill>/.../sh"`).
+        run: |
+          python sh --help
+
+      - name: Inspector smoke test
+        working-directory: my-second-brain/scripts
+        run: |
+          python checkup.py --help

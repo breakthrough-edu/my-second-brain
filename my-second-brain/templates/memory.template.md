@@ -16,7 +16,7 @@
 
 ## Recent decisions
 
-> One line each, newest on top. The decision note itself lives in `06_Command-Base/Decisions/`; this is the quick-glance trail.
+> One line each, newest on top. The decision note itself lives in `02_Command-Base/Decisions/`; this is the quick-glance trail.
 
 - 
 

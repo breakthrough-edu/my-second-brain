@@ -1,5 +1,6 @@
 ---
 type: business-profile
+business: {{BUSINESS_NAME}}
 founder_name:
 brand_name:
 industry:
@@ -32,7 +33,7 @@ last_updated: {{DATE}}
 
 ## What the owner believes makes it different
 
-(in the owner's own words; this is raw material, not positioning work. Formed brand strategy, if any, lives in `01_Assets/Brand-Strategy/`; capture asks once whether the owner has one and either guides it in or leaves those stubs empty)
+(in the owner's own words; this is raw material, not positioning work. Formed brand strategy, if any, lives in `01_Assets/<Brand>-Brand-Assets/Brand-Strategy/`; capture asks once whether the owner has one and either guides it in or leaves those stubs empty)
 
 ## Open threads
 

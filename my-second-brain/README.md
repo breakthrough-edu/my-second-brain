@@ -1,6 +1,6 @@
 # My Second Brain
 
-A Claude Code skill that builds and runs a complete second brain for a business owner: one vault, two wings (your life in PARA, your business in a three-layer knowledge map), operated in plain conversation with Obsidian as the viewing deck.
+A Claude Code skill that builds and runs a complete second brain for a business owner: one vault, two wings (your life in a personal wing, your business in a four-layer knowledge map), operated in plain conversation with Obsidian as the viewing deck.
 
 The idea underneath: **AI execution is cheap now; what is scarce is your data having a home.** Models keep changing; your knowledge base, plain markdown files on your own disk, stays yours.
 
@@ -25,11 +25,11 @@ Update anytime with `npx skills update my-second-brain` (your vault is never tou
 - **Distill** (10 min weekly): tidy scan, then distillation proposals for your methodology layer. You rule yes or no.
 - **Create-My-Jarvis** (45 to 60 min): two interviews that give your AI a real character and a real understanding of who you are.
 
-A companion skill, `pod-maker` (installed at setup), can graduate a judgment-heavy function like Marketing into its own self-learning pod when it earns one.
+Two companion skills are published separately and installed by you when you want them, and nothing here breaks without either: `sop-builder` writes an SOP properly in its own sitting, and `playbook-lab` opens the rare feedback loop around a playbook that has earned one.
 
 ## What is in this folder
 
-This directory is the skill payload that `npx skills` installs as a unit: `SKILL.md` (the router), `modes/` (one file per mode), `templates/` (everything Setup scaffolds into your vault), `references/` (structure specs and room guides), `scripts/` (the read-only `checkup.py` vault linter the weekly Tidy pass runs, the `rm-guard-hook.sh` safety-lock template, and the vendored `session-history/` session-memory tool), and `pod-maker/` (the companion skill).
+This directory is the skill payload that `npx skills` installs as a unit: `SKILL.md` (the router), `modes/` (one file per mode), `templates/` (everything Setup scaffolds into your vault), `references/` (structure specs and room guides), and `scripts/` (the read-only `checkup.py` vault linter the weekly Tidy pass runs, the `rm-guard-hook.sh` safety-lock template, and the vendored `session-history/` session-memory tool).
 
 The structural rules live in your vault after setup (`99_Meta/structure-doctrine.md`), not in this skill, so your vault stays consistent no matter which tool or model touches it.
 
@@ -37,7 +37,9 @@ The structural rules live in your vault after setup (`99_Meta/structure-doctrine
 
 - [Claude Code](https://claude.com/claude-code)
 - [Obsidian](https://obsidian.md) (free; the skill can install it for you). Enable the **Bases** core plugin for the dashboard.
-- Works on macOS, Windows, Linux. English or 中文 interaction; your choice at setup.
+- Python 3, for the inspector and session memory. macOS ships everything they need; on Windows use Python from python.org (not Anaconda, whose SQLite lacks the FTS5 extension session memory needs).
+- Works on macOS, Windows, Linux, with two honest caveats. The optional machine guards are macOS-gated for now (safety lock macOS only, session memory macOS first). And **Windows is best-effort rather than tested**: this skill is built on macOS and we have no Windows machine to verify against, so the Windows install path (a `mklink /J` junction for your generated command-base skill, with a folder copy as the fallback) is written to verify itself and fall back cleanly rather than to promise it works. Full detail in Honest boundaries and the Windows self-serve path on the [repo front page](https://github.com/breakthrough-edu/my-second-brain).
+- English or 中文 interaction; your choice at setup.
 
 ## License
 
