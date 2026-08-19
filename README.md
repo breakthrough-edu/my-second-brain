@@ -246,6 +246,8 @@ This path is best-effort and community-validated rather than officially tested o
 
 The skill payload lives in [`my-second-brain/`](my-second-brain/) (the nesting is what the `npx skills` installer ships as a unit: modes, templates, references, scripts). `deck/` holds presentation material about the system, and ⚠️ it still describes the previous generation's layout; it has not been redrawn for the shape above.
 
+`dev/` holds maintainer tooling that is deliberately kept out of the payload, so it is version-controlled but never installed. One file so far: [`dev/s8-accept.py`](dev/s8-accept.py), the acceptance harness for section 8 of `templates/structure-doctrine.template.md` (the machine-readable record schema that the frontmatter guard and the checker both read live). **Run it after any change to section 8** (a new family, a renamed key, a moved value) and require exit 0 before calling the change done. It needs PyYAML.
+
 ## License
 
 MIT. Built and maintained by [Breakthrough EDU](https://github.com/breakthrough-edu).

@@ -19,8 +19,8 @@ PUBLIC, GENERIC BY DESIGN
     conventions (no private folder names, client names, or private frontmatter
     schema). It ships sensible generic defaults drawn from the skill's own
     documented structure (references/scaffold-spec.md, templates/), and reads
-    every vault-specific specific (room whitelist, required meta files, record
-    schema, tag vocabulary, staleness thresholds) from config at runtime:
+    every vault-specific specific (room whitelist, required meta files, tag
+    vocabulary, staleness thresholds) from config at runtime:
 
       1. An explicit --config PATH (JSON), if given.
       2. An auto-discovered `.checkup.json` at the vault root or in `99_Meta/`.
@@ -29,8 +29,17 @@ PUBLIC, GENERIC BY DESIGN
          from `99_Meta/maintenance-state.md`).
       4. Generic built-in defaults.
 
-    Every check degrades gracefully: if the config or file it needs is absent,
-    it skips with a note instead of crashing.
+    THE RECORD SCHEMA IS NOT IN THAT LIST, and that is the point. It is read on
+    every run out of section 8 of the vault's own `99_Meta/structure-doctrine.md`
+    by scripts/doctrine_schema.py. No copy of a family, a required key or a
+    closed list exists in this file or in any config.
+
+DEGRADING, AND THE ONE WAY IT MAY NOT
+    A check whose input is genuinely absent skips with a note. But a check that
+    could not run when it SHOULD have (the schema unreadable, PyYAML missing, a
+    check crashing) reports an ERROR and says so in the summary banner. Zero
+    findings is what a healthy vault looks like, so no failure is allowed to
+    dress itself up as one.
 
 USAGE
     python3 checkup.py /path/to/vault
@@ -40,7 +49,8 @@ USAGE
     Exit code is 0 even when problems are found (report-only). It is non-zero
     only when the vault itself cannot be read (bad path).
 
-Python 3 standard library only.
+Python 3 standard library, plus PyYAML for reading section 8. That single
+dependency is argued in scripts/doctrine_schema.py; its absence is loud.
 """
 
 import argparse
@@ -49,6 +59,18 @@ import json
 import os
 import re
 import sys
+
+# The section 8 reader, which lives beside this file in the skill payload.
+# Imported by path rather than by name so that running this script from any
+# working directory still finds its sibling.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    import doctrine_schema
+except ImportError as _e:  # the payload was split up; say so, do not limp on
+    doctrine_schema = None
+    _DOCTRINE_IMPORT_ERROR = str(_e)
+else:
+    _DOCTRINE_IMPORT_ERROR = None
 
 # --------------------------------------------------------------------------
 # Generic built-in defaults. NONE of these are private to any one owner; they
@@ -67,34 +89,40 @@ DEFAULTS = {
     "ignore": [".git", ".obsidian", ".trash", ".DS_Store", ".gitignore",
                ".stfolder", ".stversions"],
     # The system control area and the files the scaffold guarantees live in it.
+    # This is the WHOLE list that references/scaffold-spec.md's tree writes, not
+    # a sample of it. It used to name four, which meant a vault could be missing
+    # five of its own control files and the checker would call that fine; a newer
+    # product generation adding a tenth file would go unnoticed on every older
+    # vault forever (execution-backlog entry 31).
+    # ⛔ profile.md is deliberately NOT here: create-my-jarvis writes it, setup
+    # does not, so a vault legitimately has none until that mode has been run.
     "meta_dir": "99_Meta",
     "required_meta_files": [
         "structure-doctrine.md",
-        "filing-log.md",
-        "maintenance-state.md",
         "tagging-vocabulary.md",
+        "filing-log.md",
+        "bootstrap-progress.md",
+        "capture-progress.md",
+        "maintenance-state.md",
+        "lab-gate-config.md",
+        "memory.md",
+        "capture-buffer.md",
     ],
-    # Record-schema (the "cb:" frontmatter contract). Marker is the frontmatter
-    # key that flags a governed record. `types` maps each marker VALUE to its
-    # required keys.
+    # Record-schema.
     #
     # SOURCE OF TRUTH: section 8 of structure-doctrine.md inside the vault, and
-    # nowhere else. Whatever this checker reads is DERIVED from that section; it
-    # is never a second list maintained by hand. A vault may extend it through
-    # .checkup.json (private families the public product knows nothing about),
-    # but it may not contradict it.
+    # nowhere else. As of execution-backlog entry 92 that is literally true:
+    # scripts/doctrine_schema.py reads section 8 out of the vault on every run
+    # and this file keeps no copy of any family, key or closed list. There is no
+    # generated config either; "generated" was still a second artifact to keep in
+    # sync, and the sync is what rots.
     #
-    # The shipped families are NOT optional. Every vault this product builds is
-    # born with guide / brief / menu / entity / record / process / hypothesis /
-    # lab / ritual / resources / brand-strategy already in it, so "the public
-    # default enforces nothing" (the old posture here, correct back when section
-    # 8 was only a table of precedents) would mean shipping structure with no
-    # enforcement behind it at all.
-    #
-    # NOT YET IMPLEMENTED: reading section 8 directly. Until that lands, this
-    # default stays empty rather than hardcoding a copy of the schema, because a
-    # hardcoded copy is exactly the drift this comment exists to prevent.
-    "record_schema": {"marker": "cb", "types": {}},
+    # What is left here is the ONE thing section 8 cannot supply, because it is
+    # about the reader and not the law: whether to read it at all. A vault may
+    # extend the schema through .checkup.json with private families the public
+    # product knows nothing about, but it may not contradict section 8, and a
+    # .checkup.json is no longer where the shipped families come from.
+    "record_schema": {"read_doctrine": True, "extra_types": {}},
     # Tag vocabulary: the markdown file the whitelist is parsed from, relative
     # to meta_dir. An explicit `tag_vocabulary` list in config overrides parsing.
     "tag_vocabulary_file": "tagging-vocabulary.md",
@@ -103,7 +131,13 @@ DEFAULTS = {
     "scan_inline_tags": True,
     # Dirs whose notes are skipped when scanning for tags / schema (archive and
     # template shapes are not live content).
+    # ⚠️ 99_Meta/Templates is listed here AND named separately below. Content
+    # checks must skip it (a template's placeholders are not a schema violation),
+    # but template reconciliation has to be able to walk exactly that folder, and
+    # a single list cannot say both. Naming it twice is the point, not an
+    # oversight (execution-backlog entry 31).
     "scan_skip_dirs": ["98_Archive", "99_Meta/Templates", "99_Meta/memory-archive"],
+    "template_dir": "99_Meta/Templates",
     # Freshness. Fields read from maintenance-state.md frontmatter, and the day
     # threshold past which each is called stale. If the file carries its own
     # `cadence_days`, that wins over staleness_days for the maintenance fields.
@@ -111,12 +145,88 @@ DEFAULTS = {
     "staleness_days": 7,
     "filing_log_file": "filing-log.md",
     "filing_log_stale_days": 14,
-    # Safety-lock (the optional rm -rf delete-guard installed by Setup Step 6.8).
-    # Informational only. Matched by this substring in a PreToolUse Bash hook
-    # command in ~/.claude/settings.json. macOS-only, like the guard itself.
+    # Safety-lock: which guards this product installs into ~/.claude/settings.json.
+    # Informational only, and macOS-only like the guards themselves.
+    #
+    # ⛔ NOT A LIST HERE ANY MORE, AND THAT IS THE POINT (execution-backlog entry
+    # 129). This file used to carry its own copy of the guard set, which made it
+    # the THIRD copy of one list: setup step 6.8's prose, the wiring check's
+    # reconstruction of that prose, and this. Three copies of a set that has
+    # already changed size once is three chances to disagree, and the disagreement
+    # would surface as a weekly report naming a guard nobody ships.
+    # The set now lives where the guards live: one `# MSB-GUARD:` line in the
+    # header of each scripts/*-hook.sh, read by read_guard_registry() below. None
+    # is kept. A guard joins the product by shipping a script.
+    # A vault may still override with an explicit `safety_lock_guards` list in
+    # .checkup.json (a private guard of the owner's own); left unset, the payload
+    # answers. ⛔ There is deliberately no built-in fallback: if the registry
+    # cannot be read, the check says so rather than reporting against a guess.
     "safety_lock_check": True,
-    "safety_lock_marker": "rm-guard",
+    "safety_lock_guards": None,
 }
+
+
+# The guard registry: one declaration line per guard, in the guard's own header.
+# `# MSB-GUARD: key=... installs-as=... matchers=... name=... does=...`
+# Fields are space-separated key=value in any order, except `does=`, which comes
+# last and runs to the end of the line.
+_GUARD_DECL_RE = re.compile(r"^#\s*MSB-GUARD:\s*(\S.*)$")
+
+
+def parse_guard_declaration(line):
+    """One `# MSB-GUARD:` line -> a dict, or None if the line is not one."""
+    m = _GUARD_DECL_RE.match(line.strip())
+    if not m:
+        return None
+    rest, does = m.group(1), ""
+    if " does=" in rest:
+        rest, does = rest.split(" does=", 1)
+    elif rest.startswith("does="):
+        rest, does = "", rest[len("does="):]
+    fields = {}
+    for token in rest.split():
+        key, sep, val = token.partition("=")
+        if sep:
+            fields[key] = val
+    fields["does"] = does.strip()
+    return fields or None
+
+
+def read_guard_registry(script_dir=None):
+    """Every guard this payload ships, read from the guards themselves.
+
+    Returns a list of dicts with `marker` (the installed file name, which is what
+    appears in a settings.json hook command), `name` and `does`. Returns [] when
+    no guard script can be read, and the caller reports that rather than
+    substituting a list of its own."""
+    if script_dir is None:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+    out = []
+    try:
+        names = sorted(os.listdir(script_dir))
+    except OSError:
+        return out
+    for fname in names:
+        if not fname.endswith("-hook.sh"):
+            continue
+        text = _read_text(os.path.join(script_dir, fname))
+        if text is None:
+            continue
+        for line in text.split("\n"):
+            decl = parse_guard_declaration(line)
+            if not decl:
+                continue
+            marker = decl.get("installs-as")
+            if not marker:
+                break
+            out.append({"marker": marker,
+                        "name": decl.get("name") or marker,
+                        "does": decl.get("does", ""),
+                        "matchers": [m for m in decl.get("matchers", "").split(",") if m],
+                        "key": decl.get("key", ""),
+                        "script": fname})
+            break
+    return out
 
 # Severity ordering for grouping/printing.
 ERROR, WARN, INFO = "ERROR", "WARN", "INFO"
@@ -350,48 +460,191 @@ def check_required_meta(vault, cfg):
     return findings, None
 
 
-def check_record_schema(vault, cfg):
-    findings = []
-    schema = cfg.get("record_schema", DEFAULTS["record_schema"]) or {}
-    marker = schema.get("marker", "cb")
-    types = schema.get("types", {}) or {}
+# --------------------------------------------------------------------------
+# Section 8, read live. Both schema checks below share one load per run.
+#
+# ⛔ THE ONE RULE FOR THIS WHOLE SECTION. When section 8 cannot be read, every
+# path here produces a FINDING and says why. Not one of them returns "check
+# skipped" with an empty list. A report showing zero violations because nothing
+# was read is byte-for-byte the report a spotless vault produces, and handing
+# that to an owner is worse than never running: they now have a clean bill to
+# point at. The whole enforcement line exists to catch exactly that shape, so it
+# is not allowed to become it.
+# --------------------------------------------------------------------------
+_SCHEMA_CACHE = {}
+
+
+def _get_schema(vault, cfg):
+    """Return (schema_or_None, findings, note). Never raises, never silently
+    degrades: a None schema always arrives with a finding explaining itself."""
+    key = os.path.abspath(vault)
+    if key in _SCHEMA_CACHE:
+        schema, findings, note = _SCHEMA_CACHE[key]
+        if schema is None and findings:
+            # Both schema checks consume this. Each one still has to account for
+            # itself with a finding of its own (a check reporting nothing is the
+            # shape this whole section forbids), but the second consumer does not
+            # reprint the install instructions; it points at the first.
+            first = findings[0]
+            return schema, [Finding(
+                first.severity, first.check,
+                "not run for the same reason as the finding above: %s"
+                % note, first.path)], note
+        return schema, findings, note
+
+    rs = cfg.get("record_schema", DEFAULTS["record_schema"]) or {}
+    meta_dir = cfg.get("meta_dir", DEFAULTS["meta_dir"])
+    result = None
+
+    if not rs.get("read_doctrine", True):
+        result = (None, [Finding(
+            WARN, "schema-unreadable",
+            "record_schema.read_doctrine is switched off in this vault's config, "
+            "so section 8 was not read and NOTHING it declares was enforced. The "
+            "counts below describe what was checked, not what is legal.",
+            "%s/structure-doctrine.md" % meta_dir)],
+            "disabled in config; no schema enforcement ran")
+    elif doctrine_schema is None:
+        result = (None, [Finding(
+            ERROR, "schema-unreadable",
+            "the section 8 reader (scripts/doctrine_schema.py) could not be "
+            "imported beside this script (%s), so no part of the record schema "
+            "was enforced. This script and that one ship in the same folder; if "
+            "one was copied out of the skill payload, copy both."
+            % _DOCTRINE_IMPORT_ERROR)],
+            "reader module missing; no schema enforcement ran")
+    else:
+        try:
+            schema = doctrine_schema.load_schema(vault, meta_dir=meta_dir)
+        except doctrine_schema.SchemaUnavailable as e:
+            result = (None, [Finding(
+                ERROR, "schema-unreadable",
+                "%s" % e, "%s/structure-doctrine.md" % meta_dir)],
+                "PyYAML missing; no schema enforcement ran")
+        except doctrine_schema.SchemaError as e:
+            result = (None, [Finding(
+                ERROR, "schema-unreadable",
+                "section 8 of %s/structure-doctrine.md could not be read as a "
+                "schema, so nothing it declares was enforced: %s" % (meta_dir, e),
+                "%s/structure-doctrine.md" % meta_dir)],
+                "section 8 unreadable; no schema enforcement ran")
+        else:
+            result = (schema, [], "section 8 read live from %s (%s): %d families, "
+                                  "%d shapes" % (schema.source, schema.coords,
+                                                 len(schema.families), len(schema.specs)))
+    _SCHEMA_CACHE[key] = result
+    return result
+
+
+def _extra_types(cfg):
+    """A vault's own private families, from .checkup.json. These EXTEND section
+    8; they never replace or contradict it (see the record_schema comment)."""
+    rs = cfg.get("record_schema", DEFAULTS["record_schema"]) or {}
+    return rs.get("extra_types", {}) or {}
+
+
+def _check_against_schema(vault, cfg, mounted_on_marker):
+    """One walk, one mounting mechanism. `mounted_on_marker` picks which half:
+    True  = records that declare themselves with the marker key (`cb: task`),
+    False = every other family, which declares itself with the type key.
+
+    They are two checks and not one because their inputs and their audiences
+    differ: the marker half governs the command base's own records, the type
+    half governs every note in the house. Folding the second into the first is
+    the shape that let ten of the twelve families go unchecked for months."""
+    schema, findings, note = _get_schema(vault, cfg)
+    if schema is None:
+        return findings, note
+
     skip = cfg.get("scan_skip_dirs", DEFAULTS["scan_skip_dirs"])
-    marked = 0
+    extra = _extra_types(cfg)
+    mkey, tkey = schema.marker_key, schema.type_key
+    own_key = mkey if mounted_on_marker else tkey
+    label = "record-schema" if mounted_on_marker else "type-schema"
+    out = []
+    seen = 0
+
+    if not own_key:
+        which = "marker" if mounted_on_marker else "type"
+        return [Finding(
+            ERROR, label,
+            "section 8 declares no %s mounting key, so this half of the schema "
+            "could not be enforced at all. Nothing below counts as checked."
+            % which)], "no %s mounting key in section 8" % which
+
+    # ⛔ There is no exemption for the control plane here, and that is the point.
+    # An earlier version of this function skipped every file sitting directly in
+    # the meta dir, because section 8 declared no family for the doctrine, the
+    # tag vocabulary, the lab-gate config or profile, and checking them meant
+    # four warnings on a brand-new correct install. That was a rule living in
+    # code instead of in the law, which is the exact disease this whole
+    # enforcement line exists to cure. Section 8 now declares a `control`
+    # family, so those four mount and pass like anything else, and a fifth
+    # control file arriving without an amendment is correctly surfaced instead
+    # of silently waved through by a path test.
     for path in iter_markdown_files(vault, skip):
         text = _read_text(path)
         if text is None:
             continue
         fm = parse_frontmatter(text)
-        if marker not in fm:
+        if own_key not in fm:
             continue
-        marked += 1
+        # A note carrying the marker key belongs to the marker half even when it
+        # also carries a type key, so the two halves never double-report a note.
+        if not mounted_on_marker and mkey and mkey in fm:
+            continue
+        seen += 1
         rel = os.path.relpath(path, vault)
-        mval = fm.get(marker)
-        if not mval:
-            findings.append(Finding(
-                WARN, "record-schema",
-                "record has empty '%s:' marker" % marker, rel))
+        val = fm.get(own_key)
+        if not val or not isinstance(val, str):
+            out.append(Finding(WARN, label,
+                               "note has an empty '%s:' key" % own_key, rel))
             continue
-        if not types:
-            continue  # presence-only mode; nothing private to enforce
-        required = types.get(mval)
-        if required is None:
-            findings.append(Finding(
-                WARN, "record-schema",
-                "'%s: %s' is not a configured record type" % (marker, mval), rel))
-            continue
-        missing = [k for k in required if k not in fm or fm.get(k) in ("", None, [])]
-        if missing:
-            findings.append(Finding(
-                ERROR, "record-schema",
-                "'%s: %s' record missing required key(s): %s" % (marker, mval, ", ".join(missing)),
+        val = val.strip()
+
+        spec = schema.spec_for(fm)
+        if spec is None:
+            if val in extra:
+                required = extra[val] or []
+                missing = [k for k in required
+                           if k not in fm or fm.get(k) in ("", None, [])]
+                if missing:
+                    out.append(Finding(
+                        ERROR, label,
+                        "'%s: %s' (a private family from .checkup.json) is "
+                        "missing required key(s): %s" % (own_key, val, ", ".join(missing)),
+                        rel))
+                continue
+            out.append(Finding(
+                WARN, label,
+                "'%s: %s' is not a shape section 8 declares. Either the note is "
+                "wrong, or section 8 needs amending (propose-and-approve, §8), "
+                "or it is a private family and belongs in .checkup.json's "
+                "record_schema.extra_types." % (own_key, val),
                 rel))
-    if marked == 0:
-        return findings, "no '%s:' records found; schema check idle" % marker
-    if not types:
-        return findings, ("record_schema.types not configured: ran marker-presence "
-                          "check on %d '%s:' record(s), no required-key enforcement" % (marked, marker))
-    return findings, None
+            continue
+
+        for kind, msg in doctrine_schema.validate(fm, spec, schema):
+            out.append(Finding(ERROR, label, "'%s: %s' %s" % (own_key, val, msg), rel))
+
+    if seen == 0:
+        return out, "%s; no notes mounted on '%s:'" % (note, own_key)
+    return out, "%s; checked %d note(s) on '%s:'" % (note, seen, own_key)
+
+
+def check_record_schema(vault, cfg):
+    """The marker-mounted half: the command base's own records (`cb: ...`)."""
+    return _check_against_schema(vault, cfg, mounted_on_marker=True)
+
+
+def check_type_families(vault, cfg):
+    """The type-mounted half: the ten families that are not `cb:` records.
+
+    Before this existed, `if marker not in fm: continue` meant guide, brief,
+    menu, entity, process, hypothesis, lab, ritual, resources and
+    brand-strategy were invisible to the checker no matter how the config was
+    filled in (execution-backlog entry 92)."""
+    return _check_against_schema(vault, cfg, mounted_on_marker=False)
 
 
 def load_tag_vocabulary(vault, cfg):
@@ -505,30 +758,52 @@ def check_freshness(vault, cfg):
 
 
 def check_safety_lock(vault, cfg):
-    """Informational: is the optional rm -rf delete-guard (Setup Step 6.8)
-    registered? Reads ~/.claude/settings.json read-only. macOS-only, matching
-    the guard's own platform support; INFO severity, never an error."""
+    """Informational: which of this product's guards are registered in
+    ~/.claude/settings.json? Read-only. macOS-only, matching the guards' own
+    platform support; INFO severity, never an error.
+
+    One finding PER MISSING GUARD, named. The single-marker version could only
+    say "not detected", which is unactionable once there is more than one guard
+    to install (execution-backlog entry 31).
+
+    The set is read from the payload's own guard scripts, never from a list in
+    this file (entry 129). An explicit list in .checkup.json still wins, for an
+    owner who wrote a guard of their own."""
     if not cfg.get("safety_lock_check", True):
         return [], "disabled in config"
     if sys.platform != "darwin":
         return [], "non-macOS; safety-lock check skipped"
+    guards = cfg.get("safety_lock_guards") or read_guard_registry()
+    if not guards:
+        return [], ("no guard registry found: no scripts/*-hook.sh in this payload "
+                    "carries a '# MSB-GUARD:' line, so there is nothing to check for")
     settings = os.path.expanduser(os.path.join("~", ".claude", "settings.json"))
     text = _read_text(settings)
-    hint = "optional delete-guard not detected; see Setup Step 6.8 to add the rm -rf accident net"
+
+    def missing(guard):
+        return Finding(INFO, "safety-lock",
+                       "%s not registered (%s); see the setup step that installs "
+                       "the standard guards" % (guard.get("name", guard.get("marker")),
+                                                guard.get("does", "")))
+
     if text is None:
-        return [Finding(INFO, "safety-lock", hint)], "no ~/.claude/settings.json"
+        return [missing(g) for g in guards], "no ~/.claude/settings.json"
     try:
         data = json.loads(text)
     except (ValueError, TypeError):
         return [], "~/.claude/settings.json did not parse; skipped"
-    marker = cfg.get("safety_lock_marker", "rm-guard")
+    commands = []
     pre = (data.get("hooks", {}) or {}).get("PreToolUse", []) or []
     for entry in pre:
         for h in (entry.get("hooks", []) or []):
             cmdv = h.get("command", "")
-            if isinstance(cmdv, str) and marker in cmdv:
-                return [], "delete-guard installed"
-    return [Finding(INFO, "safety-lock", hint)], None
+            if isinstance(cmdv, str):
+                commands.append(cmdv)
+    blob = "\n".join(commands)
+    absent = [g for g in guards if g.get("marker") and g["marker"] not in blob]
+    installed = len(guards) - len(absent)
+    return ([missing(g) for g in absent],
+            "%d of %d standard guard(s) registered" % (installed, len(guards)))
 
 
 # --------------------------------------------------------------------------
@@ -617,7 +892,7 @@ def current_doctrine_version():
                                 "structure-doctrine.template.md")))
 
 
-def _shape_evidence(vault):
+def _shape_evidence(vault, skip_dirs=()):
     """Read the folder shapes and return TWO lists: `old`, where an old name is
     here and its current counterpart is not, and `both`, where the two names are
     sitting beside each other.
@@ -688,8 +963,16 @@ def _shape_evidence(vault):
          "generated skills under 04_Resources/Skills/ and no 99_Meta/Skills/",
          "generated-skill folders under both 04_Resources/Skills/ and 99_Meta/Skills/")
 
+    # ⚠️ This walk now honours the configured skip list, where it used to pass an
+    # empty one. It was the only scan in the file that swept 98_Archive/ and
+    # 99_Meta/Templates/, and the direction it failed in is the dangerous one: a
+    # single ARCHIVED _*-Guide.md sets `guide` true and silences the "MOC doors
+    # and not one guide door" old-house signal, which is the same
+    # evidence-eaten-quietly shape as the decision cap above. No shipped template
+    # is named _*-Guide.md (checked: templates/ has none), so nothing that used
+    # to be found here stops being found.
     moc = guide = False
-    for path in iter_markdown_files(vault, []):
+    for path in iter_markdown_files(vault, skip_dirs):
         base = os.path.basename(path)
         if base.endswith("-MOC.md"):
             moc = True
@@ -704,6 +987,17 @@ def _shape_evidence(vault):
     # Decisions: read every command-base folder that exists, not just the first.
     # On a half-migration both exist, and stopping at the first one is how the
     # mixed-field evidence goes missing.
+    #
+    # ⛔ NO CAP HERE, AND THAT IS THE FIX. This loop used to read `[:60]` of the
+    # sorted listing and say nothing about it anywhere. Decision filenames start
+    # with a date, so "the first 60 sorted" is "the OLDEST 60", and in a
+    # half-migrated vault the old notes carry `function:` while the new ones
+    # carry `lane:` - so the newer half fell outside the cap, `n_lane` counted 0,
+    # and a vault wearing two shapes was reported as a plain old one. The
+    # both-present evidence exists for half-migrated vaults specifically, which
+    # means the cap switched it off in the only case it was written for. Reading
+    # a few hundred small files once a week costs nothing worth this
+    # (execution-backlog entry 89).
     n_fn = n_lane = 0
     seen = []
     for cb in ("06_Command-Base", "02_Command-Base"):
@@ -712,7 +1006,7 @@ def _shape_evidence(vault):
             continue
         seen.append(cb)
         try:
-            names = [x for x in sorted(os.listdir(ddir)) if x.endswith(".md")][:60]
+            names = [x for x in sorted(os.listdir(ddir)) if x.endswith(".md")]
         except OSError:
             names = []
         for name in names:
@@ -850,7 +1144,7 @@ def check_house_vintage(vault, cfg):
         # is exactly the state worth a sentence. So: report, never gate. WARN,
         # so the banner and the stop-work rule in modes/distill.md (both keyed
         # on ERROR) stay quiet and structural work proceeds.
-        _, both = _shape_evidence(vault)
+        _, both = _shape_evidence(vault, cfg.get("scan_skip_dirs", DEFAULTS["scan_skip_dirs"]))
         if both:
             findings.append(Finding(
                 WARN, "house-vintage",
@@ -868,7 +1162,7 @@ def check_house_vintage(vault, cfg):
     # Gate 3: no number anywhere. Only now does shape get a vote, and a shape is
     # evidence of a shape, never of who built the house or when. State what was
     # seen; the owner knows the provenance and this script never will.
-    old, both = _shape_evidence(vault)
+    old, both = _shape_evidence(vault, cfg.get("scan_skip_dirs", DEFAULTS["scan_skip_dirs"]))
     verstr = ("v%d" % cur) if cur is not None else "the version this skill ships"
     seen = ("no doctrine_version: key in %s/structure-doctrine.md" % meta_dir
             if doc_raw is None else
@@ -916,31 +1210,87 @@ def check_house_vintage(vault, cfg):
     return findings, "unmarked, %d both-present + %d old-only signal(s)" % (len(both), len(old))
 
 
-CHECKS = [
-    # First on purpose: it decides whether the rest of the report means anything.
-    ("House vintage", check_house_vintage),
-    ("Top-level rooms", check_rooms),
-    ("Required 99_Meta files", check_required_meta),
-    ("Record (cb:) schema", check_record_schema),
-    ("Tag vocabulary", check_tags),
-    ("Freshness", check_freshness),
-    ("Safety lock (delete-guard)", check_safety_lock),
+# --------------------------------------------------------------------------
+# The checks, in three classes (execution-backlog entry 31).
+#
+# The old order was one flat list, which made every check look equally load
+# bearing and hid the fact that they answer three different questions. Grouping
+# them says what each finding MEANS before the owner reads a single one:
+#
+#   Machine-layer self-check  Is this checker looking at the house it thinks it
+#                             is, with the equipment it needs? Runs FIRST,
+#                             because a failure here means everything below is
+#                             describing the wrong house or was not checked.
+#   Out-of-bounds writes      Something was written where the law does not allow
+#                             it, or a note's own shape breaks the law. One
+#                             file, judged on its own.
+#   Cross-file invariants     Nothing is wrong with any single file; what is
+#                             wrong is the relationship between them, or between
+#                             a file and the calendar.
+#
+# ⬜ Entry 31 also calls for the top-level room check to be DELETED once the
+# Home.md reconciliation absorbs it. That reconciliation does not exist yet
+# (it belongs to the maintenance package), so the check stays here and keeps its
+# coverage. Deleting it now would hand its job to a check that has not been
+# written and quietly lose the only thing watching the vault root.
+# --------------------------------------------------------------------------
+CHECK_CLASSES = [
+    ("Machine-layer self-check", [
+        ("House vintage", check_house_vintage),
+        ("Required 99_Meta files", check_required_meta),
+        ("Standard guards", check_safety_lock),
+    ]),
+    ("Out-of-bounds writes", [
+        ("Top-level rooms", check_rooms),
+        ("Record (cb:) schema", check_record_schema),
+        ("Type-mounted families", check_type_families),
+        ("Tag vocabulary", check_tags),
+    ]),
+    ("Cross-file invariants", [
+        ("Freshness", check_freshness),
+    ]),
 ]
+
+# Flat view, kept so anything importing CHECKS still works.
+CHECKS = [(label, fn) for _, group in CHECK_CLASSES for (label, fn) in group]
+
+# A finding from one of these checks means the rest of the report may be
+# describing something other than this vault, or may not have run at all. The
+# summary banner reads this set, so adding a check here is how a future
+# "everything below is unreliable" condition gets announced.
+INVALIDATING_CHECKS = {"house-vintage", "schema-unreadable"}
 
 
 # --------------------------------------------------------------------------
 # Reporting
 # --------------------------------------------------------------------------
 def run(vault, cfg):
+    """Run every check, grouped by class.
+
+    Returns (findings, notes) where each note is
+    (class_label, check_label, note, count).
+
+    ⛔ A CHECK THAT CRASHES REPORTS AN ERROR, NOT NOTHING. This used to swallow
+    the exception into an empty finding list with a note nobody reads, which
+    means a check that broke on every vault in the world looked exactly like a
+    check that passed on every vault in the world. One broken check still never
+    sinks the run; it just has to say so in the place the owner is looking, at
+    the severity that makes the summary banner fire."""
     all_findings = []
     notes = []
-    for label, fn in CHECKS:
-        try:
-            found, note = fn(vault, cfg)
-        except Exception as e:  # a broken check never sinks the whole run
-            found, note = [], "check errored (skipped): %s" % e
-        all_findings.extend(found)
-        notes.append((label, note, len(found)))
+    for class_label, group in CHECK_CLASSES:
+        for label, fn in group:
+            try:
+                found, note = fn(vault, cfg)
+            except Exception as e:  # a broken check never sinks the whole run
+                found = [Finding(
+                    ERROR, "check-crashed",
+                    "the '%s' check raised %s: %s. It reported nothing, so treat "
+                    "its subject as UNCHECKED rather than clean."
+                    % (label, type(e).__name__, e))]
+                note = "crashed; reported as an error rather than skipped"
+            all_findings.extend(found)
+            notes.append((class_label, label, note, len(found)))
     return all_findings, notes
 
 
@@ -953,8 +1303,12 @@ def print_report(vault, cfg, source, findings, notes):
     print("=" * 70)
 
     print("\nChecks run:")
-    for label, note, count in notes:
-        line = "  - %-26s %d finding(s)" % (label, count)
+    current = None
+    for class_label, label, note, count in notes:
+        if class_label != current:
+            current = class_label
+            print("\n  %s" % class_label)
+        line = "    - %-24s %d finding(s)" % (label, count)
         if note:
             line += "   [%s]" % note
         print(line)
@@ -987,10 +1341,14 @@ def print_report(vault, cfg, source, findings, notes):
     # direction; two records that disagree; folder shapes from another
     # generation), and none of them tells this script who built the vault or
     # when, so no sentence here may claim to know.
-    if any(f.check == "house-vintage" and f.severity == ERROR for f in findings):
-        print("NOT A CLEAN BILL: the house-vintage check did not clear, so the shape")
-        print("every check above tests for may not be the shape this vault has, and a")
-        print("low count is not evidence of health. Read the house-vintage error first.")
+    invalid = sorted({f.check for f in findings
+                      if f.severity == ERROR
+                      and (f.check in INVALIDATING_CHECKS or f.check == "check-crashed")})
+    if invalid:
+        print("NOT A CLEAN BILL: %s did not clear, so the shape every check above"
+              % " and ".join(invalid))
+        print("tests for may not be the shape this vault has, or was never tested at")
+        print("all, and a low count is not evidence of health. Read those errors first.")
     print("Report-only: nothing in the vault was changed.")
     print("=" * 70)
 
@@ -1017,7 +1375,8 @@ def main(argv=None):
             "vault": vault,
             "config_source": source,
             "date": today().isoformat(),
-            "checks": [{"label": l, "note": n, "count": c} for (l, n, c) in notes],
+            "checks": [{"class": cl, "label": l, "note": n, "count": c}
+                       for (cl, l, n, c) in notes],
             "findings": [f.as_dict() for f in findings],
             "summary": {
                 "error": sum(1 for f in findings if f.severity == ERROR),

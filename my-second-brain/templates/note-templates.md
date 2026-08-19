@@ -102,6 +102,10 @@ The JOB you do for them is a separate thing: one project in 02_Work/Deliver/, fr
   is moving.
 current_terms holds the terms in force now. A change to them is a decision note PLUS an edit
   here, in the same breath.
+status is active or prospective. Someone you are only pitching is prospective, and this note
+  exists from that first conversation (doctrine §2). Flip it to active the day they buy. The
+  template ships active because most clients already are; ⛔ do not leave it that way for a
+  prospect, because active is a legal value and nothing will ever warn you it is false.
 -->
 ```
 
@@ -129,6 +133,11 @@ tags: []
 One vendor, one note, in 01_Assets/Vendors/. Landlords, lessors, platforms you sell through,
   and freelancers who invoice you all file here.
 A freelancer on payroll is an Employee instead. The test is how the money leaves, not the work.
+status is active or prospective. A landlord you are still negotiating with, or a supplier you
+  are still courting, is prospective, and the note exists from that first conversation (doctrine
+  §2). Flip it to active the day the lease or the account is real. The template ships active;
+  ⛔ do not leave it that way for a prospect, because active is a legal value and nothing will
+  ever warn you it is false.
 -->
 ```
 
@@ -156,6 +165,10 @@ tags: []
 One person, one note, in 01_Assets/Employees/. That room also absorbs people-rules: a leave
   policy or a handbook section is its own note in the same room, not a new HR room.
 Documents with an expiry get renew_by on the note that owns them.
+status is active or prospective. A candidate you are interviewing is prospective, and the note
+  exists from that first conversation (doctrine §2). Flip it to active on their first day. The
+  template ships active; ⛔ do not leave it that way for a candidate, because active is a legal
+  value and nothing will ever warn you it is false.
 -->
 ```
 
@@ -532,6 +545,10 @@ priority:
 What the task is, in the owner's words.
 
 <!--
+Filename is the task itself, hyphenated, unique vault-wide (Regime A): Order-the-new-POS.md.
+  ⛔ NOT date-first. A task is not a dated record, so §5's YYYY-MM-DD- form does not apply to
+  it: its dates live in `created:` and `due:`, and the day it was typed is not what anyone
+  searches for. Left unsaid, two sessions name the same task two ways and both are defensible.
 Lives in <Project>/Tasks/. A TASK MUST HAVE A PROJECT: if none fits, propose opening one
   (small is fine) before the task exists. There is no parking lot for homeless tasks.
 ⛔ No project, lane, or domain key. The folder path already carries all three, and a field
@@ -616,8 +633,10 @@ status_since: {{DATE}}
 ## What it means in practice
 
 <!--
-02_Command-Base/Reviews/. One theme at a time; the previous one flips status before a new one
-  opens, so "what am I on right now" always has exactly one answer.
+02_Command-Base/Reviews/. One theme at a time; the previous one flips status to closed before a
+  new one opens, so "what am I on right now" always has exactly one answer. The trigger is the
+  new theme opening, not the calendar turning: a theme can stay active across a skipped month
+  and get closed later, and status_since records the day the flip actually happened.
 -->
 ```
 

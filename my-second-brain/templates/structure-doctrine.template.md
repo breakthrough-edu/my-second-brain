@@ -23,7 +23,7 @@ Read this before creating or filing anything in this vault. This file is the sin
    - Retired material → `98_Archive/`
    - A hypothesis → `99_Meta/Hypotheses/`. **Weekly maintenance is the only writer.** Nothing you file by hand ever lands here: the pool is where maintenance parks a claim that is not yet earned, and it graduates out on evidence. Do not create one to hold an idea. ⚠️ **A lab's bets are not this.** They live in that lab's `lab-register` (§9) and they are the owner's own, written by the `playbook-lab` skill and by scoring: the pool is the machine observing the owner, a lab register is the owner testing their own method. The pool never enters a session's context; a register must be read every time, which is why they cannot be one family.
 2. **Everything else: identify the type family** (§8 has the closed list).
-   **2b. Map the family to its home:** entity → its room in `01_Assets/` (or the matching Personal-Wing room) · process (sop) → `03_SOP/` · playbook / lesson → `04_Methodology/` · brand-strategy → that brand's `<Brand>-Brand-Assets/` · resources → `02_Command-Base/Resources/` · guide / brief / menu → with the folder or project they describe.
+   **2b. Map the family to its home:** entity → its room in `01_Assets/` (or the matching Personal-Wing room) · process (sop) → `03_SOP/` · playbook / lesson → `04_Methodology/` · brand-strategy → that brand's `<Brand>-Brand-Assets/` · resources → `02_Command-Base/Resources/` · guide / brief / menu → with the folder or project they describe · control → `99_Meta/`, and setup is what puts them there (the control plane is declared in §8 so a correct install is not flagged for its own machinery, not so that new ones get filed by hand).
 3. **If no family fits: STOP.** Do not force it in. Do not invent frontmatter. Propose a new family: a new template plus a new row in §8, get a yes, then file. (The frontmatter guard blocks a hard schema violation: a bad filename, a missing required key, a value outside a closed list. A key §8 has not declared is a judgment call, not a violation, so the guard **flags it to this session** instead of blocking: register it in §8 if this kind of note always carries it, drop it if it was invented on the spot.)
 4. **Two plausible homes?** Check the precedent table (§2). If the case is genuinely new, ask the owner once, then record the answer as a new precedent line. Never ask the same question twice.
 5. **Every filing appends one line to `99_Meta/filing-log.md`** (date · what · where · which rule decided it). Weekly maintenance reads the log for patterns: three filings to the same missing home become a proposal.
@@ -72,7 +72,7 @@ Precedent table (settled, do not re-argue):
 | Facts about a specific client | `01_Assets/Clients/` |
 | How we win or serve clients | `03_SOP/` |
 | A client job / engagement (named customer, pursuit through delivery) | ONE project under `02_Work/Deliver/`, lifecycle tracked by `stage:`, never split or moved |
-| Someone we are only talking to (a prospect, a landlord, a candidate) | an entity note in the room they would join if it works out (a landlord or lessor files under `Vendors/`; the premises itself, once leased, becomes an `Outlets/` entity); pursuing a named CUSTOMER prospect, if worth tracking, is a `Deliver/` project at `stage: pursuing`; Deliver is only for people who pay us, so pursuing a landlord, supplier or hire is `Build/` (or `Run/`) work with the person filed as an entity |
+| Someone we are only talking to (a prospect, a landlord, a candidate) | an entity note in the room they would join if it works out (a landlord or lessor files under `Vendors/`; the premises itself, once leased, becomes an `Outlets/` entity); pursuing a named CUSTOMER prospect, if worth tracking, is a `Deliver/` project at `stage: pursuing`; Deliver is only for people who pay us, so pursuing a landlord, supplier or hire is `Build/` (or `Run/`) work with the person filed as an entity. **That entity note carries `status: prospective`** while it is still only a conversation, and flips to `active` the day it becomes real (they sign, they start, they buy). Writing `active` because the template ships that way is the failure this line exists to prevent: it is a legal value, so nothing will ever warn you |
 | Employee policy / handbook material | `01_Assets/Employees/` (the room absorbs it) |
 | Systems, logins, who holds which account | `01_Assets/IT-Systems/` |
 | Pointers to external row systems, and their monthly snapshots | on the entity note of the system that produces them (POS → its IT-Systems note) |
@@ -100,7 +100,9 @@ The anchoring law: **link once, derive the rest.** Written out:
 - Things that naturally span several places (decisions, SOPs) live centrally, once, and carry fields (`domain:`, `lane:`) so each wing or lane can filter its own view. Things that naturally belong to one place (tasks, project files) live in that place and carry no redundant fields.
 - Moving or renaming a linked file: the move itself must rewrite inbound links (scan, rewrite or leave a `_MOVED` stub, verify zero dead links). Weekly maintenance re-checks as backstop.
 
-Guide files: every folder that needs explaining has one file `_<Name>-Guide.md`. Read it before working in that folder. It says what the room is for, what belongs here, and collects observations. **It is not a directory** (Home is). Guide names repeat across wings by design, so they are **fixed names addressed by path** (§5, regime B); an agent reaching one globs `_*-Guide.md` inside the folder it is already standing in, never by name across the vault. Projects have `_<Project>-Brief.md` instead: a status card (status, dates, owner, brand, goal, deliverables), linked bare because project names are unique. `_SOP-Menu.md` is the one deliberate exception that maps content: it lists the processes this business should have, including the ones not written yet.
+**Every folder's `_*-Guide.md` is its manual: read it before working there. `_*-Brief.md` is a project's status card.** That sentence is written in three places on purpose, word for word: here, in `CLAUDE.md`, and in the command-base skill. It is the one wiring instruction that has to reach a session no matter which of the three it happens to load, so it is quoted rather than paraphrased; ⛔ an edit to any one of the three is an edit to all three.
+
+Guide files: every folder that needs explaining has one file `_<Name>-Guide.md`. It says what the room is for, what belongs here, and collects observations. **It is not a directory** (Home is). Guide names repeat across wings by design, so they are **fixed names addressed by path** (§5, regime B); an agent reaching one globs `_*-Guide.md` inside the folder it is already standing in, never by name across the vault. Projects have `_<Project>-Brief.md` instead: a status card (status, dates, owner, brand, goal, deliverables), linked bare because project names are unique. `_SOP-Menu.md` is the one deliberate exception that maps content: it lists the processes this business should have, including the ones not written yet.
 
 ## 4 · Iron laws
 
@@ -152,9 +154,15 @@ Content flows, types don't transmute: pits become lessons; recurring lessons and
 
 ## 8 · Record schema (machine-readable; the single source, no copies anywhere)
 
-The frontmatter guard and the checker read this section live and keep no copies: a family, a required key, or a closed list is declared here once and nowhere else. ⚠️ Enforcement is still arriving: the checker reads a config generated from this section, and the frontmatter guard is specified but not installed yet. That is a build gap, not a second source of truth. Anything a machine reads is generated from what is written here, never hand-maintained beside it, and the families below ship with this vault, so they are enforced from day one.
+The frontmatter guard and the checker read this section live and keep no copies: a family, a required key, or a closed list is declared here once and nowhere else. Both go through one reader (`scripts/doctrine_schema.py`), which parses this block on every run, so there is no generated config and nothing to keep in sync; "generated" would still be a second artifact, and the sync is what rots. The checker reports what breaks the law here, and the guard stops a hard violation before it lands: a bad filename, a missing required key, a value outside a closed list. The families below ship with this vault, so they are enforced from day one. Amend this section and both enforcers change with it in the same breath.
 
 ```yaml
+# Reading rule, so a reader hard-codes nothing: at the top level, `families` holds the
+# families and every other key is a field name plus its closed list, global to all families.
+# Inside a family, `required` `optional` `marker` `multi` `extends` `cardinality` are reserved
+# keys; every other key is a field name whose value is either that field's closed list (a
+# list) or that family's subtypes (a mapping). `multi` = a field that may carry several
+# values at once. `extends` = values this family adds to a top-level closed list.
 families:
   guide:      {required: [type, guide_family, updated],
                guide_family: [wing, room, lane, brand, lab]}   # brand = a subfolder of
@@ -164,18 +172,37 @@ families:
                status: [active, done, killed],
                stage: [pending, planning, pursuing, executing, closed]}
   menu:       {required: [type, updated]}
-  entity:     {types: [client, vendor, employee, product-service, company-doc,
-                       equipment, outlet, it-system, marketing-asset, property, vehicle],
-               required: [type, status], optional: [renew_by]}
+  entity:     {type: [client, vendor, employee, product-service, company-doc,
+                      equipment, outlet, it-system, marketing-asset, property, vehicle],
+               required: [type, status], optional: [renew_by],
+               status: [active, prospective]}   # the real-world state of the THING itself, not
+                                        # this note's fill state: none of the eleven subtypes
+                                        # ships an empty-shell template, so this follows the
+                                        # majority pattern, not brand-strategy's. `prospective`
+                                        # is the one value in this whole block sourced from a
+                                        # PRECEDENT instead of a template: §2 already rules that
+                                        # "someone we are only talking to (a prospect, a
+                                        # landlord, a candidate)" IS an entity note. ⛔ No
+                                        # `retired`: leaving is a MOVE to `98_Archive/` (§0 path
+                                        # gate, §1), and an in-place value for it would be a
+                                        # legal way around the move.
   record:
     decision: {marker: "cb: decision", required: [cb, date, status, domain, lane],
-               optional: [supersedes, law_depends_on, project], status: [active, superseded, closed]}
+               optional: [supersedes, law_depends_on, project], status: [active, superseded, closed],
+               extends: {lane: [personal, family, health, finance-personal,
+                                property, vehicles, people]}}  # the personal wing's lanes,
+                                          # decisions only, on top of the lane list at the bottom
     task:     {marker: "cb: task", required: [cb, status, created],
                optional: [start, due, waiting_on, depends_on, priority, reminder],
                status: [not-started, in-progress, waiting, blocked, done]}
   process:
-    sop:      {required: [type, lane, owner, last_verified], optional: [playbook]}   # lane is multi-value
-    playbook: {required: [type, lane, status, confirmed_by_owner]}
+    sop:      {required: [type, lane, owner, last_verified], optional: [playbook],
+               multi: [lane]}                                  # lane is multi-value
+    playbook: {required: [type, lane, status, confirmed_by_owner],
+               status: [forming]}   # only sourced value (Playbook.md template); describes
+                                    # the methodology's maturity, not this note's fill state.
+                                    # No second value is sourced anywhere (execution-backlog
+                                    # entry 142).
     lesson:   {required: [type, date, source, lane, confirmed_by_owner]}
   hypothesis: {required: [type, status, destination,
                           weeks_supported, contradictions, weeks_silent],
@@ -184,20 +211,60 @@ families:
                              guide-observations, memory-line-retirement, lab-register]}
   lab:                                    # the three lab organs, one file each per lab,
                                           # rows inside are disposable, the files are permanent
+    cardinality: {count: 1, per: lab-folder}   # "one file each per lab", as data
     rubric:       {required: [type, updated]}
     thresholds:   {required: [type, updated]}
     lab-register: {required: [type, updated]}
   ritual:
     daily:          {required: [type, date]}
     weekly-review:  {required: [type, week_of, reviewed_on]}
-    monthly-theme:  {required: [type, month, status, status_since]}
-  resources:  {types: [clipping, course, book, prompt, tool-note], required: [type]}
+    monthly-theme:  {required: [type, month, status, status_since],
+                     status: [active, closed]}   # `active` from the Monthly-Theme.md
+                                        # template; `closed` is the word the template's own
+                                        # comment now names ("flips status to closed"), which
+                                        # is what `status_since` was always for. ⛔ One closing
+                                        # value, not two: nothing anywhere reads a theme's
+                                        # status (a decision splits `superseded` from `closed`
+                                        # only because `supersedes:` has readers), so "expired"
+                                        # versus "replaced" would change no action and would be
+                                        # a wish, not a rule (execution-backlog entry 143).
+  resources:  {type: [clipping, course, book, prompt, tool-note], required: [type]}
   brand-strategy:   {required: [type, pillar, status],
                      pillar: [DNA, Personality, Proposition, Relationship, Sensory-Cues,
-                              Positioning, Style, Journey]}
-  singletons: {home: [type], business-profile: [type, business]}
-lane: [deliver, grow, run, build]           # the four-lane ladder, see §1; decisions may additionally use
-                                            # personal values: [personal, family, health, finance-personal, property, vehicles, people]
+                              Positioning, Style, Journey],
+                     status: [empty, filled]}   # unlike every other status family below,
+                                                # this describes THIS NOTE's own fill state,
+                                                # not a real-world lifecycle (execution-backlog
+                                                # entry 141).
+  control:                                  # this vault's own machinery: one file each,
+                                            # directly in 99_Meta/, written by setup rather
+                                            # than filed by hand. Declared here so a correct
+                                            # install is never warned about its own control
+                                            # plane. ⛔ The 99_Meta STATE files (bootstrap-
+                                            # progress, capture-progress, maintenance-state,
+                                            # filing-log, capture-buffer) are deliberately
+                                            # NOT here and never will be: they carry no
+                                            # `type:` at all, so nothing mounts them and a
+                                            # correct install is silent about them already.
+                                            # The line: a file with `type:` is a document a
+                                            # person reads; a file without one is a machine's
+                                            # notepad. Adding the key to a notepad is what
+                                            # CREATES the warning, not what silences it.
+                                            # `required` is deliberately thin: a
+                                            # constitution, a tag table, a threshold config
+                                            # and a person's dossier have almost nothing in
+                                            # common to demand, and a schema invented to
+                                            # cover all four would fit none. Tighten each
+                                            # one when its shape settles.
+    doctrine:        {required: [type]}
+    vocabulary:      {required: [type]}
+    lab-gate-config: {required: [type]}
+    profile:         {required: [type]}
+  singletons:
+    home:              {required: [type]}
+    business-profile:  {required: [type, business]}
+lane: [deliver, grow, run, build]           # the four-lane ladder, see §1; decisions may also use
+                                            # the personal lanes in families.record.decision.extends
 domain: ["#personal", "#{{BUSINESS_TAG}}"]  # one value per wing; a new wing's value rides along at wing birth
 ```
 
