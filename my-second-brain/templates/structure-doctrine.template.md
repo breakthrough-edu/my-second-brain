@@ -10,7 +10,7 @@ maintained_by: the owner (AI proposes amendments, owner approves)
 
 Read this before creating or filing anything in this vault. This file is the single source of law for where things live. Changing it is an amendment: propose, get the owner's yes, then edit.
 
-⚠️ **`doctrine_version` in the frontmatter above is a machine marker, not decoration.** It is a bare integer, and it records **which generation of the product built this house**, so a session arriving with a newer skill can tell whether the shape it expects is the shape that is actually here. The house has changed shape before (v1 put the business wing at `07_<Business>/` with an `02_SOP` layer, MOC files as folder doors, and `function:` on decisions), and a skill update never touches a vault, so the number is the only thing standing between a new session and a confident wrong assumption. Keep amending this file freely; the number moves only when the product's structure itself moves, and only through the same propose-and-approve. ⛔ Do not edit it by hand: editing it makes it lie, and the whole point of it is that it cannot.
+⚠️ **`doctrine_version` in the frontmatter above is a machine marker, not decoration.** It is a bare integer, and it records **which generation of the product built this house**. Nothing reads it today, and it is still written on every new house on purpose: a house that goes unstamped can never be dated afterwards, because the folders do not say which generation shaped them, and guessing a generation from folder shapes has already been measured misreading a stranger's own Obsidian vault. ⛔ **So do not delete this key as an orphan.** Keep amending this file freely; the number moves only when the product's structure itself moves, and only through the same propose-and-approve. ⛔ Do not edit the number by hand: editing it makes it lie, and the whole point of it is that it cannot.
 
 ## 0 · Filing decision tree (run top to bottom, stop at first hit)
 
@@ -129,6 +129,8 @@ A name is an address. Two regimes, and the test is one question: **is this file 
 
 **A name carries only facts that do not change.** Date and kind are safe. Which project, lane or wing something belongs to is not: those move, and a filename that records them becomes a lie the day they do. Belonging lives in the path and the frontmatter, which is where §3 reads it from anyway.
 
+⭐ **Methods and playbooks are where that rule bites hardest, so they name it in the filename itself:** `<the-work>-method.md` and `<the-kind-of-work>-playbook.md`, named for **the work**, ⛔ never for the case that taught it. `quoting-a-renovation-method.md`, ⛔ not `the-tan-house-method.md`. A method written during one job is about the job, not the client, and the client is exactly the fact that changes.
+
 **The `_` prefix means front door.** `_<Name>-Guide.md`, `_<Project>-Brief.md`, `_SOP-Menu.md`. **At most one `_`-prefixed file per folder**, so an agent that globs `_*.md` in a folder gets exactly one hit. A file without the prefix is content, never a door.
 
 Names are English, hyphenated, no spaces (§4, law 6).
@@ -137,20 +139,26 @@ Three enforcement layers: **templates teach** (each template's bottom comment bl
 
 ## 6 · Tags
 
-Controlled vocabulary in `99_Meta/tagging-vocabulary.md`. New tags and new enum values are proposals first: approved, then used. (`#lesson-candidate` is the standing flag: put it on the journal line or entity note that describes the pit; weekly maintenance sweeps by tag.)
+Controlled vocabulary in `99_Meta/tagging-vocabulary.md`. New tags and new enum values are proposals first: approved, then used. (⛔ There is no standing flag for a pit any more: a pit becomes a Lesson at the closeout of the session it happened in, with the owner's yes, not a tag swept up days later. See §7.)
 
-## 7 · Judgment and process: decisions, playbooks, lessons, SOPs
+## 7 · Judgment and process: decisions, lessons, methods, playbooks, SOPs
 
-Four kinds, four questions:
+Five kinds, five questions:
 
-- **Decision = a call that still stands.** One decision, one note, in `02_Command-Base/Decisions/`, landed the moment it is made. A decision's `lane:` is the lane of the work it governs (pricing and offer rules: `grow`; delivery-of-work rules: `deliver`; routine and upkeep rules: `run`; capability bets: `build`). The set of ACTIVE decisions, filtered by lane, IS the rulebook: "never discount below 20%" is simply a decision that never expires. When a new decision replaces an old one, the NEW note names what it replaces via `supersedes:` (written once, at birth) and the old note just flips to `status: superseded`; history comes free. Event decisions (hire this person, buy that oven) flip to `closed` once executed, so the active set stays a rulebook and not a junk drawer. **Guardrail duty:** before landing a new decision, check the active set; on conflict, ask the owner "change the rule, or break it once?"
-- **Playbook = judgment composed.** The methodology of a kind of work: what to weigh, how to decide. Lives in `04_Methodology/Playbooks/`, earned through weekly maintenance.
-- **Lesson = a pit.** Something that actually hurt, recorded so it never surprises twice. `04_Methodology/Lessons/`, earned the same way. Triggers: in the moment (same pit twice → flag `#lesson-candidate`) and weekly (maintenance pipeline).
+- **Decision = a call that still stands.** One decision, one note, in `02_Command-Base/Decisions/`, landed the moment it is made. A decision's `lane:` is the lane of the work it governs (pricing and offer rules: `grow`; delivery-of-work rules: `deliver`; routine and upkeep rules: `run`; capability bets: `build`). The set of ACTIVE decisions, filtered by lane, IS the rulebook: "never discount below 20%" is simply a decision that never expires. When a new decision replaces an old one, the NEW note names what it replaces via `supersedes:` (written once, at birth) and the old note just flips to `status: superseded`; history comes free. Event decisions (hire this person, buy that oven) flip to `closed` once executed, so the active set stays a rulebook and not a junk drawer. **Guardrail duty: before landing a new decision, check the active set; on conflict, ask the owner "change the rule, or break it once?"** ⛔ The guardrail runs **before the note lands, in the same breath as the decision**, never on a queue that clears later. Its entire value is in the word "before": deferred to the end of the day, a ten o'clock decision and a three o'clock decision that contradicts it both land, and the conflict waits for a human to trip over it. A decision the owner made and nobody wrote down gets caught at closeout as a backstop, and ⛔ **the backstop runs the same guardrail** rather than skipping it for being late.
+- **Lesson = a pit.** Something that actually hurt, recorded so it never surprises twice. `04_Methodology/Lessons/`, grouped in subfolders when a string of them shares a subject. It lands at the closeout of the session the pit happened in, with the owner's yes. Two sections and they are not the same kind of sentence: **what happened is history and never changes**; **what we now do differently is alive and gets edited** when the world moves. If the reason for a change is that you got better rather than that the world changed, that is a Method, not an edit to a Lesson.
+- **Method = one move of yours, written down.** How you personally do one kind of thing, landed at the closeout of the work that taught it. `04_Methodology/Playbooks/`, flat, named `<the-work>-method.md`. Named for the work, ⛔ never for the case it came from (§5). Rewritten whole when you find a better way; the same name is updated rather than a second file created, so the note carries how many times you have done this without counting anything.
+- **Playbook = judgment composed.** The methodology of a kind of work: what to weigh, how to decide. `04_Methodology/Playbooks/`, beside the methods it came from. It is **earned in the weekly distillation**, when several related methods turn out to be one way of working.
 - **SOP = steps.** A dead process anyone can follow. Lives flat in `03_SOP/`; usually written through the `sop-builder` skill, legally hand-written when that skill is not installed (§1).
+
+**Only two kinds of edge exist between them: BECOMING and REFERENCING.** They are not interchangeable and the difference decides whether a note moves:
+
+- **Becoming happens once, in one place: several Methods become a Playbook.** The methods flip to `status: superseded` and carry `distilled_into:` naming the playbook they fed, so the question "which fights did this come out of" always has an answer. ⛔ Nothing else in this vault becomes anything. A Lesson never becomes a Playbook, a Decision never becomes a Playbook, a Playbook never becomes an SOP.
+- **Referencing is the other edge, and it is one-directional by design.** A Playbook may reference the Lessons and Decisions behind it (`references:`, written **once, when the playbook is born**). An SOP may reference the Playbook it leans on (`playbook:`). ⛔ **A Lesson and a Decision never register who cited them.** The pointer always lives on the note that is being written anyway at the moment the relationship is created; a list on the other end would have to be revisited every time, and a list nobody updates is worse than no list.
 
 Runtime reading order: doing an SOP → need a judgment call, open the linked playbook and the lane's active decisions → hit (or suspect) a pit, check lessons first.
 
-Content flows, types don't transmute: pits become lessons; recurring lessons and clustered decisions distill upward into playbooks; playbooks and lessons inform the next SOP that gets written.
+Content flows, types don't transmute. ⭐ **A deliberate consequence, and it is a result rather than an oversight: Decisions no longer feed Playbooks.** "The same trade-off decided the same way five times" does not grow into a playbook on its own, because a decision is a ruling and a method is a way of working, and only the second one composes.
 
 ## 8 · Record schema (machine-readable; the single source, no copies anywhere)
 
@@ -195,14 +203,36 @@ families:
     task:     {marker: "cb: task", required: [cb, status, created],
                optional: [start, due, waiting_on, depends_on, priority, reminder],
                status: [not-started, in-progress, waiting, blocked, done]}
-  process:
+  process:                                  # `confirmed_by_owner` appears on three of these
+                                            # four and means one thing: the owner who was in
+                                            # the room said yes, out loud, at the moment this
+                                            # note was written. ⛔ It does NOT mean a process
+                                            # approved it, a queue cleared it, or a weekly
+                                            # pass proposed it and nobody objected. Silence
+                                            # is not a yes, and a yes that arrived a week
+                                            # later belongs to whoever was in the room then.
     sop:      {required: [type, lane, owner, last_verified], optional: [playbook],
                multi: [lane]}                                  # lane is multi-value
+    method:   {required: [type, lane, status, confirmed_by_owner],
+               optional: [distilled_into],
+               status: [active, superseded]}   # one move of the owner's, written at the
+                                    # closeout of the work that taught it (§7). `superseded`
+                                    # is set by the weekly distillation when several methods
+                                    # compose into a playbook, and `distilled_into` names
+                                    # that playbook. ⛔ No `kind:` key and there never will
+                                    # be one: which sort of work a method belongs to is
+                                    # judged by whoever reads them together, not declared by
+                                    # whoever writes one.
     playbook: {required: [type, lane, status, confirmed_by_owner],
+               optional: [references], multi: [references],
                status: [forming]}   # only sourced value (Playbook.md template); describes
                                     # the methodology's maturity, not this note's fill state.
                                     # No second value is sourced anywhere (execution-backlog
-                                    # entry 142).
+                                    # entry 142). `references` is the ONE pointer added for
+                                    # the lesson and decision edge (§7): written once, when
+                                    # the playbook is born, on the note being written anyway.
+                                    # ⛔ There is deliberately no matching key on lesson or
+                                    # decision: a back-list would need revisiting forever.
     lesson:   {required: [type, date, source, lane, confirmed_by_owner]}
   hypothesis: {required: [type, status, destination,
                           weeks_supported, contradictions, weeks_silent],
@@ -280,6 +310,19 @@ playbook itself plus its lab organs. The upgrade happens in place: no move, no l
 rewrites; closing a lab is the same operation in reverse. Most playbooks never need this;
 prose is the normal, sufficient form of a playbook, and the default answer to opening a
 lab is NO.
+
+⭐ **This is the third and last degree of maturity, and all three live at one address**
+(`04_Methodology/Playbooks/`, flat): a `<work>-method.md` is one move of yours · a
+`<kind-of-work>-playbook.md` is several of them turning out to be one way of working (§7)
+· a `<Name>/` folder is a playbook that earned a feedback loop. ⛔ Nothing moves folders
+to climb: a method that gets distilled keeps its filename and gains `distilled_into:`,
+and a playbook that opens a lab becomes a folder where it already sits. That is what
+makes one address show the whole ladder at a glance.
+
+⚠️ **Who proposes a lab, corrected 2026-08-20:** the weekly pass no longer scans for
+candidates. A lab is opened when the OWNER asks, and the `playbook-lab` skill still runs
+the §9.5 gate and still refuses a candidate that does not pass it. ⛔ Never hand-build a
+lab's organs, then or now.
 
 9.2 Shape (fixed; changing it is an amendment). A lab folder holds exactly five things:
 `_<Name>-Guide.md` (the door: reading order, who writes what, when) · the playbook (the

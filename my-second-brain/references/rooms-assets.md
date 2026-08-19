@@ -70,7 +70,7 @@ These two rooms are unlike the rest. They scaffold pre-populated with empty stub
 - Source concentration: how many of the named clients arrived by referral, and does any mechanism exist for that? (the classic: referrals happen TO the business, nobody runs them)
 - Dependency: does one client dominate revenue or attention? What does the map look like if they leave?
 - Knowledge location: how much of what was just captured lived only in the owner's head? Who else knows client X pays 60 days late?
-- **The complaint that keeps coming back in different costumes.** If the owner describes the same failure repeating across customers, that is a process gap wearing a service costume: record it on the client note it happened to, and flag `#lesson-candidate` so the weekly pass picks it up. ⛔ Do not open a complaints room; there are no function rooms here.
+- **The complaint that keeps coming back in different costumes.** If the owner describes the same failure repeating across customers, that is a process gap wearing a service costume: record it on the client note it happened to, and **say out loud that it is a pattern** so it gets written up as a Lesson at this session's closeout. ⛔ There is no flag to leave for a later sweep. ⛔ Do not open a complaints room either; there are no function rooms here.
 
 ## Vendors
 

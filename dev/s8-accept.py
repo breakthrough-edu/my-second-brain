@@ -86,12 +86,15 @@ import doctrine_schema  # noqa: E402
 
 # --- acceptance criteria (see header: change only with a shape change) -------
 EXPECT_FAMILIES = 13
-EXPECT_SPECS = 24  # families with subtypes contribute their subtypes, not themselves
-EXPECT_IN_FAMILY_CLOSED_LISTS = 14  # 13 until 2026-08-19, when entity.status was closed
+EXPECT_SPECS = 25  # families with subtypes contribute their subtypes, not themselves
+                   # 24 until 2026-08-20, when process.method was opened
+EXPECT_IN_FAMILY_CLOSED_LISTS = 15  # 13 until 2026-08-19, when entity.status was closed;
+                                    # 14 until 2026-08-20, when process.method.status opened
 EXPECT_GLOBAL_CLOSED_LISTS = 2  # lane, domain
 EXPECT_PERSONAL_LANES = 7
 EXPECT_DECISION_LANES = 11  # the four work lanes plus the seven personal ones
-EXPECT_MULTI = {"process.sop": ["lane"]}
+EXPECT_MULTI = {"process.sop": ["lane"], "process.playbook": ["references"]}
+# process.playbook.references added 2026-08-20: the one pointer a playbook writes at birth
 EXPECT_LAB_CARDINALITY = {"count": 1, "per": "lab-folder"}
 RENDER_TAGS = ["aroma-coffee", "laowang-coffee", "noodlebar"]
 PLACEHOLDER = "{{BUSINESS_TAG}}"

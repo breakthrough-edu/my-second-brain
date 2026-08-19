@@ -4,10 +4,6 @@ The move-in ritual. Each run: pick one room or one lane, the AI asks one thing a
 
 Everything files by `99_Meta/structure-doctrine.md`. Every filing appends to `99_Meta/filing-log.md`. Interaction language comes from `bootstrap-progress.md`.
 
-⛔ **This mode does not run in a house whose generation is not settled as the current one.** Capture is the heaviest structural writer in the product: it moves the owner's real files into `01_Assets/<Room>/`, `02_Work/<lane>/` and the brand folder, and it opens rooms. Those addresses are this generation's; an earlier one put the wing at `07_<Business>/` with `02_SOP`, and a half-migrated house has some of each. Moving somebody's actual client files to an address their house does not use is the most expensive version of this mistake in the whole skill, and unlike a stray folder it is their content that ends up in the wrong place.
-
-`SKILL.md`'s house-vintage gate (mode routing, step 1) has already run this session and it rules here without appeal: if it did not clear the house as current, ⛔ do not capture. `python3 <skill>/scripts/checkup.py "<vault>"` gives the same verdict as a `house-vintage` ERROR if you need to check. **What to do instead:** say which room the material belongs in and which address this generation would use, in words, and let the owner move it. Reading their material, listening, and giving the session's observation all stay open; ⛔ the move-in, the room-opening and the `capture-progress.md` row do not. ⚠️ An unfinished `capture-progress.md` is not a reason to override this: an older house being mid-capture is exactly how it got here.
-
 ## Entry
 
 1. Read `99_Meta/capture-progress.md` and `99_Meta/bootstrap-progress.md`.
@@ -91,9 +87,9 @@ Load the guide for what was chosen: [../references/rooms-assets.md](../reference
 4. **One entity, one note**, from the matching `99_Meta/Templates/` template. Fill what was said, leave the rest blank. Blank fields are visible invitations, not failures.
 5. **Two walls.**
    - ⛔ **Never write into `03_SOP/`.** Not because only one tool may write there (hand-written SOPs are legal), but because a real SOP takes a full pass of its own: dictate, structure, draw, correct, critique, finalize. A 15-minute move-in cannot hold that, and a half-walked process written down as if it were finished is worse than no SOP. A process the owner dictates tonight parks in `00_Inbox/<process-name>-sop-draft/` as a draft.
-   - ⛔ **Never write into `04_Methodology/`.** Only the owner's yes lands anything there, and it arrives through the weekly pass, never through capture.
+   - ⛔ **Never write into `04_Methodology/`.** Only the owner's yes lands anything there, and capture is never the moment it is given. (Closeout is: a Lesson or Method written at the end of a session lands there with a yes said out loud then. ⛔ That is not a door capture may use.)
 6. **A task must have a project.** When a to-do surfaces mid-capture, either hang it on an existing project or propose opening one (small is fine). If neither happens, it does not get written. There is no parking lot.
-7. **Plant the flag.** The moment a pattern shows up that might deserve a rule (the same failure twice, a pothole with a name), tag `#lesson-candidate` on the entity note or the capture-buffer line where it lives. The weekly pass sweeps by tag and picks it up. ⛔ Do not write the lesson yourself.
+7. **Name the pit out loud, in the moment.** When a pattern shows up that might deserve a rule (the same failure twice, a pothole with a name), say so, and put the plain sentence on the entity note or the capture-buffer line where it belongs. ⛔ **There is no flag to plant**: the tags that existed for that were retired, because a pit is written up as a Lesson at this session's own **closeout**, with the owner's yes, while they still remember what it cost. ⛔ Do not write the lesson yourself mid-capture; naming it is the whole job here.
 
 **Update as you go, and only two things:** one `filing-log.md` line per filing, and `capture-progress.md` at room close. ⛔ There is no inventory to feed. An entity note is found by its type, its address, and Home; nothing anywhere lists it. Say so plainly if the owner asks: move it in and you are done, there is no register to sign.
 

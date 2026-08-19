@@ -30,7 +30,6 @@ Ask: existing Obsidian vault, or new one?
 
 - **New:** propose `~/Documents/<Name>-Second-Brain/` (their name or business name, English, hyphenated; if the business name has not come up yet, ask it here and reuse the answer in step 4). They can pick any path. `mkdir -p` it.
 - **Existing vault:** get the path. The scaffold is idempotent (`mkdir -p`, never overwrite an existing file), so a vault with PARA folders already in place is fine; we add what is missing.
-- ⛔ **Before the branch below fires, separate "their own structure" from "our older structure", because the two look alike.** An older house this product itself built also shows a PARA layout, MOC files and a command base, and adopting one of those would put a second business wing beside the one already there and leave the owner with both shapes at once. `SKILL.md`'s house-vintage gate (mode routing, step 1) is the test, and it has already run this session; if it said the house is an older generation of ours, ⛔ do not scaffold into it, whatever `setup_complete:` says. Only a vault that gate cleared as **not ours** is a candidate for the branch below.
 - **Existing vault with a structure of its own** (signature: a PARA layout, `06_MOCs/`, an existing command base, anything the owner clearly built and uses): do NOT migrate, rename, or rebuild what they have. What works keeps working. Add only what is missing and clearly ours: the business wing (`04_<Business>-Business-Wing/`), `99_Meta` doctrine plus state files, and `02_Command-Base/` if nothing plays that role yet. Tell them plainly what you are adding and what you are leaving untouched, and be honest about the one real consequence: the doctrine describes a personal wing at `03_Personal-Wing/` that their vault does not have, so on their side the doctrine governs the business wing and the shared layers, and their own personal structure stands. ⛔ Never quietly restructure someone's existing personal folders to match the law; propose it as its own piece of work, another day, or leave it alone.
 
 ## Step 4: Name, business + toggles (the only interview in setup)
@@ -78,19 +77,21 @@ Write it to `<vault>/99_Meta/Skills/<slug>-command-base/SKILL.md`, then install:
 
 One line on what they just got: "From now on, in any session, say 'morning' or 'log a decision' and this skill runs your day on top of the vault."
 
-## Step 6.6: Install the two companion skills that ride in this payload
+## Step 6.6: Install the companion skills that ride in this payload
 
-Two skills ship inside this skill's own payload and install as their own entries. They are **not** generated and **not** personalised: there is nothing to interview, nothing to fill in, and no `bootstrap-progress` question to ask first.
+⛔ **Read the set off the payload, never off this list:** `ls <payload>/skills/` is the registry, and the descriptions below are here so the owner can be told what each one is, not so the count can be quoted. (It has been two, and it is four as of 2026-08-20.) They are **not** generated and **not** personalised: there is nothing to interview, nothing to fill in, and no `bootstrap-progress` question to ask first.
 
 - **`project-consultant`** thinks a project through with the owner before they build it, and proposes the smallest set of working files that project earns (usually a bare brief and nothing else). It is never on the critical path: a project is born legally without it.
+- **`session-report`** closes out a working session: it lands the Lesson the session earned, catches decisions that were made but never written, and offers what is reusable. ⛔ It matters that this one ships: the vault's whole capture of judgment now happens at closeout, so shipping the law without this skill would leave `04_Methodology/` with a family, a template, an address and no writer.
+- **`method-builder`** writes one Method when a piece of WORK closes: how the owner did that kind of thing, in their words. Same reason as above; it is the other half of the closeout pair, and the two never fire at the same moment (one closes a session, one closes a job).
 - **`playbook-lab`** opens and closes the rare feedback loop around a playbook that has earned one (doctrine §9). ⛔ It matters that this one ships: §9 is law in every vault this skill builds, and that law says a lab is **never** hand-built. Shipping the section but not the tool would leave the owner forbidden to do the thing by hand and unequipped to do it any other way.
 
-**Install both out of this skill's own payload, and link rather than copy wherever the platform allows.** Resolve the running skill's folder (via `npx` install it is `~/.claude/skills/my-second-brain/`, resolved at runtime); the two live at `<payload>/skills/project-consultant/` and `<payload>/skills/playbook-lab/`. ⭐ **Linking is what makes `npx skills update my-second-brain` carry them along**: update the payload and both companion skills are updated in the same breath, with nothing to re-run here.
+**Install every folder under `<payload>/skills/` as its own entry, and link rather than copy wherever the platform allows.** Resolve the running skill's folder (via `npx` install it is `~/.claude/skills/my-second-brain/`, resolved at runtime). ⭐ **Linking is what makes `npx skills update my-second-brain` carry them along**: update the payload and every companion skill is updated in the same breath, with nothing to re-run here.
 
 1. **Check first.** If `~/.claude/skills/<name>` already exists for either name, ⛔ do not touch it. Say what is there and move on; an owner may have installed one by hand, and clobbering it loses their copy.
-2. **macOS / Linux:** `ln -s "<payload>/skills/<name>" ~/.claude/skills/<name>` for each of the two (create `~/.claude/skills/` if missing).
+2. **macOS / Linux:** `ln -s "<payload>/skills/<name>" ~/.claude/skills/<name>` for each folder found (create `~/.claude/skills/` if missing).
 3. **Windows, default: copy the folder** `<payload>/skills/<name>` to `%USERPROFILE%\.claude\skills\<name>`. ⚠️ **Say the cost out loud:** a copy does not follow payload updates, so `npx skills update` will refresh `my-second-brain` and leave these two at the version copied tonight. Re-running this step is how they catch up. The junction trade-off and its whole warning block are in step 6 above and apply here unchanged; ⛔ do not present a junction as the recommended path.
-4. **Verify by reading, not by assuming.** For each of the two, confirm `~/.claude/skills/<name>/SKILL.md` is readable through the installed path and that its first line is `---`. ⛔ A link that was created but does not resolve reads as success to every check except this one.
+4. **Verify by reading, not by assuming.** For each one, confirm `~/.claude/skills/<name>/SKILL.md` is readable through the installed path and that its first line is `---`. ⛔ A link that was created but does not resolve reads as success to every check except this one.
 
 Record `companion_skills_installed:` in `bootstrap-progress.md` (`linked` / `copied` / `partial` / `failed`, and name any that were left alone because something was already there).
 
@@ -176,7 +177,7 @@ This step turns on **session memory**: every Claude Code conversation on this ma
 On yes:
 
 1. The tool ships in this skill's payload at `scripts/session-history/` (self-contained, nothing to download). Resolve the running skill's folder (via npx install it is `~/.claude/skills/my-second-brain/`, resolved at runtime); call the tool's path `<tool>` below.
-2. Write the config so harvest reports know where the vault Inbox is: create `~/.my-second-brain/session-history.json` containing `{"vault": "<vault-path-from-step-3>"}` (create the folder if missing; if the file exists, update only the `vault` key).
+2. Write the config so the tool knows which vault it belongs to: create `~/.my-second-brain/session-history.json` containing `{"vault": "<vault-path-from-step-3>"}` (create the folder if missing; if the file exists, update only the `vault` key).
 3. Build the first index: `python3 "<tool>/sh" ingest`. On a machine with a long Claude Code history this can take a little while on first run; incremental runs afterwards take seconds. Report the one-line stats it prints.
 4. Show the owner one search they can try, in their language, e.g. `python3 "<tool>/sh" search "the thing we fixed"`, and say plainly: from now on, asking "上次怎么解的 / how did we solve that before" in any session can actually be answered from history.
 
@@ -184,17 +185,9 @@ On yes:
 
 Record `session_memory_installed:` in `bootstrap-progress.md` (`installed` / `declined` / `skipped-platform`).
 
-**Then ask the second question, out loud, as its own question: do they want the weekly harvest on?** ⭐ It is not the same question as the one above and it must stop being answered by it. Installing the tool makes past sessions **searchable when someone asks**. The harvest is a different thing: once a week, unasked, the morning brief reads whatever sessions are new and proposes lines to keep. One is a filing cabinet, the other is a colleague who reads it over the weekend, and an owner can reasonably want the first and not the second. Until now the second was simply switched on by answering the first, which is how a product ends up doing something on someone's behalf that they never agreed to.
+⛔ **There is no second question here any more, and it must not come back.** Until 2026-08-20 this step asked whether the owner wanted a weekly harvest: a pass that read the new sessions unasked and proposed lines to keep. That pass is retired, so the question has nothing to switch on and ⛔ no `harvest_auto:` key is written.
 
-Say it in one breath, then take the yes or no:
-
-> "Once a week your morning brief can quietly read whatever sessions are new and only speak up if something looks worth keeping, so most weeks you see nothing. Nothing ever reaches the files your AI loads at session start without you reading the exact words first. Want that on, or would you rather I ask you each time?"
-
-- **On** → `harvest_auto: true`. It runs itself; production is invisible, adoption is not.
-- **Ask me each time** → `harvest_auto: false`. The pass becomes an offer in the brief.
-- **Session memory was declined or skipped** → ⛔ do not ask this question at all. The harvest reads the index, so with no index there is nothing to decide. Record `harvest_auto: false` with the reason, and say one line: if they turn session memory on later, this comes back as a question then.
-
-⛔ **Write the key either way.** A missing `harvest_auto:` used to mean "automatic", which made the absence of an answer indistinguishable from a yes; a key that is always present is what makes a later session able to tell "they said yes" from "nobody ever asked".
+⭐ **What the tool is now, said plainly to the owner in one line, because the difference is the whole point:** it is a filing cabinet, not a colleague who reads it over the weekend. It answers "how did we solve that before" **when somebody asks**, and it never speaks first. What is worth keeping out of a session is decided at that session's own closeout, while whoever was in it still remembers.
 
 ## Step 6.95: The starter project, then the first dashboard build
 

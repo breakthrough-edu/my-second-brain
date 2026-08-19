@@ -11,7 +11,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import datetime
 import os
 import sys
 
@@ -22,8 +21,6 @@ from . import (
     connect,
     default_db_path,
     default_projects_dir,
-    harvest,
-    harvest_commit,
     ingest,
     recent,
     search,
@@ -108,45 +105,6 @@ def cmd_actions(conn, args) -> int:
     return 0
 
 
-def cmd_harvest(conn, args) -> int:
-    now = args.now
-    out = args.out
-    if not out:
-        # The draft lands in the tool's own state directory, never the vault
-        # Inbox. The Inbox is for things the owner is meant to read, and a
-        # machine sift is not one of them; putting it there made skipping
-        # curation the path of least resistance. A curated proposal note is
-        # what reaches the Inbox now, written by the session that read this.
-        # Side benefit: harvest no longer needs a configured vault to run.
-        out = os.path.join(
-            os.path.expanduser(DEFAULT_STATE_DIR), f"{now}-harvest-draft.md"
-        )
-    stats = harvest(conn, now=now, out_path=out, max_sessions=args.max)
-    print(
-        f"harvest: {stats['qualified']} qualified, {stats['in_report']} in report, "
-        f"{stats['capped_out']} capped out, "
-        f"{stats['echo_lines_filtered']} echo line(s) filtered"
-    )
-    print(f"       quiescence cutoff (mtime older than): {stats['cutoff']}")
-    cc = stats["candidate_counts"]
-    print(
-        f"       candidates mined: {cc['memory']} memory, "
-        f"{cc['decisions']} decision, {cc['notes']} note"
-    )
-    print(f"       draft: {stats['out_path']}")
-    print("       (a machine sift, NOT a report: curate it into a short proposal\n        note in the owner's Inbox, then `harvest commit` that note)")
-    return 0
-
-
-def cmd_harvest_commit(conn, args) -> int:
-    res = harvest_commit(conn, args.report_path, now=args.now)
-    print(
-        f"harvest commit: {res['flipped']} flipped, {res['already']} already harvested, "
-        f"{res['missing']} missing (of {res['requested']} in report)"
-    )
-    return 0
-
-
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="session-history", description=__doc__)
     p.add_argument("--db", default=None,
@@ -177,24 +135,10 @@ def build_parser() -> argparse.ArgumentParser:
     pa.add_argument("-n", "--limit", type=int, default=500)
     pa.set_defaults(func=cmd_actions)
 
-    # WS2 harvest. `harvest` proposes (never flips the bookmark); `harvest commit`
-    # consumes the bookmark for an approved report.
-    today = datetime.date.today().isoformat()
-    pd = sub.add_parser("harvest", help="weekly harvest pass: propose memory candidates")
-    pd.add_argument("--now", default=today,
-                    help="reference date/instant (default: today; deterministic if passed)")
-    pd.add_argument("--out", default=None,
-                    help="draft path (default: ~/.my-second-brain/<now>-harvest-draft.md)")
-    pd.add_argument("--max", type=int, default=30, help="cap on sessions in the report")
-    pd.set_defaults(func=cmd_harvest)
-
-    pd_sub = pd.add_subparsers(dest="harvest_cmd")
-    pdc = pd_sub.add_parser("commit",
-                            help="after approval, flip harvested=1 for the report's sessions")
-    pdc.add_argument("report_path")
-    pdc.add_argument("--now", default=today,
-                     help="harvested_at date to stamp (default: today)")
-    pdc.set_defaults(func=cmd_harvest_commit)
+    # ⛔ There is no `harvest` subcommand and there has not been one since
+    # 2026-08-20. It ran a weekly pass that guessed at what a week of
+    # sessions was worth keeping; that judgement now happens at each
+    # session's own closeout, by whoever was in it. See core.py's note.
     return p
 
 

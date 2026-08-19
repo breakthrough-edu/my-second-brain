@@ -603,16 +603,54 @@ reviewed_on: {{DATE}}
 
 # Week of {{DATE}}
 
-## What moved
+## Headline
+
+## Top 3
+
+1. 
+2. 
+3. 
 
 ## Drifts
 (what slipped, what went stale, what the machine pass flagged)
 
-## Next week
+## The week, compressed
+
+## Active theme
+
+## Pool vitals
+
+- Open: 
+- Graduated: 
+- Expired: 
+
+## What I noticed
+
+Nothing this week.
 
 <!--
 02_Command-Base/Reviews/. week_of is the Monday of the week reviewed; reviewed_on is when the
   review actually happened. They differ often enough that one key cannot answer both.
+Written at the close of the weekly ritual: the anti-drift half fills everything down to Pool
+  vitals, the distillation half writes What I noticed. Two writers, one file, in that order.
+Two sections carry a rule the others do not, and both rules exist to keep the file honest:
+  HEADLINE is the owner's own words, one line. Ask for it and paste it back as said; never
+    write it for them. It is the only sentence in the whole ritual that is not mechanical.
+  WHAT I NOTICED is the AI's reading, and it is deliberately not the headline. It ships holding
+    "Nothing this week." and THAT LINE IS A FINISHED ANSWER, not a placeholder to clear: a flat
+    week is the normal outcome. Never manufacture insight from insufficient material; a section
+    that gets padded weekly is a section the owner learns to skip, which costs more than the
+    paragraph was worth.
+POOL VITALS counts only what 04_Methodology/Hypotheses/ can count about itself: open,
+  graduated, expired. Three older metrics (citation-rejection rate, contested rate, sessions
+  actually read against the cap) are absent because what produced them is gone, not because
+  they were cut: the citation gate and the session cap both retired with the scan they belonged
+  to, and a contradiction now kills a hypothesis on the spot, so nothing sits in a contested
+  state to be counted.
+There is no "Next week" section: the hook for next week is spoken at the very end of the
+  ritual, from next_suggestion: in 99_Meta/capture-progress.md, and a section nobody fills is a
+  section nobody reads.
+An empty week gets no review at all. A break is covered by the next one, never by a stub.
 -->
 ```
 
@@ -628,6 +666,8 @@ status_since: {{DATE}}
 
 # <Theme>
 
+Follows [[<the theme this one replaces>]]
+
 ## Why this, this month
 
 ## What it means in practice
@@ -637,6 +677,14 @@ status_since: {{DATE}}
   new one opens, so "what am I on right now" always has exactly one answer. The trigger is the
   new theme opening, not the calendar turning: a theme can stay active across a skipped month
   and get closed later, and status_since records the day the flip actually happened.
+The two link lines are what make this layer read as a line rather than a pile. A new theme
+  opens with "Follows [[previous]]"; in the same breath, the theme it replaces gets
+  "Followed by [[new]]" written under its own title as its status flips to closed. Both
+  directions, written at the one moment when whoever is doing it knows both names.
+  The first theme in a vault has nothing to follow: delete the line rather than leave it
+  pointing at nothing.
+Who opens one: the theme check at the close of the weekly review (the anti-drift half of the
+  weekly ritual). It only ever proposes; the theme is the owner's word for their own month.
 -->
 ```
 
@@ -656,15 +704,65 @@ tags: []
 
 ## What happened
 
+<!-- HISTORY. ⛔ Never edited again. What happened happened; a corrected past is not a
+     record, it is a story. Wrong facts get a correcting sentence here, never a rewrite. -->
+
 ## What we now do differently
 
+<!-- ALIVE. This is the part that gets edited, and there is exactly one reason to edit it:
+     the world changed and the old handling stopped working. ⛔ If the reason is that YOU got
+     better at this, that is not an edit here, that is a Method (§7). Mixing the two is how a
+     lesson quietly turns into a half-written playbook nobody trusts. -->
+
 <!--
-04_Methodology/Lessons/. A lesson is a PIT: something that actually hurt, written down so it
-  never surprises twice. Not a good idea, not a note-to-self.
-⛔ Capture never writes here. It arrives one way only: the weekly pass proposes it and the
-  owner says yes, which is what confirmed_by_owner records. Until that flag is true, this
-  note is a proposal sitting in a draft, not a lesson.
+04_Methodology/Lessons/, grouped in a subfolder when a string of pits shares a subject
+  (one folder for a tool, a client, a platform).
+A lesson is a PIT: something that actually hurt, written down so it never surprises twice.
+  Not a good idea, not a note-to-self.
+⛔ Capture never writes here. It lands at the CLOSEOUT of the session the pit happened in,
+  with the owner saying yes in that moment, which is what confirmed_by_owner records
+  (doctrine §8: the owner who was in the room, out loud, then). Until that flag is true,
+  this note is a proposal sitting in a draft, not a lesson.
 date is when the pit happened, not when it was written up.
+-->
+```
+
+## Method.md
+
+```markdown
+---
+type: method
+lane:
+status: active
+confirmed_by_owner: false
+tags: []
+---
+
+# Method: <the kind of work>
+
+## When I reach for this
+
+## How I do it
+
+## What I judge along the way
+
+<!--
+04_Methodology/Playbooks/, flat, beside the playbooks. A method is ONE MOVE OF YOURS: how
+  you personally do one kind of work, written at the closeout of the work that taught it,
+  with the owner saying yes in that moment (that is what confirmed_by_owner records).
+Named for the WORK, never for the case it came out of: <the-work>-method.md. "quoting-a-
+  renovation-method.md", not "the-tan-house-method.md". A name that records which case,
+  client or project it belongs to becomes a lie the day that moves (doctrine §5).
+⛔ Same name, same file. Found a better way? Rewrite this note whole. ⛔ Do NOT create a
+  second file with a version in the name: one note per move is what lets the note carry how
+  many times you have done this without anybody counting anything.
+⛔ There is no kind: key and there will not be one. Which sort of work a method belongs to
+  is judged by whoever reads several of them together in the weekly distillation, not
+  declared by whoever writes one. Declaring it would put the classification burden on the
+  moment you least want it, which is the moment you just finished the job.
+status: flips to superseded when the weekly distillation composes this and its relatives
+  into a playbook; distilled_into: then names that playbook. Superseded methods are never
+  deleted: "which fights did this playbook come out of" has to stay answerable.
 -->
 ```
 
@@ -676,6 +774,7 @@ type: playbook
 lane:
 status: forming
 confirmed_by_owner: false
+references: []
 tags: []
 ---
 
@@ -690,9 +789,16 @@ tags: []
 <!--
 04_Methodology/Playbooks/. A playbook is JUDGMENT COMPOSED: what to weigh and how to decide
   for a kind of work. An SOP is the other thing entirely, dead steps anyone can follow.
+It is EARNED in the weekly distillation, when several related methods turn out to be one way
+  of working. Those methods flip to status: superseded and carry distilled_into: pointing
+  here, so the fights this came out of stay traceable.
+references: is written ONCE, right here, at birth: the lessons and decisions this playbook
+  leans on. ⛔ Leave it as an empty list when there are none. ⛔ Those notes never register
+  that they were cited; a back-list would have to be revisited forever (doctrine §7).
 ⛔ Types do not transmute. A playbook does not "mature into" an SOP and an SOP does not
-  "grow into" a playbook. What travels between them is content: playbooks and lessons inform
-  the next SOP someone writes, and clustered decisions distill upward into playbooks.
+  "grow into" a playbook. Only methods BECOME a playbook; lessons and decisions are only
+  ever referenced by one. What travels between them otherwise is content: playbooks and
+  lessons inform the next SOP someone writes.
 Prose is the normal, sufficient form of a playbook. A few earn a live feedback loop and grow
   into a folder with lab organs beside them, in place, no move and no link rewrites. That is
   rare, it is proposed by the weekly scan or asked for by the owner, and the default answer
