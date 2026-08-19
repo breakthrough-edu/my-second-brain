@@ -22,7 +22,7 @@ If missing, offer to install it now (recommended; capture works without it, but 
 - Linux: point to the AppImage / flatpak on `https://obsidian.md/download`
 - Any failure: link `https://obsidian.md/download`, tell them to install it later, continue setup. Nothing downstream hard-depends on it.
 
-Note for later (step 8 and the dashboard): the dashboard uses Obsidian **Bases**, a core plugin. If it is not enabled: Settings -> Core plugins -> enable Bases. Mention this once at the graph moment, not now.
+Nothing about the dashboard depends on Obsidian: it is a generated HTML file that opens in a browser (step 6.95). Obsidian is the reading and graph surface, nothing more.
 
 ## Step 3: Vault location
 
@@ -33,23 +33,24 @@ Ask: existing Obsidian vault, or new one?
 - ⛔ **Before the branch below fires, separate "their own structure" from "our older structure", because the two look alike.** An older house this product itself built also shows a PARA layout, MOC files and a command base, and adopting one of those would put a second business wing beside the one already there and leave the owner with both shapes at once. `SKILL.md`'s house-vintage gate (mode routing, step 1) is the test, and it has already run this session; if it said the house is an older generation of ours, ⛔ do not scaffold into it, whatever `setup_complete:` says. Only a vault that gate cleared as **not ours** is a candidate for the branch below.
 - **Existing vault with a structure of its own** (signature: a PARA layout, `06_MOCs/`, an existing command base, anything the owner clearly built and uses): do NOT migrate, rename, or rebuild what they have. What works keeps working. Add only what is missing and clearly ours: the business wing (`04_<Business>-Business-Wing/`), `99_Meta` doctrine plus state files, and `02_Command-Base/` if nothing plays that role yet. Tell them plainly what you are adding and what you are leaving untouched, and be honest about the one real consequence: the doctrine describes a personal wing at `03_Personal-Wing/` that their vault does not have, so on their side the doctrine governs the business wing and the shared layers, and their own personal structure stands. ⛔ Never quietly restructure someone's existing personal folders to match the law; propose it as its own piece of work, another day, or leave it alone.
 
-## Step 4: Business + toggles (the only interview in setup)
+## Step 4: Name, business + toggles (the only interview in setup)
 
-Three quick things, one message each or one compact message, their call:
+Four quick things, one message each or one compact message, their call:
 
-1. Business name (and its folder-safe English form, e.g. 咖啡老王 -> `Laowang-Coffee`; propose, they confirm). Derive the domain tag from it (`{{BUSINESS_TAG}}`, kebab-case) and confirm that too, in the same breath.
-2. Toggle: physical outlets? (yes -> `Outlets/` room)
-3. Toggle: machines or equipment? (yes -> `Equipment/` room)
+1. **What to call them.** One line: "And what should I call you?" ⛔ **Ask it, never infer it.** This answer becomes `{{YOUR_NAME}}`, which the generated command-base skill uses eighteen times and the vault's `CLAUDE.md` puts at the top, so an install that skips the question either invents a name for the owner or addresses them by their business name forever. The vault folder from step 3 is not this answer: it may well be the business's name, and it is a folder name either way.
+2. Business name (and its folder-safe English form, e.g. 咖啡老王 -> `Laowang-Coffee`; propose, they confirm). Derive the domain tag from it (`{{BUSINESS_TAG}}`, kebab-case) and confirm that too, in the same breath.
+3. Toggle: physical outlets? (yes -> `Outlets/` room)
+4. Toggle: machines or equipment? (yes -> `Equipment/` room)
 
 ⛔ **Do not ask about the personal wing.** It and its six life rooms are always created; the doctrine states its contents flatly, so a vault missing them does not match its own law. There is no third toggle either: the old importing toggle only ever created SOP subfolders, and `03_SOP/` now ships empty and flat.
 
 ## Step 5: The scaffold burst
 
-Execute [../references/scaffold-spec.md](../references/scaffold-spec.md) in one go: all folders, every door file (`_<Name>-Guide.md` per room, lane, brand subfolder and wing, plus `_SOP-Menu.md`), `Home.md` as the vault's full directory, `Business-Profile` at the wing root (empty schema), doctrine (from [../templates/structure-doctrine.template.md](../templates/structure-doctrine.template.md)), tagging vocabulary (from [../templates/tagging-vocabulary.template.md](../templates/tagging-vocabulary.template.md)), note templates (from [../templates/note-templates.md](../templates/note-templates.md)), dashboard `.base` (verbatim from [../templates/command-base.base.template](../templates/command-base.base.template)), the pre-seeded brand rooms (`Brand-Strategy/` with seven pillar stubs + `Target-Audience/` with the Journey stub, per the spec), and the state files, including `99_Meta/lab-gate-config.md` (from [../templates/lab-gate-config.template.md](../templates/lab-gate-config.template.md)) and working memory `99_Meta/memory.md` (from [../templates/memory.template.md](../templates/memory.template.md); this is what the command-base skill reads and appends every session, so it exists from day one).
+Execute [../references/scaffold-spec.md](../references/scaffold-spec.md) in one go: all folders, every door file (`_<Name>-Guide.md` per room, lane, brand subfolder and wing, plus `_SOP-Menu.md`), `Home.md` as the vault's full directory, `Business-Profile` at the wing root (empty schema), doctrine (from [../templates/structure-doctrine.template.md](../templates/structure-doctrine.template.md)), tagging vocabulary (from [../templates/tagging-vocabulary.template.md](../templates/tagging-vocabulary.template.md)), note templates (from [../templates/note-templates.md](../templates/note-templates.md)), the pre-seeded brand rooms (`Brand-Strategy/` with seven pillar stubs + `Target-Audience/` with the Journey stub, per the spec), and the state files, including `99_Meta/lab-gate-config.md` (from [../templates/lab-gate-config.template.md](../templates/lab-gate-config.template.md)) and working memory `99_Meta/memory.md` (from [../templates/memory.template.md](../templates/memory.template.md); this is what the command-base skill reads and appends every session, so it exists from day one).
 
 Two layers ship deliberately bare and it is worth not "fixing" them mid-burst: `03_SOP/` holds nothing but its menu, and `04_Methodology/` holds two empty folders and zero `.md` files, doors included.
 
-Run the wiring check at the end of the spec. Report one line: "Scaffolded N folders, M files. Home lists all of it."
+Report one line: "Scaffolded N folders, M files. Home lists all of it." ⚠️ **The wiring check does not run here.** It is step 7.9, because four of its eleven checks test things that do not exist yet at this point (the vault `CLAUDE.md`, the guards, the starter project, the dashboard).
 
 ## Step 5.5: Vault CLAUDE.md (the always-on context layer)
 
@@ -77,32 +78,88 @@ Write it to `<vault>/99_Meta/Skills/<slug>-command-base/SKILL.md`, then install:
 
 One line on what they just got: "From now on, in any session, say 'morning' or 'log a decision' and this skill runs your day on top of the vault."
 
-## Step 6.7: Name the two skills that do not ship here (one line, no install)
+## Step 6.6: Install the two companion skills that ride in this payload
 
-Two pieces of work have their own tools, and both are published separately and installed by the owner when they want them. Say this once, in one line each, and only so nothing later reads as if it were already on the machine:
+Two skills ship inside this skill's own payload and install as their own entries. They are **not** generated and **not** personalised: there is nothing to interview, nothing to fill in, and no `bootstrap-progress` question to ask first.
+
+- **`project-consultant`** thinks a project through with the owner before they build it, and proposes the smallest set of working files that project earns (usually a bare brief and nothing else). It is never on the critical path: a project is born legally without it.
+- **`playbook-lab`** opens and closes the rare feedback loop around a playbook that has earned one (doctrine §9). ⛔ It matters that this one ships: §9 is law in every vault this skill builds, and that law says a lab is **never** hand-built. Shipping the section but not the tool would leave the owner forbidden to do the thing by hand and unequipped to do it any other way.
+
+**Install both out of this skill's own payload, and link rather than copy wherever the platform allows.** Resolve the running skill's folder (via `npx` install it is `~/.claude/skills/my-second-brain/`, resolved at runtime); the two live at `<payload>/skills/project-consultant/` and `<payload>/skills/playbook-lab/`. ⭐ **Linking is what makes `npx skills update my-second-brain` carry them along**: update the payload and both companion skills are updated in the same breath, with nothing to re-run here.
+
+1. **Check first.** If `~/.claude/skills/<name>` already exists for either name, ⛔ do not touch it. Say what is there and move on; an owner may have installed one by hand, and clobbering it loses their copy.
+2. **macOS / Linux:** `ln -s "<payload>/skills/<name>" ~/.claude/skills/<name>` for each of the two (create `~/.claude/skills/` if missing).
+3. **Windows, default: copy the folder** `<payload>/skills/<name>` to `%USERPROFILE%\.claude\skills\<name>`. ⚠️ **Say the cost out loud:** a copy does not follow payload updates, so `npx skills update` will refresh `my-second-brain` and leave these two at the version copied tonight. Re-running this step is how they catch up. The junction trade-off and its whole warning block are in step 6 above and apply here unchanged; ⛔ do not present a junction as the recommended path.
+4. **Verify by reading, not by assuming.** For each of the two, confirm `~/.claude/skills/<name>/SKILL.md` is readable through the installed path and that its first line is `---`. ⛔ A link that was created but does not resolve reads as success to every check except this one.
+
+Record `companion_skills_installed:` in `bootstrap-progress.md` (`linked` / `copied` / `partial` / `failed`, and name any that were left alone because something was already there).
+
+One line on what they just got, no more: "Two extra skills came with this one. Say 'help me plan this project' when a piece of work is big enough to need thinking through, and 'open a lab' if a playbook of yours ever earns a scoreboard, which most never will."
+
+⚠️ **The test that decides whether a skill installs here or only gets named in 6.7, for whoever edits this list next.** It is not preference and not popularity: **ask what the doctrine permits the owner to do by hand.** §1 explicitly permits hand-writing an SOP, so an owner without that skill can still do the work and it is honest to leave it out. §9 explicitly forbids hand-building a lab, so an owner without that skill would be forbidden to do it by hand and unequipped to do it any other way, which puts a whole section of their own constitution out of reach. ⛔ **Never move a skill between the two steps without running that test first.**
+
+## Step 6.7: Name the one skill that does not ship here (one line, no install)
+
+One piece of work has its own tool, published separately and installed by the owner when they want it. Say this once, in one line, and only so nothing later reads as if it were already on the machine:
 
 - **Writing an SOP** runs on the `sop-builder` skill. `03_SOP/` ships empty by design and hand-writing an SOP is perfectly legal (doctrine §1); the skill is the comfortable path, not the only legal writer.
-- **Opening a playbook lab** runs on the `playbook-lab` skill, and that is a rare, later thing: most playbooks never need one, and the weekly maintenance scan proposes candidacy long before the owner has to think about it.
 
-⛔ Do not install either here, and do not present them as missing pieces. Nothing in this vault breaks without them.
+⛔ Do not install it here, and do not present it as a missing piece. Nothing in this vault breaks without it. **The test for whether a skill belongs in this step rather than the one above is written at the end of 6.6; apply it before moving anything here.**
 
-## Step 6.8: Safety lock (optional, recommended, macOS only)
+## Step 6.8: The standard guards (one explanation, one install, one uninstall)
 
-This step installs a **read-only accident net**: a Claude Code hook that blocks a recursive delete (`rm -rf` and its variants) aimed at the vault or `~/.claude/skills`. It exists because of one specific, hard-to-reverse mistake. The command-base skill installs as a **symlink** under `~/.claude/skills/` that points INTO the vault; a plain `rm -r` on that link follows it and destroys the real vault content behind it. The hook stops exactly that. It is an accident net, not a security boundary: it fails open (allows) on anything it cannot parse, and it never blocks non-delete commands.
+⭐ **The guards are a set, and this step installs the set.** They used to go in one at a time as each was written, which meant the owner met them one at a time, agreed to them one at a time, and had no single place to go to turn them off. **Which guards are in the set is read off this payload, never off a number written here:** every `scripts/*-hook.sh` file is one guard, each has its own subsection below, and adding a guard means adding a script and a subsection, not editing a count. ⛔ **Never write "all four" or any other number into this step, into the wiring check, or into what you say to the owner.** The set has already changed size once, and every sentence that carried a count became a lie the day it did.
 
-**This changes the owner's `~/.claude/settings.json`, which is machine-level configuration outside the vault. Explain before you install, and install only on an explicit yes.** Say, in plain terms: what it blocks (recursive deletes hitting the vault or the skills folder), how it blocks (the command is refused with a note before it runs), and how to remove it (below). If the owner declines, record that and move on; nothing else in the system depends on it.
+⭐ **And what each guard NEEDS is read off the guard too, not out of this prose.** Every `scripts/*-hook.sh` carries one `# MSB-GUARD:` line in its header declaring four facts about itself: its `bootstrap-progress` key, the file name it installs as, the `PreToolUse` matchers it must be registered under, and a plain-words `does=`. **Read that line for each guard before doing anything below** (`grep -h "^# MSB-GUARD:" <payload>/scripts/*-hook.sh` returns the whole registry, one line per guard). ⛔ Do not take the key, the file name or the matchers from any sentence in this step or from what the subsections below happen to say: those are descriptions, and a description is a copy. The declaration is the source, and it lives beside the code it describes so the two cannot drift apart. The weekly checker reads the same lines, so all three readers of this registry read the same physical characters.
 
-**Platform honesty.** The install flow and the hook are validated on **macOS only** at this stage. On Windows or Linux, tell the owner it is not yet supported here, skip the install, and record the skip. Do not improvise a port.
+⭐ **And HOW EACH GUARD PROVES IT IS ALIVE is read off the guard as well.** Beside the registry line, every guard carries at least one `# MSB-PROBE:` line: a call it must refuse (or must allow), written as the exact `PreToolUse` payload Claude Code would hand it, with `{{VAULT}}` where the vault path goes. `grep -h "^# MSB-PROBE:" <payload>/scripts/*-hook.sh` returns them all. Step 4 below pipes each one into the guard as it was actually installed and compares the exit code to what the line demands. ⛔ **Do not compose a payload of your own.** Composing one is how the 2026-08-16 install session nearly filed a healthy guard as broken: it invented a case the guard was right to allow, then read the pass-through as a hole. The guard knows what it refuses; this step does not.
 
-On yes (macOS):
+**What they have in common.** Each is a Claude Code `PreToolUse` hook: it sees a tool call before it runs and either lets it through, attaches a note to it, or refuses it. All of them are **read-only** (none writes to the vault, none phones anywhere), all of them **fail open** (anything they cannot parse is allowed), and all of them live in one folder, `~/.claude/hooks/`, registered in one file, `~/.claude/settings.json`.
 
-1. The hook template ships in this skill's payload at `scripts/rm-guard-hook.sh`. Read it, and replace the single placeholder token `__MSB_VAULT_PATHS__` (it appears on exactly one line, the `MSB_VAULT_PATHS=` env assignment) with the vault's absolute path from Step 3. Write the result to `~/.claude/hooks/my-second-brain-rm-guard.sh` (create `~/.claude/hooks/` if missing) and `chmod +x` it. Do not edit the payload template in place; the concrete, path-injected copy lives in `~/.claude/hooks/`.
-2. Register it in `~/.claude/settings.json` under `hooks.PreToolUse`, matcher `"Bash"`, as a `{"type": "command", "command": "~/.claude/hooks/my-second-brain-rm-guard.sh", "timeout": 10}` entry (expand `~` to the absolute path). **Use the official `update-config` skill to make this edit if it is available; only hand-edit the JSON as a fallback, and preserve any existing `PreToolUse` / `Bash` entries by appending, never overwriting.**
-3. Sanity-check: the token no longer appears in the installed file (`grep -c __MSB_VAULT_PATHS__` returns 0) and `bash -n ~/.claude/hooks/my-second-brain-rm-guard.sh` is clean.
+**This changes the owner's `~/.claude/settings.json`, which is machine-level configuration outside the vault. Explain before you install, and install only on an explicit yes.** One explanation covering the whole set, in plain words, then one yes. Do not walk them through the guards one at a time asking separately; that is the shape this step exists to replace. What the explanation has to contain, per guard: **what it stops · what that costs when it fires · that it is off with one edit.** Then the uninstall, once, for the set.
 
-**Uninstall** (tell the owner this, once): remove that one entry from the `PreToolUse` `Bash` matcher in `~/.claude/settings.json` and delete `~/.claude/hooks/my-second-brain-rm-guard.sh`. Nothing else references it.
+**The guards that ship in this payload today:**
 
-Record `rm_guard_installed:` in `bootstrap-progress.md` (`installed` / `declined` / `skipped-platform`).
+- **The delete guard** (`scripts/rm-guard-hook.sh`, matcher `Bash`). Stops a recursive delete (`rm -rf` and its variants) aimed at the vault or at `~/.claude/skills`. It exists for one specific, hard-to-reverse accident: the command-base skill installs as a **symlink** under `~/.claude/skills/` pointing INTO the vault, so a plain `rm -r` on that link follows it and destroys the real vault content behind it. It never touches a non-delete command. Placeholder: `__MSB_VAULT_PATHS__`, on exactly one line.
+- **The frontmatter guard** (`scripts/fm-guard-hook.sh`, matchers `Write` **and** `Bash`). Judges a note at the moment it is about to be born: it refuses a filename that breaks doctrine §5 and frontmatter that breaks §8, and on a pass it hands the session the filing protocol so notes get filed by the law rather than from memory. It reads the law live out of the vault's own `99_Meta/structure-doctrine.md`, so it can never disagree with the weekly checker. ⚠️ **Tell the owner the one thing about it that will surprise them:** it blocks writing a note through the shell (`cat > x.md`) and points at the Write tool instead, because it can read a Write's content and cannot read a heredoc's. Placeholders: `__MSB_VAULT_PATHS__` and `__MSB_SKILL_DIR__`, one line each.
+
+**Platform.** Both guards are bash plus `python3` and are validated on **macOS**, which is the machine this product is built on. On Windows or Linux, say that plainly, and then **try anyway rather than refusing**: you are here, in a session, and the verify step below is a real test on this actual machine rather than a promise about the platform. If it passes, it passes. If it does not, debug it with the owner on the spot (a missing `python3`, a shell that is not bash, a settings file in a different place), and if it still does not work, say what broke in one line, record the guard as `skipped-platform`, and carry on. ⛔ Do not record a guard as `installed` on a failed or unrun verify, whatever the platform.
+
+**Before installing anything, probe the reader the law travels through.** The frontmatter guard does not carry section 8; it reads it live through `scripts/doctrine_schema.py`, and that reader needs **PyYAML**, which is not in the standard library. Run the reader against the vault once, on the interpreter the guards will actually run on:
+
+```
+/usr/bin/env python3 "<payload>/scripts/doctrine_schema.py" "<vault-path>"
+```
+
+⚠️ **`/usr/bin/env python3`, not whichever python you have been using.** Every guard invokes its Python that way, so that resolution is the one that decides whether the law is readable. Probing one interpreter and installing into another is a way to be confidently wrong here, and on a Mac with three pythons on PATH it is the likely mistake rather than an exotic one.
+
+- **Exit 0**: it printed the families it read. The law is readable; carry on.
+- **Exit 3**: PyYAML is missing for that interpreter, so section 8 cannot be read and **nothing it declares can be enforced**. The reader has already worked out what is true on THIS machine and printed it: the exact install command (it runs PEP 668's own externally-managed test, so a Homebrew python gets `--break-system-packages --user` and a python.org or Command Line Tools python gets plain `--user`) and the directory it will land in. ⭐ **Show the owner those two lines, ask, and on a yes run it yourself** (this is a one-line per-user install into their own site directory, not a system change, and handing them a command to go and run is how a setup ends with a dead gate nobody came back to). ⛔ **Ask first anyway** (it installs software on their machine), and **if the install fails, say so out loud in one line and keep going to the behaviour check below, which will then fail honestly.** ⛔ Never take a failed install quietly: this is the whole reason the check exists.
+- **Exit 1 or 2**: something else: the vault has no doctrine yet, or section 8 will not parse. That is a different fault; read what it says before touching the guards.
+
+⛔ **Do not skip the probe because the guard "fails open anyway".** It does fail open, deliberately (a guard that cannot read the law but blocks anyway would wedge every session), and it says so **in the context it injects**, which nobody is reading tonight. Failing open plus nobody reading is exactly a house whose constitution has no enforcer while every check says installed.
+
+On yes, per guard in the set, then once for the settings file:
+
+1. **Build the concrete copy.** Read the payload script and replace every `__MSB_*__` placeholder token it carries: `__MSB_VAULT_PATHS__` with the vault's absolute path from Step 3, and `__MSB_SKILL_DIR__` (frontmatter guard only) with the resolved path of this running skill's folder, the same resolution step 6.6 does. Write the result to `~/.claude/hooks/<the guard's own installs-as value>` (create `~/.claude/hooks/` if missing) and `chmod +x` it. ⛔ Never edit the payload template in place; the path-injected copy lives in `~/.claude/hooks/` and the payload stays clean for the next update.
+2. **Register all of them in one edit** to `~/.claude/settings.json` under `hooks.PreToolUse`, each as a `{"type": "command", "command": "<absolute path to the hook>", "timeout": 10}` entry under **every matcher its `MSB-GUARD:` line declares** (`matchers=` is comma-separated; a guard declaring two goes under both). Expand `~` to the absolute path. **Use the official `update-config` skill for this edit if it is available; only hand-edit the JSON as a fallback, and preserve any existing entries under those matchers by appending, never overwriting.**
+3. **Verify by reading, per guard**: every placeholder token that guard declares is gone from the installed file (`grep -c __MSB_VAULT_PATHS__` returns 0, and for the frontmatter guard `grep -c __MSB_SKILL_DIR__` too), `bash -n` on it is clean, and the file's path appears in `~/.claude/settings.json` under every matcher it was meant to go into. ⛔ A guard written but not registered, or registered but still carrying a placeholder, is a guard that does nothing while reading as installed to everything except this check.
+
+   ⚠️ **Grep for the whole token, never for the `__MSB_` prefix.** Each guard deliberately keeps a copy of its own placeholder name, built by string concatenation so the full token never appears, and uses it at runtime to notice a botched install. A prefix search hits those sentinels and reports a correct install as broken; that is a real trap and it has already caught one reader of this step.
+
+4. ⭐ **Then verify by RUNNING, per guard, and this is the check that decides what gets recorded.** Everything in step 3 is a reading: the file is there, it parses, it is registered. **A guard can pass all of it and refuse nothing.** So take each `# MSB-PROBE:` line off the payload script, substitute the vault's absolute path for `{{VAULT}}`, **write that JSON to a file**, pipe the file into the guard **as installed in `~/.claude/hooks/`**, and compare its exit code: `expect=block` means exit 2, `expect=allow` means exit 0.
+
+   ⚠️ **Write the payload to a file, or use `printf '%s'`. ⛔ Not `echo`.** In zsh the builtin `echo` expands the `\n` inside the JSON into real newlines, the hook cannot parse its own input, and every guard fails OPEN on unparseable input by design, so the probe reports a dead guard on a perfectly healthy one. Measured on this product, on zsh, and it cost a session an hour.
+
+   ⛔ **The probe is piped to the hook. It is never run as a command.** The delete guard's probe names a recursive delete, because that is the thing it exists to refuse.
+
+   **What a failure means, concretely.** A `block` probe that comes back exit 0 is a guard that is installed, registered, clean and **not enforcing anything**. The frontmatter guard's probe is the one that catches a missing PyYAML: its payload is a note with a legal name and a `type:` section 8 has never heard of, so the only thing that can refuse it is the law, read live, just now.
+
+**Uninstall** (tell the owner this once, for the set): delete the scripts from `~/.claude/hooks/` and remove their entries from `~/.claude/settings.json`. Nothing else in the system references them, and nothing breaks without them.
+
+**Record one key per guard** in `bootstrap-progress.md`, using **the key that guard's own `MSB-GUARD:` line declares** (`key=`), each set to `installed` / `installed-not-enforcing` / `declined` / `skipped-platform`. ⭐ **One key per guard rather than one key for the set**, because that is what lets the wiring check count what this step actually did without a number written anywhere, and what lets a later guard join by adding a key instead of by changing a schema.
+
+⛔ **`installed` means step 4 passed.** A guard whose file is in place and registered but whose probe did not behave gets **`installed-not-enforcing`**, plus one line to the owner in plain words saying which guard, what it is not doing, and what would fix it (for the frontmatter guard that is almost always the PyYAML install above). ⛔ Never write `installed` on an unrun or failed probe, and ⛔ never quietly downgrade the probe to "the file looks right". **A guard recorded as installed while enforcing nothing is worse than no guard**, because the owner stops watching for the thing it was supposed to catch. The wiring check `guards-registered` reads these keys, so this value is what makes the failure visible at the end of setup instead of six weeks later.
 
 ## Step 6.9: Session memory (optional, recommended, macOS first)
 
@@ -114,9 +171,9 @@ This step turns on **session memory**: every Claude Code conversation on this ma
 - **Where it writes:** one search database plus one small config file in `~/.my-second-brain/`. That folder sits outside the vault and outside this skill, so a skill update never wipes the index or the owner's review bookmarks.
 - **Purely local:** there is no network code in the tool at all. Nothing is uploaded anywhere. It is also not a background process; it only runs when a session invokes it.
 
-**Platform honesty.** The tool itself is standard-library Python and needs `python3` plus SQLite with FTS5, which macOS ships. It is validated on **macOS only** at this stage; on Windows or Linux, say so, skip, and record the skip. Do not improvise a port here. Windows owners who want it anyway have a documented, self-driven route: point them at the **"Windows self-serve path"** section of the README (native-first, they install python.org Python and run the tool by hand, and the tool's own FTS5 probe gives them a clear pass/fail). That path is best-effort and self-validated, which is exactly why it stays out of this gated Setup step.
+**Platform.** The tool is standard-library Python and needs `python3` plus SQLite with FTS5, which macOS ships. It is validated on **macOS**; on Windows or Linux, say that plainly and then **try it rather than refusing**. The tool carries its own FTS5 probe, so this machine can answer the question that no claim about the platform can: run the probe, and if it passes, keep going. If something breaks, debug it here with the owner (the usual causes are no `python3` on PATH, or a Python built without FTS5) and tell them the one concrete thing that would fix it, for example installing python.org Python rather than relying on what shipped. If it still will not run, say so in one line and record `skipped-platform`. The README's **"Windows self-serve path"** section is the written-down version of the same route for an owner who would rather do it themselves later; point them at it when they defer, not instead of trying.
 
-On yes (macOS):
+On yes:
 
 1. The tool ships in this skill's payload at `scripts/session-history/` (self-contained, nothing to download). Resolve the running skill's folder (via npx install it is `~/.claude/skills/my-second-brain/`, resolved at runtime); call the tool's path `<tool>` below.
 2. Write the config so harvest reports know where the vault Inbox is: create `~/.my-second-brain/session-history.json` containing `{"vault": "<vault-path-from-step-3>"}` (create the folder if missing; if the file exists, update only the `vault` key).
@@ -127,7 +184,40 @@ On yes (macOS):
 
 Record `session_memory_installed:` in `bootstrap-progress.md` (`installed` / `declined` / `skipped-platform`).
 
-Say one sentence about the weekly rhythm so it is never a surprise: once a week the morning brief quietly runs this pass in the background, reads whatever is new, and only speaks up if something is actually worth keeping, so most weeks the owner sees nothing. Nothing is ever written into the files their AI loads at session start without them reading the exact words first. If they would rather be asked each time, set `harvest_auto: false` in `bootstrap-progress.md` and it goes back to offering; leaving the key out means automatic.
+**Then ask the second question, out loud, as its own question: do they want the weekly harvest on?** ⭐ It is not the same question as the one above and it must stop being answered by it. Installing the tool makes past sessions **searchable when someone asks**. The harvest is a different thing: once a week, unasked, the morning brief reads whatever sessions are new and proposes lines to keep. One is a filing cabinet, the other is a colleague who reads it over the weekend, and an owner can reasonably want the first and not the second. Until now the second was simply switched on by answering the first, which is how a product ends up doing something on someone's behalf that they never agreed to.
+
+Say it in one breath, then take the yes or no:
+
+> "Once a week your morning brief can quietly read whatever sessions are new and only speak up if something looks worth keeping, so most weeks you see nothing. Nothing ever reaches the files your AI loads at session start without you reading the exact words first. Want that on, or would you rather I ask you each time?"
+
+- **On** → `harvest_auto: true`. It runs itself; production is invisible, adoption is not.
+- **Ask me each time** → `harvest_auto: false`. The pass becomes an offer in the brief.
+- **Session memory was declined or skipped** → ⛔ do not ask this question at all. The harvest reads the index, so with no index there is nothing to decide. Record `harvest_auto: false` with the reason, and say one line: if they turn session memory on later, this comes back as a question then.
+
+⛔ **Write the key either way.** A missing `harvest_auto:` used to mean "automatic", which made the absence of an answer indistinguishable from a yes; a key that is always present is what makes a later session able to tell "they said yes" from "nobody ever asked".
+
+## Step 6.95: The starter project, then the first dashboard build
+
+Two halves of one step, in this order. The order is the whole point: the deck is built to read the vault, so the vault has to have something in it first.
+
+**A. Create the starter project, then name it in Home.** Full shape in [../references/scaffold-spec.md](../references/scaffold-spec.md) (the starter-project section): one project folder in `03_Personal-Wing/Personal-Projects/`, its Brief with **all four deck keys filled** (`started`, `due`, `stage`, `priority`), and three tasks in its `Tasks/` under the three file names that section gives literally. ⭐ Say what it is in one line and no more: "The three things you still have to do after tonight are already in there as tasks. That is your first project, and it is real." ⛔ Do not create a business project, do not invent work the owner has not mentioned, and ⛔ do not fill the four keys with placeholders: they are what the deck's Next Action, Countdown and swimlane bar are derived from, and a Brief the product wrote itself with them blank teaches that frontmatter is decoration.
+
+⛔ **Then add one line to `02_Command-Base/Home.md`, before moving on**, under the `## 03_Personal-Wing` heading:
+
+```markdown
+- `Personal-Projects/Second-Brain-Rollout/`: the starter project ([[_Second-Brain-Rollout-Brief|brief]])
+```
+
+⚠️ **This is not bookkeeping and it is not optional.** `Home.md` was written back at step 5, from the tree that existed then, and this folder did not. Home calls itself the only directory this vault has, so the moment the owner's first real project is missing from it, that sentence is false, in the first hour, on a correct install. The wiring check `home-is-true` fails on exactly this and has done so on a real end-to-end run. ⭐ Its `Tasks/` folder is deliberately **not** listed: what is inside a project is the project's business and its Brief is the address (doctrine §3). Every folder made after tonight carries the same duty, which is why the frontmatter guard injects it on every `mkdir`; the difference here is that this one is made by the product itself, so the product does it rather than reminding anyone.
+
+**B. Build the dashboard once.** The engine and its display template ship in this skill's payload at `scripts/deck.py` and `scripts/deck-template.html`; resolve the running skill's folder the same way step 6.6 does. ⛔ Neither is ever copied into the vault: the generator is the part that grows patches, and a copy in the vault is a snapshot of tonight that no update can reach.
+
+1. **Probe `python3`.** Present on macOS and most Linux; on Windows it is often absent.
+2. **If it is missing, explain before you touch anything.** Say what is missing, what it is for (the dashboard, and the same interpreter the weekly checker and session search already need), and where to get it. ⛔ **Never install it, or change the owner's PATH or system settings, without their explicit yes.** If they decline or cannot right now: record `deck: skipped-no-python` in `bootstrap-progress.md`, say in one line that the dashboard is pending and that "fix my deck" builds it the moment Python is there, and move on. Nothing else in setup depends on it. The fallback for those days is `Home.md` and the starter project's Brief, both plain markdown.
+3. **Run it once:** `python3 "<payload>/scripts/deck.py" build "<vault-path>"`. Record `deck: built`.
+4. **Report one line, the one it printed**, e.g. "Command Deck rebuilt: 1 projects, 3 tasks, N notes scanned." ⛔ Do not paste the path and do not open it yet; the deck belongs to the graph moment.
+
+⚠️ If the build exits non-zero, say so plainly, record `deck: skipped-no-python` only when Python was the actual reason, and carry on. A failed dashboard must never end a setup that otherwise worked.
 
 ## Step 7: Official Obsidian skills (optional, recommended)
 
@@ -145,13 +235,22 @@ Three choices. Do the lightweight part inline, do not stall setup on OAuth or an
 
 Always record the outcome in `bootstrap-progress.md` (`calendar_offered: true` + `calendar_provider:`). Offer once, never nag; the command-base skill reads the flag every morning and stays silent when it is `none`.
 
+## Step 7.9: Wiring check
+
+Run the wiring check at the end of [../references/scaffold-spec.md](../references/scaffold-spec.md), all eleven, by name. ⛔ **Refer to each by its name, never by its number**, for the reason written at the top of that list. Two of them read state rather than the filesystem: `guards-registered` reads what step 6.8 recorded, one key per guard, and confirms each one it says it installed is actually registered (a declined or platform-skipped guard passes; session memory is not a guard and is not counted). `deck-is-alive` reads step 6.95's own build result, including the skipped-as-passed case when there is no `python3`.
+
+Report failures plainly and fix what is mechanically fixable (a missing `Home.md` line, a leftover `{{` placeholder). ⛔ Do not hide a failure to keep the ending clean: the graph moment below is the payoff, and a payoff on top of a broken wiring is how a vault gets abandoned in month three.
+
 ## Step 8: The graph moment
 
 Close setup with the payoff:
 
-1. Tell them to open Obsidian -> Open folder as vault -> pick the vault path (skip if already open).
-2. One-time check: Settings -> Core plugins -> **Bases** enabled (the dashboard needs it).
-3. Open graph view (the network icon, or Ctrl/Cmd+G).
+1. **Open Obsidian on the vault yourself; do not read them a menu path.** Obsidian registers an `obsidian://` URL scheme, so the whole thing is one command.
+   - **Try to open it first:** `open "obsidian://open?path=<url-encoded absolute vault path>"` on macOS (`xdg-open` on Linux, `start` on Windows). If the vault is already registered with Obsidian, it comes to the front on the right vault and you are done.
+   - **If nothing opens, the vault is not registered yet**, which is the normal case for a brand-new folder: Obsidian only knows the vaults it has been shown. Register it, then open it again. Obsidian keeps its vault list in `obsidian.json` under its config folder (macOS `~/Library/Application Support/obsidian/`, Linux `~/.config/obsidian/`, Windows `%APPDATA%\obsidian\`); add an entry for this vault path and retry the URI. ⛔ Read that file before writing it and preserve every vault already listed; it is the owner's own list of every vault they have, and it is not ours to rewrite.
+   - **If it still does not open**, stop trying and say the one sentence that gets them there by hand: Obsidian, Open folder as vault, pick the path. ⛔ A setup must never end stuck on its own last step; the payoff is the graph, not the automation that reached it.
+2. **Then tell them the one keystroke, because this part genuinely is theirs to press:** Cmd+G on macOS, Ctrl+G elsewhere, or the network icon in the left ribbon. ⛔ Do not go looking for a way to open the graph automatically: the official URI scheme has no action for it, and no third-party plugin gets installed for one keystroke on one night.
+3. Then the other window: open `02_Command-Base/Command-Deck.html` in their browser and tell them to bookmark it. One line on how it stays true: it is rebuilt at the start of every session, so it is always as fresh as the last time they worked, and saying "rebuild my deck" refreshes it on the spot. (Skip this if step 6.95 recorded `deck: skipped-no-python`; say the dashboard is waiting on Python instead.)
 
 What they see is their second brain as a constellation: every door wired to Home, business wing on one side, personal wing on the other, all of it empty and waiting. Say it straight, in their language, something like: "That is your second brain, half built. The structure is done; the memories are not moved in yet. That is what capture mode is for, and the first ten minutes of it is your Business Profile. Want to move the first thing in now?"
 

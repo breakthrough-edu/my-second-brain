@@ -38,6 +38,6 @@ On an idling signal, ask "recommit?" exactly once before proposing to close. On 
 
 ## Notes
 
-- This file sets **when to ask**, nothing else. Opening and closing a lab is guided by the separately installed `playbook-lab` skill, which runs the gate properly, interviews the rubric into existence, and seeds the register and thresholds. ⛔ Never hand-build a lab's organs.
-- If that skill is not installed, the scan still runs and still reports. A finding keeps.
+- This file sets **when to ask**, nothing else. Opening and closing a lab is guided by the `playbook-lab` skill, which shipped with `my-second-brain` and was installed at setup (step 6.6). It runs the gate properly, interviews the rubric into existence, and seeds the register and thresholds. ⛔ Never hand-build a lab's organs.
+- If that skill is somehow absent (removed by hand, or a vault built before it shipped), the scan still runs and still reports. A finding keeps.
 - Counting depends on `lane:` being present on lessons and playbooks. A blank one makes that work invisible to this scan, which is why the weekly schema check flags it.

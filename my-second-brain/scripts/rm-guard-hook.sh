@@ -2,6 +2,44 @@
 # rm-guard-hook.sh  (My Second Brain safety lock)
 # Claude Code PreToolUse hook (matcher: Bash). A READ-ONLY accident net.
 #
+# MSB-GUARD: key=rm_guard_installed installs-as=my-second-brain-rm-guard.sh matchers=Bash name=delete-guard does=stops a recursive delete aimed at your vault or at a skill symlink into it
+# MSB-PROBE: expect=block stdin={"tool_name":"Bash","tool_input":{"command":"rm -rf {{VAULT}}/probe-target-that-does-not-exist"}}
+#
+# ⭐ THAT FIRST LINE IS THE REGISTRY ENTRY FOR THIS GUARD, AND THE ONLY ONE.
+#   Three readers take these facts from here and none of them keeps a copy:
+#   setup step 6.8 (which key to write, what to name the installed file, which
+#   PreToolUse matchers to register it under), the wiring check
+#   `guards-registered` (the same three, to verify what setup claims), and
+#   scripts/checkup.py's weekly safety-lock check (name and `does=`, to say
+#   which guard is missing in words the owner understands).
+#   Format: `# MSB-GUARD:` then space-separated key=value fields in any order,
+#   except `does=`, which is last and runs to the end of the line.
+#   ⛔ A new guard joins the product by shipping a script with one of these
+#   lines. It does not join by anyone editing a list, because there is no list.
+#
+# ⭐ AND THE SECOND LINE IS HOW THIS GUARD PROVES IT IS ALIVE, FOR THE SAME
+#   REASON. A guard can be written, registered, placeholder-free and clean under
+#   `bash -n` while doing nothing at all, so setup 6.8 ends by FEEDING each
+#   installed guard a call it must refuse and checking that it did. The call has
+#   to travel with the guard rather than live in setup's prose: whoever writes
+#   the third guard would otherwise have to hand-compose a payload for it, and a
+#   hand-composed payload is how the 2026-08-16 install session nearly filed a
+#   healthy guard as broken (it invented one the guard was right to allow).
+#   Format: `# MSB-PROBE:` then `expect=block` or `expect=allow`, then `stdin=`,
+#   which is last and runs to the end of the line: one line of JSON, exactly the
+#   PreToolUse payload Claude Code would hand this hook, with `{{VAULT}}` where
+#   the vault's absolute path goes. A guard may declare more than one.
+#   expect=block means exit 2; expect=allow means exit 0.
+#   ⛔ The probe is PIPED TO THE HOOK, never run as a command. This one names a
+#   recursive delete because that is the thing this guard exists to refuse; the
+#   target is a path that does not exist, so a misreading that executes it
+#   instead of piping it deletes nothing.
+#   ⚠️ Write the payload to a file, or use `printf '%s'`. ⛔ Not `echo`: zsh's
+#   builtin `echo` expands the `\n` inside a JSON string into real newlines, the
+#   hook then fails to parse its own input, and every guard fails OPEN on
+#   unparseable input by design - so the probe reports a dead guard on a healthy
+#   one. Measured, on zsh, on this product.
+#
 # Blocks recursive deletes that target your Obsidian vault or ~/.claude/skills,
 # including the symlink-passthrough case: My Second Brain installs skills (the
 # command-base skill) as ~/.claude/skills/<name> symlinks that point
