@@ -93,7 +93,7 @@ EXPECT_PERSONAL_LANES = 7
 EXPECT_DECISION_LANES = 11  # the four work lanes plus the seven personal ones
 EXPECT_MULTI = {"process.sop": ["lane"]}
 EXPECT_LAB_CARDINALITY = {"count": 1, "per": "lab-folder"}
-RENDER_TAGS = ["aroma-coffee", "laowang-coffee", "kaotim"]
+RENDER_TAGS = ["aroma-coffee", "laowang-coffee", "noodlebar"]
 PLACEHOLDER = "{{BUSINESS_TAG}}"
 
 failures = []
