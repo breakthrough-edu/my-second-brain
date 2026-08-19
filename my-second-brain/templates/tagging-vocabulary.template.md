@@ -44,6 +44,10 @@ version: 1.0
 | `#waiting-for` | Blocked on someone else; the record names who. |
 | `#renewal` | Anything with a `renew_by` date (licenses, insurance, leases, road tax). |
 | `#lesson-candidate` | A pothole or realization flagged for the next maintenance run. Not yet in `04_Methodology`. |
+| `#lesson-pooled` | A candidate maintenance picked up and moved into the hypothesis pool: it is being watched, not yet confirmed. Replaces `#lesson-candidate` on that line rather than being added beside it. |
+| `#lesson-rejected` | A candidate maintenance looked at and decided was not worth carrying, with the reason written on the same line. The flag stays; only a rejection nobody can find gets re-flagged next month. |
+
+> The three flags above are one lifecycle, not three independent tags. A line is flagged `#lesson-candidate` when it is noticed, and maintenance changes it to exactly one of the other two: **the flag is swapped, never deleted**. Deleting it erases the fact that the pothole was ever noticed, and the same pothole then gets flagged again by whoever hits it next.
 
 ## Excluded for now
 
@@ -51,4 +55,4 @@ version: 1.0
 
 ## Revision log
 
-- **{{DATE}}**: v1.0 written at setup.
+- **{{DATE}}**: v1.0 written at setup. `#lesson-pooled` and `#lesson-rejected` ship on the list rather than waiting to be proposed, because the flag they close (`#lesson-candidate`) ships already used: the doctrine names it as the standing flag and maintenance sweeps by it from week one. A vocabulary carrying the opening flag but neither closing one leaves the first sweep two illegal moves and no legal one, delete the flag or use an off-list tag, and protocol 2 above is what would have to break.

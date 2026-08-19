@@ -25,6 +25,32 @@ Three things the ladder settles that people ask about every time:
 
 ---
 
+## The four doors (`guide_family: lane`)
+
+⭐ **Scaffold copies these onto the four lane guides verbatim, and capture reads the same lines when it walks someone into a lane.** They are here rather than invented at install time for one reason: a door file is read every time anyone works in that folder, so two installs that improvise two sets of door signs are two different products. ⛔ Do not reword them per vault; translate them on a `中文` install and leave the file names English.
+
+### Deliver
+
+**Door sign:** work you are doing for a named customer or hot prospect. One engagement, one project, from first pursuit through handover.
+**Filing test:** if the work has a specific customer's name on it, it belongs here (whether or not they have paid yet); WHO that customer is lives in `01_Assets/Clients/`; HOW you win or serve them is an SOP in `03_SOP/`. A recurring service for a named customer stays here indefinitely at `stage: executing`, and never re-homes to `Run/`.
+
+### Grow
+
+**Door sign:** work aimed at people who have not bought yet, addressed as an audience: content, campaigns, channels, offer design.
+**Filing test:** the campaign or launch lives here while it is running; the reusable output it leaves behind (the post that worked, the photo set) graduates to `01_Assets/Marketing-Assets/` when the project closes; the platform it runs on and who holds that login lives in `01_Assets/IT-Systems/`. If it turns into routine, the finite project archives and the recurring residue re-homes to `Run/`.
+
+### Run
+
+**Door sign:** recurring internal upkeep: the work that would still exist if the business never grew, and never finishes.
+**Filing test:** work that repeats with no end date and no customer's name on it belongs here; a recurring service for a named customer is `Deliver/`, not this; the written steps for the routine are an SOP in `03_SOP/`, and this lane is where doing it lives.
+
+### Build
+
+**Door sign:** finite internal work that leaves the business different when it is done: a new capability, a tool, a system, a training, an expansion.
+**Filing test:** internal, has an end, and changes what the business can do → here; what it produces files in the `01_Assets` room that owns it once it exists (a new POS becomes an IT-Systems note); attending a course as an undertaking is a project here, while the notes from it live in `02_Command-Base/Resources/`.
+
+---
+
 ## Capturing in-flight work (the question set)
 
 This is usually the most valuable ten minutes of a first capture, because the live work is what the owner is carrying in their head right now, and it is the material an empty vault most obviously cannot help with.

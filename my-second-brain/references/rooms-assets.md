@@ -1,14 +1,21 @@
-# Room Guides: `01_Assets` entity rooms
+# Room Guides: every room's door, and the business rooms' question sets
 
-For each room: the door sign (also used on its `_<Name>-Guide.md`), the filing test, the guided question set, and insight angles. Ask ONE question at a time; every question is answerable by talking for 20 seconds. 3 to 5 items is a full first capture. Insight formula and honesty rules live in capture mode Stage 4; the angles here are raw material for it, not scripts.
+For each room: the door sign (also used on its `_<Name>-Guide.md`), the filing test, and, for the business rooms, the guided question set and insight angles. Ask ONE question at a time; every question is answerable by talking for 20 seconds. 3 to 5 items is a full first capture. Insight formula and honesty rules live in capture mode Stage 4; the angles here are raw material for it, not scripts.
 
 `01_Assets` is what the business is **made of**. Work that is moving lives in `02_Work/` and has its own reference ([work-lanes.md](work-lanes.md)). There are no function rooms in this vault: this house has no departments, so nothing files by which department would own it.
+
+⭐ **Every room scaffold builds has its door sign and filing test in this file or in [work-lanes.md](work-lanes.md), and setup copies them rather than writing its own.** The business rooms are below; the personal wing's seven doors and the `Resources/` door are in the last two sections, and those carry no question set on purpose (capture never interviews them: personal rooms fill as life happens, and the library fills as things are saved). ⛔ Never improvise a door sign at install time. A door file is read every time anyone works in that folder, so two installs that invent two sets of door signs have built two different products.
 
 ---
 
 ## The brand folder: `<Brand>-Brand-Assets/`
 
 One folder per brand, holding three rooms: `Brand-Strategy/`, `Target-Audience/`, `Products-Services/`. A single-brand business has exactly one, named after the business; ask which brand something belongs to only when a second one exists.
+
+**Door sign** (for `_<Brand>-Brand-Assets-Guide.md`, the folder's own door): everything that makes this brand this brand: what it stands for (`Brand-Strategy/`), who it is for (`Target-Audience/`), and what it sells (`Products-Services/`).
+**Filing test:** an answer ABOUT the brand files in one of the three rooms below; the reusable output that expresses the brand (the post, the photo set, the deck) lives in `Marketing-Assets/`; the METHOD for doing brand work lives in `04_Methodology/`.
+
+⚠️ **`guide_family` on these four doors, because the two sources read differently and the doctrine wins.** §8's own comment defines `brand` as "a subfolder of `<Brand>-Brand-Assets/`", so all three subfolders (`Brand-Strategy/`, `Target-Audience/` **and** `Products-Services/`) carry `guide_family: brand`. The `<Brand>-Brand-Assets/` folder itself is not a subfolder of one, it IS one, and doctrine §1 lists it among the entity rooms of `01_Assets/`, so its own door carries `guide_family: room`.
 
 ### Brand-Strategy and Target-Audience (filled by intake, not by interview)
 
@@ -202,3 +209,62 @@ Two questions from the old Finance battery survive and belong in the `IT-Systems
 
 - "When did you last see a P&L, and did you believe it?" (the believability gap: books exist but the owner decides by glancing at the bank balance)
 - "Is there a number you wish you knew every Monday morning?" (capture it verbatim; it is the owner's own design brief for what any future dashboard should surface)
+
+---
+
+# The personal wing: `03_Personal-Wing/`
+
+Seven doors plus the wing's own, all created at setup, no question asked (doctrine §1 states the wing's contents flatly, so a vault missing them does not match its own law). ⛔ **No question set here, and that is deliberate:** capture interviews the business because the owner came to move a business in, and a battery of questions about their family on night one is an interrogation, not a payoff. These rooms fill the day something actually happens.
+
+⚠️ The test that separates this wing from the business wing is **whose thing it is**, never what kind of thing it is: the same object files on both sides depending on who owns it. A company van is `01_Assets/Equipment/`; the owner's car is `Vehicles/`. Business premises are `01_Assets/Outlets/`; the owner's house is `Property/`.
+
+## The wing door (`03_Personal-Wing/_Personal-Wing-Guide.md`, `guide_family: wing`)
+
+**Door sign:** your life outside the business: what you are running for yourself, and six rooms for the things a life accumulates.
+**Filing test:** if it is yours rather than the business's, it files on this side; the same paper on the business's side files in the business wing; a personal call you want to hold yourself to is still a decision note in `02_Command-Base/Decisions/`, carrying one of the personal lanes.
+
+## Personal-Projects
+
+**Door sign:** the things you are running for yourself that have an end. One project, one folder, with its own brief.
+**Filing test:** personal work with a finish line lives here as a project; a standing fact about your life lives in one of the six rooms below; anything the business is doing belongs in a `02_Work/` lane, even when you are the only one doing it.
+
+## Family
+
+**Door sign:** the people closest to you, one per note, plus the household papers and dates that belong to no one person.
+**Filing test:** someone you are related to or live with files here; a friend, mentor or professional you deal with as yourself is `People/`; anyone the business pays or is paid by files in the business wing.
+
+## Health
+
+**Door sign:** your health and your household's: conditions, medications, providers, policies, and the dates any of it renews.
+**Filing test:** anything a doctor or an insurer would ask about files here, with `renew_by` on whatever expires; an employee's medical benefit is a people-rule and lives in `01_Assets/Employees/`.
+
+## Finance-Personal
+
+**Door sign:** personal money: accounts, policies, loans, and where each statement actually lives. Pointers and snapshots only.
+**Filing test:** money that is yours files here; money that is the business's stays in the system that produces it and is pointed at from `01_Assets/IT-Systems/`; ⛔ rows and passwords enter neither side (iron laws 1 and 2).
+
+## Property
+
+**Door sign:** places you own or rent for yourself: the papers, the dates, the quirks. One property, one note.
+**Filing test:** a home or a personally-held property files here; business premises are `01_Assets/Outlets/`; the tenancy end, the insurance or the assessment date is `renew_by`.
+
+## Vehicles
+
+**Door sign:** your cars and bikes: papers, service history, and the dates that must not lapse.
+**Filing test:** a vehicle you own personally files here; a company vehicle is `01_Assets/Equipment/`; road tax and insurance, whichever falls first, are `renew_by`.
+
+## People
+
+**Door sign:** people who are neither family nor a business relationship: friends, mentors, the doctor, the person who fixes things. One person, one note.
+**Filing test:** someone you deal with as yourself files here; a relative is `Family/`; a client, vendor or employee files in the business wing, in the room that names the relationship.
+
+---
+
+# The library: `02_Command-Base/Resources/`
+
+## Resources
+
+**Door sign:** what you saved to read, study or reuse, on five shelves: `Clippings/` `Courses/` `Books/` `Prompts/` `Tools/`.
+**Filing test:** the artifact you kept files here (the article, the course notes, the prompt); what you now DO differently because of it is a lesson or a playbook in `04_Methodology/`, and it only gets there when you say so. ⚠️ ATTENDING a course, as an undertaking with a start and an end, is a `02_Work/Build/` project while the notes stay here: two homes, on purpose (doctrine §2).
+
+⛔ The five shelves ship as folders and get **no doors of their own**: the shelf name is the whole explanation, and one door per room already covers them.
