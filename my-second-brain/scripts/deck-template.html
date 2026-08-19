@@ -1,0 +1,1717 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Command Deck</title>
+<style>
+  :root{
+    --bg:#0e1014; --ink:#eef1f5; --ink2:#c4cad3; --muted:#8b929c; --faint:#5b626c;
+    --line:rgba(255,255,255,.08); --hair:rgba(255,255,255,.055);
+    --accent:#ff7a1f; --accent-ink:#ffb680;
+    --glass:rgba(255,255,255,.055);
+    --ease:cubic-bezier(.32,.72,0,1); --easeio:cubic-bezier(.52,0,.22,1);
+    --st-ns:#8b929c; --st-ip:#9dc0ff; --st-wf:#f0b45e; --st-bl:#ff9d9d; --st-dn:#7fd8a6;
+    --dep:#7fd7c4;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{color:var(--ink);font-family:var(--font);font-size:13.5px;-webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(120% 70% at 8% -8%, rgba(84,116,180,.22), transparent 52%),
+      radial-gradient(80% 80% at 98% 2%, rgba(255,122,31,.13), transparent 50%),
+      radial-gradient(130% 120% at 78% 116%, rgba(126,96,190,.18), transparent 55%),
+      linear-gradient(160deg,#15181f 0%,#0e1014 55%,#0a0c0f 100%);
+    background-attachment:fixed; height:100%; overflow:hidden; display:flex; flex-direction:column}
+  html{height:100%}
+  .split{flex:1 1 auto;display:grid;grid-template-columns:minmax(0,1fr) 402px;min-height:0;
+    transition:grid-template-columns .38s var(--easeio)}
+  .split.norail{grid-template-columns:minmax(0,1fr) 0px}
+  .split.norail .pane-r{border-left-color:transparent;background-color:transparent}
+  .split.norail .railinner{opacity:0;transform:translateX(22px)}
+  .railbtn{align-self:center;height:24px;font-size:11.5px;gap:6px}
+  .railbtn .gl2{display:flex;gap:2px}
+  .railbtn .gl2 i{width:4px;height:11px;border-radius:1.5px;background:rgba(255,255,255,.3)}
+  .railbtn .gl2 i:last-child{width:6px}
+  .railbtn[data-on="1"] .gl2 i:last-child{background:var(--accent)}
+  .pane{overflow-y:auto;overflow-x:hidden;min-width:0;min-height:0;scrollbar-width:thin}
+  .pane::-webkit-scrollbar{width:9px}
+  .pane::-webkit-scrollbar-thumb{background:rgba(255,255,255,.11);border-radius:99px}
+  .pane::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.2)}
+  .pane-l{padding:0 40px 110px}
+  .pane-r{padding:0;border-left:1px solid var(--line);background:rgba(255,255,255,.014);
+    transition:border-color .38s var(--easeio),background-color .38s var(--easeio)}
+  .railinner{width:402px;padding:0 34px 110px;
+    transition:opacity .26s var(--easeio),transform .38s var(--easeio)}
+  .railinner > div:first-child{padding-top:34px}
+  .railinner > div + div{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}
+  @media(max-width:1100px){
+    body{overflow:auto;display:block;height:auto}
+    .split{display:block}
+    .pane{overflow:visible}
+    .pane-r{border-left:none;border-top:1px solid var(--line);margin-top:22px}
+  }
+  .wrap{max-width:1220px;margin:0 auto;padding:0 26px}
+  .num{font-variant-numeric:tabular-nums}
+
+  .bar{flex:0 0 auto;z-index:40;display:flex;align-items:baseline;gap:11px;padding:0 26px;height:50px;
+    background:rgba(14,16,20,.6);backdrop-filter:blur(22px) saturate(1.6);-webkit-backdrop-filter:blur(22px) saturate(1.6);
+    border-bottom:1px solid rgba(255,255,255,.06)}
+  .bar h1{font-size:15px;margin:0;font-weight:650;letter-spacing:-.01em;align-self:center}
+  .bar .biz{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.03em;align-self:center}
+  .bar .stamp{margin-left:auto;margin-right:12px;font-size:10.5px;color:var(--faint);align-self:center;font-variant-numeric:tabular-nums}
+  .bar .stamp.stale{color:var(--st-wf);font-weight:600}
+  .bar .stamp.stale .nudge{color:var(--muted);font-weight:400;margin-left:7px}
+
+  .ctl{cursor:pointer;user-select:none;font-size:12px;color:var(--ink2);background:rgba(255,255,255,.05);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 1px 0 rgba(255,255,255,.10);
+    border-radius:10px;height:27px;padding:0 10px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+  .ctl:hover{background:rgba(255,255,255,.09);color:var(--ink)}
+  .ctl[data-on="1"]{background:rgba(255,122,31,.16);color:#ffdcb9;box-shadow:inset 0 0 0 1px rgba(255,146,72,.45)}
+
+  .k{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;margin-bottom:9px}
+  .sp{flex:1}
+
+  /* ===== 顶部三块 ===== */
+  .attn{display:none;margin-top:20px;display:flex;flex-wrap:wrap;align-items:stretch;border-radius:22px;background:var(--glass);
+    backdrop-filter:blur(26px) saturate(1.7);-webkit-backdrop-filter:blur(26px) saturate(1.7);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.06),0 22px 46px -34px rgba(0,0,0,.7)}
+  .attn + .attn{margin-top:12px}
+  .attn .col{padding:14px 22px;border-right:1px solid var(--hair);min-width:0}
+  .attn .col:last-child{border-right:none}
+  .zoneL{flex:0 0 auto;display:flex;flex-direction:column;justify-content:center}
+  .zoneR{flex:1 1 520px}
+  .statcell{display:flex;align-items:center;gap:18px}
+  .donut{position:relative;flex:0 0 auto}
+  .donut svg{transform:rotate(-90deg);display:block}
+  .dcenter{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .dcenter .dt{font-size:19px;font-weight:750;line-height:1;letter-spacing:-.02em}
+  .dcenter .dl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-top:2px}
+  .bignums{display:flex;flex-direction:column;gap:7px}
+  .bn{display:flex;align-items:baseline;gap:9px}
+  .bn-v{font-size:19px;font-weight:750;line-height:1;min-width:26px;text-align:right}
+  .bn-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+
+  /* 关口倒数卡 */
+  .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .mcard{position:relative;overflow:hidden;padding:12px 13px 15px;border-radius:10px;min-width:0;
+    background:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);
+    cursor:pointer;transition:background .3s var(--ease)}
+  .mcard:hover{background:rgba(255,255,255,.035)}
+  .mc-tag{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;letter-spacing:.05em;
+    color:var(--muted);text-transform:uppercase}
+  .mc-tag .gk{width:7px;height:7px;flex:0 0 auto;border-radius:2px;border:1.5px solid rgba(255,255,255,.42)}
+  .mcard .mc-title{font-size:12px;font-weight:600;line-height:1.3;margin:7px 0 8px;color:var(--ink);
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:31px}
+  .mc-cd{display:flex;align-items:baseline;gap:4px}
+  .mc-cd b{font-size:24px;font-weight:300;line-height:1;letter-spacing:-.04em;color:var(--ink);
+    font-variant-numeric:tabular-nums}
+  .mc-cd .u{font-size:10.5px;color:var(--muted)}
+  .mcard .mc-date{font-size:10px;color:var(--faint);margin-top:3px}
+  .mc-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.05)}
+  .mc-bar i{position:absolute;left:0;top:0;bottom:0;background:rgba(255,255,255,.22);border-radius:0 3px 3px 0}
+  .mcard.next{background:transparent;box-shadow:inset 0 0 0 1px rgba(255,146,72,.38)}
+  .mcard.next .mc-tag{color:var(--accent-ink)}
+  .mcard.next .mc-tag .gk{border-color:rgba(255,176,104,.7)}
+  .mcard.next .mc-cd b{color:var(--accent)}
+  .mcard.next .mc-date{color:var(--accent-ink)}
+  .mcard.next .mc-bar i{background:linear-gradient(90deg,rgba(255,122,31,.5),#ff9a4a)}
+  .mcard.over{box-shadow:inset 0 0 0 1px rgba(255,140,140,.38)}
+  .mcard.over .mc-cd b{color:var(--st-bl)}
+  .mcard.over .mc-bar i{background:linear-gradient(90deg,rgba(220,80,80,.5),#ff8f8f)}
+
+  /* Top priority */
+  .prio{display:grid;grid-template-columns:1fr 1fr;gap:2px 34px}
+  .prio a{display:flex;align-items:baseline;gap:9px;text-decoration:none;color:var(--ink);cursor:pointer;padding:4px 0}
+  .prio .rank{font-size:10px;font-weight:800;color:var(--faint);min-width:14px;font-variant-numeric:tabular-nums}
+  .prio .mk{width:6px;height:6px;border-radius:50%;flex:0 0 auto;transform:translateY(-1px)}
+  .prio .nt{font-size:12.5px;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .prio .np{font-size:10.5px;color:var(--faint);white-space:nowrap}
+  .prio .nw{font-size:10.5px;color:var(--st-wf);white-space:nowrap}
+  .prio .nd{font-size:11px;color:var(--muted);margin-left:auto;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .prio .nd.over{color:var(--st-bl);font-weight:650}
+  .emptyline{font-size:12px;color:var(--faint);line-height:1.75}
+
+  /* ===== 小节标题 ===== */
+  .sect{margin-top:22px;padding:0 4px 11px;display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
+  .sect > span:not(.lbl):not(.note){font-size:10.5px;color:var(--muted);text-transform:uppercase;
+    letter-spacing:.08em;font-weight:700}
+  .sect .note{font-size:11.5px;color:var(--faint);font-weight:500}
+
+  /* D2: 一张主卡 + 三行补充, 比四张并排更吃得下窄栏 */
+  .ghero{position:relative;overflow:hidden;padding:12px 14px 15px;border-radius:14px;margin-bottom:11px;
+    background:linear-gradient(180deg,rgba(255,140,60,.16),rgba(255,122,31,.04));
+    box-shadow:inset 0 1px 0 rgba(255,196,148,.24),inset 0 0 0 1px rgba(255,146,72,.4),0 12px 26px -16px rgba(255,96,12,.45)}
+  .ghero.over{background:linear-gradient(180deg,rgba(220,80,80,.16),rgba(220,80,80,.04));
+    box-shadow:inset 0 1px 0 rgba(255,180,180,.22),inset 0 0 0 1px rgba(255,120,120,.4)}
+  .ghero .mc-tag{color:var(--accent-ink)}
+  .ghero .gt{font-size:13.5px;font-weight:650;line-height:1.3;margin:7px 0 9px;color:var(--ink)}
+  .ghero .gcd{display:flex;align-items:baseline;gap:5px}
+  .ghero .gcd b{font-size:26px;font-weight:750;line-height:1;letter-spacing:-.02em;color:#ffdcb9;font-variant-numeric:tabular-nums}
+  .ghero.over .gcd b{color:#ffc4c4}
+  .ghero .gcd .u{font-size:11px;color:var(--accent-ink)}
+  .ghero .gcd .gd{margin-left:auto;font-size:10.5px;color:var(--accent-ink);font-variant-numeric:tabular-nums}
+  .ghero .mc-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.06)}
+  .ghero .mc-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:0 3px 3px 0;
+    background:linear-gradient(90deg,rgba(255,122,31,.5),#ff9a4a);box-shadow:0 0 10px 1px rgba(255,122,31,.5)}
+  .grow2{display:flex;align-items:baseline;gap:9px;padding:6px 0;border-top:1px solid var(--hair)}
+  .grow2 .glane{font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--faint);flex:0 0 46px}
+  .grow2 .gn{flex:1 1 auto;min-width:0;font-size:12.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .grow2 .gd{font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+  /* D3: 单栏两行制, 比原来那条横幅短得多 */
+  .prow{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-top:1px solid var(--hair)}
+  .prow:first-of-type{border-top:none}
+  .prow .rank{font-size:10px;font-weight:800;color:var(--faint);flex:0 0 12px;padding-top:2px;font-variant-numeric:tabular-nums}
+  .prow .mk{width:6px;height:6px;border-radius:50%;flex:0 0 auto;margin-top:6px}
+  .prow .pmain{flex:1 1 auto;min-width:0}
+  .prow .pt{font-size:12.5px;font-weight:550;color:var(--ink);line-height:1.35}
+  .prow .psub{font-size:10.5px;color:var(--faint);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .prow .psub em{font-style:normal;color:var(--st-wf)}
+  .prow .pd{font-size:11px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;padding-top:2px}
+  .prow .pd.over{color:var(--st-bl);font-weight:650}
+
+  /* ===== 视图分页 + 控制列 ===== */
+  .tabs{margin-top:34px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .tab{cursor:pointer;user-select:none;font-size:12.5px;font-weight:600;color:var(--muted);padding:7px 15px;border-radius:12px;
+    background:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)}
+  .tab:hover{color:var(--ink2);background:rgba(255,255,255,.04)}
+  .tab[data-on="1"]{color:var(--ink);background:var(--glass);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.12)}
+  .tab .tc{font-size:10px;color:var(--faint);margin-left:6px;font-variant-numeric:tabular-nums}
+  .ctlrow{margin-top:11px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:10px 14px;border-radius:16px;
+    background:rgba(255,255,255,.028);box-shadow:inset 0 0 0 1px rgba(255,255,255,.055)}
+  .ctlrow .gsep{width:1px;height:18px;background:var(--hair);margin:0 4px}
+  .ctlrow .glab{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);font-weight:700;margin-right:2px}
+
+  .lanepop{position:relative}
+  .lanemenu{display:none;position:absolute;left:0;top:33px;z-index:50;width:300px;padding:12px;border-radius:16px;
+    background:rgba(20,23,28,.96);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 30px 60px -26px rgba(0,0,0,.92)}
+  .lanemenu.on{display:block}
+  .lanemenu .lm-h{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;margin:9px 0 6px}
+  .lanemenu .lm-h:first-child{margin-top:0}
+  .lm-row{display:flex;align-items:center;gap:8px;padding:4px 7px;border-radius:8px;cursor:pointer;font-size:12px}
+  .lm-row:hover{background:rgba(255,255,255,.06)}
+  .lm-box{width:12px;height:12px;border-radius:4px;flex:0 0 auto;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+  .lm-row[data-on="1"] .lm-box{background:var(--accent);box-shadow:inset 0 0 0 1px rgba(255,176,104,.6)}
+  .lm-row .lm-n{flex:1}
+  .lm-row .lm-c{font-size:10.5px;color:var(--faint)}
+  .lm-row.empty .lm-n{color:var(--muted)}
+  .lm-foot{margin-top:10px;padding-top:9px;border-top:1px solid var(--hair);font-size:10.5px;color:var(--faint);line-height:1.6}
+
+  /* ===== 泳道视图 ===== */
+  .boardwrap{position:relative;margin-top:18px}
+  .board{overflow-x:auto;overflow-y:visible;padding:2px 0 6px}
+  .axisbar{position:sticky;top:0;z-index:30;overflow:hidden;margin:0 -40px;padding:6px 40px 0;
+    background:linear-gradient(180deg,rgba(13,15,19,.94) 0%,rgba(13,15,19,.88) 62%,rgba(13,15,19,0) 100%);
+    backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3)}
+  .axisinner{position:relative;will-change:transform}
+  .axistoday{position:absolute;top:16px;bottom:2px;width:2px;margin-left:-1px;border-radius:3px;
+    background:linear-gradient(to bottom,rgba(205,222,255,.55),rgba(176,202,255,.12));
+    box-shadow:0 0 12px 1px rgba(160,195,255,.28)}
+  .axistoday span{position:absolute;left:6px;top:-2px;font-size:9px;font-weight:700;letter-spacing:.1em;
+    color:rgba(205,222,255,.8);white-space:nowrap}
+  .board::-webkit-scrollbar{height:8px}
+  .board::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:99px}
+  .inner{position:relative;min-width:100%}
+  svg.edges{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;z-index:6}
+  .axishead{position:relative;height:18px}
+  .axis{position:relative;height:30px;margin-left:var(--labw)}
+  .axis .mo{position:absolute;top:0;font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--ink2)}
+  .axis .tkm{position:absolute;top:15px;width:1px;height:5px;background:rgba(255,255,255,.2)}
+  .axis .tk{position:absolute;top:20px;font-size:10px;color:var(--muted);transform:translateX(-50%)}
+
+  .band{margin-bottom:16px}
+  .band-h{display:flex;align-items:baseline;gap:9px;padding:0 4px 7px}
+  .band-h .bt{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink2)}
+  .band-h .bs{font-size:10.5px;color:var(--faint)}
+  .band-body{border-radius:22px;overflow:hidden;background:var(--glass);
+    backdrop-filter:blur(26px) saturate(1.7);-webkit-backdrop-filter:blur(26px) saturate(1.7);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.06),0 22px 46px -34px rgba(0,0,0,.7)}
+  .lane{position:relative;display:flex;border-top:1px solid var(--hair)}
+  .lane:first-child{border-top:none}
+  .lane-h{flex:0 0 var(--labw);padding:13px 0 13px 22px}
+  .lane-h .ln{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+  .lane-h .lq{font-size:10px;color:var(--faint);line-height:1.45;margin-top:4px;padding-right:14px}
+  .lane.is-empty .lane-h .ln{color:var(--muted)}
+  .lane-body{position:relative;flex:1 1 auto;min-height:56px}
+  .gl{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.04);pointer-events:none}
+  .gl.mo{background:rgba(255,255,255,.08)}
+  .todaybeam{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;z-index:5;pointer-events:none;border-radius:3px;
+    background:linear-gradient(to bottom,rgba(205,222,255,.45),rgba(176,202,255,.12));box-shadow:0 0 14px 1px rgba(160,195,255,.3)}
+  .lane-empty{position:absolute;left:0;top:50%;transform:translateY(-50%);font-size:11px;color:var(--faint);
+    display:flex;align-items:center;gap:9px}
+  .lane-empty .dash{width:70px;height:1px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.16) 0 5px,transparent 5px 10px)}
+
+  .pbar{position:absolute;height:38px;border-radius:12px;display:flex;align-items:center;z-index:3;
+    background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.06));
+    backdrop-filter:blur(14px) saturate(1.5);-webkit-backdrop-filter:blur(14px) saturate(1.5);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 0 0 1px rgba(255,255,255,.14),0 10px 22px -16px rgba(0,0,0,.8);
+    cursor:pointer}
+  .pbar .pw{display:flex;align-items:center;gap:9px;flex:1 1 auto;min-width:0;padding:0 13px}
+  .pbar .pl{font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1 1 auto;min-width:0}
+  .pbar .pmeta{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+  .pbar.narrow .pw{position:absolute;left:100%;margin-left:11px;flex:0 0 auto;padding:5px 11px;border-radius:12px;
+    background:rgba(255,255,255,.08);backdrop-filter:blur(14px) saturate(1.5);-webkit-backdrop-filter:blur(14px) saturate(1.5);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.13),inset 0 0 0 1px rgba(255,255,255,.08);z-index:5}
+  .pbar.narrow .pl{overflow:visible;text-overflow:clip;flex:0 0 auto}
+  .pbar.clipL{border-top-left-radius:2px;border-bottom-left-radius:2px}
+  .pbar.clipR{border-top-right-radius:2px;border-bottom-right-radius:2px}
+  .chip{font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:99px;
+    background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:var(--muted);white-space:nowrap}
+  .chip.stage{color:var(--accent-ink);background:rgba(255,122,31,.13);box-shadow:inset 0 0 0 1px rgba(255,146,72,.32)}
+  .chip.nodate{color:var(--faint)}
+  .pbar.near{background:linear-gradient(180deg,rgba(255,140,60,.20),rgba(255,122,31,.06));
+    box-shadow:inset 0 1px 0 rgba(255,196,148,.28),inset 0 0 0 1px rgba(255,146,72,.4),0 12px 28px -13px rgba(255,96,12,.5)}
+  .pbar.near .pl{color:#ffdcb9}
+  .pbar.done{opacity:.5}
+  .pbar.done .pl{text-decoration:line-through}
+  .pbar.hidden-proj{outline:1.5px dashed rgba(255,255,255,.28);outline-offset:2px;opacity:.5}
+  /* milestone: due with no start. A point in time, so it gets no runway. */
+  .pbar.mile{background:none;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;width:0}
+  .pbar.mile .mk{position:absolute;left:-9px;top:50%;width:18px;height:18px;border-radius:4px;
+    transform:translateY(-50%) rotate(45deg);background:linear-gradient(160deg,rgba(255,255,255,.34),rgba(255,255,255,.13));
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.42),0 8px 18px -12px rgba(0,0,0,.9)}
+  .pbar.mile.near .mk{background:linear-gradient(160deg,rgba(255,170,105,.85),rgba(255,122,31,.45));
+    box-shadow:inset 0 0 0 1px rgba(255,196,148,.6),0 10px 22px -11px rgba(255,96,12,.6)}
+  .pbar.mile .pw{margin-left:17px}
+  .pbar.mile.done .mk{opacity:.5}
+  .pbar .cap{position:absolute;top:50%;width:7px;height:7px;border-radius:50%;transform:translateY(-50%);background:rgba(255,255,255,.45)}
+  .pbar .cap.l{left:-3px}.pbar .cap.r{right:-3px}
+  .pbar .dep-o{position:absolute;top:50%;right:-14px;width:9px;height:9px;border-radius:50%;transform:translateY(-50%);
+    background:rgba(127,215,196,.85);box-shadow:0 0 8px 1px rgba(90,200,175,.35)}
+  .pbar .dep-i{position:absolute;top:50%;left:-14px;width:9px;height:9px;border-radius:50%;transform:translateY(-50%);
+    background:rgba(127,215,196,.4);box-shadow:inset 0 0 0 1px rgba(127,215,196,.8)}
+
+  .undated{margin:10px 0 0 var(--labw,176px);font-size:11px;color:var(--faint);line-height:1.6}
+  .conn{position:absolute;width:1px;z-index:2;background:linear-gradient(rgba(255,255,255,.28),rgba(255,255,255,.05));pointer-events:none}
+  /* 两套线, 两件事: dep = 跨项目依赖, 正交轨 + 箭头; stream = 同一条泳道内的先后, 直连虚线不带箭头 */
+  .edge{fill:none;stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round}
+  .edge.dep{stroke:rgba(255,255,255,.3)}
+  .edge.stream{stroke:rgba(255,255,255,.13);stroke-width:1.3;stroke-dasharray:1 6}
+  .vein{fill:none;stroke:rgba(184,208,255,.07);stroke-width:13;stroke-linecap:round;stroke-linejoin:round;opacity:.65}
+  .plug{fill:rgba(255,255,255,.45)}
+  .tcard{position:absolute;z-index:4;width:158px;border-radius:10px;cursor:pointer;padding:8px 11px;
+    background:rgba(20,23,28,.5);backdrop-filter:blur(12px) saturate(1.5);-webkit-backdrop-filter:blur(12px) saturate(1.5);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(255,255,255,.07),0 10px 22px -15px rgba(0,0,0,.85)}
+  .tcard:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.13)}
+  .tcard .tcl{font-size:11.5px;font-weight:500;line-height:1.35;color:var(--ink2)}
+  .tcard .tcd{font-size:10px;color:var(--muted);margin-top:4px}
+  .tcard .tcd.over{color:var(--st-bl);font-weight:600}
+  .tdot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;vertical-align:1px}
+  .tcard.fin{opacity:.5}
+  .tcard.fin .tcl{text-decoration:line-through}
+  .tcard .tcx{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1);font-size:10.5px;color:var(--muted);line-height:1.7}
+  .tcard.open{z-index:20;background:rgba(20,23,28,.85);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 30px 60px -26px rgba(0,0,0,.92)}
+  .tcard.open .tcx{display:block}
+  .tcard .tcx b{color:var(--ink2)}
+  .td-ns{background:var(--st-ns)}.td-ip{background:var(--st-ip)}.td-wf{background:var(--st-wf)}
+  .td-bl{background:var(--st-bl)}.td-dn{background:var(--st-dn)}
+
+  /* ===== 看板 ===== */
+  .kb{margin-top:14px;display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;align-items:flex-start}
+  .kb::-webkit-scrollbar{height:8px}
+  .kb::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:99px}
+  .kcol{flex:1 1 0;min-width:210px;border-radius:18px;padding:13px 12px 14px;background:var(--glass);
+    backdrop-filter:blur(26px) saturate(1.7);-webkit-backdrop-filter:blur(26px) saturate(1.7);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.06)}
+  .kcol .kh{display:flex;align-items:center;gap:7px;margin-bottom:11px}
+  .kcol .kh .kn{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink2)}
+  .kcol .kh .kc{margin-left:auto;font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .kcard{border-radius:11px;padding:9px 11px;margin-bottom:8px;background:rgba(20,23,28,.45);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.07),inset 0 0 0 1px rgba(255,255,255,.07);cursor:pointer}
+  .kcard:hover{background:rgba(20,23,28,.62)}
+  .kcard .kt{font-size:12px;font-weight:550;line-height:1.35;color:var(--ink)}
+  .kcard .km{display:flex;align-items:center;gap:7px;margin-top:7px;flex-wrap:wrap}
+  .kcard .kp{font-size:10px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .kcard .kd{font-size:10px;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums}
+  .kcard .kd.over{color:var(--st-bl);font-weight:650}
+  .kcard.fin{opacity:.5}.kcard.fin .kt{text-decoration:line-through}
+  .kempty{font-size:11px;color:var(--faint);padding:6px 2px}
+
+  .kcol.ghost{background:rgba(255,255,255,.022);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+  .kcol.over{box-shadow:inset 0 0 0 1.5px rgba(255,146,72,.6),0 0 24px -6px rgba(255,122,31,.5)}
+  .kbody{min-height:52px}
+  .kcard{transition:transform .12s var(--ease),opacity .12s var(--ease)}
+  .kcard:active{cursor:grabbing}
+  .kcard.dragging{opacity:.35;transform:scale(.97)}
+  .kcard.proj .kt{font-weight:650}
+  .kcard.proj{background:linear-gradient(180deg,rgba(255,255,255,.11),rgba(255,255,255,.05));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 0 0 1px rgba(255,255,255,.12)}
+  .draghint{position:absolute;left:26px;top:0;font-size:10.5px;color:var(--faint)}
+  .axishead{position:relative;height:18px}
+  .pendbtn{background:rgba(255,122,31,.16)!important;color:#ffdcb9!important;
+    box-shadow:inset 0 0 0 1px rgba(255,146,72,.5)!important}
+  .pendov{display:none;position:fixed;inset:0;z-index:120;background:rgba(8,10,13,.72);
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;justify-content:center}
+  .pendov.on{display:flex}
+  .pendbox{width:min(760px,92vw);max-height:82vh;display:flex;flex-direction:column;gap:11px;padding:22px;border-radius:22px;
+    background:rgba(20,23,28,.96);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 40px 80px -30px rgba(0,0,0,.95)}
+  .pendh{font-size:14px;font-weight:650}
+  .pendb{font-size:12px;color:var(--muted);line-height:1.65}
+  #pendtext{flex:1 1 auto;min-height:220px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:11.5px;line-height:1.75;color:var(--ink2);background:rgba(0,0,0,.32);border:none;border-radius:12px;padding:13px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.09)}
+  .pendbtns{display:flex;align-items:center;gap:8px}
+
+  /* ===== 表格 ===== */
+  .grid{margin-top:14px;border-radius:20px;overflow:hidden;background:var(--glass);
+    backdrop-filter:blur(26px) saturate(1.7);-webkit-backdrop-filter:blur(26px) saturate(1.7);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.06)}
+  details.grp{border-bottom:1px solid var(--hair)}
+  details.grp:last-child{border-bottom:none}
+  details.grp>summary{list-style:none;cursor:pointer;padding:11px 20px;display:flex;align-items:center;gap:10px}
+  details.grp>summary::-webkit-details-marker{display:none}
+  details.grp>summary:hover{background:rgba(255,255,255,.03)}
+  .grp .gname{font-size:12.5px;font-weight:650;color:var(--ink)}
+  .grp .gpath{font-size:10px;color:var(--faint)}
+  .grp .gcnt{margin-left:auto;font-size:10.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .grp .car{font-size:9px;color:var(--muted);transition:transform .2s var(--ease)}
+  details.grp[open] .car{transform:rotate(90deg)}
+  table.gt{width:100%;border-collapse:collapse;font-size:12px}
+  table.gt th{text-align:left;font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+    font-weight:700;padding:6px 12px;background:rgba(255,255,255,.02)}
+  table.gt td{padding:7px 12px;border-top:1px solid var(--hair);color:var(--ink2);vertical-align:top}
+  table.gt tr.fin td{opacity:.5}
+  table.gt tr.fin td.t{text-decoration:line-through}
+  table.gt td.d{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+  table.gt td.d.over{color:var(--st-bl);font-weight:650}
+  table.gt td.w{color:var(--st-wf)}
+
+  /* ===== 月历 ===== */
+  .calbar{margin-top:14px;display:flex;align-items:center;gap:9px}
+  .calnav{cursor:pointer;user-select:none;font-size:12px;color:var(--ink2);padding:4px 10px;border-radius:9px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+  .calnav:hover{background:rgba(255,255,255,.07)}
+  .caltt{font-size:13px;font-weight:650;letter-spacing:.02em;margin-left:4px}
+  .calwrap{margin-top:11px;border-radius:20px;overflow:hidden;background:var(--glass);
+    backdrop-filter:blur(26px) saturate(1.7);-webkit-backdrop-filter:blur(26px) saturate(1.7);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.06)}
+  .calhead{display:grid;grid-template-columns:repeat(7,1fr)}
+  .calhead div{padding:9px 0;text-align:center;font-size:9.5px;font-weight:700;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--muted)}
+  .calgrid{display:grid;grid-template-columns:repeat(7,1fr)}
+  .cell{min-height:104px;padding:7px 8px 9px;border-top:1px solid var(--hair);border-left:1px solid var(--hair)}
+  .cell:nth-child(7n+1){border-left:none}
+  .cell.out{opacity:.35}
+  .cell.today{background:rgba(120,150,220,.10);box-shadow:inset 0 0 0 1px rgba(160,190,255,.25)}
+  .cell .dnum{font-size:11px;font-weight:650;color:var(--ink2);font-variant-numeric:tabular-nums;margin-bottom:5px}
+  .cell.today .dnum{color:#d6e4ff}
+  .ev{display:flex;align-items:baseline;gap:5px;font-size:10.5px;line-height:1.35;margin-bottom:4px;color:var(--ink2)}
+  .ev .en{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ev.proj{color:var(--accent-ink)}
+  .ev.ren{color:#ffd9a8}
+  .ev .sq{width:6px;height:6px;flex:0 0 auto;transform:translateY(-1px);border-radius:2px}
+  .ev.proj .sq{background:var(--accent)}
+  .ev.ren .sq{background:var(--st-wf);border-radius:50%}
+
+  /* ===== 驾驶舱三节 ===== */
+
+  .panel{border-radius:20px;padding:16px 18px;background:var(--glass);
+    backdrop-filter:blur(26px) saturate(1.7);-webkit-backdrop-filter:blur(26px) saturate(1.7);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.06),0 22px 46px -34px rgba(0,0,0,.7)}
+  .panel .ph{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
+  .panel .ph .k{margin-bottom:0}
+  .panel .ph .src{font-size:10px;color:var(--faint);margin-left:auto;white-space:nowrap}
+  .row{display:flex;align-items:baseline;gap:9px;padding:6px 0;border-top:1px solid var(--hair)}
+  .row:first-of-type{border-top:none}
+  .row .rt{font-size:12px;font-weight:500;color:var(--ink);line-height:1.4;flex:1 1 auto;min-width:0}
+  .row .rd{font-size:10.5px;color:var(--faint);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .row .rsub{font-size:10.5px;color:var(--muted);margin-top:2px}
+  .row.sup .rt{text-decoration:line-through;color:var(--faint)}
+  .cd{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .cd.red{color:#ffc4c4;background:rgba(220,80,80,.2);box-shadow:inset 0 0 0 1px rgba(255,140,140,.3)}
+  .cd.amb{color:#ffd9a8;background:rgba(214,150,50,.18);box-shadow:inset 0 0 0 1px rgba(240,180,94,.28)}
+  .cd.cool{color:var(--muted);background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+  .wingdot{width:6px;height:6px;border-radius:50%;flex:0 0 auto;transform:translateY(-2px)}
+  .wingdot.p{background:#9dc0ff}.wingdot.b{background:var(--accent)}
+  .spark{display:flex;align-items:flex-end;gap:3px;height:38px;margin:2px 0 12px}
+  .spark i{flex:1 1 auto;background:rgba(255,255,255,.14);border-radius:2px 2px 0 0;min-height:2px}
+  .spark i.hot{background:linear-gradient(180deg,#ff9a4a,rgba(255,122,31,.35))}
+  .spark i.zero{background:rgba(255,255,255,.05)}
+  .sparkax{display:flex;justify-content:space-between;font-size:9.5px;color:var(--faint);margin-top:-9px;margin-bottom:12px}
+  .silent{margin-top:12px;padding-top:11px;border-top:1px solid var(--hair)}
+  .silent .sh{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--st-wf);font-weight:700;margin-bottom:7px}
+  .more{font-size:11px;color:var(--faint);padding-top:7px}
+
+  /* ===== 契约表 (讨论用) ===== */
+
+  .knote{text-transform:none;letter-spacing:0;font-weight:500;color:var(--faint);margin-left:8px}
+
+  /* ===== 菜单 (Filter / Display / Layers / Lanes) ===== */
+  .menuwrap{position:relative;display:inline-flex}
+  .mbtn .car{font-size:8px;color:var(--muted);margin-left:1px}
+  .mbtn .badge{font-size:10px;font-weight:700;padding:0 5px;border-radius:99px;background:rgba(255,122,31,.22);color:#ffdcb9}
+  .menu{display:none;position:absolute;left:0;top:33px;z-index:60;width:262px;max-height:60vh;overflow:auto;
+    padding:11px;border-radius:16px;background:rgba(20,23,28,.97);
+    backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 30px 60px -26px rgba(0,0,0,.92)}
+  .menu.on{display:block}
+  .mh{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:700;margin:10px 0 5px 6px}
+  .mh:first-child{margin-top:0}
+  .mrow{display:flex;align-items:center;gap:9px;padding:5px 7px;border-radius:8px;cursor:pointer;font-size:12.5px}
+  .mrow:hover{background:rgba(255,255,255,.06)}
+  .mrow.dim .mn{color:var(--muted)}
+  .mbox{width:13px;height:13px;border-radius:4px;flex:0 0 auto;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+  .mrow[data-on="1"] .mbox{background:var(--accent);box-shadow:inset 0 0 0 1px rgba(255,176,104,.6)}
+  .mrow[data-on="1"] .mbox.sw-task{background:var(--st-ip);box-shadow:inset 0 0 0 1px rgba(157,192,255,.6)}
+  .mrow[data-on="1"] .mbox.sw-proj{background:var(--accent)}
+  .mrow[data-on="1"] .mbox.sw-ren{background:var(--st-wf);box-shadow:inset 0 0 0 1px rgba(240,180,94,.6)}
+  .mrow .mn{flex:1}
+  .mrow .mc{font-size:10.5px;color:var(--faint)}
+  .mfoot{margin-top:10px;padding-top:9px;border-top:1px solid var(--hair);font-size:10.5px;color:var(--faint);line-height:1.6}
+  .inlinegrp{display:inline-flex;align-items:center;gap:7px}
+  .seg{display:inline-flex;border-radius:10px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+  .segb{cursor:pointer;font-size:12px;color:var(--ink2);padding:0 11px;height:27px;display:inline-flex;align-items:center}
+  .segb:hover{background:rgba(255,255,255,.06)}
+  .segb[data-on="1"]{background:rgba(255,122,31,.18);color:#ffdcb9}
+  .ctl.reset{color:var(--accent-ink);box-shadow:inset 0 0 0 1px rgba(255,146,72,.4)}
+
+  /* 筛选状态外露: 一眼扫的 dashboard 最怕把子集当全量 */
+  .statusline{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 4px 0;font-size:11.5px}
+  .statusline:empty{display:none}
+  .showing{color:var(--muted)}.showing b{color:var(--ink)}
+  .fchip{display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:2px 8px;border-radius:99px;
+    color:var(--ink2);background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+  .fchip:hover{background:rgba(255,255,255,.11)}
+  .fchip .fx{color:var(--faint);font-size:12px}
+  .freset{cursor:pointer;color:var(--accent-ink);text-decoration:underline dotted;text-underline-offset:3px}
+
+  /* ===== cockpit 三块: 同一套 headline 排版 ===== */
+  .head1{display:flex;align-items:baseline;gap:9px;margin-bottom:3px}
+  .hnum{font-size:36px;font-weight:700;line-height:1;letter-spacing:-.03em}
+  .hnum.dim{opacity:.3}.hnum.accent{color:var(--accent)}
+  .hslash{font-size:18px;font-weight:600;color:var(--muted);letter-spacing:-.02em}
+  .hlab{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;line-height:1.3}
+  .hside{margin-left:auto;font-size:11.5px;color:var(--faint);white-space:nowrap}
+  .hside.warn{color:var(--st-wf)}
+  .head1sub{font-size:12.5px;color:var(--ink);margin-bottom:14px}
+  .head1sub span{font-size:11px;color:var(--faint);margin-left:6px}
+
+  /* L · rug */
+  .lanestrip{display:flex;gap:2px;height:6px;margin:13px 0 7px}
+  .lanestrip i{border-radius:3px}
+  .ls0{background:rgba(255,255,255,.34)}.ls1{background:rgba(255,255,255,.26)}
+  .ls2{background:rgba(255,255,255,.19)}.ls3{background:rgba(255,255,255,.13)}
+  .ls4{background:rgba(157,192,255,.3)}
+  .lanelegend{display:flex;flex-wrap:wrap;gap:10px;font-size:9.5px;letter-spacing:.05em;color:var(--faint);font-weight:700}
+  .lanelegend span{display:inline-flex;align-items:center;gap:4px}
+  .lanelegend i{width:7px;height:7px;border-radius:2px}
+  .lanelegend b{color:var(--ink2);font-weight:700}
+  .rug{position:relative;height:46px;margin:15px 0 4px}
+  .rugbase{position:absolute;left:0;right:0;top:26px;height:1px;background:rgba(255,255,255,.12)}
+  .rt{position:absolute;width:2px;border-radius:1px}
+  .rt.up{top:8px;height:18px;background:rgba(255,255,255,.6)}
+  .rt.dn{top:27px;height:9px;background:rgba(255,255,255,.18)}
+  .rt.newest{width:3px;top:2px;height:24px;background:var(--accent);box-shadow:0 0 9px 1px rgba(255,122,31,.55)}
+  .rugax{display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:.05em;color:var(--faint);margin-bottom:12px}
+  .drow{display:flex;align-items:baseline;gap:10px;padding:7px 0;border-top:1px solid var(--hair)}
+  .ddate{font-size:10px;color:var(--faint);letter-spacing:.04em;flex:0 0 52px}
+  .dmain{flex:1 1 auto;min-width:0}
+  .drow .dt{font-size:12.5px;color:var(--ink);line-height:1.35}
+  .dsup{font-size:11px;color:var(--faint);text-decoration:line-through;margin-top:2px}
+  .dlane{font-size:9px;font-weight:700;letter-spacing:.07em;color:var(--faint)}
+
+  /* M · rail */
+  .rail{position:relative;margin-top:8px}
+  .bnd{position:relative;padding:0 0 5px 0}
+  .bnd::before{content:"";position:absolute;left:4px;top:18px;bottom:5px;width:1px;background:rgba(255,255,255,.11)}
+  .bnd.off::before{display:none}
+  .bndh{display:flex;align-items:baseline;gap:8px;padding:7px 0 3px;border-top:1px dashed rgba(255,255,255,.1)}
+  .bndh span{font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--faint)}
+  .bndh b{margin-left:auto;font-size:10.5px;color:var(--muted)}
+  .bnd.off .bndh span,.bnd.off .bndh b{opacity:.45}
+  .bndnone{font-size:10.5px;color:var(--faint);padding-left:20px;line-height:1.1}
+  .railrow{position:relative;display:flex;align-items:baseline;gap:10px;padding:3px 0}
+  .raildot{position:absolute;left:0;top:8px;width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.5)}
+  .raildot.hollow{background:transparent;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55)}
+  .railtx{margin-left:20px;flex:1 1 auto;min-width:0}
+  .railrow .rn{font-size:12.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .railrow .rs{font-size:10px;color:var(--faint);margin-top:1px}
+  .rday{font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+  .railrow.hot .raildot{background:var(--accent);box-shadow:0 0 10px 2px rgba(255,122,31,.5)}
+  .railrow.hot .rn{color:#ffdcb9}.railrow.hot .rday{color:var(--accent-ink);font-weight:700}
+  .railrow.red .raildot{background:var(--st-bl)}.railrow.red .rday{color:#ffc4c4}
+  .railrow.amb .raildot{background:var(--st-wf)}.railrow.amb .rday{color:#ffd9a8}
+
+  /* N · pulse */
+  .pulse{display:flex;align-items:flex-end;gap:2px;height:36px;margin:14px 0 3px}
+  .pulse i{flex:1 1 auto;background:rgba(255,255,255,.24);border-radius:1.5px}
+  .pulse i.z{background:rgba(255,255,255,.07)}
+  .pulse i.recent{background:rgba(255,255,255,.55)}
+  .pulse i.today{background:var(--accent);box-shadow:0 0 8px 1px rgba(255,122,31,.5)}
+  .pulseax{display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:.05em;color:var(--faint);margin-bottom:12px}
+  .rrow{position:relative;display:flex;align-items:center;gap:9px;height:26px;padding:0 9px;border-radius:7px;overflow:hidden}
+  .rrow i{position:absolute;left:0;top:0;bottom:0;background:rgba(255,255,255,.08)}
+  .rname{position:relative;flex:1 1 auto;min-width:0;font-size:12.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rnum{position:relative;font-size:11.5px;color:var(--muted);font-weight:600}
+  .rnum.amb{color:var(--st-wf)}.rnum.red{color:var(--st-bl)}
+  .quiet{margin-top:11px;padding-top:10px;border-top:1px solid var(--hair)}
+  .qh{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--st-wf);font-weight:700;margin:0 0 5px 9px}
+  .qrow .rname{color:var(--muted)}
+
+  /* ================= option A 的排版原语 (照搬, 只改两个撞名的 class) ================= */
+  .kick{display:flex;align-items:baseline;gap:10px;font-size:10px;font-weight:700;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .kick .r{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:.05em;
+    text-transform:none;color:var(--faint)}
+  .kick.acc{color:var(--accent)}
+  .hn{font-weight:300;line-height:.88;letter-spacing:-.045em;color:var(--ink);font-variant-numeric:tabular-nums}
+  .hn.acc{color:var(--accent)}
+  .hn-xl{font-size:52px} .hn-l{font-size:33px} .hn-m{font-size:25px}
+  .hbar{display:block;height:2px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden}
+  .hbar i{display:block;height:100%;background:rgba(255,255,255,.28)}
+  .hbar.acc i{background:var(--accent)}
+  .more{margin-top:9px;font-size:10.5px;letter-spacing:.05em;color:var(--faint);padding-top:0}
+  .schip{display:inline-flex;align-items:center;gap:5px;font-style:normal;font-size:9.5px;
+    font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--c)}
+  .schip::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--c)}
+
+  /* L1 · health, the standfirst */
+  .ledger{display:flex;align-items:center;gap:30px;padding:34px 0 18px;
+    border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .lg-l{display:flex;align-items:baseline;gap:11px;flex:0 0 auto}
+  .lg-l span{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .lg-bar{flex:1 1 160px;min-width:120px;display:flex;gap:3px;height:5px}
+  .lg-bar i{display:block;border-radius:2px}
+  .lg-key{display:flex;gap:17px;flex:0 0 auto}
+  .lg-key span{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+  .lg-key em{width:6px;height:6px;border-radius:50%;display:block;flex:0 0 auto}
+  .lg-key b{color:var(--ink2);font-weight:600}
+
+  /* L2 · next action, the only surface on the page */
+  .hero{position:relative;display:flex;align-items:flex-start;gap:24px;
+    padding:16px 22px 16px 25px;border-radius:14px;background:rgba(255,255,255,.035);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+  .hero::before{content:"";position:absolute;left:0;top:15px;bottom:15px;width:2px;
+    border-radius:0 2px 2px 0;background:var(--accent)}
+  .hero .t{flex:1 1 auto;min-width:0}
+  .hero{margin-top:12px}
+  .hero h2{margin:0;font-size:30px;line-height:1.05;font-weight:650;letter-spacing:-.028em}
+  .hero .meta{margin-top:9px;font-size:12.5px;color:var(--muted)}
+  .hero .meta b{color:var(--ink2);font-weight:600}
+  .hero .blk{margin-top:11px;padding-top:10px;border-top:1px solid var(--hair);
+    display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--muted)}
+  .hero .blk b{color:var(--ink2);font-weight:600}
+  .hero .n{margin-left:auto;text-align:right;flex:0 0 auto;padding-left:8px}
+  .hero .n .lab{margin-top:5px;font-size:9.5px;font-weight:700;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--muted)}
+  .leadwrap{padding:0}
+  .leadrow{display:grid;grid-template-columns:minmax(0,1fr) 396px;gap:38px;align-items:start;padding:26px 0 4px}
+  @media(max-width:1360px){.leadrow{grid-template-columns:minmax(0,1fr)}}
+  .tail{margin-top:16px}
+  .plist{list-style:none;margin:8px 0 0;padding:0}
+  .plist li{display:grid;grid-template-columns:6px minmax(0,1fr) 124px 46px 32px;
+    align-items:center;gap:11px;padding:5px 2px;border-top:1px solid var(--hair)}
+  @media(max-width:1180px){.plist li{grid-template-columns:6px minmax(0,1fr) 46px 32px} .p-p{display:none}}
+  .sdot{width:6px;height:6px;border-radius:50%}
+  .p-t{font-size:12.5px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .p-p{font-size:11px;color:var(--faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .p-d{font-size:11px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+  .p-n{font-size:11px;color:var(--faint);text-align:right;font-variant-numeric:tabular-nums}
+  .plist li:hover .p-t{color:var(--ink)}
+
+  /* 右栏共用: 领头那一坨 */
+  .rlead{display:flex;align-items:baseline;gap:12px;margin:13px 0 8px}
+  .rlead>span{min-width:0}
+  .rlead .t{display:block;font-size:14px;font-weight:600;color:var(--ink);line-height:1.2}
+  .rlead .m{display:block;margin-top:3px;font-size:10.5px;color:var(--muted);line-height:1.35}
+  .blead{display:flex;align-items:baseline;gap:11px;margin:11px 0}
+  .blead>span{min-width:0}
+  .blead .t{display:block;font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.25}
+  .blead .s{display:block;margin-top:3px;font-size:10.5px;font-weight:400;color:var(--faint)}
+  .sublab{margin:9px 0 4px;font-size:9.5px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--faint)}
+
+  /* R1 · countdown */
+  .glist{list-style:none;margin:13px 0 0;padding:0}
+  .glist li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px;align-items:start;
+    padding:4px 0 5px;border-top:1px solid var(--hair)}
+  .g-n{font-size:14px;color:var(--ink2);text-align:right;line-height:1.3;font-variant-numeric:tabular-nums}
+  .g-row{display:flex;align-items:baseline;gap:8px;min-width:0}
+  .g-t{font-size:12.5px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .g-m{margin-left:auto;font-size:10px;color:var(--faint);white-space:nowrap;flex:0 0 auto}
+  .glist .hbar,.rl-bar{margin-top:6px}
+  .legend{margin-top:7px;font-size:10px;color:var(--faint);line-height:1.5}
+
+  /* R2 · expires */
+  .nlist{list-style:none;margin:0;padding:0}
+  .nlist li{display:grid;grid-template-columns:minmax(0,1fr) 46px 32px;gap:8px;
+    align-items:baseline;padding:3.5px 0;border-top:1px solid var(--hair)}
+  .n-t{font-size:12px;color:var(--ink2);display:block;min-width:0}
+  .n-t span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .n-t em{display:block;font-style:normal;font-size:9.6px;color:var(--faint);margin-top:1px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .n-d{font-size:10.5px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+  .n-n{font-size:10.5px;color:var(--faint);text-align:right;font-variant-numeric:tabular-nums}
+
+  /* R3 · moving */
+  .spark{display:flex;align-items:flex-end;gap:1px;height:28px;margin:1px 0 0}
+  .spark i{flex:1 1 0;min-width:0;background:rgba(255,255,255,.26);border-radius:1px}
+  .spark i.now{background:var(--accent)}
+  .tlist{list-style:none;margin:0;padding:0}
+  .tlist li{display:grid;grid-template-columns:minmax(0,1fr) 58px 22px;gap:9px;
+    align-items:center;padding:2px 0}
+  .t-t{font-size:11.5px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .t-t em{font-style:normal;color:var(--faint);font-size:10px}
+  .t-n{font-size:10.5px;color:var(--faint);text-align:right;font-variant-numeric:tabular-nums}
+  .quiet{font-size:10.5px;line-height:1.7;color:var(--faint);margin-top:0;padding-top:0;border-top:none}
+  .quiet b{color:var(--muted);font-weight:600}
+  .quiet i{font-style:normal;color:var(--faint);padding:0 3px}
+
+  /* R4 · standing rules */
+  .dlist{list-style:none;margin:0;padding:0}
+  .dlist li{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;
+    align-items:baseline;padding:3.5px 0;border-top:1px solid var(--hair)}
+  .d-dt{font-size:10.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .d-t{display:block;font-size:12px;color:var(--ink2);line-height:1.35}
+  .d-l{font-size:10px;color:var(--faint);letter-spacing:.05em}
+  .d-sup{display:block;margin-top:2px;font-size:10px;color:var(--faint)}
+  .retired{margin-top:9px;font-size:10.5px;line-height:1.6;color:var(--faint)}
+  .retired s{color:var(--faint);text-decoration-color:rgba(255,255,255,.22)}
+  .retired i{font-style:normal;padding:0 2px}
+
+  /* ===== 定位标签 (讨论用, 不进产品) ===== */
+  .lbl{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:16px;padding:0 4px;
+    border-radius:5px;font-size:10px;font-weight:800;letter-spacing:.02em;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    color:#ff6161;background:rgba(255,70,70,.14);box-shadow:inset 0 0 0 1px rgba(255,95,95,.5);
+    margin-right:8px;flex:0 0 auto;vertical-align:1px}
+  body.nolabel .lbl{display:none}
+  body{}
+
+  /* ===== mockup 控制 (浮在右下, 不属于产品) ===== */
+  .panel{align-self:stretch}
+</style>
+</head>
+<body class="nolabel">
+
+<div class="bar">
+  <h1 id="ttl">Command Deck</h1><span class="biz" id="biz"></span>
+  <span class="stamp" id="stamp"></span>
+  <span class="ctl railbtn" id="railbtn"></span>
+</div>
+
+<div class="split">
+  <div class="pane pane-l" id="paneL">
+    <div id="p-health"></div>
+    <div class="leadrow">
+      <div id="p-prio"></div>
+      <div id="p-gates"></div>
+    </div>
+
+    <div class="tabs" id="tabs"></div>
+    <div class="ctlrow" id="ctlrow"></div>
+    <div class="statusline" id="statusline"></div>
+    <div id="viewhost"></div>
+  </div>
+
+  <div class="pane pane-r" id="paneR"><div class="railinner">
+    <div id="p-ren"></div>
+    <div id="p-pulse"></div>
+    <div id="p-dec"></div>
+  </div></div>
+</div>
+
+<div class="pendov" id="pendov">
+  <div class="pendbox">
+    <div class="pendh" id="pendh"></div>
+    <div class="pendb" id="pendb"></div>
+    <textarea id="pendtext" readonly spellcheck="false"></textarea>
+    <div class="pendbtns">
+      <span class="ctl" id="pendclear"></span><span class="sp"></span>
+      <span class="ctl" id="pendcopy"></span><span class="ctl" id="pendclose"></span>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* ============================================================================
+   Command Deck · TEMPLATE MOCKUP v2
+   背后没有活数据。DATA 就是生成器该产出的东西, 每个 key 对应 doctrine §8 一个键。
+   ========================================================================== */
+
+const TODAY = "{{TODAY}}";
+
+const SETUP = {{SETUP_JSON}};
+
+const DECK = {{DATA_JSON}};
+
+const DICT = {
+  en:{
+    deck:"Command Deck", cockpit:"Cockpit",
+    sidebar:"Sidebar", openTasks:"open tasks", k_actionable:"actionable", k_waiting:"waiting", k_blocked:"blocked",
+    nextAction:"Next action", thenWord:"Then", byDueDate:"by due date",
+    daysLeft:"days left", daysOver:"days over", dueWord:"due", moreOpen:"more open, priority 1 and 2",
+    deadlinesWord:"deadlines", runwayGone:"of the runway gone", furtherOut:"further out",
+    mileNote:"Milestones only: a due date and no start date. Anything with a start is a bar on the swimlane; anything with renew_by lives under What expires and is not on the timeline at all.",
+    tracked:"tracked", dleftLong:"days", businessThen:"Business · then", personalWord:"Personal",
+    journalLast:"journal, last", daysShort:"d", projectsTouched:"projects touched",
+    ofWord:"of", activeWord:"active", barsNote:"bars = journal lines per day, ending today",
+    mostMentioned:"Most mentioned", logged:"logged", rulingsInForce:"rulings still in force",
+    newestFirst:"newest first", retiredWord:"retired", closedWord:"closed", supersededWord:"superseded",
+    moreActive:"more active rulings", retiredLabel:"Retired:", replaces:"replaces",
+
+    staleNudge:"say \"rebuild my deck\" to refresh",
+    cocknote:"what needs you now, and what quietly stands behind it",
+    genat:"generated", health:"Project health", gates:"Countdown", prio:"Top Priority",
+    tabLane:"Swimlanes", tabKanban:"Kanban", tabGrid:"Grid", tabCal:"Calendar",
+    filter:"Filter", display:"Display", layers:"Layers", lanesBtn:"Lanes", reset:"Reset",
+    groupBy:"Group", byStatus:"Status", byStage:"Stage",
+    mInclude:"Include", mNarrow:"Narrow down", mWings:"Wings", mLines:"Brand lines",
+    mThisView:"This view", mLayers:"Show on the calendar", columns:"Columns",
+    showDone:"Show done", showParked:"Show parked projects", overdueOnly:"Overdue only",
+    showEmptyLanes:"Show empty lanes", showTaskCards:"Show task cards", showDeps:"Show dependencies",
+    showEmptyCols:"Show empty columns", weekStartMon:"Week starts Monday", expandGroups:"Expand groups",
+    layTask:"Task due", layProj:"Project due", layRen:"Renewals",
+    filterFoot:"Filter only narrows the view below. The cards above and the sidebar always show everything.",
+    displayFoot:"Display only changes how this one view is drawn. It never changes a number.",
+    layersFoot:"Three kinds of date, three colours, each can be switched off.",
+    renewNote:"projects carry renew_by, which belongs to What expires and to nothing else on this timeline. A Brief should not carry that key at all.",
+    renewNote1:"project carries renew_by, which belongs to What expires and to nothing else on this timeline. A Brief should not carry that key at all.",
+    undatedNote:"projects carry neither a start nor a due date, so this timeline has nowhere to put them. They are still on the kanban and the grid.",
+    undatedNote1:"project carries neither a start nor a due date, so this timeline has nowhere to put it. It is still on the kanban and the grid.",
+    laneEmptyNote:"Every lane ships on day one. Switching one off hides it, it still exists. To park a single project for good, set hide_on_deck in its Brief.",
+    chipOverdue:"Due before today", chipDone:"Done hidden", chipParked:"Parked hidden",
+    chipNoPersonal:"Personal off", chipNoBusiness:"Business off", chipLineOff:"Off:",
+    chipLanesOff:"lanes off", showing:"This view shows", of:"of", projects:"projects", tasksWord:"tasks",
+    personal:"Personal", general:"General", thisMonth:"today",
+    deliver:"Deliver", grow:"Grow", run:"Run", build:"Build", personalProjects:"Personal Projects",
+    q_deliver:"work for a named customer", q_grow:"aimed at people who have not bought",
+    q_run:"would exist even without growth", q_build:"leaves the business different",
+    q_personal:"personal work with an end",
+    empty:"empty", none:"none", dleft:"d", overdue:"overdue", waiting:"waiting on", noTaskDate:"undated",
+    dec:"Standing rules", ren:"What expires", pulse:"What is moving",
+    srcDec:"cb: decision", srcRen:"renew_by", srcPulse:"01_Daily backlinks",
+    standingRules:"standing rules", retired:"retired", showAll:"Show all", todayWord:"TODAY",
+    daysWord:"days to the nearest", nothingExpires:"nothing expiring",
+    thisMonthBand:"THIS MONTH", thisQuarterBand:"THIS QUARTER", thisYearBand:"THIS YEAR", beyondBand:"BEYOND",
+    touchedWeek:"projects touched this week", quietWord:"quiet", weeksAgo:"8 WEEKS AGO",
+    silent:"Not mentioned",
+    st_ns:"not started", st_ip:"in progress", st_wf:"waiting", st_bl:"blocked", st_dn:"done",
+    sg_pending:"Pending", sg_planning:"Planning", sg_pursuing:"Pursuing",
+    sg_executing:"Executing", sg_closed:"Closed", sg_none:"No stage yet",
+    dragHintTask:"drag a card to change a task's status",
+    dragHintProj:"drag a card to change a project's stage",
+    pend:"Pending edits", pendH:"These edits are not in your vault yet",
+    pendBody:"The deck is generated, it never writes a file itself. Hand the block below to your assistant, or just say \"apply deck edits\".",
+    pendCopy:"Copy", pendClear:"Discard", pendClose:"Close",
+    prioNote:"open tasks under priority 1 and 2 projects, overdue first",
+    emptyGates:"No milestone yet.<br>A Brief with a due date and no start date is a point in time, and it counts down here.",
+    emptyPrio:"Nothing open under priority 1 and 2.",
+    emptyDec:"No decisions yet. The first one you record becomes rule number one.",
+    emptyRen:"Nothing expires yet. Add a renewal date to any document and it lands here.",
+    emptyPulse:"No journal backlinks yet. Link a project from a daily note and it starts moving."
+  },
+  zh:{
+    deck:"Command Deck", cockpit:"驾驶舱",
+    sidebar:"侧栏", openTasks:"件开着的 task", k_actionable:"可动", k_waiting:"等人", k_blocked:"卡住",
+    nextAction:"下一个动作", thenWord:"接着", byDueDate:"按到期日",
+    daysLeft:"天后到期", daysOver:"天前就该好", dueWord:"到期", moreOpen:"件还开着 (priority 1 与 2)",
+    deadlinesWord:"个截止", runwayGone:"的跑道已经跑掉", furtherOut:"个更远",
+    mileNote:"只收 milestone: 有 due 没有 start 的。有 start 的是跑道, 泳道上画成长条; 带 renew_by 的归 What expires, 根本不上这条时间轴。",
+    tracked:"个在追", dleftLong:"天后", businessThen:"生意 · 接着", personalWord:"个人",
+    journalLast:"日记, 最近", daysShort:"天", projectsTouched:"个 project 这周动过",
+    ofWord:"共", activeWord:"个在跑", barsNote:"每根 = 那天写了几行日记, 最后一根是今天",
+    mostMentioned:"提得最多", logged:"条在册", rulingsInForce:"条规矩还站着",
+    newestFirst:"新的在上", retiredWord:"条已退", closedWord:"条结案", supersededWord:"条被取代",
+    moreActive:"条还在效力内", retiredLabel:"已退役:", replaces:"取代了",
+
+    staleNudge:"说一句「rebuild my deck」就更新",
+    cocknote:"现在该看什么, 底下垫着什么",
+    genat:"生成于", health:"项目健康", gates:"关口倒数", prio:"Top Priority",
+    tabLane:"泳道", tabKanban:"看板", tabGrid:"表格", tabCal:"月历",
+    filter:"筛选", display:"显示", layers:"图层", lanesBtn:"泳道", reset:"复位",
+    groupBy:"分组", byStatus:"Status", byStage:"Stage",
+    mInclude:"收进来", mNarrow:"收窄", mWings:"翼", mLines:"品牌线",
+    mThisView:"只影响这个 view", mLayers:"月历上显示什么", columns:"栏位",
+    showDone:"显示已完结", showParked:"显示已停放的 project", overdueOnly:"只看逾期",
+    showEmptyLanes:"显示空泳道", showTaskCards:"显示 task 卡", showDeps:"显示依赖线",
+    showEmptyCols:"显示空栏", weekStartMon:"周一起头", expandGroups:"展开分组",
+    layTask:"task due", layProj:"project due", layRen:"到期续约",
+    filterFoot:"筛选只收窄底下那个 view。上面那些卡与右栏永远是全量。",
+    displayFoot:"显示只改这一个 view 怎么画, 永远不改任何数字。",
+    layersFoot:"三种日期三个颜色, 各自可关。",
+    renewNote:"个 project 带着 renew_by, 那个键只属于 What expires, 不进这条时间轴。Brief 本来就不该带这个键。",
+    renewNote1:"个 project 带着 renew_by, 那个键只属于 What expires, 不进这条时间轴。Brief 本来就不该带这个键。",
+    undatedNote:"个 project 既没有 started 也没有 due, 时间轴放不下它们。它们仍然在看板与表格上。",
+    undatedNote1:"个 project 既没有 started 也没有 due, 时间轴放不下它。它仍然在看板与表格上。",
+    laneEmptyNote:"空泳道装机就位, 关掉只是不看, 不是不存在。个别 project 要长期不出现, 在它的 Brief 写 hide_on_deck。",
+    chipOverdue:"只看今天之前到期", chipDone:"已完结隐藏", chipParked:"已停放隐藏",
+    chipNoPersonal:"个人翼关", chipNoBusiness:"生意翼关", chipLineOff:"关:",
+    chipLanesOff:"条泳道关着", showing:"这个 view 只显示", of:"/", projects:"个 project", tasksWord:"个 task",
+    personal:"个人", general:"通线", thisMonth:"本月",
+    deliver:"Deliver", grow:"Grow", run:"Run", build:"Build", personalProjects:"Personal Projects",
+    q_deliver:"有名有姓的客户的活", q_grow:"面向还没买单的人", q_run:"生意不成长也照做的",
+    q_build:"做完之后生意会不一样", q_personal:"个人这边有终点的事",
+    empty:"空", none:"(空)", dleft:"天", overdue:"逾期", waiting:"等", noTaskDate:"件没日期",
+    dec:"还站着的规矩", ren:"什么到期", pulse:"谁在动",
+    srcDec:"cb: decision", srcRen:"renew_by", srcPulse:"01_Daily 反链",
+    standingRules:"条还站着的规矩", retired:"条已退", showAll:"全部", todayWord:"今天",
+    daysWord:"天后最近的一个到期", nothingExpires:"没有东西到期",
+    thisMonthBand:"这个月", thisQuarterBand:"这一季", thisYearBand:"今年内", beyondBand:"更远",
+    touchedWeek:"个 project 这周动过", quietWord:"个没人提", weeksAgo:"8 周前",
+    silent:"没人提起",
+    st_ns:"未开始", st_ip:"在跑", st_wf:"等人", st_bl:"卡住", st_dn:"完结",
+    sg_pending:"待启动", sg_planning:"规划中", sg_pursuing:"追单中",
+    sg_executing:"执行中", sg_closed:"已结案", sg_none:"未定阶段",
+    dragHintTask:"拖一张卡换 task 的 status",
+    dragHintProj:"拖一张卡换 project 的 stage",
+    pend:"未落地的改动", pendH:"这些改动还没有进你的宅",
+    pendBody:"Deck 是生成物, 它自己永远不写档。把下面这段交给你的 assistant, 或者说一句「apply deck edits」。",
+    pendCopy:"复制", pendClear:"丢弃", pendClose:"关闭",
+    prioNote:"priority 1 与 2 的 project 底下还开着的 task, 逾期排最前",
+    emptyGates:"还没有 milestone。<br>Brief 上有 due 没有 started 的就是一个时间点, 它会出现在这里倒数。",
+    emptyPrio:"priority 1 与 2 底下没有开着的 task。",
+    emptyDec:"还没有拍过板。第一条记下来的, 就是第一条规矩。",
+    emptyRen:"还没有任何东西带着到期日。在那份 note 写一行 renew_by, 就再也不用记得它。",
+    emptyPulse:"日记还没有反链。收工说一句 compile, 今天做过的事就会连到它属于的 project。"
+  }
+};
+
+
+const DEFAULTS = { showDone:false, showParked:false, overdueOnly:false,
+  showEmptyLanes:true, showTaskCards:true, showDeps:true, showEmptyCols:true,
+  gridCollapsed:false, kbGroup:"status" };
+
+const S = { lang:"{{LANG}}", tab:"lane", showRail:true,
+  showDone:false, showParked:false, overdueOnly:false,
+  wings:{personal:true, business:true},
+  lines:Object.fromEntries([["general",true]].concat(SETUP.brands.map(b => [b,true]))),
+  laneOff:new Set(),
+  showEmptyLanes:true, showTaskCards:true, showDeps:true,
+  showEmptyCols:true, kbGroup:"status",
+  calLayers:{task:true, proj:true, ren:true}, weekStartMon:true, calMonth:"{{THIS_MONTH}}",
+  gridCollapsed:false, gridCols:{start:true, priority:true},
+  openMenu:null };
+
+const $ = s => document.querySelector(s);
+const D = s => new Date(s + "T00:00:00");
+const ISO = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const dayDiff = (a,b) => Math.round((D(b) - D(a)) / 86400000);
+const fmt = s => s.slice(5).replace("-","/");
+const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const L = () => DICT[S.lang];
+const DATA = () => DECK;
+
+const ST = {
+  "not-started":{c:"td-ns", key:"st_ns"}, "in-progress":{c:"td-ip", key:"st_ip"},
+  "waiting":{c:"td-wf", key:"st_wf"}, "blocked":{c:"td-bl", key:"st_bl"}, "done":{c:"td-dn", key:"st_dn"}
+};
+const ST_ORDER = ["not-started","in-progress","waiting","blocked","done"];
+const stName = k => L()[ST[k].key];
+/* stage 住在 Brief 上, 不在 task 上 (doctrine §8)。所以 by stage 拖的是 project。 */
+const STAGE_ORDER = ["pending","planning","pursuing","executing","closed"];
+const sgName = k => L()["sg_" + (k || "none")];
+
+const PENDING = [];
+const projPath = p => p.wing === "personal"
+  ? `03_Personal-Wing/Personal-Projects/${p.name.replace(/\s+/g,"-")}/`
+  : `${SETUP.business.wing}/02_Work/${p.lane}/${p.name.replace(/\s+/g,"-")}/`;
+const briefPath = p => `${projPath(p)}_${p.name.replace(/\s+/g,"-")}-Brief.md`;
+function addPending(file, key, from, to){
+  const hit = PENDING.find(e => e.file === file && e.key === key);
+  if(hit){ hit.to = to; if(hit.from === hit.to) PENDING.splice(PENDING.indexOf(hit),1); }
+  else PENDING.push({file, key, from, to});
+}
+
+/* ---- 泳道矩阵: 从 SETUP 推, 不从数据推。空的也要在 ---- */
+function buildMatrix(){
+  const l = L(), b = SETUP.business.name;
+  const bands = [];
+  if(S.wings.personal) bands.push({ id:"personal", title:l.personal, sub:"03_Personal-Wing",
+    lanes:[{id:"personal", name:l.personalProjects, q:l.q_personal}] });
+  const mk = (prefix, brand) => SETUP.lanes.map(x => ({ id:prefix+"/"+x, name:l[x], q:l["q_"+x], brand }));
+  if(S.wings.business){
+    if(S.lines.general) bands.push({id:"gen", title:b+" · "+l.general, sub:SETUP.business.wing+"/02_Work", lanes:mk("gen", null)});
+    if(SETUP.brands.length > 1) SETUP.brands.forEach(br => { if(S.lines[br])
+      bands.push({id:"br-"+br, title:b+" · "+br, sub:"brand: "+br, lanes:mk("br-"+br, br)}); });
+  }
+  return bands;
+}
+const laneKeyOf = p => p.wing === "personal" ? "personal"
+  : (p.brand ? "br-"+p.brand : "gen") + "/" + p.lane;
+
+const WIN_A = "2026-07-14", WIN_B = "2026-11-22";
+const SPAN = dayDiff(WIN_A, WIN_B), PXD = 7.6, LABW = 176;
+const x = d => dayDiff(WIN_A, d) * PXD;
+const bodyW = SPAN * PXD;
+
+/* JW 2026-08-16: ONE predicate, used by the swimlane and by Countdown, so the two
+   can never disagree about what a milestone is. A project that declares a due
+   date and no start date is a point in time, not a runway: swimlane draws it as
+   a diamond, and Countdown holds exactly this set and nothing else.
+   ⛔ It reads the Brief's own `started:` key, never the fallback dates derived
+   from its tasks: the key is the owner's declaration, and deriving it would let
+   one dated task silently turn a milestone into a bar. */
+/* SHAPE: due with no start is a point in time, so the swimlane draws a diamond. */
+const isMilestone = p => !!p.due && !p.started;
+/* PANEL: Countdown is the diamonds MINUS anything carrying `renew_by`.
+   JW 2026-08-16: a record that carries renew_by belongs to What expires (R1) and
+   nowhere else, or the same date counts down in two panels and the owner has to
+   work out that they are one thing. ⛔ R1 wins because renew_by is the more
+   specific claim: it says this lapses, not that work on it ends.
+   ⭐ Countdown is DERIVED from the diamond set rather than defined beside it, so
+   the two can never drift into disagreeing about what a milestone is. */
+const inCountdown = p => isMilestone(p) && !p.renew_by;
+/* JW 2026-08-16, second reading: renew_by appears in What expires and NOWHERE
+   else on the timeline. So a Brief carrying it is off the swimlane too, not just
+   out of Countdown. ⛔ A Brief should not carry renew_by at all (section 8
+   declares that key on `entity`, and all six templates that use it are entity
+   notes), so this is the deck refusing to draw a mistake twice rather than a
+   shape the product ever produces. `doctor` names it. */
+const hasNoDates = p => !p.started && !p.due;
+const offTimeline = p => hasNoDates(p) || !!p.renew_by;
+
+function projSpan(p){
+  const ds = p.tasks.flatMap(t => [t.start, t.due]).filter(Boolean).sort();
+  let a = p.started || ds[0] || TODAY;
+  let b = p.due || ds[ds.length-1] || TODAY;
+  if(dayDiff(a,b) < 7) b = ISO(new Date(D(a).getTime() + 7*86400000));
+  return [a,b];
+}
+const isOver = t => t.due && t.status !== "done" && dayDiff(TODAY, t.due) < 0;
+
+/* 正典集合: 整张 Deck 的固定口径 = 还活着的 project。
+   排除两种: Brief 自己声明 hide_on_deck 的, 与已经结案的。
+   ⛔ 不受 F 那排钮影响, 那排只管底下那个 view。 */
+function deckProjects(){
+  return DATA().projects.filter(p => !p.hide_on_deck && p.status !== "done");
+}
+/* view 的分母: 这张 Deck 有可能显示的全部 (含已结案, 因为 Show done 打开就会出现) */
+const deckScope = () => DATA().projects.filter(p => !p.hide_on_deck);
+/* view 专用: F 那排钮全部只作用在这里 */
+function visibleProjects(){
+  return DATA().projects.filter(p =>
+    (S.showDone || p.status !== "done") &&
+    (S.showParked || !p.hide_on_deck) &&
+    (p.wing === "personal" ? S.wings.personal : S.wings.business) &&
+    (p.wing === "personal" || S.lines[p.brand || "general"]) &&
+    !S.laneOff.has(laneKeyOf(p)));
+}
+function visibleTasks(){
+  return visibleProjects().flatMap(p => p.tasks
+    .filter(t => (S.showDone || t.status !== "done") && (!S.overdueOnly || isOver(t)))
+    .map(t => ({...t, proj:p})));
+}
+const allTasks = () => deckScope().flatMap(p => p.tasks);
+
+/* ======================= D1 · D2 · D3 ======================= */
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const md = iso => { const d=D(iso), y=D(TODAY).getFullYear();
+  return d.getDate()+" "+MON[d.getMonth()]+(d.getFullYear()!==y?" "+String(d.getFullYear()).slice(2):""); };
+const dleft = iso => dayDiff(TODAY, iso);
+
+/* 左栏上半: L1 health 当 standfirst · L2 next action 当唯一一块有底色的面 */
+function renderTop(){
+  const l = L(), ps = deckProjects();
+  const open = ps.flatMap(p => p.tasks).filter(t => t.status !== "done");
+  const cnt = k => open.filter(t => t.status === k).length;
+  const key = [[l.k_actionable, cnt("not-started")+cnt("in-progress"), "var(--st-ip)"],
+               [l.k_waiting,    cnt("waiting"), "var(--st-wf)"],
+               [l.k_blocked,    cnt("blocked"), "var(--st-bl)"]];
+
+  $("#p-health").innerHTML = `<div class="ledger">
+      <div class="lg-l"><span class="lbl">L1</span><b class="hn hn-l num">${open.length}</b><span>${l.openTasks}</span></div>
+      <div class="lg-bar">${key.map(k => `<i style="flex:${k[1]};background:${k[2]}"></i>`).join("")}</div>
+      <div class="lg-key">${key.map(k =>
+        `<span><em style="background:${k[2]}"></em><b class="num">${k[1]}</b> ${k[0]}</span>`).join("")}</div>
+    </div>`;
+
+  const prio = ps.filter(p => (p.priority||9) <= 2)
+    .flatMap(p => p.tasks.filter(t => t.status !== "done").map(t => ({...t, proj:p})))
+    .sort((a,b) => {
+      const oa = isOver(a)?0:1, ob = isOver(b)?0:1;
+      if(oa !== ob) return oa - ob;
+      return (a.due||"9999") < (b.due||"9999") ? -1 : 1;
+    });
+
+  if(!prio.length){
+    $("#p-prio").innerHTML = `<div class="leadwrap"><div class="kick"><span class="lbl">L2</span>${l.nextAction}</div>
+      <div class="emptyline" style="margin-top:12px">${l.emptyPrio}</div></div>`;
+    return;
+  }
+  const L0 = prio[0], Ld = L0.due ? dleft(L0.due) : null, SHOW = 5;
+  $("#p-prio").innerHTML = `<div class="leadwrap">
+    <div class="kick acc"><span class="lbl">L2</span>${l.nextAction}</div>
+    <div class="hero">
+      <div class="t">
+        <h2>${esc(L0.title)}</h2>
+        <div class="meta"><b>${esc(L0.proj.name)}</b> &nbsp;·&nbsp; ${l.dueWord} <span class="num">${L0.due?md(L0.due):l.none}</span></div>
+        <div class="blk"><i class="schip" style="--c:${getComputedStyle(document.documentElement).getPropertyValue(
+            {"not-started":"--st-ns","in-progress":"--st-ip","waiting":"--st-wf","blocked":"--st-bl","done":"--st-dn"}[L0.status])}">${stName(L0.status)}</i>
+          ${L0.waiting_on?`<span>${l.waiting} <b>${esc(L0.waiting_on)}</b></span>`:""}</div>
+      </div>
+      <div class="n"><div class="hn hn-xl num ${Ld!==null&&Ld<0?"":"acc"}">${Ld===null?"·":Math.abs(Ld)}</div>
+        <div class="lab">${Ld!==null&&Ld<0?l.daysOver:l.daysLeft}</div></div>
+    </div>
+    <div class="tail">
+      <div class="kick">${l.thenWord}<span class="r">${l.byDueDate}</span></div>
+      <ul class="plist">${prio.slice(1,SHOW).map(t => `<li>
+        <i class="sdot ${ST[t.status].c}"></i>
+        <span class="p-t">${esc(t.title)}</span>
+        <span class="p-p">${esc(t.proj.name)}</span>
+        <span class="p-d num">${t.due?md(t.due):"·"}</span>
+        <span class="p-n num">${t.due?dleft(t.due)+"d":""}</span></li>`).join("")}</ul>
+      ${prio.length>SHOW?`<div class="more">+${prio.length-SHOW} ${l.moreOpen}</div>`:""}
+    </div></div>`;
+}
+
+/* ======================= E 分页 ======================= */
+function renderTabs(){
+  const l = L();
+  const nProj = visibleProjects().length, nTask = visibleTasks().length;
+  const tabs = [["lane", l.tabLane, nProj], ["kanban", l.tabKanban, S.kbGroup==="stage"?nProj:nTask],
+                ["cal", l.tabCal, ""], ["grid", l.tabGrid, nTask]];
+  $("#tabs").innerHTML = `<span class="lbl">E</span>` + tabs.map(([id,name,c]) =>
+    `<span class="tab" data-t="${id}" data-on="${S.tab===id?1:0}">${name}${c!==""?`<span class="tc num">${c}</span>`:""}</span>`).join("")
+    + `<span class="sp"></span><span id="pendhost"></span>`;
+  $("#tabs").querySelectorAll(".tab").forEach(t => t.onclick = () => { S.tab = t.dataset.t; renderAll(); });
+}
+
+/* ======================= F 控制列 =======================
+   结构照 Linear 的二分: Filter 管「收进来什么」, Display 管「长什么样」。
+   Group 与 Layers 外露, 因为它们改的是这个 view 在讲什么, 不是筛选。
+   极性统一成「开 = 显示更多」, 筛选状态一律外露成可删 chip + Reset。      */
+function isDirty(){
+  return Object.keys(DEFAULTS).some(k => S[k] !== DEFAULTS[k])
+    || S.laneOff.size > 0
+    || !S.wings.personal || !S.wings.business
+    || Object.values(S.lines).some(v => !v)
+    || Object.values(S.calLayers).some(v => !v);
+}
+function resetAll(){
+  Object.keys(DEFAULTS).forEach(k => S[k] = DEFAULTS[k]);
+  S.laneOff.clear();
+  S.wings = {personal:true, business:true};
+  S.lines = {general:true, Sunrise:true, Nightowl:true};
+  S.calLayers = {task:true, proj:true, ren:true};
+  renderAll();
+}
+const chk = (on, label, act, swatch) =>
+  `<div class="mrow" data-act="${act}" data-on="${on?1:0}">
+     <span class="mbox${swatch?" sw "+swatch:""}"></span><span class="mn">${label}</span></div>`;
+
+function renderControls(){
+  const l = L();
+  let filterN = 0;
+  if(S.overdueOnly) filterN++;
+  if(!S.showDone) filterN++;
+  if(!S.showParked) filterN++;
+  if(!S.wings.personal || !S.wings.business) filterN++;
+  if(Object.values(S.lines).some(v => !v)) filterN++;
+
+  const menuBtn = (id, label, badge) =>
+    `<span class="menuwrap"><span class="ctl mbtn" data-menu="${id}" data-on="${S.openMenu===id?1:0}">${label}${
+      badge?`<span class="badge num">${badge}</span>`:""}<span class="car">▾</span></span>
+      <div class="menu" id="m-${id}"></div></span>`;
+
+  let h = `<span class="lbl">F</span>`;
+  if(S.tab === "kanban")
+    h += `<span class="inlinegrp"><span class="glab">${l.groupBy}</span>` +
+      `<span class="seg"><span class="segb" data-act="kbStatus" data-on="${S.kbGroup==="status"?1:0}">${l.byStatus}</span>` +
+      `<span class="segb" data-act="kbStage" data-on="${S.kbGroup==="stage"?1:0}">${l.byStage}</span></span></span>`;
+  if(S.tab === "cal") h += menuBtn("layers", l.layers);
+  if(S.tab === "lane") h += menuBtn("lanes", l.lanesBtn, S.laneOff.size ? S.laneOff.size : 0);
+  h += menuBtn("filter", l.filter, filterN);
+  h += menuBtn("display", l.display);
+  if(isDirty()) h += `<span class="ctl reset" data-act="reset">${l.reset}</span>`;
+  $("#ctlrow").innerHTML = h;
+
+  /* 菜单内容 */
+  const M = {};
+  M.filter = `<div class="mh">${l.mInclude}</div>` +
+    chk(S.showDone, l.showDone, "showDone") +
+    chk(S.showParked, l.showParked, "showParked") +
+    `<div class="mh">${l.mNarrow}</div>` +
+    chk(S.overdueOnly, l.overdueOnly, "overdueOnly") +
+    `<div class="mh">${l.mWings}</div>` +
+    chk(S.wings.personal, l.personal, "wing:personal") +
+    chk(S.wings.business, SETUP.business.name, "wing:business") +
+    (SETUP.brands.length > 1 ? `<div class="mh">${l.mLines}</div>` +
+      chk(S.lines.general, l.general, "line:general") +
+      SETUP.brands.map(b => chk(S.lines[b], b, "line:"+b)).join("") : "") +
+    `<div class="mfoot">${l.filterFoot}</div>`;
+
+  M.display = `<div class="mh">${l.mThisView}</div>` +
+    (S.tab === "lane" ? chk(S.showEmptyLanes, l.showEmptyLanes, "showEmptyLanes") +
+                        chk(S.showTaskCards, l.showTaskCards, "showTaskCards") +
+                        chk(S.showDeps, l.showDeps, "showDeps") : "") +
+    (S.tab === "kanban" ? chk(S.showEmptyCols, l.showEmptyCols, "showEmptyCols") : "") +
+    (S.tab === "cal" ? chk(S.weekStartMon, l.weekStartMon, "weekStartMon") : "") +
+    (S.tab === "grid" ? chk(!S.gridCollapsed, l.expandGroups, "gridCollapsed") +
+                        `<div class="mh">${l.columns}</div>` +
+                        chk(S.gridCols.start, "start", "col:start") +
+                        chk(S.gridCols.priority, "priority", "col:priority") : "") +
+    `<div class="mfoot">${l.displayFoot}</div>`;
+
+  M.layers = `<div class="mh">${l.mLayers}</div>` +
+    chk(S.calLayers.task, l.layTask, "lay:task", "sw-task") +
+    chk(S.calLayers.proj, l.layProj, "lay:proj", "sw-proj") +
+    chk(S.calLayers.ren, l.layRen, "lay:ren", "sw-ren") +
+    `<div class="mfoot">${l.layersFoot}</div>`;
+
+  if(S.tab === "lane"){
+    const counts = {};
+    DATA().projects.forEach(p => counts[laneKeyOf(p)] = (counts[laneKeyOf(p)]||0)+1);
+    M.lanes = buildMatrix().map(b => `<div class="mh">${esc(b.title)}</div>` + b.lanes.map(ln =>
+      `<div class="mrow${counts[ln.id]?"":" dim"}" data-act="lane:${ln.id}" data-on="${S.laneOff.has(ln.id)?0:1}">
+        <span class="mbox"></span><span class="mn">${esc(ln.name)}</span>
+        <span class="mc">${counts[ln.id] || l.empty}</span></div>`).join("")).join("")
+      + `<div class="mfoot">${l.laneEmptyNote}</div>`;
+  }
+  Object.keys(M).forEach(k => { const el = $("#m-"+k); if(el) el.innerHTML = M[k]; });
+  if(S.openMenu) $("#m-"+S.openMenu)?.classList.add("on");
+
+  $("#ctlrow").querySelectorAll("[data-menu]").forEach(b => b.onclick = e => {
+    e.stopPropagation();
+    S.openMenu = S.openMenu === b.dataset.menu ? null : b.dataset.menu;
+    renderControls();
+  });
+  $("#ctlrow").querySelectorAll("[data-act]").forEach(el => el.onclick = e => {
+    e.stopPropagation();
+    const a = el.dataset.act;
+    if(a === "reset") return resetAll();
+    if(a === "kbStatus"){ S.kbGroup = "status"; }
+    else if(a === "kbStage"){ S.kbGroup = "stage"; }
+    else if(a.startsWith("wing:")) S.wings[a.slice(5)] = !S.wings[a.slice(5)];
+    else if(a.startsWith("line:")) S.lines[a.slice(5)] = !S.lines[a.slice(5)];
+    else if(a.startsWith("lay:")) S.calLayers[a.slice(4)] = !S.calLayers[a.slice(4)];
+    else if(a.startsWith("col:")) S.gridCols[a.slice(4)] = !S.gridCols[a.slice(4)];
+    else if(a.startsWith("lane:")){ const id = a.slice(5);
+      S.laneOff.has(id) ? S.laneOff.delete(id) : S.laneOff.add(id); }
+    else S[a] = !S[a];
+    renderAll();
+  });
+  renderStatusLine();
+}
+
+/* 筛过的东西必须外露, 不然一眼扫会把子集当全量 */
+function renderStatusLine(){
+  const l = L(), chips = [];
+  if(S.overdueOnly) chips.push([l.chipOverdue, "overdueOnly"]);
+  if(!S.showDone) chips.push([l.chipDone, "showDone"]);
+  if(!S.showParked) chips.push([l.chipParked, "showParked"]);
+  if(!S.wings.personal) chips.push([l.chipNoPersonal, "wing:personal"]);
+  if(!S.wings.business) chips.push([l.chipNoBusiness, "wing:business"]);
+  Object.keys(S.lines).forEach(k => { if(!S.lines[k]) chips.push([l.chipLineOff+" "+(k==="general"?l.general:k), "line:"+k]); });
+  if(S.laneOff.size) chips.push([S.laneOff.size+" "+l.chipLanesOff, "lanesReset"]);
+
+  const unit = S.tab === "lane" || (S.tab === "kanban" && S.kbGroup === "stage");
+  const shown = unit ? visibleProjects().length : visibleTasks().length;
+  const total = unit ? deckScope().length : allTasks().length;
+  const word = unit ? l.projects : l.tasksWord;
+
+  $("#statusline").innerHTML = chips.length
+    ? `<span class="showing">${l.showing} <b class="num">${shown}</b> ${l.of} <b class="num">${total}</b> ${word}</span>`
+      + chips.map(([t,a]) => `<span class="fchip" data-act="${a}">${t}<span class="fx">×</span></span>`).join("")
+      + `<span class="freset" data-act="reset">${l.reset}</span>` : "";
+  $("#statusline").querySelectorAll("[data-act]").forEach(el => el.onclick = () => {
+    const a = el.dataset.act;
+    if(a === "reset") return resetAll();
+    if(a === "lanesReset"){ S.laneOff.clear(); return renderAll(); }
+    if(a.startsWith("wing:")) S.wings[a.slice(5)] = true;
+    else if(a.startsWith("line:")) S.lines[a.slice(5)] = true;
+    else S[a] = !S[a];
+    renderAll();
+  });
+}
+
+/* ======================= G 泳道 ======================= */
+function renderLaneView(){
+  const l = L(), bands = buildMatrix(), byLane = {};
+  /* JW 2026-08-16: a project with neither started nor due is not on this timeline.
+     ⛔ It used to be drawn as a bar from today to today+7, which is a runway the
+     owner never declared and cannot be told apart from a real one. It is still on
+     the kanban, the grid and the health ring; only a timeline cannot place it. */
+  const dated = visibleProjects().filter(p => !offTimeline(p));
+  const undated = visibleProjects().filter(hasNoDates).length;
+  const renewals = visibleProjects().filter(p => !!p.renew_by).length;
+  dated.forEach(p => (byLane[laneKeyOf(p)] ||= []).push(p));
+  Object.values(byLane).forEach(a => a.sort((m,n) => (m.priority||9)-(n.priority||9)));
+
+  let axis = `<div class="axis" style="width:${bodyW}px">`;
+  let cur = D(WIN_A); cur.setDate(1);
+  while(cur <= D(WIN_B)){
+    const m0 = ISO(cur);
+    axis += `<div class="mo" style="left:${Math.max(2, x(m0)+4)}px">${cur.toLocaleString("en",{month:"short"}).toUpperCase()}</div>`;
+    if(x(m0) > 0) axis += `<div class="tkm" style="left:${x(m0)}px"></div>`;
+    for(let d = 8; d <= 22; d += 7){
+      const day = ISO(new Date(cur.getFullYear(), cur.getMonth(), d));
+      if(dayDiff(WIN_A, day) > 0 && dayDiff(day, WIN_B) > 0) axis += `<div class="tk" style="left:${x(day)}px">${d}</div>`;
+    }
+    cur.setMonth(cur.getMonth()+1);
+  }
+  axis += `</div>`;
+
+  let html = "";
+  bands.forEach((band, bi) => {
+    const BL = "G" + (bi+1);
+    const lanesOn = band.lanes.filter(ln => !S.laneOff.has(ln.id))
+      .filter(ln => S.showEmptyLanes || (byLane[ln.id]||[]).length);
+    if(!lanesOn.length) return;
+    html += `<div class="band"><div class="band-h"><span class="lbl">${BL}</span><span class="bt">${esc(band.title)}</span><span class="bs">${esc(band.sub)}</span></div><div class="band-body">`;
+    lanesOn.forEach(ln => {
+      const ps = byLane[ln.id] || [];
+      let top = 12, body = "";
+      ps.forEach(p => {
+        const mile = isMilestone(p);
+        const [a,b] = projSpan(p);
+        const rawA = mile ? x(p.due) : x(a), rawB = mile ? rawA : x(b);
+        const clipL = rawA < 0, clipR = rawB > bodyW;
+        const bx = mile ? Math.max(0, Math.min(bodyW, rawA)) : Math.max(0, rawA);
+        const bw = mile ? 0 : Math.max(46, Math.min(bodyW, rawB) - bx);
+        const narrow = mile || bw < 168;
+        const soon = p.due && dayDiff(TODAY, p.due) >= 0 && dayDiff(TODAY, p.due) <= 21;
+        const nodate = p.tasks.filter(t => !t.due).length;
+        /* mile keeps the .pbar class on purpose: drawEdges finds dependency
+           anchors by `.pbar[data-p]`, so a diamond stays wired to its arrows
+           without drawEdges needing to know the shape exists. */
+        body += `<div class="pbar${mile?" mile":""}${soon?" near":""}${p.status==="done"?" done":""}${p.hide_on_deck?" hidden-proj":""}${narrow?" narrow":""}${clipL&&!mile?" clipL":""}${clipR&&!mile?" clipR":""}"
+            data-p="${p.id}" style="left:${bx}px;width:${bw}px;top:${top}px">
+            ${mile?`<span class="mk"></span>`
+                 :`${clipL?"":`<span class="cap l"></span>`}${clipR?"":`<span class="cap r"></span>`}`}
+            <span class="pw"><span class="pl">${esc(p.name)}</span><span class="pmeta">
+              ${p.stage?`<span class="chip stage">${sgName(p.stage)}</span>`:""}
+              ${S.showTaskCards&&nodate?`<span class="chip nodate">+${nodate} ${l.noTaskDate}</span>`:""}
+            </span></span>
+            ${S.showDeps&&p.depends_on.length?`<span class="dep-i"></span>`:""}
+            ${S.showDeps&&DATA().projects.some(q => q.depends_on.includes(p.id))?`<span class="dep-o"></span>`:""}
+          </div>`;
+        let maxRow = -1;
+        if(S.showTaskCards){
+          const dated = p.tasks.filter(t => t.due && (S.showDone || t.status !== "done") && (!S.overdueOnly || isOver(t)))
+                               .sort((m,n) => m.due < n.due ? -1 : 1);
+          const rows = [];
+          dated.forEach(t => {
+            const cx = x(t.due);
+            let r = 0; while(rows[r] !== undefined && rows[r] > cx - 8) r++;
+            rows[r] = cx + 158; maxRow = Math.max(maxRow, r);
+            const ty = top + 46 + r*54, over = isOver(t);
+            body += `<div class="conn" style="left:${cx}px;top:${top+38}px;height:${ty-top-38}px"></div>
+              <div class="tcard${t.status==="done"?" fin":""}" style="left:${cx}px;top:${ty}px">
+                <div class="tcl"><span class="tdot ${ST[t.status].c}"></span>${esc(t.title)}</div>
+                <div class="tcd${over?" over":""}">${fmt(t.due)}${over?" · "+l.overdue:""}</div>
+                <div class="tcx"><b>status</b> ${stName(t.status)}<br>
+                  <b>start</b> ${t.start||l.none} &nbsp; <b>due</b> ${t.due}
+                  ${t.waiting_on?`<br><b>waiting_on</b> ${esc(t.waiting_on)}`:""}
+                  <br><span style="color:var(--faint)">${esc(p.name)}/Tasks/</span></div></div>`;
+          });
+        }
+        top += 46 + (maxRow+1)*54 + 12;
+      });
+      const isEmpty = !ps.length;
+      html += `<div class="lane${isEmpty?" is-empty":""}">
+        <div class="lane-h"><div class="ln">${esc(ln.name)}</div><div class="lq">${esc(ln.q)}</div></div>
+        <div class="lane-body" style="width:${bodyW}px;height:${isEmpty?56:top}px">
+          ${gridlines()}<div class="todaybeam" style="left:${x(TODAY)}px"></div>
+          ${isEmpty?`<div class="lane-empty" style="left:${x(TODAY)+18}px"><span class="dash"></span><span>${l.empty}</span></div>`:""}
+          ${body}</div></div>`;
+    });
+    html += `</div></div>`;
+  });
+  html += `<svg class="edges" id="edges"></svg>`;
+
+  $("#viewhost").innerHTML = `<div class="boardwrap">
+      <div class="axisbar" id="axisbar" style="--labw:${LABW}px">
+        <div class="axisinner" id="axisinner" style="width:${bodyW + LABW}px">
+          <div class="axishead"><span class="lbl">G</span></div>${axis}
+          <div class="axistoday" style="left:${LABW + x(TODAY)}px"><span>${l.todayWord}</span></div>
+        </div></div>
+      <div class="board" id="board"><div class="inner" id="inner" style="--labw:${LABW}px">${html}</div></div>
+      ${undated||renewals?`<div class="undated">${undated?`${undated} ${undated===1?l.undatedNote1:l.undatedNote}`:""}${undated&&renewals?"<br>":""}${renewals?`${renewals} ${renewals===1?l.renewNote1:l.renewNote}`:""}</div>`:""}
+    </div>`;
+  const _bd = $("#board"), _ai = $("#axisinner");
+  _bd.addEventListener("scroll", () => { _ai.style.transform = `translateX(${-_bd.scrollLeft}px)`; }, {passive:true});
+  $("#inner").style.width = (bodyW + LABW) + "px";
+  $("#viewhost").querySelectorAll(".tcard").forEach(el => el.onclick = e => {
+    e.stopPropagation();
+    const was = el.classList.contains("open");
+    document.querySelectorAll(".tcard.open").forEach(o => o.classList.remove("open"));
+    if(!was) el.classList.add("open");
+  });
+  requestAnimationFrame(drawEdges); setTimeout(drawEdges, 60); setTimeout(drawEdges, 320);
+}
+function gridlines(){
+  let g = "", cur = D(WIN_A); cur.setDate(1);
+  while(cur <= D(WIN_B)){
+    const m0 = ISO(cur);
+    if(dayDiff(WIN_A, m0) > 0) g += `<div class="gl mo" style="left:${x(m0)}px"></div>`;
+    for(let d = 8; d <= 22; d += 7){
+      const day = ISO(new Date(cur.getFullYear(), cur.getMonth(), d));
+      if(dayDiff(WIN_A, day) > 0 && dayDiff(day, WIN_B) > 0) g += `<div class="gl" style="left:${x(day)}px"></div>`;
+    }
+    cur.setMonth(cur.getMonth()+1);
+  }
+  return g;
+}
+/* 依赖轨。照本宅 cb-control-tower.py 产出的那套 (只读参考, 没有改它):
+   · dep    = 跨项目依赖, 从**源的左缘**出发, 横到目标左侧一条共享竖通道, 竖直走到目标那一行,
+              再右转进目标左缘。实线 + 开口 chevron 箭头 (冷白, 不是橙), 源头一颗插头点,
+              底下垫一条粗而极淡的 vein 当光晕。
+   · stream = 同一条泳道内按开始日排出的先后, 前一条右缘直连下一条左缘, 1/6 点虚线, ⛔ 不带箭头。
+   两者不可互换: 有箭头 = 真的有依赖; 虚线只是同一条泳道里的顺序。 */
+const CH_MARGIN = 22, CH_TRACK = 5, CH_TARGET_GAP = 16, RAIL_R = 8;
+function orthPath(ax, ay, cx, bx, by, r){
+  if(Math.abs(by-ay) < 1) return `M${ax},${ay} L${bx},${by}`;
+  const dY = by > ay ? 1 : -1;
+  const rr = Math.max(2, Math.min(r, Math.abs(by-ay)/2, Math.abs(ax-cx), Math.abs(bx-cx)));
+  return `M${ax},${ay} L${cx+rr},${ay} Q${cx},${ay} ${cx},${ay+dY*rr}`
+       + ` L${cx},${by-dY*rr} Q${cx},${by} ${cx+rr},${by} L${bx},${by}`;
+}
+function drawEdges(){
+  const svg = $("#edges"), inner = $("#inner");
+  if(!svg || !inner) return;
+  const box = inner.getBoundingClientRect();
+  svg.setAttribute("width", inner.scrollWidth); svg.setAttribute("height", inner.scrollHeight);
+  const defs = `<defs><marker id="arw" markerWidth="8" markerHeight="8" refX="6.4" refY="3" orient="auto">
+      <path d="M0.6,0.6 L6,3 L0.6,5.4" fill="none" stroke="rgba(226,232,246,.9)"
+        stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
+  if(!S.showDeps){ svg.innerHTML = defs; return; }
+
+  /* 每条长条的左缘 · 右缘 · 中线 */
+  const pos = {};
+  inner.querySelectorAll(".pbar[data-p]").forEach(el => {
+    const r = el.getBoundingClientRect();
+    pos[el.dataset.p] = { x0:r.left-box.left, x1:r.right-box.left, y:r.top-box.top+r.height/2,
+                          lane:el.closest(".lane") };
+  });
+
+  let veins = "", rails = "", plugs = "";
+
+  /* stream: 同一条泳道内的先后 */
+  const byLane = new Map();
+  DATA().projects.forEach(p => { const q = pos[p.id]; if(!q) return;
+    if(!byLane.has(q.lane)) byLane.set(q.lane, []);
+    byLane.get(q.lane).push({id:p.id, start:projSpan(p)[0]}); });
+  byLane.forEach(arr => {
+    arr.sort((a,b) => a.start < b.start ? -1 : 1);
+    for(let i = 0; i < arr.length-1; i++){
+      const A = pos[arr[i].id], B = pos[arr[i+1].id];
+      if(A && B && B.x0 > A.x1 + 4)
+        rails += `<path class="edge stream" d="M${A.x1},${A.y} L${B.x0},${B.y}"/>`;
+    }
+  });
+
+  /* dep: 跨项目依赖, 走左侧共享通道 */
+  const de = [];
+  DATA().projects.forEach(p => (p.depends_on||[]).forEach(src => {
+    const A = pos[src], B = pos[p.id];
+    if(A && B) de.push({ax:A.x0, ay:A.y, bx:B.x0, by:B.y});
+  }));
+  const grp = {};
+  de.forEach((e,i) => { const k = e.bx+"_"+e.by; (grp[k] = grp[k] || []).push(e); });
+  const gs = Object.values(grp).map(arr => ({arr, base:Math.min(arr[0].bx, ...arr.map(e => e.ax)) - CH_MARGIN}));
+  gs.sort((a,b) => b.base - a.base);
+  for(let i = 1; i < gs.length; i++)
+    if(gs[i-1].base - gs[i].base < CH_TARGET_GAP) gs[i].base = gs[i-1].base - CH_TARGET_GAP;
+  gs.forEach(g => { const n = g.arr.length;
+    g.arr.forEach((e,i) => { e.cx = Math.max(8, g.base + i*CH_TRACK); e.by += (i-(n-1)/2)*3.4; }); });
+
+  de.forEach(e => {
+    const d = orthPath(e.ax, e.ay, e.cx, e.bx, e.by, RAIL_R);
+    veins += `<path class="vein" d="${d}"/>`;
+    rails += `<path class="edge dep" d="${d}" marker-end="url(#arw)"/>`;
+    plugs += `<circle class="plug" cx="${e.ax}" cy="${e.ay}" r="1.7"/>`;
+  });
+  svg.innerHTML = defs + veins + rails + plugs;
+}
+
+/* ======================= H 看板 ======================= */
+function renderKanbanView(){
+  const l = L();
+  let cols, unit;
+  if(S.kbGroup === "status"){
+    unit = "task";
+    const ts = visibleTasks();
+    cols = ST_ORDER.filter(k => S.showDone || k !== "done").map(k => ({
+      key:k, name:stName(k), dot:ST[k].c,
+      items:ts.filter(t => t.status === k).sort((a,b) => (a.due||"9999") < (b.due||"9999") ? -1 : 1)
+    }));
+  } else {
+    unit = "project";
+    const ps = visibleProjects();
+    cols = STAGE_ORDER.filter(k => S.showDone || k !== "closed").map(k => ({
+      key:k, name:sgName(k), dot:"",
+      items:ps.filter(p => p.stage === k).sort((a,b) => (a.priority||9) - (b.priority||9))
+    }));
+    cols.push({key:"", name:sgName(null), dot:"", ghost:true, items:ps.filter(p => !p.stage)});
+  }
+  if(!S.showEmptyCols) cols = cols.filter(c => c.items.length);
+
+  const card = it => {
+    if(unit === "task"){
+      const over = isOver(it);
+      return `<div class="kcard${it.status==="done"?" fin":""}" draggable="true" data-id="${it.id}">
+        <div class="kt">${esc(it.title)}</div>
+        <div class="km"><span class="chip">${esc(it.proj.lane ? l[it.proj.lane] : l.personal)}</span>
+          <span class="kp">${esc(it.proj.name)}</span>
+          <span class="kd${over?" over":""}">${it.due ? (over ? l.overdue : fmt(it.due)) : "·"}</span></div></div>`;
+    }
+    const left = it.due ? dayDiff(TODAY, it.due) : null;
+    const open = it.tasks.filter(t => t.status !== "done").length;
+    return `<div class="kcard proj${it.status==="done"?" fin":""}" draggable="true" data-id="${it.id}">
+      <div class="kt">${esc(it.name)}</div>
+      <div class="km"><span class="chip">${esc(it.lane ? l[it.lane] : l.personal)}</span>
+        ${it.brand?`<span class="chip">${esc(it.brand)}</span>`:""}
+        <span class="kp">${open} ${l.tasksWord}</span>
+        <span class="kd${left!==null&&left<0?" over":""}">${left===null?"·":(left<0?l.overdue:left+l.dleft)}</span></div></div>`;
+  };
+
+  $("#viewhost").innerHTML = `<div class="axishead"><span class="lbl">H</span>
+      <span class="draghint">${unit==="task"?l.dragHintTask:l.dragHintProj}</span></div>
+    <div class="kb">` + cols.map(c => `<div class="kcol${c.ghost?" ghost":""}" data-col="${c.key}">
+      <div class="kh">${c.dot?`<span class="tdot ${c.dot}"></span>`:""}<span class="kn">${esc(c.name)}</span>
+        <span class="kc num">${c.items.length}</span></div>
+      <div class="kbody">${c.items.length ? c.items.map(card).join("") : `<div class="kempty">${l.empty}</div>`}</div>
+    </div>`).join("") + `</div>`;
+
+  $("#viewhost").querySelectorAll(".kcard").forEach(el => {
+    el.addEventListener("dragstart", e => { el.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", el.dataset.id); });
+    el.addEventListener("dragend", () => { el.classList.remove("dragging");
+      $("#viewhost").querySelectorAll(".kcol").forEach(c => c.classList.remove("over")); });
+  });
+  $("#viewhost").querySelectorAll(".kcol").forEach(col => {
+    col.addEventListener("dragover", e => { e.preventDefault(); col.classList.add("over"); });
+    col.addEventListener("dragleave", () => col.classList.remove("over"));
+    col.addEventListener("drop", e => {
+      e.preventDefault(); col.classList.remove("over");
+      const id = e.dataTransfer.getData("text/plain"), to = col.dataset.col;
+      if(!id) return;
+      if(unit === "task"){
+        for(const p of DATA().projects){
+          const t = p.tasks.find(t => t.id === id);
+          if(t){ if(t.status === to) return;
+            addPending(`${projPath(p)}Tasks/${t.title.replace(/\s+/g,"-").toLowerCase()}.md`, "status", t.status, to);
+            t.status = to; break; }
+        }
+      } else {
+        const p = DATA().projects.find(p => p.id === id);
+        if(!p || (p.stage||"") === to) return;
+        addPending(briefPath(p), "stage", p.stage || "(none)", to || "(none)");
+        p.stage = to || undefined;
+      }
+      renderAll();
+    });
+  });
+}
+function renderPending(){
+  const l = L(), host = $("#pendhost");
+  if(!host) return;
+  if(!PENDING.length){ host.innerHTML = ""; return; }
+  host.innerHTML = `<span class="ctl pendbtn" id="pendbtn">${l.pend} <span class="num">${PENDING.length}</span></span>`;
+  $("#pendbtn").onclick = () => {
+    $("#pendtext").value = PENDING.map(e => `${e.file}\n  ${e.key}: ${e.from}  ->  ${e.to}`).join("\n\n");
+    $("#pendov").classList.add("on");
+  };
+}
+
+/* ======================= I 表格 ======================= */
+function renderGridView(){
+  const l = L(), ps = visibleProjects(), c = S.gridCols;
+  const head = `<tr><th style="width:36%">task</th><th>status</th>${c.start?"<th>start</th>":""}<th>due</th><th>waiting_on</th>${c.priority?"<th>priority</th>":""}</tr>`;
+  const span = 4 + (c.start?1:0) + (c.priority?1:0);
+  $("#viewhost").innerHTML = `<div class="axishead"><span class="lbl">I</span></div><div class="grid">` +
+    ps.map(p => {
+      const ts = p.tasks.filter(t => (S.showDone || t.status !== "done") && (!S.overdueOnly || isOver(t)))
+        .sort((a,b) => (a.due||"9999") < (b.due||"9999") ? -1 : 1);
+      return `<details class="grp"${S.gridCollapsed?"":" open"}>
+        <summary><span class="car">▶</span><span class="gname">${esc(p.name)}</span>
+          ${p.stage?`<span class="chip stage">${sgName(p.stage)}</span>`:""}
+          ${p.brand?`<span class="chip">${esc(p.brand)}</span>`:""}
+          <span class="gpath">${esc(projPath(p))}</span>
+          <span class="gcnt">${ts.length} ${l.tasksWord} · due ${p.due||l.none} · priority ${p.priority||l.none}</span></summary>
+        <table class="gt"><thead>${head}</thead><tbody>` +
+        (ts.length ? ts.map(t => `<tr class="${t.status==="done"?"fin":""}">
+          <td class="t">${esc(t.title)}</td>
+          <td><span class="tdot ${ST[t.status].c}"></span>${stName(t.status)}</td>
+          ${c.start?`<td class="d">${t.start||"·"}</td>`:""}
+          <td class="d${isOver(t)?" over":""}">${t.due||"·"}</td>
+          <td class="w">${t.waiting_on?esc(t.waiting_on):""}</td>
+          ${c.priority?`<td class="d">${t.priority||""}</td>`:""}</tr>`).join("")
+          : `<tr><td colspan="${span}" style="color:var(--faint)">${l.empty}</td></tr>`) +
+        `</tbody></table></details>`;
+    }).join("") + `</div>`;
+}
+
+/* ======================= J 月历 ======================= */
+function renderCalView(){
+  const l = L(), d = DATA();
+  const [Y,M] = S.calMonth.split("-").map(Number);
+  const first = new Date(Y, M-1, 1), start = new Date(first);
+  const off = S.weekStartMon ? ((first.getDay()+6) % 7) : first.getDay();
+  start.setDate(1 - off);
+  const evByDay = {};
+  const push = (day, html) => (evByDay[day] ||= []).push(html);
+  if(S.calLayers.task) visibleTasks().forEach(t => { if(t.due)
+    push(t.due, `<div class="ev"><span class="tdot ${ST[t.status].c}"></span><span class="en">${esc(t.title)}</span></div>`); });
+  if(S.calLayers.proj) visibleProjects().forEach(p => { if(p.due)
+    push(p.due, `<div class="ev proj"><span class="sq"></span><span class="en">${esc(p.name)}</span></div>`); });
+  if(S.calLayers.ren) d.renewals.forEach(r =>
+    push(r.renew_by, `<div class="ev ren"><span class="sq"></span><span class="en">${esc(r.name)}</span></div>`));
+
+  let cells = "";
+  for(let i = 0; i < 42; i++){
+    const dt = new Date(start); dt.setDate(start.getDate()+i);
+    const iso = ISO(dt), out = dt.getMonth() !== M-1;
+    cells += `<div class="cell${out?" out":""}${iso===TODAY?" today":""}">
+      <div class="dnum">${dt.getDate()}</div>${(evByDay[iso]||[]).join("")}</div>`;
+  }
+  const label = first.toLocaleString("en",{month:"long"}) + " " + Y;
+  const shift = n => { const t = new Date(Y, M-1+n, 1); return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}`; };
+  const days = S.weekStartMon ? ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"] : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  $("#viewhost").innerHTML = `<div class="axishead"><span class="lbl">J</span></div>
+    <div class="calbar"><span class="calnav" data-m="${shift(-1)}">◀</span>
+      <span class="calnav" data-m="{{THIS_MONTH}}">${l.thisMonth}</span>
+      <span class="calnav" data-m="${shift(1)}">▶</span><span class="caltt">${label}</span></div>
+    <div class="calwrap"><div class="calhead">${days.map(x=>`<div>${x}</div>`).join("")}</div>
+    <div class="calgrid">${cells}</div></div>`;
+  $("#viewhost").querySelectorAll(".calnav").forEach(n => n.onclick = () => { S.calMonth = n.dataset.m; renderCalView(); });
+}
+
+function renderView(){
+  if(S.tab === "lane") renderLaneView();
+  else if(S.tab === "kanban") renderKanbanView();
+  else if(S.tab === "cal") renderCalView();
+  else renderGridView();
+}
+
+/* ======================= 右栏 · R1 R2 R3 R4 =======================
+   顺序照 JW 定的: Countdown → Expires → Moving → Standing rules。
+   四节共用 option A 的 headline 文法 (大数字领头 + 一句名字 + 一行小字尾巴)。 */
+function renderCockpit(){
+  const l = L(), d = DATA(), ps = deckProjects();
+
+  /* ---- L3 Countdown · 卡片式, 一张卡一个关口 ---- */
+  /* JW 2026-08-16: milestones ONLY, the same set the swimlane draws as diamonds.
+     ⛔ A project carrying both a start and a due is a runway, and it belongs on
+     the swimlane where its span is visible, not in a countdown that would report
+     only its last day. The hairline went with this change: a point in time has
+     no runway to have half-run. */
+  const gates = ps.filter(inCountdown).map(p => ({
+    name:p.name, due:p.due, left:dleft(p.due),
+    lane:(p.lane ? l[p.lane] : l.personal).toUpperCase()
+  })).sort((a,b) => a.left - b.left);
+  const GSHOW = 4;
+  let R1 = `<div class="kick"><span class="lbl">L3</span>${l.gates}<span class="r">${gates.length} ${l.deadlinesWord}</span></div>`;
+  if(!gates.length) R1 += `<div class="emptyline" style="margin-top:14px">${l.emptyGates}</div>`;
+  else {
+    R1 += `<div class="mgrid" style="margin-top:12px">` + gates.slice(0,GSHOW).map((g,i) => `
+      <div class="mcard${i===0&&g.left>=0?" next":""}${g.left<0?" over":""}">
+        <span class="mc-tag"><span class="gk"></span>${esc(g.lane)}</span>
+        <div class="mc-title">${esc(g.name)}</div>
+        <div class="mc-cd"><b>${Math.abs(g.left)}</b><span class="u">${g.left<0?l.overdue:l.dleft}</span></div>
+        <div class="mc-date">${md(g.due)}</div>
+      </div>`).join("") + `</div>`;
+    const tail = gates.slice(GSHOW);
+    if(tail.length) R1 += `<div class="more">+${tail.length} ${l.furtherOut} · ${
+      tail.map(g => `<span class="num">${g.left}d</span>`).join(" · ")}</div>`;
+    R1 += `<div class="legend">${l.mileNote}</div>`;
+  }
+  $("#p-gates").innerHTML = R1;
+
+  /* ---- R2 Expires ---- */
+  const rens = d.renewals.map(r => ({...r, left:dleft(r.renew_by)})).sort((a,b) => a.left-b.left);
+  let R2 = `<div class="kick"><span class="lbl">R1</span>${l.ren}<span class="r">${rens.length} ${l.tracked}</span></div>`;
+  if(!rens.length) R2 += `<div class="emptyline" style="margin-top:12px">${l.emptyRen}</div>`;
+  else {
+    const r0 = rens[0], tail = rens.slice(1);
+    const row = r => `<li><span class="n-t"><span>${esc(r.name)}</span><em>${r.room}</em></span>
+      <span class="n-d num">${md(r.renew_by)}</span><span class="n-n num">${r.left}d</span></li>`;
+    const biz = tail.filter(r => r.wing === "business"), per = tail.filter(r => r.wing === "personal");
+    R2 += `<div class="blead"><b class="hn hn-m num acc">${r0.left}</b>
+        <span><span class="t">${l.dleftLong} · ${esc(r0.name)}</span>
+        <span class="s">${r0.room} · ${r0.wing} · ${md(r0.renew_by)}</span></span></div>`
+      + (biz.length?`<div class="sublab">${l.businessThen}</div><ul class="nlist">${biz.map(row).join("")}</ul>`:"")
+      + (per.length?`<div class="sublab">${l.personalWord}</div><ul class="nlist">${per.map(row).join("")}</ul>`:"");
+  }
+  $("#p-ren").innerHTML = R2;
+
+  /* ---- R3 Moving ---- */
+  const pu = d.pulse, mx = Math.max(1, ...pu.days), tmx = Math.max(1, ...pu.top.map(t => t.n));
+  const nActive = d.projects.filter(p => p.status !== "done").length;
+  let R3 = `<div class="kick"><span class="lbl">R2</span>${l.pulse}<span class="r">${l.journalLast} ${pu.days.length}${l.daysShort}</span></div>
+    <div class="blead"><b class="hn hn-m num${pu.touched?"":" dim"}">${pu.touched}</b>
+      <span><span class="t">${l.projectsTouched}</span>
+      <span class="s">${l.ofWord} ${nActive} ${l.activeWord} · ${l.barsNote}</span></span></div>
+    <div class="spark">${pu.days.map((v,i) =>
+      `<i class="${i===pu.days.length-1?"now":""}" style="height:${v?Math.max(v/mx*100,8).toFixed(1)+"%":"2px"}"></i>`).join("")}</div>`;
+  if(pu.top.length){
+    R3 += `<div class="sublab">${l.mostMentioned}</div><ul class="tlist">${pu.top.map(t =>
+        `<li><span class="t-t">${esc(t.name)} <em>${t.kind}</em></span>
+          <span class="hbar"><i style="width:${Math.round(t.n/tmx*100)}%"></i></span>
+          <span class="t-n num">${t.n}</span></li>`).join("")}</ul>`;
+    if(pu.silent.length) R3 += `<div class="sublab">${l.silent}</div><div class="quiet">${
+      pu.silent.map(sv => `<b>${esc(sv.name)}</b> <span class="num">${sv.days}d</span>`).join("<i>·</i>")}</div>`;
+  } else R3 += `<div class="emptyline" style="margin-top:11px">${l.emptyPulse}</div>`;
+  $("#p-pulse").innerHTML = R3;
+
+  /* ---- R4 Standing rules ---- */
+  const decs = d.decisions.slice().sort((a,b) => a.date < b.date ? -1 : 1);
+  const act = decs.filter(v => v.status === "active").reverse();
+  const ret = decs.filter(v => v.status !== "active");
+  const sup = ret.filter(v => v.status === "superseded").length, clo = ret.length - sup;
+  const DSHOW = 5;
+  let R4 = `<div class="kick"><span class="lbl">R3</span>${l.dec}<span class="r">${decs.length} ${l.logged}</span></div>`;
+  if(!decs.length) R4 += `<div class="emptyline" style="margin-top:12px">${l.emptyDec}</div>`;
+  else {
+    R4 += `<div class="blead"><b class="hn hn-m num">${act.length}</b>
+        <span><span class="t">${l.rulingsInForce}</span>
+        <span class="s">${l.newestFirst} · ${ret.length} ${l.retiredWord} (${clo} ${l.closedWord}, ${sup} ${l.supersededWord})</span></span></div>
+      <ul class="dlist">${act.slice(0,DSHOW).map(v => `<li>
+        <span class="d-dt num">${md(v.date)}</span>
+        <span><span class="d-t">${esc(v.title)}</span>
+          ${v.supersedes?`<em class="d-sup">${l.replaces} ${esc(v.supersedes)}</em>`:""}</span>
+        <span class="d-l">${(v.lane==="personal"?l.personal:l[v.lane]||v.lane)}</span></li>`).join("")}</ul>
+      ${act.length>DSHOW?`<div class="more">+${act.length-DSHOW} ${l.moreActive}</div>`:""}
+      ${ret.length?`<div class="retired">${l.retiredLabel} ${ret.map(v=>`<s>${esc(v.title)}</s>`).join("<i>·</i>")}</div>`:""}`;
+  }
+  $("#p-dec").innerHTML = R4;
+}
+
+/* ======================= 组装 ======================= */
+function renderAll(){
+  const l = L();
+  $("#ttl").textContent = l.deck;
+  $("#biz").textContent = SETUP.business.name;
+  /* JW 2026-08-14: a deck read from a bookmark, outside any session, must say
+     when it is looking at yesterday's numbers rather than let them read as today's. */
+  const genDay = (DATA().meta.generatedDate || DATA().meta.generated || "").slice(0,10);
+  const nowDay = new Date().toISOString().slice(0,10);
+  const stale = genDay && nowDay > genDay;
+  $("#stamp").innerHTML = esc(l.genat + " " + DATA().meta.generated)
+    + (stale ? `<span class="nudge">${esc(l.staleNudge)}</span>` : "");
+  $("#stamp").classList.toggle("stale", !!stale);
+  document.querySelector(".split").classList.toggle("norail", !S.showRail);
+  $("#railbtn").innerHTML = `<span class="gl2"><i></i><i></i></span>${l.sidebar}`;
+  $("#railbtn").dataset.on = S.showRail ? 1 : 0;
+  $("#pendh").textContent = l.pendH; $("#pendb").textContent = l.pendBody;
+  $("#pendcopy").textContent = l.pendCopy; $("#pendclear").textContent = l.pendClear;
+  $("#pendclose").textContent = l.pendClose;
+  renderTop(); renderTabs(); renderControls(); renderView(); renderPending(); renderCockpit();
+}
+
+$("#railbtn").onclick = () => {
+  S.showRail = !S.showRail;
+  document.querySelector(".split").classList.toggle("norail", !S.showRail);
+  $("#railbtn").dataset.on = S.showRail ? 1 : 0;
+  const t0 = performance.now();
+  (function tick(){ drawEdges(); if(performance.now() - t0 < 480) requestAnimationFrame(tick); })();
+};
+$("#pendclose").onclick = () => $("#pendov").classList.remove("on");
+$("#pendcopy").onclick = () => { $("#pendtext").select(); document.execCommand("copy"); };
+$("#pendclear").onclick = () => { PENDING.length = 0; $("#pendov").classList.remove("on"); renderPending(); };
+$("#pendov").onclick = e => { if(e.target.id === "pendov") $("#pendov").classList.remove("on"); };
+document.addEventListener("click", e => {
+  if(!e.target.closest(".menuwrap") && S.openMenu){ S.openMenu = null; renderControls(); }
+  if(!e.target.closest(".tcard")) document.querySelectorAll(".tcard.open").forEach(o => o.classList.remove("open"));
+});
+window.addEventListener("resize", drawEdges);
+window.addEventListener("load", () => setTimeout(drawEdges, 40));
+renderAll();
+</script>
+</body>
+</html>

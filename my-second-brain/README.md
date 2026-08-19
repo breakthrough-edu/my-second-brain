@@ -36,7 +36,7 @@ The structural rules live in your vault after setup (`99_Meta/structure-doctrine
 ## Requirements
 
 - [Claude Code](https://claude.com/claude-code)
-- [Obsidian](https://obsidian.md) (free; the skill can install it for you). Enable the **Bases** core plugin for the dashboard.
+- [Obsidian](https://obsidian.md) (free; the skill can install it for you). It is the reading and graph surface. The dashboard is a generated HTML file that opens in any browser, so it needs no plugin.
 - Python 3, for the inspector and session memory. macOS ships everything they need; on Windows use Python from python.org (not Anaconda, whose SQLite lacks the FTS5 extension session memory needs).
 - Works on macOS, Windows, Linux, with two honest caveats. The optional machine guards are macOS-gated for now (safety lock macOS only, session memory macOS first). And **Windows is best-effort rather than tested**: this skill is built on macOS and we have no Windows machine to verify against, so the Windows install path (a plain folder copy for your generated command-base skill by default, with a `mklink /J` junction available on request once Setup has told you what you give up by taking it) is written to verify itself and fall back cleanly rather than to promise it works. Full detail in Honest boundaries and the Windows self-serve path on the [repo front page](https://github.com/breakthrough-edu/my-second-brain).
 - English or 中文 interaction; your choice at setup.
