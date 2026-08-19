@@ -3,3 +3,7 @@
 # Python
 __pycache__/
 *.pyc
+
+# Claude Code local settings (machine specific, holds absolute paths).
+# Only this one file. .claude/settings.json and .claude/commands/ stay committable.
+.claude/settings.local.json
