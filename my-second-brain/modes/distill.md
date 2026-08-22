@@ -47,10 +47,12 @@ The chain, and each link needs the owner: **several related methods → you name
 
 ### 4 · Filing patterns
 
-Read `99_Meta/filing-log.md` since the last run. **Two signals, both proposals:**
+Read `99_Meta/filing-log.md`. **Two signals, both proposals**, and they read two different windows:
 
-- **Three or more filings to the same destination that has no room yet** → propose opening the room.
-- **Repeated filings decided by judgment with no rule to cite** → propose a new row for the precedent table in doctrine §2 (on approval: append the row, add a revision-log line).
+- **Three or more filings to the same destination that has no room yet** → propose opening the room. ⭐ **This bullet is the whole of the doctrine's §0 promise** ("three filings to the same missing home become a proposal"); nothing anywhere else reads the log for that pattern, so a reader looking for the law's check has arrived.
+
+    ⭐ **The window is the whole log, and a line stops counting the day the room it wanted exists.** ⛔ Not "since the last run": the doctrine calls this a pattern, three filings spread over three weeks are the ordinary shape of one, and a window one week wide would leave the law promising a check that could almost never fire. Counting the whole log costs one thing, named here rather than discovered later: a room the owner declined is proposed again next run, the same way the monthly-theme doorbell re-asks a question it was told no to. ⚠️ It cannot swell into a nag, because the count collapses to nothing the day the room is opened, and opening it is the only outcome that retires the proposal for good.
+- **Repeated filings decided by judgment with no rule to cite** → propose a new row for the precedent table in doctrine §2 (on approval: append the row, add a revision-log line). ⭐ **This one reads since the last run**, unlike the signal above: what it hunts is a judgment being made over and over right now, and once the row lands, the older lines were decided under a rule that did not exist when they were written.
 
 ⭐ This is the only pass here that grows the **house** rather than the owner's methodology, and it belongs on this side because what it reads is a record of judgment.
 

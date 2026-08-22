@@ -97,6 +97,8 @@ Grouped by check, each item one line: what, where, proposed action, rule cited. 
 
 Execute what was approved. Append every move to `filing-log.md`.
 
+⭐ **This half writes that log and never reads it back, and the one line above is the whole of its business with it.** The reader is the other half: [distill.md](distill.md)'s filing-patterns pass, which is where the doctrine's "three filings to the same missing home become a proposal" actually happens. ⛔ **Do not grow a second copy of that pattern check here.** A session that greps this file for `filing-log`, finds this line, sees a write, and concludes the law promises a check nobody built has found the writer and stopped one file short of the reader; the two proposals it would then produce would run back to back in the same ritual, for one room.
+
 ## First-run honesty
 
 On a young vault most of this finds nothing. Say so in one line and move on. ⛔ Never manufacture findings to look thorough; a short honest pass builds more trust than a padded one, and it is also what makes a real finding believable when one turns up.

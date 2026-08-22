@@ -26,7 +26,7 @@ Read this before creating or filing anything in this vault. This file is the sin
    **2b. Map the family to its home:** entity → its room in `01_Assets/` (or the matching Personal-Wing room) · process (sop) → `03_SOP/` · playbook / lesson → `04_Methodology/` · brand-strategy → that brand's `<Brand>-Brand-Assets/` · brand-research → that brand's `<Brand>-Brand-Assets/Brand-Research/` · resources → `02_Command-Base/Resources/` · guide / brief / menu → with the folder or project they describe · control → `99_Meta/`, and setup is what puts them there (the control plane is declared in §8 so a correct install is not flagged for its own machinery, not so that new ones get filed by hand).
 3. **If no family fits: STOP.** Do not force it in. Do not invent frontmatter. Propose a new family: a new template plus a new row in §8, get a yes, then file. (The frontmatter guard blocks a hard schema violation: a bad filename, a missing required key, a value outside a closed list. A key §8 has not declared is a judgment call, not a violation, so the guard **flags it to this session** instead of blocking: register it in §8 if this kind of note always carries it, drop it if it was invented on the spot.)
 4. **Two plausible homes?** Check the precedent table (§2). If the case is genuinely new, ask the owner once, then record the answer as a new precedent line. Never ask the same question twice.
-5. **Every filing appends one line to `99_Meta/filing-log.md`** (date · what · where · which rule decided it). Weekly maintenance reads the log for patterns: three filings to the same missing home become a proposal.
+5. **Every filing appends one line to `99_Meta/filing-log.md`** (date · what · where · which rule decided it). The weekly ritual's distillation half reads the log for patterns: three filings to the same missing home become a proposal. ⛔ **The distillation half, not the anti-drift half**: the anti-drift half writes this log and never reads it back, and naming the wrong half here has already sent one reader hunting for a check that was sitting in the other file all along.
 
 ## 1 · Structure
 
@@ -217,9 +217,13 @@ families:
                                         # `active` is a legal word for a note nobody has looked at
                                         # since the deal closed, so the date is what makes "how
                                         # long has this said prospective" a question anyone can
-                                        # answer. ⛔ Nothing reads it and no check counts the
-                                        # days: writing the ruler comes before reading it, and a
-                                        # threshold for "too long" is the owner's business rhythm
+                                        # answer. ⭐ One reader exists: the weekly anti-drift
+                                        # pass takes it as a date written INSIDE the note, which
+                                        # beats the file's timestamp when it judges what has gone
+                                        # cold, because copying a vault rewrites every timestamp
+                                        # and moves nothing a person typed. ⛔ And no check counts
+                                        # the days: writing the ruler comes before reading it, and
+                                        # a threshold for "too long" is the owner's business rhythm
                                         # to set, not this product's to guess. Same key, same
                                         # meaning, as `ritual.monthly-theme` below.
     client:          {required: [type, status],
@@ -385,7 +389,27 @@ families:
                                             # common to demand, and a schema invented to
                                             # cover all four would fit none. Tighten each
                                             # one when its shape settles.
-    doctrine:        {required: [type]}
+    doctrine:        {required: [type],
+                      optional: [doctrine_version, created, last_updated,
+                                 maintained_by]}
+                                        # the four keys this file's own template ships,
+                                        # declared for the reason the other three
+                                        # control files declare theirs: a house must
+                                        # not be reported for the machinery it was
+                                        # born carrying. Undeclared until 2026-08-22,
+                                        # which made the frontmatter guard read a
+                                        # freshly written constitution as a note
+                                        # carrying four keys nobody had registered.
+                                        # ⛔ `doctrine_version` being a LEGAL key here
+                                        # is not permission to touch it. This file's
+                                        # own header rules on it in one line, `Do not
+                                        # edit the number by hand`, and that rule
+                                        # is untouched by this line: declaring a key
+                                        # tells an enforcer the product wrote it, and
+                                        # says nothing about who may change it after.
+                                        # The number moves when the product's
+                                        # generation moves, through the product, and
+                                        # no other way.
     vocabulary:      {required: [type],
                       optional: [maintained_by, last_updated, version]}
     lab-gate-config: {required: [type],
@@ -393,7 +417,15 @@ families:
     profile:         {required: [type],
                       optional: [subject, last_updated, maintained_by]}
   singletons:
-    home:              {required: [type]}
+    home:              {required: [type],
+                        optional: [updated]}
+                                        # `updated:` ships on the scaffolded Home.md
+                                        # itself, and the directory is re-audited
+                                        # against the filesystem at every maintenance
+                                        # run (§3), so the date is part of the file
+                                        # rather than something a session invented.
+                                        # Same omission as `control.doctrine` above,
+                                        # closed on the same day and for one reason.
     business-profile:  {required: [type, business],
                         optional: [founder_name, brand_name, industry, category,
                                    location, one_line_description, created,
