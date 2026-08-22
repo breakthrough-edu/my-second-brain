@@ -12,7 +12,7 @@ WHAT IT IS
     rebuild rewrites the whole thing, and nothing on the page is authoritative
     about anything: the vault is. That is the entire reason it may be
     overwritten without asking, and the reason a drag on the deck produces a
-    proposal rather than a write (execution-backlog entry 46).
+    proposal rather than a write.
 
 READ-ONLY ON THE VAULT, ALWAYS
     The one file this script writes is the deck itself, and it writes it
@@ -29,7 +29,6 @@ ZERO CONFIG FILE, ON PURPOSE
       wings    top-level folders (`03_Personal-Wing/`, `*-Business-Wing/`)
       lanes    the subfolders of a wing's `02_Work/`, ordered by doctrine
       brands   the `<Brand>-Brand-Assets/` folders under `01_Assets/`
-      language `language:` in 99_Meta/bootstrap-progress.md
 
     A stored copy of any of those is a second thing to keep true, and the day
     it disagrees with the folders the deck starts lying quietly.
@@ -42,8 +41,12 @@ SHARED READING LAYER, NOT A SECOND DIALECT
     whether it is FED. Those are different questions, which is why they are two
     commands, and the shared layer is where they must not differ.
 
-    ⛔ Consequence worth stating: everything the deck reads is an OPTIONAL key
-    in doctrine section 8 (`due`, `started`, `stage`, `priority`, `depends_on`).
+    ⛔ Consequence worth stating: every key a DARK CELL is about is an OPTIONAL
+    key in doctrine section 8 (`due`, `started`, `stage`, `priority`,
+    `depends_on`, `hide_on_deck` on a Brief; `start`, `due`, `waiting_on` on a
+    task). The deck also reads required keys to know what a note IS (`cb:`,
+    `status:`, and on a decision `date:` and `lane:`), and a note missing one of
+    those is the checker's business, not this file's.
     A project with none of them is perfectly legal, so the checker will never
     mention it and the frontmatter guard will never stop it. It is simply a dark
     row on the deck. `doctor` exists because that failure is in no other
@@ -91,9 +94,12 @@ DECK_RELPATH = os.path.join("02_Command-Base", "Command-Deck.html")
 META_DIR = "99_Meta"
 PROGRESS = "bootstrap-progress.md"
 
-# Doctrine section 1 states the lane ladder in this order. Folders are the
-# source of WHICH lanes exist; this list is only their reading order, and a lane
-# folder the owner added that is not on it still ships, at the end.
+# Doctrine section 1 states the lane ladder, and it is CLOSED: every project
+# lives in exactly one of these four. This list is therefore the whole set, not
+# just a reading order. ⛔ A fifth lane folder is not shipped quietly at the end:
+# the display layer does not get to widen a rule the doctrine wrote, and a lane
+# the deck has no name, no question line and no colour for would draw as a hole.
+# `doctor` names the folder instead, which is what `doctor` is for.
 LANE_ORDER = ["Deliver", "Grow", "Run", "Build"]
 
 # Skipped for the same reason checkup skips them: templates are shapes, not
@@ -221,7 +227,7 @@ def _pretty(name):
 
 class VaultShape(object):
     __slots__ = ("root", "personal_wing", "business_wings", "brands", "lanes",
-                 "language", "business_name", "business_slug")
+                 "extra_lanes", "business_name", "business_slug")
 
     def __init__(self):
         self.root = None
@@ -229,7 +235,7 @@ class VaultShape(object):
         self.business_wings = []
         self.brands = []
         self.lanes = []
-        self.language = "en"
+        self.extra_lanes = []
         self.business_name = ""
         self.business_slug = ""
 
@@ -261,14 +267,14 @@ def read_shape(vault):
                     brand = room[: -len("-Brand-Assets")]
                     if brand not in shape.brands:
                         shape.brands.append(brand)
-    ordered = [l for l in LANE_ORDER if l in lanes]
-    ordered += [l for l in lanes if l not in LANE_ORDER]
-    shape.lanes = ordered
+    shape.lanes = [l for l in LANE_ORDER if l in lanes]
+    # ⛔ Not appended to shape.lanes: doctrine section 1 closes the ladder at
+    # four. Kept so `doctor` can name the folder rather than the deck drawing a
+    # lane it has no name for.
+    shape.extra_lanes = [l for l in lanes if l not in LANE_ORDER]
 
     progress = os.path.join(vault, META_DIR, PROGRESS)
     fm = parse_frontmatter(_read(progress) or "")
-    lang = str(fm.get("language", "")).strip().lower()
-    shape.language = "zh" if lang.startswith("zh") or lang == "中文" else "en"
     shape.business_name = str(fm.get("business_name", "")).strip()
     shape.business_slug = str(fm.get("business_tag", "")).strip()
     if not shape.business_name and shape.business_wings:
@@ -405,7 +411,7 @@ def scan_vault(vault, shape):
             "due": str(fm.get("due", "")).strip() or None,
             "priority": _int_or_none(fm.get("priority")),
             # A Brief may carry renew_by. It then belongs to What expires rather
-            # than to Countdown, and the template routes it there (JW 2026-08-16).
+            # than to Countdown, and the template routes it there.
             "renew_by": str(fm.get("renew_by", "")).strip() or None,
             "depends_on": [_link_target(x) for x in _listify(fm.get("depends_on"))],
             "hide_on_deck": _truthy(fm.get("hide_on_deck")),
@@ -545,9 +551,10 @@ def _read_pulse(vault, scan):
             touched += 1
         elif seen:
             silent.append({"name": p["name"], "days": (today - seen).days})
-        else:
-            silent.append({"name": p["name"], "days": None})
-    silent = [s for s in silent if s["days"] is not None]
+        # ⛔ A project no daily note has EVER named has no "days since" to sort
+        # or print by, so it is not in this list at all. That is why the panel's
+        # label reads LAST MENTIONED and not "not mentioned": what this list
+        # holds is projects with a date, just an old one.
     silent.sort(key=lambda s: -s["days"])
     return {"touched": touched, "days": days, "top": top, "silent": silent[:4]}
 
@@ -565,6 +572,10 @@ def _strip_private(obj):
 
 
 def build_payload(shape, scan, now):
+    # ⛔ One wing reaches the page: its name in the title bar, and its folder as
+    # the root of every file path the deck offers back. Doctrine section 8
+    # pre-approves a second wing and the scan reads all of them, so this line
+    # picks the first and `doctor` names the ones it did not pick.
     wing = shape.business_wings[0] if shape.business_wings else ""
     setup = {
         "business": {
@@ -597,13 +608,24 @@ def build_payload(shape, scan, now):
 # build
 # --------------------------------------------------------------------------
 
+def _json_for_script(obj):
+    """JSON safe to paste inside a <script> block.
+
+    ⛔ Every `<` becomes the escape `\\u003c`. The HTML tokenizer ends a script
+    at the literal text `</script>` wherever it appears, quoted or not, so one
+    note titled `</script>` would otherwise cut the page in half and the whole
+    deck would render blank. The escape is invisible to the JSON parser: the
+    string that reaches the page is byte-for-byte the title the owner wrote.
+    """
+    return json.dumps(obj, ensure_ascii=False, indent=2).replace("<", "\\u003c")
+
+
 def render(template_text, setup, data, shape, now):
     out = template_text
     out = out.replace("{{TODAY}}", now.strftime("%Y-%m-%d"))
     out = out.replace("{{THIS_MONTH}}", now.strftime("%Y-%m"))
-    out = out.replace("{{LANG}}", shape.language)
-    out = out.replace("{{SETUP_JSON}}", json.dumps(setup, ensure_ascii=False, indent=2))
-    out = out.replace("{{DATA_JSON}}", json.dumps(data, ensure_ascii=False, indent=2))
+    out = out.replace("{{SETUP_JSON}}", _json_for_script(setup))
+    out = out.replace("{{DATA_JSON}}", _json_for_script(data))
     return out
 
 
@@ -654,7 +676,11 @@ def cmd_build(vault, args):
     line = "Command Deck rebuilt: %d projects, %d tasks, %d notes scanned." % (
         data["meta"]["briefs"], data["meta"]["tasks"], scan.scanned)
     if scan.unreadable:
-        line += " %d file(s) the deck could not read (run `deck.py doctor`)." % len(scan.unreadable)
+        # ⛔ Printed so it can be typed back verbatim: the interpreter, the
+        # script's real path and the vault, and no backticks (a shell would run
+        # what is between them). The file carries no execute bit on purpose.
+        line += " %d file(s) the deck could not read. To see them, run: python3 \"%s\" doctor \"%s\"" % (
+            len(scan.unreadable), os.path.abspath(__file__), vault)
     print(line)
     return 0
 
@@ -674,7 +700,7 @@ def _dark_cells(scan, shape):
     projects = [p for p in scan.projects
                 if p["status"] != "done" and not p["hide_on_deck"]]
 
-    # JW 2026-08-16: `due` with no `started` is a MILESTONE (a diamond on the
+    # `due` with no `started` is a MILESTONE (a diamond on the
     # swimlane, and the only thing Countdown holds). `started` with `due` is a
     # runway (a bar). Both are complete shapes, so neither is dark. What IS dark
     # is a project carrying neither: it is not a point and not a span, and the
@@ -742,6 +768,50 @@ def _dark_cells(scan, shape):
                             "path": t["_path"],
                             "why": "status is waiting but nothing names who or what is being waited on",
                             "fix": "waiting_on: <person or thing> in the task note"})
+
+    # A depends_on entry that resolves to nothing is dropped during the scan, so
+    # the arrow it asked for is simply absent. ⛔ Silently absent is the failure:
+    # the owner wrote the key and the deck owes them the reason it did nothing.
+    unresolved = dict((n[1], n[2]) for n in scan.notes if n[0] == "dep-unresolved")
+    for p in scan.projects:
+        if p["_path"] in unresolved:
+            out.append({"cell": "Dependency arrows", "subject": p["name"], "path": p["_path"],
+                        "why": unresolved[p["_path"]],
+                        "fix": "spell the other project the way its own Brief titles it, or "
+                               "drop the name if that project is gone"})
+
+    # Doctrine section 1 closes the lane ladder at four. A fifth folder is a
+    # doctrine question, not a display one, so the deck neither draws it nor
+    # hides it: it says the folder's name and leaves the call to the owner.
+    for lane in getattr(shape, "extra_lanes", []):
+        out.append({"cell": "Swimlane lanes", "subject": lane, "path": None,
+                    "why": "02_Work/%s is not one of the four lanes doctrine section 1 "
+                           "allows (Deliver, Grow, Run, Build), so the deck gives it no "
+                           "lane of its own. Projects inside it are still counted, still "
+                           "on the kanban, the grid and the calendar" % lane,
+                    "fix": "move those projects into one of the four lanes and remove the "
+                           "folder, or decide the ladder itself should change and amend "
+                           "doctrine section 1 first"})
+
+    # A second business wing is pre-approved by doctrine section 8 and the scan
+    # reads every wing it finds, so both wings' projects are on every panel. The
+    # PAGE, though, carries one business name and one wing folder (build_payload
+    # takes the first), and every file path the deck offers is built from that
+    # one folder. So the second wing's projects wear the first wing's name and
+    # are handed out under a path they do not live at. Nothing in the vault is
+    # broken, so no checker and no guard has anything to say about it, and the
+    # page cannot show what it left out: doctor says it instead of swallowing it.
+    for wing in shape.business_wings[1:]:
+        out.append({"cell": "Wing names and paths", "subject": wing, "path": None,
+                    "why": "this vault has %d business wings and the deck draws one: %s. The "
+                           "projects in %s are counted and on every panel, but they carry the "
+                           "drawn wing's name, and the file path the deck prints for their "
+                           "notes points into %s, where those notes are not"
+                           % (len(shape.business_wings), shape.business_wings[0],
+                              wing, shape.business_wings[0]),
+                    "fix": "take the path off the project's own folder rather than off the "
+                           "deck when you hand one of this wing's notes to a session; the "
+                           "vault is right and this is the page's edge"})
 
     if projects and not any(p["depends_on"] for p in projects):
         out.append({"cell": "Dependency arrows", "subject": "(vault-wide)", "path": None,
@@ -836,9 +906,12 @@ def cmd_doctor(vault, args):
                 if row["path"]:
                     print("       in : %s" % row["path"])
         print("")
-        print("   Nothing above is a law the vault broke. Every key named here is OPTIONAL in")
-        print("   doctrine section 8, which is exactly why no other check mentions them; an")
-        print("   unparseable file is the one exception, and it is a typo rather than a ruling.")
+        print("   Almost nothing above is a law the vault broke. Nearly every key named here is")
+        print("   OPTIONAL in doctrine section 8, which is exactly why no other check mentions")
+        print("   them. Four rows are not about an optional key: an unparseable file (a typo,")
+        print("   not a ruling), a depends_on that names nothing, a lane folder outside the four")
+        print("   of doctrine section 1 (that one IS a doctrine question), and a business wing")
+        print("   the deck does not draw (that one is this page's edge, not the vault's).")
         print("   This report proposes; it changes nothing.")
     return 0
 

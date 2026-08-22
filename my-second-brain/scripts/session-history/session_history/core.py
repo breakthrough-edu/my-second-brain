@@ -36,9 +36,6 @@ _SKIP_FILENAMES = {"journal.jsonl"}
 # The config file is optional JSON at ~/.my-second-brain/session-history.json
 # (override the location itself with SESSION_HISTORY_CONFIG). Recognised keys:
 #
-#   vault      absolute path to the owner's vault; harvest reports default to
-#              <vault>/00_Inbox/
-#   inbox      explicit report directory (wins over vault-derived inbox)
 #   db         database path
 #   projects   Claude Code transcripts directory
 #
@@ -80,22 +77,6 @@ def default_db_path() -> str:
 
 def default_projects_dir() -> str:
     return _resolve("SESSION_HISTORY_PROJECTS", "projects", "~/.claude/projects")
-
-
-def default_inbox_dir() -> Optional[str]:
-    """Directory harvest reports land in, or None if unconfigured.
-
-    No baked-in default: the report belongs in the owner's vault Inbox, and
-    only config (or SESSION_HISTORY_INBOX / the vault key) knows where that is.
-    Callers must ask for an explicit --out when this returns None.
-    """
-    explicit = _resolve("SESSION_HISTORY_INBOX", "inbox", None)
-    if explicit:
-        return explicit
-    vault = load_config().get("vault")
-    if vault:
-        return os.path.join(os.path.abspath(os.path.expanduser(str(vault))), "00_Inbox")
-    return None
 
 
 # --------------------------------------------------------------------------
@@ -147,6 +128,50 @@ def fts5_available() -> bool:
         return False
     finally:
         probe.close()
+
+
+# --------------------------------------------------------------------------
+# "No index yet" runtime check
+# --------------------------------------------------------------------------
+#
+# The query verbs read tables that only `ingest` creates, so on a fresh install
+# the very first `search` used to die on a raw `no such table: messages`. Same
+# shape as the FTS5 probe above: check before touching the tables, and fail
+# soft with a plain-language fix instead of a traceback. It stays a check and
+# never becomes an implicit ingest: `search` is a read, and it must not start
+# writing to the database because somebody asked it a question.
+
+INDEX_MISSING_MESSAGE = (
+    "session-history has no index yet, so there is nothing to answer from.\n"
+    "Build it first, then run this again:\n"
+    "    python3 -m session_history ingest     (or: ./sh ingest)\n"
+    "That reads ~/.claude/projects/ read-only and writes one database in "
+    "~/.my-second-brain/. The first run on a long history takes a while; "
+    "later runs take seconds."
+)
+
+
+class IndexNotBuilt(RuntimeError):
+    """Raised when a query verb runs before `ingest` has built the index."""
+
+    def __init__(self, message: str = INDEX_MISSING_MESSAGE):
+        super().__init__(message)
+
+
+def index_built(conn: sqlite3.Connection) -> bool:
+    """True once the tables the query verbs read exist in this database."""
+    names = {
+        r[0]
+        for r in conn.execute(
+            "SELECT name FROM sqlite_master WHERE name IN ('sessions', 'messages')"
+        ).fetchall()
+    }
+    return {"sessions", "messages"} <= names
+
+
+def _require_index(conn: sqlite3.Connection) -> None:
+    if not index_built(conn):
+        raise IndexNotBuilt()
 
 
 # --------------------------------------------------------------------------
@@ -231,10 +256,11 @@ def _maybe_migrate(conn: sqlite3.Connection) -> int:
     a stale shape beats no content, `search` still finds them, and their
     `harvested` bookmarks stay exactly where they were.
 
-    Deliberately NOT hung off `init_db`. `harvest` and `harvest_commit` call
-    that too, and the distill has a path that reviews an existing report
-    without ever ingesting; wiping messages there would empty the index with
-    nothing queued to rebuild it.
+    Deliberately NOT hung off `init_db`. `init_db` is a public entry point that
+    any caller may use just to open the database, without meaning to re-index;
+    wiping messages there would empty the index with nothing queued to rebuild
+    it. `ingest` is the only caller, because it is the only one that can put
+    the rows back in the same breath.
 
     The deletes and the version stamp share one transaction, so an interrupted
     run self-heals rather than half-migrating: a session left at byte_offset 0
@@ -283,8 +309,9 @@ def _truncate(text: str, limit: int = MAX_TEXT_BYTES) -> str:
 
 
 # Pseudo tool_name marking an assistant `thinking` block. Not a real tool; it
-# parks reasoning in a row the harvest query skips while `sh search` still finds
-# it. Changing this string requires a re-ingest to take effect on old rows.
+# parks private reasoning in its own row so `sh search` still finds it while
+# `actions` (which lists tool calls) filters it back out by this exact name.
+# Changing this string requires a re-ingest to take effect on old rows.
 THINKING_TOOL_NAME = "__thinking__"
 
 
@@ -349,10 +376,11 @@ def _rows_for_line(obj: dict) -> Iterator[tuple]:
                 text_parts.append(t)
         elif btype == "thinking":
             # Own row, tagged, NOT concatenated into the visible-prose row.
-            # Merged in, the assistant's private reasoning was indistinguishable
-            # from what it actually said, and harvest mined it as owner signal.
-            # The THINKING_TOOL_NAME marker keeps it fully searchable while the
-            # harvest query (tool_name IS NULL) skips it.
+            # Merged in, the assistant's private reasoning would be
+            # indistinguishable from what it actually said. The
+            # THINKING_TOOL_NAME marker keeps it fully searchable while every
+            # reader that means "what the assistant said" or "what tools it
+            # called" can exclude it by name.
             t = str(block.get("thinking", "")).strip()
             if t:
                 extra_rows.append((role, _truncate(t), THINKING_TOOL_NAME, i))
@@ -634,6 +662,7 @@ def _fts_query(raw: str) -> str:
 
 
 def search(conn: sqlite3.Connection, query: str, limit: int = 20) -> list[dict]:
+    _require_index(conn)
     match = _fts_query(query)
     sql = """
         SELECT m.session_id AS session_id,
@@ -654,14 +683,21 @@ def search(conn: sqlite3.Connection, query: str, limit: int = 20) -> list[dict]:
     """
     try:
         rows = conn.execute(sql, (match, limit)).fetchall()
-    except sqlite3.OperationalError:
-        # Last-ditch: quote the whole thing literally.
+    except sqlite3.OperationalError as first_error:
+        # The only thing worth retrying is the MATCH expression itself, once,
+        # with the whole query quoted as a single literal phrase. If that fails
+        # too, the fault was never the phrasing, so raise the first error on its
+        # own instead of stacking a second traceback on top of it.
         safe = '"' + query.replace('"', '""') + '"'
-        rows = conn.execute(sql, (safe, limit)).fetchall()
+        try:
+            rows = conn.execute(sql, (safe, limit)).fetchall()
+        except sqlite3.OperationalError:
+            raise first_error from None
     return [dict(r) for r in rows]
 
 
 def show(conn: sqlite3.Connection, session_id: str, limit: int = 1000) -> dict:
+    _require_index(conn)
     sess = conn.execute("SELECT * FROM sessions WHERE id=?", (session_id,)).fetchone()
     if sess is None:
         # Allow prefix match on the uuid for convenience.
@@ -684,6 +720,7 @@ def show(conn: sqlite3.Connection, session_id: str, limit: int = 1000) -> dict:
 
 
 def recent(conn: sqlite3.Connection, n: int = 10) -> list[dict]:
+    _require_index(conn)
     rows = conn.execute(
         """
         SELECT id, project, title, started_at, last_ts, line_count
@@ -714,6 +751,7 @@ def recent(conn: sqlite3.Connection, n: int = 10) -> list[dict]:
 
 
 def actions(conn: sqlite3.Connection, session_id: str, limit: int = 500) -> list[dict]:
+    _require_index(conn)
     sess = conn.execute("SELECT id FROM sessions WHERE id=?", (session_id,)).fetchone()
     if sess is None:
         sess = conn.execute(
@@ -726,11 +764,11 @@ def actions(conn: sqlite3.Connection, session_id: str, limit: int = 500) -> list
         """
         SELECT ts, tool_name, text
         FROM messages
-        WHERE session_id=? AND tool_name IS NOT NULL
+        WHERE session_id=? AND tool_name IS NOT NULL AND tool_name <> ?
         ORDER BY line_index, block_index
         LIMIT ?
         """,
-        (session_id, limit),
+        (session_id, THINKING_TOOL_NAME, limit),
     ).fetchall()
     return [dict(r) for r in rows]
 

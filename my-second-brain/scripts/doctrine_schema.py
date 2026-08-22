@@ -8,7 +8,7 @@ WHAT IT IS
     Section 8 calls itself "the single source, no copies anywhere"; this file
     is what makes that sentence true instead of aspirational. Before it, the
     checker shipped an empty record-schema config and the law sat unread
-    beside it (execution-backlog entry 92).
+    beside it.
 
     Consumers so far: scripts/checkup.py (the weekly linter) and the
     frontmatter guard hook. Both read through here. Neither keeps a copy.
@@ -25,27 +25,28 @@ WHAT IT READS, AND WHY IT HARD-CODES NO FAMILY OR FIELD NAMES
     both measured rather than assumed (see the 2026-08-15 harness session):
 
       1. Walking by the meta-rule writes ZERO family names and ZERO field
-         names into this file. Hard-coding those would have meant naming 40.
+         names into this file. Hard-coding those would have meant naming every
+         family and every field section 8 declares.
 
          ⛔ It does NOT write zero key names, and the difference is the whole
          claim. Four of the six RESERVED keys are written here on purpose:
          `required`, `optional`, `marker` and `multi` are fixed slots on Spec
          (see its __slots__), and three of them are also read straight off a
          raw spec (`raw.get(...)`, four such reads) rather than through the
-         reserved set. Measured: `grep -oE '"(required|optional|multi)"'` over
-         this file gives 7 occurrences on 6 lines. Those four are structural
-         rather than discovered: a Spec needs somewhere to keep required keys
-         whatever section 8 decides to call them.
+         reserved set; `grep -oE '"(required|optional|multi)"'` over this file
+         counts them. Those four are structural rather than discovered: a Spec
+         needs somewhere to keep required keys whatever section 8 decides to
+         call them.
 
          What writing them here costs, measured on a rendered vault rather than
          reasoned about: rename `required` in the block and this reader ABORTS
          (the mounting key stops being derivable), but rename `optional` or
-         `multi` and it runs QUIETLY with that slot empty, 13 families and 24
-         shapes exactly as before. The quiet `multi` is the expensive one: a
+         `multi` and it runs QUIETLY with that slot empty, the same families
+         and shapes as before. The quiet `multi` is the expensive one: a
          legal `lane: [deliver, run]` on an SOP is then reported as two values
          in a single-valued field. So renaming a reserved key is an edit to this
          file as well, which is the same contract the meta-rule comment has.
-         The 40 names that would rot in silence are the family names and the
+         The names that would rot in silence are the family names and the
          field names, and not one of them appears below.
       2. The reserved-key list is not a convenience, it is a correctness
          requirement. "Inside a family, a mapping is a subtype" stops being
@@ -58,10 +59,27 @@ WHAT IT READS, AND WHY IT HARD-CODES NO FAMILY OR FIELD NAMES
     there is no fallback anywhere in this file. If the meta-rule comment
     cannot be read, load_schema raises. It never guesses.
 
+OPEN KEYS: DECLARED LEGAL HERE, VALUES NOT GOVERNED HERE
+    Section 8 can also declare a key legal on every note while declaring
+    nothing about its values. `tags` is the one that ships: which words are
+    legal is the tag vocabulary's business, and section 8's business is only
+    that the key itself is not something somebody invented on the spot.
+
+    An open key is NOT a closed list with nothing in it. An empty list refuses
+    every value while looking like law; an open key refuses none and says so.
+
+    So the reader puts an open key on the KNOWN side of every spec (its
+    `optional`) and keeps it OUT of `enums`, where a value would be measured
+    against a list. What that buys is one sentence in section 8 instead of two
+    laws: the frontmatter guard used to carry `k != "tags"` in its own source,
+    a second place the law lived, which is the thing section 8's own title
+    forbids. A name declared open here and given a closed list anywhere in the
+    same block raises rather than resolves (see parse_block).
+
 NO LINE NUMBERS, EVER
     Section 8 is found by its heading and the first ```yaml fence below it.
     Every edit inside the block shifts every line in it, so a line number is
-    a reference that rots on the next edit (execution-backlog entry 103).
+    a reference that rots on the next edit.
 
 PYYAML IS A REAL DEPENDENCY, AND ITS ABSENCE IS LOUD
     Section 8 uses flow mappings and inline comments. A hand-rolled parser for
@@ -239,13 +257,15 @@ class Spec(object):
 class Schema(object):
     """Everything section 8 declares, in the six shapes it can express."""
 
-    __slots__ = ("families", "specs", "globals", "by_marker", "by_type",
-                 "marker_key", "type_key", "reserved", "source", "coords")
+    __slots__ = ("families", "specs", "globals", "open_keys", "by_marker",
+                 "by_type", "marker_key", "type_key", "reserved", "source",
+                 "coords")
 
     def __init__(self):
         self.families = []      # family names, in declaration order
         self.specs = {}         # dotted name -> Spec
         self.globals = {}       # field -> closed list, global to all families
+        self.open_keys = {}     # field -> why it is open, values ungoverned
         self.by_marker = {}     # "cb: task" -> Spec
         self.by_type = {}       # "brief" / "client" -> Spec
         self.marker_key = None  # the frontmatter key markers are written on
@@ -392,14 +412,32 @@ def parse_block(body_text, source=None, coords=None):
             "forbids, and it would go stale without ever raising. Refusing to run "
             "is the loud failure; a fallback would be the quiet one.")
 
-    # Top level: one key holds the families, every other key is a global list.
+    # Top level: three shapes, told apart by the VALUE and never by the name,
+    # the same way the families holder has never been named in this file.
+    #   mapping of mappings  -> the families (exactly one such key)
+    #   mapping of strings   -> the open-key table (at most one such key)
+    #   list                 -> a closed list, global to all families
     family_holders = [k for k, v in doc.items()
-                      if isinstance(v, dict) and all(isinstance(x, dict) for x in v.values())]
+                      if isinstance(v, dict) and v
+                      and all(isinstance(x, dict) for x in v.values())]
+    open_holders = [k for k, v in doc.items()
+                    if isinstance(v, dict) and v
+                    and all(isinstance(x, str) for x in v.values())]
     if len(family_holders) != 1:
         raise SchemaError(
             "expected exactly one top-level key holding the families, found %d "
-            "(%s)" % (len(family_holders), sorted(family_holders)))
+            "(%s). A top-level mapping is the families when every value in it "
+            "is itself a mapping, and the open-key table when every value in it "
+            "is a one-line string saying what governs that key instead, so an "
+            "open-key entry written as a mapping is one way to land here."
+            % (len(family_holders), sorted(family_holders)))
+    if len(open_holders) > 1:
+        raise SchemaError(
+            "expected at most one top-level key holding the open keys, found %d "
+            "(%s); which one a reader should believe is not decidable"
+            % (len(open_holders), sorted(open_holders)))
     families = doc[family_holders[0]]
+    open_keys = dict(doc[open_holders[0]]) if open_holders else {}
     globals_ = {k: v for k, v in doc.items()
                 if k != family_holders[0] and isinstance(v, list)}
 
@@ -465,6 +503,30 @@ def parse_block(body_text, source=None, coords=None):
                 schema.by_type[v] = spec
         elif not spec.marker:
             schema.by_type[spec.subtype or spec.family] = spec
+
+    # Open keys, applied last so nothing above can be read through them.
+    # Two halves, and the second one refuses instead of resolving:
+    #   1. the name joins every spec's `optional`, which is the side an
+    #      enforcer counting undeclared keys reads. That is what lets the
+    #      exemption live in section 8 rather than in an enforcer's source.
+    #   2. the name may not also carry a closed list, anywhere. A key declared
+    #      open here and closed there is section 8 saying two things about one
+    #      key, and because the name now sits in `optional`, `Spec.declares`
+    #      returns True for it, so picking the closed list would silently start
+    #      enforcing a list the same block calls ungoverned. Raising is the
+    #      loud failure; choosing a winner is the quiet one.
+    schema.open_keys = open_keys
+    for spec in schema.specs.values():
+        for field in open_keys:
+            if field in spec.enums:
+                raise SchemaError(
+                    "section 8 declares %r an open key (its values are not "
+                    "governed there) and also gives it a closed list on %s, so "
+                    "the block says two different things about one key. Keep "
+                    "one: drop the closed list, or drop the name from the "
+                    "open-key table." % (field, spec.name))
+            if field not in spec.required and field not in spec.optional:
+                spec.optional.append(field)
 
     return schema
 
@@ -533,6 +595,10 @@ def main(argv=None):
     print("mounting keys: marker=%r type=%r" % (schema.marker_key, schema.type_key))
     print("families (%d): %s" % (len(schema.families), ", ".join(schema.families)))
     print("global closed lists: %s" % {k: v for k, v in schema.globals.items()})
+    print("open keys (legal on every note, values not governed by section 8): %s"
+          % sorted(schema.open_keys))
+    for k in sorted(schema.open_keys):
+        print("    %s: %s" % (k, schema.open_keys[k]))
     print("\nspecs (%d):" % len(schema.specs))
     for name in sorted(schema.specs):
         s = schema.specs[name]

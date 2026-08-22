@@ -4,25 +4,23 @@
 
 **It runs SECOND**, after [maintenance.md](maintenance.md). That order is not preference: this half reads the state of the house to decide what is worth keeping, and the anti-drift half is what makes that state true.
 
-⛔ **One doorbell, two files.** The owner is never asked to pick a half.
+⛔ **One doorbell, two files.** The doorbell names the half that is actually overdue rather than handing the owner a choice.
 
 **The discipline, said to the owner once per run: distillation proposes, judgment rules.** Nothing enters `04_Methodology` unless the owner says yes; that is what keeps the layer honest. It holds judgment, not sediment.
-
-⭐ **What this half is NOT any more, said once because it used to be.** It no longer mines the week for material. Lessons, decisions, memory lines and methods **land the moment they happen**, at the closeout of the session that produced them, with the owner's yes in that moment (`session-report` and `method-builder` do that). What is left for a weekly pass is the only thing a weekly pass is genuinely better at: **looking at several of them at once.** ⛔ Do not reintroduce a scan of `02_Command-Base/Resources/`; the owner's library is their reading, not the machine's input.
 
 ## The four passes
 
 ### 1 · Audit the hypothesis pool
 
-`04_Methodology/Hypotheses/`. **This pass is the pool's only reader and its only writer.** ⛔ The pool never enters a session's context anywhere else.
+`99_Meta/Hypotheses/`. **This pass reads the pool and writes to it, and so does `session-report` at a session's closeout; the anti-drift half only reads it.** ⛔ The pool never enters a session's context anywhere else.
 
-⭐ **The pool has exactly one landing point now: patterns about the owner that only observation can establish, destined for `99_Meta/profile.md`.** Everything the pool used to hold besides that lands directly these days. The dividing line is not where something ends up, it is **whether the claim needs time to become true**: "he said he never discounts" is true the moment he says it and lands now; "he reaches for price before he reaches for scope" is only ever true after you have watched it three times, and that is what a pool is for. The profile template's own discipline already draws this line: record what has been revealed, meaning **said outright, or seen three or more times**.
+⭐ **The pool has exactly one landing point now: patterns about the owner that only observation can establish, destined for `99_Meta/profile.md`.** The dividing line is not where something ends up, it is **whether the claim needs time to become true**: "he said he never discounts" is true the moment he says it and lands now; "he reaches for price before he reaches for scope" is only ever true after you have watched it three times, and that is what a pool is for. The profile template's own discipline already draws this line: record what has been revealed, meaning **said outright, or seen three or more times**.
 
 Three things per hypothesis, per week:
 
-- **Corroboration.** A new piece of evidence, quoted verbatim with its session pointer in the body (⛔ in the body, not in a key: that is what makes it checkable). Count it.
-- **Contradiction.** The owner's actual behaviour contradicted it. ⛔ **It dies immediately**, and ⛔ **the body stays** with the reason. A dead hypothesis with a reason is what stops the same claim walking back in next month wearing different words.
-- **Silence.** Nothing either way: age it by one. Around four cadence periods with nothing, it expires.
+- **Corroboration.** A new piece of evidence, quoted verbatim with its session pointer in the body (⛔ in the body, not in a key: that is what makes it checkable). Count it: `weeks_supported:` goes up by one.
+- **Contradiction.** The owner's actual behaviour contradicted it. ⛔ **It dies immediately**: `status:` flips to `rejected`, and ⛔ **the body stays** with the reason. A dead hypothesis with a reason is what stops the same claim walking back in next month wearing different words.
+- **Silence.** Nothing either way: age it by one in `weeks_silent:`. Around four cadence periods with nothing, it expires.
 
 Merge near-duplicates, adding their evidence together. **Graduation needs all four:** corroborated in 3 different weeks · from different sessions · every piece of evidence carrying a real quote · zero unanswered contradictions. On graduation the claim is moved **verbatim**, because it was written in the finished wording of where it was going, which is the whole reason that rule exists.
 
@@ -44,6 +42,8 @@ The chain, and each link needs the owner: **several related methods → you name
 ⛔ **Superseded methods are never deleted.** "Which fights did this playbook come out of" has to stay answerable, and the pointer is written on the method because the method is the note being edited at that moment anyway.
 
 ⛔ **Only methods compose.** A run of decisions resolved the same way is not a playbook candidate, however striking the pattern (§7). Say the pattern out loud if it is interesting; ⛔ do not file it.
+
+⛔ **Never hand-build a lab's organs from this pass.** A playbook that has earned a live feedback loop is §9's business, not this one: the owner asks for a lab, and the `playbook-lab` skill opens it through the §9.5 gate. A playbook composed here is a playbook, and that is all it is.
 
 ### 4 · Filing patterns
 
@@ -68,16 +68,8 @@ Read `99_Meta/filing-log.md` since the last run. **Two signals, both proposals:*
 
 - **Set `last_distill:` in `maintenance-state.md`**, append the history line (proposals made / accepted). ⛔ This half stamps `last_distill` and nothing else; the anti-drift half stamps `last_tidy`. That is what lets the doorbell name the half that is actually overdue.
 - **The first playbook.** If this run is the first time a **playbook** was born in this vault, mark it; one line, no ceremony: "That is your first playbook. A method is one move of yours written down; a playbook is several of them turning out to be one way of working. This is the part nobody could have captured for you."
-
-    ⛔ **The old wording is gone on purpose and must not come back.** It said the fourth layer was no longer empty and that capture could never fill it. The first half stopped being a milestone (lessons and methods land there the day they happen, so `04_Methodology` is usually populated in week one), and the second half stopped being true in the same move. What stayed rare is not the layer receiving anything, it is **your way of working turning out to be composable**, so the moment moved there and the sentence moved with it.
 - **Next week's hook, once.** Read `next_suggestion:` from `capture-progress.md` so it is concrete: "Doorbell rings in <cadence_days> days. <Next room or lane> is the suggested next move-in. Anything you want me to watch for between now and then?" ⭐ This is the last word of the whole ritual, both halves.
 
 ## First-run honesty
 
 If this half runs with nothing to work on (no methods yet, an empty pool), say so in one line and move on. ⛔ Never manufacture insight from insufficient material. **An honest empty week is the normal outcome**, and saying so is what makes a real proposal believable when one arrives.
-
-## ⬜ One thing that used to run here and now has no home
-
-**The lab scan.** Doctrine §9 says a playbook may earn a live feedback loop, §9.5 gives the gate, and the `playbook-lab` skill ships to open and close one. Until 2026-08-20 the weekly pass ran that gate and proposed candidacy. The redesigned shape does not include it, and its own list of what this half does declares itself complete, so ⛔ **it is not quietly reinstated here.**
-
-⚠️ **What this means in practice, so nobody has to guess:** §9 is not broken, it is now **owner-initiated**. A lab opens when the owner asks for one, and `playbook-lab` still runs the gate and refuses candidates that do not pass it. What no longer happens by itself is the *suggestion*. ⛔ Do not hand-build a lab's organs from this pass, then or now.

@@ -18,21 +18,19 @@ PUBLIC, GENERIC BY DESIGN
     This ships in a public skill, so it hardcodes no single owner's private
     conventions (no private folder names, client names, or private frontmatter
     schema). It ships sensible generic defaults drawn from the skill's own
-    documented structure (references/scaffold-spec.md, templates/), and reads
-    every vault-specific specific (room whitelist, required meta files, tag
-    vocabulary, staleness thresholds) from config at runtime:
+    documented structure (references/scaffold-spec.md, templates/), and resolves
+    every vault-specific setting (room whitelist, required meta files, tag
+    vocabulary, staleness thresholds) at runtime from two places only:
 
-      1. An explicit --config PATH (JSON), if given.
-      2. An auto-discovered `.checkup.json` at the vault root or in `99_Meta/`.
-      3. Parsed from the vault's own control files where possible
+      1. The vault's own control files, where the setting has one
          (tag vocabulary from `99_Meta/tagging-vocabulary.md`, staleness dates
          from `99_Meta/maintenance-state.md`).
-      4. Generic built-in defaults.
+      2. Generic built-in defaults.
 
     THE RECORD SCHEMA IS NOT IN THAT LIST, and that is the point. It is read on
     every run out of section 8 of the vault's own `99_Meta/structure-doctrine.md`
     by scripts/doctrine_schema.py. No copy of a family, a required key or a
-    closed list exists in this file or in any config.
+    closed list exists in this file.
 
 DEGRADING, AND THE ONE WAY IT MAY NOT
     A check whose input is genuinely absent skips with a note. But a check that
@@ -43,7 +41,6 @@ DEGRADING, AND THE ONE WAY IT MAY NOT
 
 USAGE
     python3 checkup.py /path/to/vault
-    python3 checkup.py /path/to/vault --config my-checkup.json
     python3 checkup.py /path/to/vault --json
 
     Exit code is 0 even when problems are found (report-only). It is non-zero
@@ -75,27 +72,29 @@ else:
 # --------------------------------------------------------------------------
 # Generic built-in defaults. NONE of these are private to any one owner; they
 # come straight from the skill's documented scaffold (references/scaffold-spec.md).
-# Every one of them is overridable by config read from inside the target vault.
+# There is no config file and no override flag, so these are the values every
+# run uses.
 # --------------------------------------------------------------------------
 DEFAULTS = {
     # A top-level entry is an expected "room" if its name matches this pattern
-    # (the numbered-room convention: 00_Inbox, 01_Daily, ... 99_Meta, plus the
-    # 04_/05_ business wings). Anything else at the top level is surfaced.
+    # (the numbered-room convention: two digits, an underscore, then a name, so
+    # 00_Inbox, 01_Daily, 99_Meta and any business wing all match). Anything
+    # else at the top level is surfaced.
     "room_pattern": r"^\d{2}_[A-Za-z]",
     # Extra top-level names that are allowed even though they do not match the
     # room pattern. Default covers the one file the scaffold writes to root.
     "allowed_rooms": ["CLAUDE.md"],
-    # Top-level entries never worth reporting (tool/OS clutter).
-    "ignore": [".git", ".obsidian", ".trash", ".DS_Store", ".gitignore",
-               ".stfolder", ".stversions"],
+    # Extra top-level entries never worth reporting, beyond the ones the room
+    # check already drops. ⛔ Empty on purpose: the room check skips every
+    # dot-prefixed name outright, so the tool/OS clutter this used to list
+    # (.git, .obsidian, .DS_Store and friends) was never once reached from here.
+    "ignore": [],
     # The system control area and the files the scaffold guarantees live in it.
     # This is the WHOLE list that references/scaffold-spec.md's tree writes, not
-    # a sample of it. It used to name four, which meant a vault could be missing
-    # five of its own control files and the checker would call that fine; a newer
-    # product generation adding a tenth file would go unnoticed on every older
-    # vault forever (execution-backlog entry 31).
-    # ⛔ profile.md is deliberately NOT here: create-my-jarvis writes it, setup
-    # does not, so a vault legitimately has none until that mode has been run.
+    # a sample of it. A sample was the earlier shape, and it meant a vault could
+    # be missing most of its own control files and the checker would still call
+    # that fine; any file a newer product generation added would go unnoticed on
+    # every older vault forever.
     "meta_dir": "99_Meta",
     "required_meta_files": [
         "structure-doctrine.md",
@@ -106,36 +105,31 @@ DEFAULTS = {
         "maintenance-state.md",
         "lab-gate-config.md",
         "memory.md",
+        "profile.md",
         "capture-buffer.md",
     ],
     # Record-schema.
     #
     # SOURCE OF TRUTH: section 8 of structure-doctrine.md inside the vault, and
-    # nowhere else. As of execution-backlog entry 92 that is literally true:
+    # nowhere else. That is literally true and not an aspiration:
     # scripts/doctrine_schema.py reads section 8 out of the vault on every run
     # and this file keeps no copy of any family, key or closed list. There is no
     # generated config either; "generated" was still a second artifact to keep in
     # sync, and the sync is what rots.
     #
-    # What is left here is the ONE thing section 8 cannot supply, because it is
-    # about the reader and not the law: whether to read it at all. A vault may
-    # extend the schema through .checkup.json with private families the public
-    # product knows nothing about, but it may not contradict section 8, and a
-    # .checkup.json is no longer where the shipped families come from.
-    "record_schema": {"read_doctrine": True, "extra_types": {}},
+    # ⛔ There is no setting here, and that is the point: section 8 is read on
+    # every run, and it is the only place a family, a key or a closed list can
+    # come from. Nothing outside the vault's own doctrine widens the schema.
     # Tag vocabulary: the markdown file the whitelist is parsed from, relative
-    # to meta_dir. An explicit `tag_vocabulary` list in config overrides parsing.
+    # to meta_dir.
     "tag_vocabulary_file": "tagging-vocabulary.md",
-    # Also scan note BODIES for inline #tags, not just frontmatter `tags:`.
-    # Inline scanning is inherently noisier; set False to check frontmatter only.
-    "scan_inline_tags": True,
     # Dirs whose notes are skipped when scanning for tags / schema (archive and
     # template shapes are not live content).
     # ⚠️ 99_Meta/Templates is listed here AND named separately below. Content
     # checks must skip it (a template's placeholders are not a schema violation),
     # but template reconciliation has to be able to walk exactly that folder, and
     # a single list cannot say both. Naming it twice is the point, not an
-    # oversight (execution-backlog entry 31).
+    # oversight.
     "scan_skip_dirs": ["98_Archive", "99_Meta/Templates", "99_Meta/memory-archive"],
     "template_dir": "99_Meta/Templates",
     # Freshness. Fields read from maintenance-state.md frontmatter, and the day
@@ -145,26 +139,23 @@ DEFAULTS = {
     "staleness_days": 7,
     "filing_log_file": "filing-log.md",
     "filing_log_stale_days": 14,
-    # Safety-lock: which guards this product installs into ~/.claude/settings.json.
-    # Informational only, and macOS-only like the guards themselves.
-    #
-    # ⛔ NOT A LIST HERE ANY MORE, AND THAT IS THE POINT (execution-backlog entry
-    # 129). This file used to carry its own copy of the guard set, which made it
-    # the THIRD copy of one list: setup step 6.8's prose, the wiring check's
-    # reconstruction of that prose, and this. Three copies of a set that has
-    # already changed size once is three chances to disagree, and the disagreement
-    # would surface as a weekly report naming a guard nobody ships.
-    # The set now lives where the guards live: one `# MSB-GUARD:` line in the
-    # header of each scripts/*-hook.sh, read by read_guard_registry() below. None
-    # is kept. A guard joins the product by shipping a script.
-    # A vault may still override with an explicit `safety_lock_guards` list in
-    # .checkup.json (a private guard of the owner's own); left unset, the payload
-    # answers. ⛔ There is deliberately no built-in fallback: if the registry
-    # cannot be read, the check says so rather than reporting against a guess.
-    "safety_lock_check": True,
-    "safety_lock_guards": None,
 }
 
+
+# Safety-lock: which guards this product installs into ~/.claude/settings.json.
+# Informational only, and macOS-only like the guards themselves.
+#
+# ⛔ THE GUARD SET IS NOT A SETTING AND NOT A LIST IN THIS FILE, AND THAT IS THE
+# POINT. This file used to carry its own copy of the guard set, which made it
+# the THIRD copy of one list: setup step 6.8's prose, the wiring check's
+# reconstruction of that prose, and this. Three copies of a set that has
+# already changed size once is three chances to disagree, and the disagreement
+# would surface as a weekly report naming a guard nobody ships.
+# The set now lives where the guards live: one `# MSB-GUARD:` line in the
+# header of each scripts/*-hook.sh, read by read_guard_registry() below. None
+# is kept. A guard joins the product by shipping a script.
+# ⛔ There is deliberately no built-in fallback: if the registry cannot be
+# read, the check says so rather than reporting against a guess.
 
 # The guard registry: one declaration line per guard, in the guard's own header.
 # `# MSB-GUARD: key=... installs-as=... matchers=... name=... does=...`
@@ -385,38 +376,6 @@ def parse_date(s):
 
 
 # --------------------------------------------------------------------------
-# Config resolution
-# --------------------------------------------------------------------------
-def load_config(vault, explicit_path):
-    """Layer config over defaults. Returns (config, source_note)."""
-    cfg = dict(DEFAULTS)
-    source = "built-in generic defaults"
-    candidate = None
-    if explicit_path:
-        candidate = explicit_path
-    else:
-        for rel in (".checkup.json", os.path.join(DEFAULTS["meta_dir"], ".checkup.json")):
-            p = os.path.join(vault, rel)
-            if os.path.isfile(p):
-                candidate = p
-                break
-    if candidate and os.path.isfile(candidate):
-        raw = _read_text(candidate)
-        try:
-            user = json.loads(raw) if raw else {}
-            cfg.update(user)
-            # deep-merge record_schema so a partial override keeps the marker
-            if "record_schema" in user:
-                merged = dict(DEFAULTS["record_schema"])
-                merged.update(user["record_schema"])
-                cfg["record_schema"] = merged
-            source = "config file: " + candidate
-        except (ValueError, TypeError) as e:
-            source = "built-in defaults (config at %s failed to parse: %s)" % (candidate, e)
-    return cfg, source
-
-
-# --------------------------------------------------------------------------
 # Checks. Each returns (list[Finding], note_str_or_None). A note means the
 # check was skipped or partially ran; it is surfaced in the report.
 # --------------------------------------------------------------------------
@@ -492,19 +451,10 @@ def _get_schema(vault, cfg):
                 % note, first.path)], note
         return schema, findings, note
 
-    rs = cfg.get("record_schema", DEFAULTS["record_schema"]) or {}
     meta_dir = cfg.get("meta_dir", DEFAULTS["meta_dir"])
     result = None
 
-    if not rs.get("read_doctrine", True):
-        result = (None, [Finding(
-            WARN, "schema-unreadable",
-            "record_schema.read_doctrine is switched off in this vault's config, "
-            "so section 8 was not read and NOTHING it declares was enforced. The "
-            "counts below describe what was checked, not what is legal.",
-            "%s/structure-doctrine.md" % meta_dir)],
-            "disabled in config; no schema enforcement ran")
-    elif doctrine_schema is None:
+    if doctrine_schema is None:
         result = (None, [Finding(
             ERROR, "schema-unreadable",
             "the section 8 reader (scripts/doctrine_schema.py) could not be "
@@ -536,13 +486,6 @@ def _get_schema(vault, cfg):
     return result
 
 
-def _extra_types(cfg):
-    """A vault's own private families, from .checkup.json. These EXTEND section
-    8; they never replace or contradict it (see the record_schema comment)."""
-    rs = cfg.get("record_schema", DEFAULTS["record_schema"]) or {}
-    return rs.get("extra_types", {}) or {}
-
-
 def _check_against_schema(vault, cfg, mounted_on_marker):
     """One walk, one mounting mechanism. `mounted_on_marker` picks which half:
     True  = records that declare themselves with the marker key (`cb: task`),
@@ -551,13 +494,12 @@ def _check_against_schema(vault, cfg, mounted_on_marker):
     They are two checks and not one because their inputs and their audiences
     differ: the marker half governs the command base's own records, the type
     half governs every note in the house. Folding the second into the first is
-    the shape that let ten of the twelve families go unchecked for months."""
+    the shape that let most of the families go unchecked for months."""
     schema, findings, note = _get_schema(vault, cfg)
     if schema is None:
         return findings, note
 
     skip = cfg.get("scan_skip_dirs", DEFAULTS["scan_skip_dirs"])
-    extra = _extra_types(cfg)
     mkey, tkey = schema.marker_key, schema.type_key
     own_key = mkey if mounted_on_marker else tkey
     label = "record-schema" if mounted_on_marker else "type-schema"
@@ -579,9 +521,9 @@ def _check_against_schema(vault, cfg, mounted_on_marker):
     # four warnings on a brand-new correct install. That was a rule living in
     # code instead of in the law, which is the exact disease this whole
     # enforcement line exists to cure. Section 8 now declares a `control`
-    # family, so those four mount and pass like anything else, and a fifth
-    # control file arriving without an amendment is correctly surfaced instead
-    # of silently waved through by a path test.
+    # family, so they mount and pass like anything else, and a control file
+    # arriving without an amendment is correctly surfaced instead of silently
+    # waved through by a path test.
     for path in iter_markdown_files(vault, skip):
         text = _read_text(path)
         if text is None:
@@ -604,23 +546,11 @@ def _check_against_schema(vault, cfg, mounted_on_marker):
 
         spec = schema.spec_for(fm)
         if spec is None:
-            if val in extra:
-                required = extra[val] or []
-                missing = [k for k in required
-                           if k not in fm or fm.get(k) in ("", None, [])]
-                if missing:
-                    out.append(Finding(
-                        ERROR, label,
-                        "'%s: %s' (a private family from .checkup.json) is "
-                        "missing required key(s): %s" % (own_key, val, ", ".join(missing)),
-                        rel))
-                continue
             out.append(Finding(
                 WARN, label,
                 "'%s: %s' is not a shape section 8 declares. Either the note is "
-                "wrong, or section 8 needs amending (propose-and-approve, §8), "
-                "or it is a private family and belongs in .checkup.json's "
-                "record_schema.extra_types." % (own_key, val),
+                "wrong, or section 8 needs amending (propose-and-approve, §8)."
+                % (own_key, val),
                 rel))
             continue
 
@@ -638,20 +568,20 @@ def check_record_schema(vault, cfg):
 
 
 def check_type_families(vault, cfg):
-    """The type-mounted half: the ten families that are not `cb:` records.
+    """The type-mounted half: every family that is not a `cb:` record.
 
     Before this existed, `if marker not in fm: continue` meant guide, brief,
     menu, entity, process, hypothesis, lab, ritual, resources and
-    brand-strategy were invisible to the checker no matter how the config was
-    filled in (execution-backlog entry 92)."""
+    brand-strategy were invisible to the checker."""
     return _check_against_schema(vault, cfg, mounted_on_marker=False)
 
 
 def load_tag_vocabulary(vault, cfg):
-    """Return (set_of_tags, source_note_or_None)."""
-    explicit = cfg.get("tag_vocabulary")
-    if explicit:
-        return set(t.lstrip("#") for t in explicit), "explicit list in config"
+    """Return (set_of_tags, source_note_or_None).
+
+    ⛔ Parsed from the vault's own vocabulary file, and from nowhere else. A
+    second place to declare the whitelist would be a second answer to the same
+    question, and the vault's file is the one the owner actually edits."""
     meta_dir = cfg.get("meta_dir", DEFAULTS["meta_dir"])
     fname = cfg.get("tag_vocabulary_file", DEFAULTS["tag_vocabulary_file"])
     path = os.path.join(vault, meta_dir, fname)
@@ -686,12 +616,14 @@ def check_tags(vault, cfg):
             for t in re.split(r"[,\s]+", fmtags):
                 if t:
                     found.add(t.lstrip("#").lower())
-        if cfg.get("scan_inline_tags", DEFAULTS["scan_inline_tags"]):
-            body = strip_code_and_frontmatter(text)
-            for m in _INLINE_TAG_RE.findall(body):
-                if _HEX_COLOR_RE.match(m) and any(c.isdigit() for c in m):
-                    continue  # a hex color, not a tag
-                found.add(m.lower())
+        # Note BODIES are scanned for inline #tags too, not just frontmatter
+        # `tags:`. Inline scanning is noisier, but a tag the vocabulary has
+        # never heard of counts the same wherever it was written.
+        body = strip_code_and_frontmatter(text)
+        for m in _INLINE_TAG_RE.findall(body):
+            if _HEX_COLOR_RE.match(m) and any(c.isdigit() for c in m):
+                continue  # a hex color, not a tag
+            found.add(m.lower())
         for t in found:
             if t not in vocab:
                 counts[t] = counts.get(t, 0) + 1
@@ -764,16 +696,13 @@ def check_safety_lock(vault, cfg):
 
     One finding PER MISSING GUARD, named. The single-marker version could only
     say "not detected", which is unactionable once there is more than one guard
-    to install (execution-backlog entry 31).
+    to install.
 
-    The set is read from the payload's own guard scripts, never from a list in
-    this file (entry 129). An explicit list in .checkup.json still wins, for an
-    owner who wrote a guard of their own."""
-    if not cfg.get("safety_lock_check", True):
-        return [], "disabled in config"
+    The set is read from the payload's own guard scripts, and from nowhere
+    else."""
     if sys.platform != "darwin":
         return [], "non-macOS; safety-lock check skipped"
-    guards = cfg.get("safety_lock_guards") or read_guard_registry()
+    guards = read_guard_registry()
     if not guards:
         return [], ("no guard registry found: no scripts/*-hook.sh in this payload "
                     "carries a '# MSB-GUARD:' line, so there is nothing to check for")
@@ -818,7 +747,7 @@ def check_safety_lock(vault, cfg):
 # --------------------------------------------------------------------------
 
 # --------------------------------------------------------------------------
-# The checks, in three classes (execution-backlog entry 31).
+# The checks, in three classes.
 #
 # The old order was one flat list, which made every check look equally load
 # bearing and hid the fact that they answer three different questions. Grouping
@@ -835,11 +764,10 @@ def check_safety_lock(vault, cfg):
 #                             wrong is the relationship between them, or between
 #                             a file and the calendar.
 #
-# ⬜ Entry 31 also calls for the top-level room check to be DELETED once the
-# Home.md reconciliation absorbs it. That reconciliation does not exist yet
-# (it belongs to the maintenance package), so the check stays here and keeps its
-# coverage. Deleting it now would hand its job to a check that has not been
-# written and quietly lose the only thing watching the vault root.
+# The top-level room check earns its place because nothing else here looks at
+# the vault root at all: it is the one check that lists what sits directly
+# inside the vault, and every other check reads a path it was already handed.
+# Dropping it would quietly lose the only thing watching the vault root.
 # --------------------------------------------------------------------------
 CHECK_CLASSES = [
     ("Machine-layer self-check", [
@@ -974,7 +902,6 @@ def main(argv=None):
         description="Read-only vault linter for a My Second Brain vault. "
                     "Reports hygiene problems; changes nothing.")
     ap.add_argument("vault", help="path to the vault root")
-    ap.add_argument("--config", help="path to a .checkup.json config (overrides auto-discovery)")
     ap.add_argument("--json", action="store_true", help="emit findings as JSON instead of a text report")
     args = ap.parse_args(argv)
 
@@ -983,7 +910,8 @@ def main(argv=None):
         sys.stderr.write("checkup: cannot read vault (not a directory): %s\n" % vault)
         return 2
 
-    cfg, source = load_config(vault, args.config)
+    cfg = dict(DEFAULTS)
+    source = "built-in generic defaults"
     findings, notes = run(vault, cfg)
 
     if args.json:

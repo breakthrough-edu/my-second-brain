@@ -4,7 +4,7 @@ s8-accept.py - acceptance harness for section 8 of the structure doctrine
 (the machine-readable record schema).
 
 WHAT THIS IS
-    Six checks that section 8 is still the thing it claims to be: parseable,
+    Seven checks that section 8 is still the thing it claims to be: parseable,
     self-describing, and readable by the code that actually ships. It replaces
     the throwaway script that the 2026-08-15 shape-fix session wrote into a
     scratchpad and lost; that loss is the reason this file exists at all.
@@ -66,7 +66,7 @@ WHAT IT DELIBERATELY DOES NOT DO
     shape, and say so in the commit.
 
 EXIT CODES
-    0  all six checks ran and passed
+    0  all seven checks ran and passed
     1  a check failed - the report says which check and what differs
 """
 
@@ -86,10 +86,13 @@ import doctrine_schema  # noqa: E402
 
 # --- acceptance criteria (see header: change only with a shape change) -------
 EXPECT_FAMILIES = 13
-EXPECT_SPECS = 25  # families with subtypes contribute their subtypes, not themselves
+EXPECT_SPECS = 35  # families with subtypes contribute their subtypes, not themselves
                    # 24 until 2026-08-20, when process.method was opened
-EXPECT_IN_FAMILY_CLOSED_LISTS = 15  # 13 until 2026-08-19, when entity.status was closed;
-                                    # 14 until 2026-08-20, when process.method.status opened
+                   # 25 until 2026-08-21, when entity's eleven types became eleven subtypes
+EXPECT_IN_FAMILY_CLOSED_LISTS = 14  # 13 until 2026-08-19, when entity.status was closed;
+                                    # 14 until 2026-08-20, when process.method.status opened;
+                                    # 15 until 2026-08-21, when entity.type stopped being a list
+                                    # and became the family's subtypes
 EXPECT_GLOBAL_CLOSED_LISTS = 2  # lane, domain
 EXPECT_PERSONAL_LANES = 7
 EXPECT_DECISION_LANES = 11  # the four work lanes plus the seven personal ones
@@ -202,6 +205,23 @@ def walk_specs(families, reserved):
     return specs, errors
 
 
+def open_key_table(doc):
+    """The block's open keys, derived the way the block says to derive them.
+
+    An open key is a key section 8 declares legal on every note while declaring
+    nothing about its values. The rule for finding the table is the same one the
+    shipped reader uses (a top-level mapping whose values are all one-line
+    strings), written independently here for the same reason check 5 exists: two
+    implementations that must agree catch a drift that one cannot. No key name is
+    typed into this harness, so a rename in the block carries.
+    """
+    tables = [v for v in doc.values()
+              if isinstance(v, dict) and v and all(isinstance(x, str) for x in v.values())]
+    if len(tables) != 1:
+        return {}
+    return dict(tables[0])
+
+
 def closed_lists(families, reserved):
     """Every in-family closed list, as (path, owning-spec-name, field-name)."""
     out = []
@@ -222,7 +242,7 @@ def closed_lists(families, reserved):
     return out
 
 
-# --- the six checks ----------------------------------------------------------
+# --- the seven checks ----------------------------------------------------------
 
 def check1(parsed):
     print("CHECK 1 - the block parses with yaml.safe_load")
@@ -342,6 +362,35 @@ def check3(parsed, reserved):
         else:
             print(f"    3e {label:8s} lab cardinality = {card}")
 
+        # 3f - a reserved key stranded at a family level that has subtypes.
+        # The meta-rule says a family with subtypes contributes its subtypes and
+        # not itself, so a `required` / `optional` / `multi` / `marker` written
+        # beside the family NAME is dropped on the floor: it enforces nothing and
+        # nothing raises, which is the quiet failure this check exists to make
+        # loud. Which keys those are is derived, not typed: they are the reserved
+        # keys the shipped reader keeps a slot for on one Spec. `cardinality` is
+        # not among them and is legitimately family-level (see 3e); a family-level
+        # closed LIST is legitimate too and still reaches every subtype, which is
+        # why only the slot keys are looked at here.
+        per_spec = set(doctrine_schema.Spec.__slots__) & set(reserved)
+        stranded = []
+        for fam, body in fams.items():
+            if not isinstance(body, dict):
+                continue
+            has_subtypes = any(k not in reserved and isinstance(v, dict)
+                               for k, v in body.items())
+            if not has_subtypes:
+                continue          # the family IS its own spec, so these are read
+            stranded += [f"{fam}.{k}" for k in sorted(per_spec & set(body))]
+        if stranded:
+            fail("3f", label,
+                 "reserved key(s) written at a family level that has subtypes, so "
+                 f"the reader drops them and they enforce nothing: {stranded}. "
+                 "Move each one onto every subtype's own line.")
+        else:
+            print(f"    3f {label:8s} nothing stranded at a family level "
+                  f"({', '.join(sorted(per_spec))} checked on {len(fams)} families)")
+
 
 def check4(bodies):
     print("CHECK 4 - duplicate keys silently swallowed?")
@@ -358,7 +407,7 @@ def check4(bodies):
             print(f"    {label:8s} duplicate keys: NONE")
 
 
-def check5(body, reserved, specs):
+def check5(body, reserved, specs, open_names):
     """The shipped reader agrees with this harness's own walk.
 
     Everything above walks the block using code written in THIS file. The
@@ -392,6 +441,15 @@ def check5(body, reserved, specs):
         raw, spec = specs[name], schema.specs[name]
         for field in ("required", "optional", "multi"):
             mine = list(raw.get(field) or [])
+            if field == "optional":
+                # An open key is legal on every note, so the reader puts it on
+                # every spec's optional: that is the side an enforcer reads when
+                # it counts keys section 8 has not declared. The harness walk
+                # reads the raw block, so it applies the same rule here rather
+                # than expecting the two lists to differ. Same order as the
+                # reader's, appended after what the spec itself declares.
+                mine += [k for k in open_names
+                         if k not in mine and k not in (raw.get("required") or [])]
             theirs = list(getattr(spec, field))
             if mine != theirs:
                 fail("5", f"doctrine_schema[{name}]",
@@ -409,6 +467,97 @@ def check5(body, reserved, specs):
     if len(failures) == before:
         print(f"    agreement: {len(specs)} specs, identical required/optional/multi "
               f"on every one")
+
+
+def _closed_list_slots(obj):
+    """The slots on a parsed object where a closed list can actually sit.
+
+    Derived, not typed, the same way 3f derives its slot names from
+    `Spec.__slots__`: a slot holding a mapping of field name to a LIST of values
+    IS a closed list, whatever it is called. Rename `enums` or `globals` and this
+    follows the rename instead of going quietly blind.
+    """
+    out = []
+    for slot in type(obj).__slots__:
+        v = getattr(obj, slot, None)
+        if isinstance(v, dict) and v and all(isinstance(x, list) for x in v.values()):
+            out.append(slot)
+    return out
+
+
+def check7(body, open_names):
+    """An open key is legal everywhere and closed nowhere.
+
+    Section 8 can declare a key legal on every note while saying nothing about
+    its values (`tags` is the one that ships). The whole worth of that sentence
+    is WHERE the name lands inside the shipped reader, so this check reads the
+    reader's own parse rather than the block:
+
+      * on the known side of every spec, which is what lets the exemption live
+        in section 8 instead of inside an enforcer. The frontmatter guard
+        carried `k != "tags"` in its own source until 2026-08-21; that line is
+        gone, and this is the check that keeps it gone.
+      * in no closed list, anywhere. A closed list on an open key would mean the
+        block declares the values ungoverned and then measures them against a
+        list, and because the name sits in `optional` the reader's `declares()`
+        says True for it, so such a list WOULD be enforced.
+
+    The second half is proved twice: the shipped block is inspected, and then a
+    doctored copy that gives an open key a closed list is handed to the reader,
+    which has to refuse it. A rule nobody has watched refuse anything is a rule
+    nobody has watched run.
+    """
+    print("CHECK 7 - open keys: known on every spec, closed nowhere")
+    if not open_names:
+        print("    template  no open keys declared in the block; nothing to check")
+        return
+    text = "\n".join(body)
+    try:
+        schema = doctrine_schema.parse_block(text, source="template")
+    except doctrine_schema.SchemaError as exc:
+        fail("7", "doctrine_schema", f"the shipped reader could not read the block: {exc}")
+        return
+
+    slots = sorted(set(_closed_list_slots(schema)) |
+                   {s for spec in schema.specs.values() for s in _closed_list_slots(spec)})
+    closed, unknown = [], []
+    for name in open_names:
+        for slot in _closed_list_slots(schema):
+            if name in getattr(schema, slot):
+                closed.append(f"schema.{slot}[{name!r}]")
+        for spec_name in sorted(schema.specs):
+            spec = schema.specs[spec_name]
+            for slot in _closed_list_slots(spec):
+                if name in getattr(spec, slot):
+                    closed.append(f"{spec_name}.{slot}[{name!r}]")
+            if not spec.declares(name):
+                unknown.append(f"{spec_name}:{name}")
+    if closed:
+        fail("7", "template",
+             "open key(s) also carry a closed list, so the block declares their "
+             f"values ungoverned and enforces them anyway: {sorted(set(closed))}")
+    if unknown:
+        fail("7", "template",
+             "open key(s) missing from the known side of some spec(s), so an "
+             "enforcer counting undeclared keys still reports them there: "
+             f"{unknown[:8]}{' ...' if len(unknown) > 8 else ''}")
+    if not closed and not unknown:
+        print(f"    template  {sorted(open_names)} known on all {len(schema.specs)} specs, "
+              f"in 0 closed lists (slots checked: {', '.join(slots)})")
+
+    # The refusal, run rather than described.
+    name = sorted(open_names)[0]
+    doctored = f"{text}\n{name}: [{name}-closed-by-a-doctored-block]\n"
+    try:
+        doctrine_schema.parse_block(doctored, source="doctored")
+    except doctrine_schema.SchemaError as exc:
+        print(f"    doctored  '{name}:' given a closed list -> reader refuses: "
+              f"{str(exc).split('.')[0]}.")
+    else:
+        fail("7", "doctrine_schema",
+             f"a block declaring {name!r} open AND giving it a closed list was "
+             "accepted; the reader picked one meaning silently, and the closed "
+             "list would be enforced on every note")
 
 
 def check6(parsed, bodies):
@@ -487,9 +636,12 @@ def main():
     check4(bodies)
     print()
     specs, _ = walk_specs((parsed["template"][0] or {}).get("families", {}), reserved)
-    check5(body, reserved, specs)
+    open_names = open_key_table(parsed["template"][0] or {})
+    check5(body, reserved, specs, open_names)
     print()
     check6(parsed, bodies)
+    print()
+    check7(body, open_names)
     print()
 
     if failures:
@@ -499,7 +651,7 @@ def main():
         return 1
 
     print("FAILURES: none")
-    print("PASS - six checks against the single source.")
+    print("PASS - seven checks against the single source.")
     return 0
 
 

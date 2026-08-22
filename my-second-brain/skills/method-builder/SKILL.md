@@ -1,25 +1,25 @@
 ---
 name: method-builder
 description: >
+  MANUAL TRIGGER ONLY: runs when the owner calls this skill by name, or when the
+  session was told at the outset to write a Method when the work closed. ⛔ Do not
+  fire on work-closing phrasing.
   Write down how the owner actually did a piece of work, at the moment that work
   closes, as one Method note in their second-brain vault. Reads the vault first
   (doctrine section 8, existing methods, the lane), asks about what it could not
   read, and lands one note with the owner's yes given out loud in that moment.
-  MUST trigger when the user says "case closed", "结案了", "这个案子收了", "做完了",
-  "wrap up this project", "this one is done", "finished that job", "we shipped it",
-  "how did I do that", "write this up as a method", "写成 method", "记下我的做法",
-  "把这次的做法记下来", or closes a piece of work that took real judgment. NOT for
-  a pit that hurt (that is a Lesson, written at session closeout), NOT for a call
-  that still stands (that is a decision), NOT for dead repeatable steps (that is
-  sop-builder), and NOT for composing several methods into a playbook (that is the
-  weekly distillation, and it is not this skill's call to make).
+  NOT for a pit that hurt (that is a Lesson, written at session closeout), NOT for
+  a call that still stands (that is a decision), NOT for dead repeatable steps
+  (that is sop-builder), and NOT for composing several methods into a playbook
+  (that is the weekly distillation, and it is not this skill's call to make).
+disable-model-invocation: true
 ---
 
 # Method Builder
 
 You write ONE thing: a **Method**, which is one move of the owner's, written down at the moment the work that taught it closes.
 
-**Why now and not later.** How somebody did something is at its sharpest the hour they finish. A week later it has become a summary of itself. This skill exists because the alternative that was tried, a weekly pass re-reading the week and guessing, was measurably worse at exactly this.
+**Why now and not later.** How somebody did something is at its sharpest the hour they finish. A week later it has become a summary of itself. ⛔ Do not defer this to any later pass that re-reads the week and guesses.
 
 ## What a Method is, and the three things it is not
 
@@ -40,7 +40,7 @@ A Method answers: **how do I do this kind of work?** It is the owner's own way o
 
 ## The interview: three questions, and no more
 
-Ask them one at a time, in the owner's language. If the session that just closed already answered one, ⛔ do not ask it again; say what you have and ask them to correct it.
+Ask them one at a time. If the session that just closed already answered one, ⛔ do not ask it again; say what you have and ask them to correct it.
 
 1. **"When do you reach for this?"** The trigger. What kind of job, what circumstances.
 2. **"How do you actually do it?"** The moves, in their order. ⛔ Do not tidy this into a numbered procedure if it did not happen as one.
@@ -52,11 +52,13 @@ Ask them one at a time, in the owner's language. If the session that just closed
 
 From the **Method template** in `99_Meta/Templates/`, into `04_Methodology/Playbooks/`, flat, beside the playbooks.
 
+⚠️ **`04_Methodology/` is the layer inside the business wing, not a folder at the vault root**; read the full path off section 1 of the vault's `99_Meta/structure-doctrine.md` rather than guessing it.
+
 - **Name it for the work**, `<the-work>-method.md`, ⛔ never for the case that taught it (§5). Show the owner the filename before you write it; a wrong name here is the one thing that has to be fixed by hand later.
 - ⛔ **Same work, same file.** If step 3 above found a method for this work, **rewrite that one** and say what changed. ⛔ Do not create a second file with a version or a date in its name.
 - **`confirmed_by_owner: true` only after they have seen the actual note and said yes**, out loud, in this session. ⛔ Silence is not a yes and ⛔ "sounds good" to a summary is not a yes to the text.
 - Append one line to `99_Meta/filing-log.md`.
-- ⭐ **Then drop a one-line pointer into Claude's own persistent memory**, so the next session knows this method exists without being told. A method nobody knows about gets rewritten from scratch the next time the same job comes round, and that is the failure this whole skill exists to prevent.
+- ⭐ **Then drop a one-line pointer into the vault's working memory, `99_Meta/memory.md`**, so the next session knows this method exists without being told. A method nobody knows about gets rewritten from scratch the next time the same job comes round, and that is the failure this whole skill exists to prevent.
 
 ## Two things to say once, at the end, and then stop
 

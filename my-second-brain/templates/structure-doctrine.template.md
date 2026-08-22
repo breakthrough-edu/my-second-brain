@@ -21,7 +21,7 @@ Read this before creating or filing anything in this vault. This file is the sin
    - Weekly review / monthly theme → `02_Command-Base/Reviews/`
    - A template → `99_Meta/Templates/`
    - Retired material → `98_Archive/`
-   - A hypothesis → `99_Meta/Hypotheses/`. **Weekly maintenance is the only writer.** Nothing you file by hand ever lands here: the pool is where maintenance parks a claim that is not yet earned, and it graduates out on evidence. Do not create one to hold an idea. ⚠️ **A lab's bets are not this.** They live in that lab's `lab-register` (§9) and they are the owner's own, written by the `playbook-lab` skill and by scoring: the pool is the machine observing the owner, a lab register is the owner testing their own method. The pool never enters a session's context; a register must be read every time, which is why they cannot be one family.
+   - A hypothesis → `99_Meta/Hypotheses/`. **The machine writes it: the weekly ritual's distillation half, and the `session-report` skill when a session throws off a claim.** Nothing you file by hand ever lands here: the pool is where maintenance parks a claim that is not yet earned, and it graduates out on evidence. Do not create one to hold an idea. ⚠️ **A lab's bets are not this.** They live in that lab's `lab-register` (§9) and they are the owner's own, written by the `playbook-lab` skill and by scoring: the pool is the machine observing the owner, a lab register is the owner testing their own method. The pool never enters a session's context; a register must be read every time, which is why they cannot be one family.
 2. **Everything else: identify the type family** (§8 has the closed list).
    **2b. Map the family to its home:** entity → its room in `01_Assets/` (or the matching Personal-Wing room) · process (sop) → `03_SOP/` · playbook / lesson → `04_Methodology/` · brand-strategy → that brand's `<Brand>-Brand-Assets/` · resources → `02_Command-Base/Resources/` · guide / brief / menu → with the folder or project they describe · control → `99_Meta/`, and setup is what puts them there (the control plane is declared in §8 so a correct install is not flagged for its own machinery, not so that new ones get filed by hand).
 3. **If no family fits: STOP.** Do not force it in. Do not invent frontmatter. Propose a new family: a new template plus a new row in §8, get a yes, then file. (The frontmatter guard blocks a hard schema violation: a bad filename, a missing required key, a value outside a closed list. A key §8 has not declared is a judgment call, not a violation, so the guard **flags it to this session** instead of blocking: register it in §8 if this kind of note always carries it, drop it if it was invented on the spot.)
@@ -111,7 +111,7 @@ Guide files: every folder that needs explaining has one file `_<Name>-Guide.md`.
 3. **The expiry key is `renew_by`**: one key across the whole vault (company docs, outlets, equipment, personal property and vehicles). If a date means "act before this day", it goes in `renew_by`, details in the body.
 4. **`04_Methodology` is earned, never captured.** Capture never writes here, and **only the owner's yes lands anything**. (A rule the owner declares on the spot is not blocked by this: standing rules are decisions, they land in `Decisions/` immediately; see §7.)
 5. **CLAUDE.md and this file are never silently rewritten.** They evolve only through propose-and-approve.
-6. **Folder and file names are English**, hyphenated, no spaces, regardless of the working language.
+6. **Folder and file names are English**, hyphenated, no spaces.
 
 ## 5 · File naming
 
@@ -123,7 +123,7 @@ A name is an address. Two regimes, and the test is one question: **is this file 
   This applies to **every** guide, including the personal wing's, where nothing collides today. One uniform rule survives the day a second wing appears; a rule conditional on how many wings exist does not.
   `_<Project>-Brief.md` is the deliberate exception: project names are Regime A and therefore unique vault-wide, so a brief is linked bare.
 
-**Dated records are `YYYY-MM-DD-keyword-slug.md`.** The date is **when the thing happened, not when the note was typed**. A decision made on Monday and written up on Friday carries Monday. A family may register a serial-first variant instead, but only in §8.
+**Dated records are `YYYY-MM-DD-keyword-slug.md`.** The date is **when the thing happened, not when the note was typed**. A decision made on Monday and written up on Friday carries Monday.
 
 **No bare generic nouns in Regime A.** `findings.md`, `notes.md`, `decisions.md` and their kind are banned. A name that could belong to any note belongs to no note: the next search returns five of them and picks the wrong one.
 
@@ -139,7 +139,7 @@ Three enforcement layers: **templates teach** (each template's bottom comment bl
 
 ## 6 · Tags
 
-Controlled vocabulary in `99_Meta/tagging-vocabulary.md`. New tags and new enum values are proposals first: approved, then used. (⛔ There is no standing flag for a pit any more: a pit becomes a Lesson at the closeout of the session it happened in, with the owner's yes, not a tag swept up days later. See §7.)
+Controlled vocabulary in `99_Meta/tagging-vocabulary.md`. New tags and new enum values are proposals first: approved, then used.
 
 ## 7 · Judgment and process: decisions, lessons, methods, playbooks, SOPs
 
@@ -158,19 +158,27 @@ Five kinds, five questions:
 
 Runtime reading order: doing an SOP → need a judgment call, open the linked playbook and the lane's active decisions → hit (or suspect) a pit, check lessons first.
 
-Content flows, types don't transmute. ⭐ **A deliberate consequence, and it is a result rather than an oversight: Decisions no longer feed Playbooks.** "The same trade-off decided the same way five times" does not grow into a playbook on its own, because a decision is a ruling and a method is a way of working, and only the second one composes.
+Content flows, types don't transmute. "The same trade-off decided the same way five times" does not grow into a playbook on its own, because a decision is a ruling and a method is a way of working, and only the second one composes.
 
 ## 8 · Record schema (machine-readable; the single source, no copies anywhere)
 
-The frontmatter guard and the checker read this section live and keep no copies: a family, a required key, or a closed list is declared here once and nowhere else. Both go through one reader (`scripts/doctrine_schema.py`), which parses this block on every run, so there is no generated config and nothing to keep in sync; "generated" would still be a second artifact, and the sync is what rots. The checker reports what breaks the law here, and the guard stops a hard violation before it lands: a bad filename, a missing required key, a value outside a closed list. The families below ship with this vault, so they are enforced from day one. Amend this section and both enforcers change with it in the same breath.
+The frontmatter guard and the checker read this section live and keep no copies: a family, a required key, a closed list, or a key whose values this section leaves open is declared here once and nowhere else. Both go through one reader (`scripts/doctrine_schema.py`), which parses this block on every run, so there is no generated config and nothing to keep in sync; "generated" would still be a second artifact, and the sync is what rots. The checker reports what breaks the law here, and the guard stops a hard violation before it lands: a bad filename, a missing required key, a value outside a closed list. The families below ship with this vault, so they are enforced from day one. Amend this section and both enforcers change with it in the same breath.
 
 ```yaml
-# Reading rule, so a reader hard-codes nothing: at the top level, `families` holds the
-# families and every other key is a field name plus its closed list, global to all families.
+# Reading rule, so a reader hard-codes nothing: at the top level a key is read by its VALUE.
+# A mapping of mappings holds the families. A mapping of one-line strings declares the OPEN
+# keys (see the bottom). A list is a field name plus its closed list, global to all families.
 # Inside a family, `required` `optional` `marker` `multi` `extends` `cardinality` are reserved
 # keys; every other key is a field name whose value is either that field's closed list (a
 # list) or that family's subtypes (a mapping). `multi` = a field that may carry several
 # values at once. `extends` = values this family adds to a top-level closed list.
+# ⛔ The consequence of that rule, and it bites silently: once a family has subtypes, the
+# family contributes its subtypes and NOT itself, so `required` `optional` `multi` written
+# at the family level are dropped and enforce nothing. A closed LIST written at the family
+# level still reaches every subtype, which is why `entity`'s `status: [active, prospective]`
+# is live while a `required` next to it would not be. A key every subtype shares is
+# therefore written on every subtype's own line, one at a time, and the repetition is the
+# price of the rule rather than an oversight.
 families:
   guide:      {required: [type, guide_family, updated],
                guide_family: [wing, room, lane, brand, lab]}   # brand = a subfolder of
@@ -180,10 +188,19 @@ families:
                status: [active, done, killed],
                stage: [pending, planning, pursuing, executing, closed]}
   menu:       {required: [type, updated]}
-  entity:     {type: [client, vendor, employee, product-service, company-doc,
-                      equipment, outlet, it-system, marketing-asset, property, vehicle],
-               required: [type, status], optional: [renew_by],
-               status: [active, prospective]}   # the real-world state of the THING itself, not
+  entity:                                 # eleven subtypes, one kind of real-world thing each,
+                                          # and each one declares the keys its own template
+                                          # ships. That is what lets this block tell a key the
+                                          # PRODUCT wrote from a key somebody invented on the
+                                          # spot: the first kind is declared here, so only the
+                                          # second kind is ever reported as a judgment call. A
+                                          # field added to a template is a name added to that
+                                          # subtype's line, in the same breath. `renew_by` and
+                                          # `status_since` are on all eleven: the expiry key is
+                                          # the one deadline key in this vault and belongs to
+                                          # whichever entity has a deadline, and the status date
+                                          # belongs to every status.
+    status: [active, prospective]         # the real-world state of the THING itself, not
                                         # this note's fill state: none of the eleven subtypes
                                         # ships an empty-shell template, so this follows the
                                         # majority pattern, not brand-strategy's. `prospective`
@@ -194,14 +211,48 @@ families:
                                         # `retired`: leaving is a MOVE to `98_Archive/` (§0 path
                                         # gate, §1), and an in-place value for it would be a
                                         # legal way around the move.
+                                        # `status_since:` is OPTIONAL and stays optional: the day
+                                        # the status above was last set. `prospective` is the one
+                                        # value here that is supposed to stop being true, and
+                                        # `active` is a legal word for a note nobody has looked at
+                                        # since the deal closed, so the date is what makes "how
+                                        # long has this said prospective" a question anyone can
+                                        # answer. ⛔ Nothing reads it and no check counts the
+                                        # days: writing the ruler comes before reading it, and a
+                                        # threshold for "too long" is the owner's business rhythm
+                                        # to set, not this product's to guess. Same key, same
+                                        # meaning, as `ritual.monthly-theme` below.
+    client:          {required: [type, status],
+                      optional: [renew_by, status_since, source, since, current_terms]}
+    vendor:          {required: [type, status],
+                      optional: [renew_by, status_since, supplies, terms, contact]}
+    employee:        {required: [type, status],
+                      optional: [renew_by, status_since, role, started]}
+    product-service: {required: [type, status],
+                      optional: [renew_by, status_since, price, cost]}
+    company-doc:     {required: [type, status],
+                      optional: [renew_by, status_since, doc_kind, issuer,
+                                 location_of_original]}
+    equipment:       {required: [type, status],
+                      optional: [renew_by, status_since, model, purchased, last_serviced]}
+    outlet:          {required: [type, status],
+                      optional: [renew_by, status_since, address, licenses]}
+    it-system:       {required: [type, status],
+                      optional: [renew_by, status_since, holder]}
+    marketing-asset: {required: [type, status],
+                      optional: [renew_by, status_since, asset_kind, where_it_lives]}
+    property:        {required: [type, status],
+                      optional: [renew_by, status_since, address]}
+    vehicle:         {required: [type, status],
+                      optional: [renew_by, status_since, plate]}
   record:
     decision: {marker: "cb: decision", required: [cb, date, status, domain, lane],
-               optional: [supersedes, law_depends_on, project], status: [active, superseded, closed],
+               optional: [supersedes, project], status: [active, superseded, closed],
                extends: {lane: [personal, family, health, finance-personal,
                                 property, vehicles, people]}}  # the personal wing's lanes,
                                           # decisions only, on top of the lane list at the bottom
     task:     {marker: "cb: task", required: [cb, status, created],
-               optional: [start, due, waiting_on, depends_on, priority, reminder],
+               optional: [start, due, waiting_on, depends_on, priority],
                status: [not-started, in-progress, waiting, blocked, done]}
   process:                                  # `confirmed_by_owner` appears on three of these
                                             # four and means one thing: the owner who was in
@@ -227,26 +278,37 @@ families:
                optional: [references], multi: [references],
                status: [forming]}   # only sourced value (Playbook.md template); describes
                                     # the methodology's maturity, not this note's fill state.
-                                    # No second value is sourced anywhere (execution-backlog
-                                    # entry 142). `references` is the ONE pointer added for
-                                    # the lesson and decision edge (§7): written once, when
-                                    # the playbook is born, on the note being written anyway.
+                                    # No second value is sourced anywhere. `references` is
+                                    # the ONE pointer added for the lesson and decision edge
+                                    # (§7): written once, when the playbook is born, on the
+                                    # note being written anyway.
                                     # ⛔ There is deliberately no matching key on lesson or
                                     # decision: a back-list would need revisiting forever.
     lesson:   {required: [type, date, source, lane, confirmed_by_owner]}
   hypothesis: {required: [type, status, destination,
-                          weeks_supported, contradictions, weeks_silent],
-               status: [open, contested, expired, graduated, rejected],
-               destination: [memory, profile, lesson, decision-proposal,
-                             guide-observations, memory-line-retirement, lab-register]}
+                          weeks_supported, weeks_silent],
+               status: [open, expired, graduated, rejected],
+               destination: [profile]}   # the pool has exactly one landing point:
+                                        # patterns about the owner that only observation can
+                                        # establish, destined for `99_Meta/profile.md`. The key
+                                        # stays required and stays a closed list of one, because
+                                        # a closed list earns its keep only by refusing what is
+                                        # not on it, and a list of values nobody writes refuses
+                                        # nothing while looking like it does.
   lab:                                    # the three lab organs, one file each per lab,
                                           # rows inside are disposable, the files are permanent
-    cardinality: {count: 1, per: lab-folder}   # "one file each per lab", as data
+    cardinality: {count: 1, per: lab-folder}   # "one file each per lab", written down
+                                               # for the person reading this block. It is a
+                                               # description of the shape a lab has; no check
+                                               # anywhere counts these files against it, and
+                                               # a lab holding the wrong number of them is
+                                               # something a person notices, not something
+                                               # this block enforces.
     rubric:       {required: [type, updated]}
     thresholds:   {required: [type, updated]}
     lab-register: {required: [type, updated]}
   ritual:
-    daily:          {required: [type, date]}
+    daily:          {required: [type]}
     weekly-review:  {required: [type, week_of, reviewed_on]}
     monthly-theme:  {required: [type, month, status, status_since],
                      status: [active, closed]}   # `active` from the Monthly-Theme.md
@@ -257,15 +319,15 @@ families:
                                         # status (a decision splits `superseded` from `closed`
                                         # only because `supersedes:` has readers), so "expired"
                                         # versus "replaced" would change no action and would be
-                                        # a wish, not a rule (execution-backlog entry 143).
-  resources:  {type: [clipping, course, book, prompt, tool-note], required: [type]}
+                                        # a wish, not a rule.
+  resources:  {type: [clipping, course, book, prompt, tool-note], required: [type],
+               optional: [source]}
   brand-strategy:   {required: [type, pillar, status],
                      pillar: [DNA, Personality, Proposition, Relationship, Sensory-Cues,
                               Positioning, Style, Journey],
                      status: [empty, filled]}   # unlike every other status family below,
                                                 # this describes THIS NOTE's own fill state,
-                                                # not a real-world lifecycle (execution-backlog
-                                                # entry 141).
+                                                # not a real-world lifecycle.
   control:                                  # this vault's own machinery: one file each,
                                             # directly in 99_Meta/, written by setup rather
                                             # than filed by hand. Declared here so a correct
@@ -276,6 +338,10 @@ families:
                                             # NOT here and never will be: they carry no
                                             # `type:` at all, so nothing mounts them and a
                                             # correct install is silent about them already.
+                                            # `memory.md` is the sixth of those: not a
+                                            # progress file but the session's own working
+                                            # notepad, and it carries no `type:` for exactly
+                                            # the same reason.
                                             # The line: a file with `type:` is a document a
                                             # person reads; a file without one is a machine's
                                             # notepad. Adding the key to a notepad is what
@@ -287,20 +353,41 @@ families:
                                             # cover all four would fit none. Tighten each
                                             # one when its shape settles.
     doctrine:        {required: [type]}
-    vocabulary:      {required: [type]}
-    lab-gate-config: {required: [type]}
-    profile:         {required: [type]}
+    vocabulary:      {required: [type],
+                      optional: [maintained_by, last_updated, version]}
+    lab-gate-config: {required: [type],
+                      optional: [created, last_updated, maintained_by]}
+    profile:         {required: [type],
+                      optional: [subject, last_updated, maintained_by]}
   singletons:
     home:              {required: [type]}
-    business-profile:  {required: [type, business]}
+    business-profile:  {required: [type, business],
+                        optional: [founder_name, brand_name, industry, category,
+                                   location, one_line_description, created,
+                                   last_updated]}
 lane: [deliver, grow, run, build]           # the four-lane ladder, see §1; decisions may also use
                                             # the personal lanes in families.record.decision.extends
 domain: ["#personal", "#{{BUSINESS_TAG}}"]  # one value per wing; a new wing's value rides along at wing birth
+open_keys: {tags: "legal on every note, and the words themselves are governed by §6 and by
+                   99_Meta/tagging-vocabulary.md rather than by section 8"}
+                                            # An open key is the opposite of a closed list,
+                                            # not a loose one: a closed list above names the
+                                            # only legal values and refuses every other one,
+                                            # while an open key names the KEY and refuses no
+                                            # value. Both are declared here for the same
+                                            # reason, which is that an enforcer must be able
+                                            # to tell a key this vault ships from a key
+                                            # somebody invented while writing a note, and
+                                            # the answer to that lives in this block alone.
+                                            # ⛔ Giving one of these names a closed list
+                                            # anywhere in this section contradicts the line
+                                            # above, and the reader stops instead of picking
+                                            # which half of the block to believe.
 ```
 
 Example frontmatter, a decision: `cb: decision · date: {{DATE}} · status: active · domain: "#{{BUSINESS_TAG}}" · lane: grow`. A client: `type: client · status: active`.
 
-Adding a family or a required key = amending this file (propose-and-approve). There is no other copy to keep in sync.
+Adding a family or a required key = amending this file (propose-and-approve). There is no other copy to keep in sync. The `vault-guardian` skill is the recommended way to carry an amendment through every file it touches (this file, the note templates, the tag vocabulary, `Home.md`, the folder doors, `CLAUDE.md`); amending by hand is legal, and the guard and the checker read the result the same way either way.
 
 ## 9 · Playbook labs (the upgraded form of a playbook)
 
@@ -319,10 +406,8 @@ to climb: a method that gets distilled keeps its filename and gains `distilled_i
 and a playbook that opens a lab becomes a folder where it already sits. That is what
 makes one address show the whole ladder at a glance.
 
-⚠️ **Who proposes a lab, corrected 2026-08-20:** the weekly pass no longer scans for
-candidates. A lab is opened when the OWNER asks, and the `playbook-lab` skill still runs
-the §9.5 gate and still refuses a candidate that does not pass it. ⛔ Never hand-build a
-lab's organs, then or now.
+A lab is opened when the OWNER asks, and the `playbook-lab` skill runs the §9.5 gate
+and refuses a candidate that does not pass it. ⛔ Never hand-build a lab's organs.
 
 9.2 Shape (fixed; changing it is an amendment). A lab folder holds exactly five things:
 `_<Name>-Guide.md` (the door: reading order, who writes what, when) · the playbook (the
@@ -336,18 +421,18 @@ deliberately NOT in the lab: scores live with the outputs they score. (View mech
 the scoreboard is shared ground with the dashboard design; decided there, not here.)
 
 9.3 The loop. Output → scored against the rubric (seconds, never ceremony) → scores feed
-the register, bets resolve → a threshold fires → the weekly lab scan proposes → the
-owner's yes revises the playbook → everything downstream follows automatically, because
-SOPs link the playbook (`playbook:`) and sessions reach it through the standard reading
-order; the authority is one file, so the latest distillation is simply what everyone
-reads. No step relies on anyone remembering, and no step bypasses the owner.
+the register, bets resolve → a threshold fires → the owner's yes revises the playbook →
+everything downstream follows automatically, because SOPs link the playbook (`playbook:`)
+and sessions reach it through the standard reading order; the authority is one file, so
+the latest distillation is simply what everyone reads. No step relies on anyone
+remembering, and no step bypasses the owner.
 
 9.4 One line, one playbook (the split test). Methodology segments that score the same
 outputs live as chapters of one playbook, sharing one scoreboard. A stream with its own
 outputs and its own feedback signal is its own playbook; split before opening a lab.
 
-9.5 Opening a lab (the gate). Candidacy is proposed by the weekly lab scan or requested
-by the owner; either way the gate runs, carrying its NO-prior. Three doors, all required:
+9.5 Opening a lab (the gate). Candidacy is requested by the owner; the gate runs,
+carrying its NO-prior. Three doors, all required:
 the line is alive (default: 4+ new outputs in the last 30 days, counted from journal
 backlinks and output rooms) · judgment is accruing (default: 3+ related lessons or
 decisions; busy-but-no-judgment wants a better SOP, not a lab) · an external, countable

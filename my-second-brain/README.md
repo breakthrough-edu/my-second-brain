@@ -16,20 +16,20 @@ Then open Claude Code and say:
 
 > set up my second brain
 
-Update anytime with `npx skills update my-second-brain` (your vault is never touched, only the skill files). ⚠️ If your vault was built before August 2026 its shape predates this version, so the skill will say which parts differ and will decline to move files or open rooms until you say what you want; reading and answering carry on. See "Updating" on the repo front page.
+Update anytime with `npx skills update my-second-brain` (your vault is never touched, only the skill files). ⚠️ The skill does not work out which generation of the product built your vault, and it never reshapes an older one on that basis: nothing structural is created or moved without your yes, whatever shape your vault is in. See "Updating" on the repo front page.
 
 ## Four modes, one skill
 
 - **Setup** (10 min): builds the fully wired vault and generates your personal command-base skill, named after your business.
-- **Capture** (15 min per room): guided move-in, one room at a time. Every session ends with one observation you had not noticed plus two good questions.
-- **Distill** (10 min weekly): tidy scan, then distillation proposals for your methodology layer. You rule yes or no.
-- **Create-My-Jarvis** (45 to 60 min): two interviews that give your AI a real character and a real understanding of who you are.
+- **Capture** (15 to 20 min for a first room, 10 for a regular one): guided move-in, one room at a time. Every session ends with one observation you had not noticed plus two good questions.
+- **Distill** (weekly, two passes behind one doorbell): first the anti-drift pass, which keeps the house from rotting, then distillation proposals for your methodology layer. You rule yes or no.
+- **Create-My-Jarvis** (a light tier in one 45 to 60 min sitting, or a deep tier across three separate conversations): interviews that give your AI a real character and a real understanding of who you are.
 
-Two companion skills are published separately and installed by you when you want them, and nothing here breaks without either: `sop-builder` writes an SOP properly in its own sitting, and `playbook-lab` opens the rare feedback loop around a playbook that has earned one.
+The companion skills (`project-consultant`, `session-report`, `method-builder`, `playbook-lab`) ride in this payload and setup installs them for you, so they update when this skill updates. One tool is published separately and installed by you when you want it, and nothing here breaks without it: `sop-builder` writes an SOP properly in its own sitting.
 
 ## What is in this folder
 
-This directory is the skill payload that `npx skills` installs as a unit: `SKILL.md` (the router), `modes/` (one file per mode), `templates/` (everything Setup scaffolds into your vault), `references/` (structure specs and room guides), and `scripts/` (the read-only `checkup.py` vault linter the weekly Tidy pass runs, the `rm-guard-hook.sh` safety-lock template, and the vendored `session-history/` session-memory tool).
+This directory is the skill payload that `npx skills` installs as a unit: `SKILL.md` (the router), `modes/` (one file per mode), `templates/` (everything Setup scaffolds into your vault), `references/` (structure specs and room guides), and `scripts/` (the read-only `checkup.py` vault linter the anti-drift pass runs, `deck.py` with `deck-template.html`, which generate the Command Deck dashboard, `doctrine_schema.py`, which reads your vault's own record schema, the `rm-guard-hook.sh` and `fm-guard-hook.sh` machine-guard templates, and the vendored `session-history/` session-memory tool).
 
 The structural rules live in your vault after setup (`99_Meta/structure-doctrine.md`), not in this skill, so your vault stays consistent no matter which tool or model touches it.
 
@@ -38,8 +38,7 @@ The structural rules live in your vault after setup (`99_Meta/structure-doctrine
 - [Claude Code](https://claude.com/claude-code)
 - [Obsidian](https://obsidian.md) (free; the skill can install it for you). It is the reading and graph surface. The dashboard is a generated HTML file that opens in any browser, so it needs no plugin.
 - Python 3, for the inspector and session memory. macOS ships everything they need; on Windows use Python from python.org (not Anaconda, whose SQLite lacks the FTS5 extension session memory needs).
-- Works on macOS, Windows, Linux, with two honest caveats. The optional machine guards are macOS-gated for now (safety lock macOS only, session memory macOS first). And **Windows is best-effort rather than tested**: this skill is built on macOS and we have no Windows machine to verify against, so the Windows install path (a plain folder copy for your generated command-base skill by default, with a `mklink /J` junction available on request once Setup has told you what you give up by taking it) is written to verify itself and fall back cleanly rather than to promise it works. Full detail in Honest boundaries and the Windows self-serve path on the [repo front page](https://github.com/breakthrough-edu/my-second-brain).
-- English or 中文 interaction; your choice at setup.
+- Works on macOS, Windows, Linux, with two honest caveats. The optional machine guards are macOS-gated: the safety lock is macOS only, and the session-memory install step is written for macOS. And **Windows is best-effort rather than tested**: this skill is built on macOS and we have no Windows machine to verify against, so the Windows install path (a plain folder copy for your generated command-base skill by default, with a `mklink /J` junction available on request once Setup has told you what you give up by taking it) is written to verify itself and fall back cleanly rather than to promise it works. Full detail in Honest boundaries and the Windows self-serve path on the [repo front page](https://github.com/breakthrough-edu/my-second-brain).
 
 ## License
 

@@ -205,7 +205,7 @@ These two rooms are unlike the rest. They scaffold pre-populated with empty stub
 
 There is no Finance room. Money lives in the systems built for it, and the vault holds three things about it, all of them on the `IT-Systems/` note of the system that produces the numbers: **a pointer** to where the rows live, **exception narratives**, and **monthly snapshots** (iron law 1). A money DECISION is a decision note in `02_Command-Base/Decisions/`, never a room entry.
 
-Two questions from the old Finance battery survive and belong in the `IT-Systems/` pass, because they are about sight, not about rows:
+Two money questions belong in the `IT-Systems/` pass, because they are about sight, not about rows:
 
 - "When did you last see a P&L, and did you believe it?" (the believability gap: books exist but the owner decides by glancing at the bank balance)
 - "Is there a number you wish you knew every Monday morning?" (capture it verbatim; it is the owner's own design brief for what any future dashboard should surface)

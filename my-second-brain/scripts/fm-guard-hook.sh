@@ -131,7 +131,8 @@ def in_vault(path):
 
 # --- the exemption table, copied from nowhere -------------------------------
 # ⛔ These three are the checker's `scan_skip_dirs` default, and they are here
-# because both enforcers must agree on what is not live content. A template full
+# because every enforcer that walks a vault has to agree on what is not live
+# content, and this list is the shared answer. A template full
 # of {{PLACEHOLDER}} is not a schema violation; blocking writes into Templates/
 # would make the product unable to ship its own templates.
 EXEMPT_DIRS = ("98_Archive", "99_Meta/Templates", "99_Meta/memory-archive")
@@ -157,7 +158,8 @@ PROTOCOL = (
 # --- filename law (doctrine §5) ---------------------------------------------
 # Only the parts §5 states as absolutes are enforced here. "Dated records are
 # YYYY-MM-DD-keyword-slug" is NOT among them: which families are dated records
-# is a judgment §8 does not encode, so it is injected rather than blocked.
+# is a judgment §8 does not encode, so this guard leaves it to §5 and the owner
+# instead of enforcing it.
 BARE_NOUNS = {
     "notes", "note", "findings", "decisions", "tasks", "ideas", "misc",
     "stuff", "temp", "draft", "drafts", "untitled", "new", "doc", "docs",
@@ -271,9 +273,9 @@ def schema_gate(root, path, content):
                 "row to §8, get the owner's yes, then file. §8 is amended by "
                 "propose-and-approve; it is never widened by a note that "
                 "arrived first.\n"
-                "  3. If it is private to this vault and the public product "
-                "should not know it, add it to .checkup.json under "
-                "record_schema.extra_types instead of amending §8."
+                "  The vault-guardian skill, if this vault has it, carries "
+                "that whole change, including the files outside §8 that it "
+                "touches."
                 % declared, None)
 
     try:
@@ -298,9 +300,7 @@ def schema_gate(root, path, content):
                 "  1. The note is wrong: correct it to the shape above.\n"
                 "  2. The LAW is wrong (this shape genuinely needs a key or a "
                 "value §8 does not have): say so to the owner and amend §8 "
-                "first, propose-and-approve. If the addition is private to this "
-                "vault and the public product should not carry it, it goes in "
-                ".checkup.json under record_schema.extra_types instead."
+                "first, propose-and-approve."
                 % (spec.name, lines, spec.name, legal), None)
 
     # A key §8 has not declared: a judgment call, so it is flagged, not blocked.
@@ -309,7 +309,7 @@ def schema_gate(root, path, content):
         known.add(schema.marker_key)
     if schema.type_key:
         known.add(schema.type_key)
-    extra = [k for k in fm if k not in known and k != "tags"]
+    extra = [k for k in fm if k not in known]
     notes = []
     if extra:
         notes.append("This %s carries key(s) §8 has not declared: %s. That is a "

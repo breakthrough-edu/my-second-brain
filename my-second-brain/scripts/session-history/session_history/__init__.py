@@ -4,8 +4,11 @@ from .core import (
     SCHEMA_VERSION,
     FTS5_MISSING_MESSAGE,
     FTS5Unavailable,
+    INDEX_MISSING_MESSAGE,
+    IndexNotBuilt,
     connect,
     fts5_available,
+    index_built,
     init_db,
     ingest,
     search,
@@ -14,7 +17,6 @@ from .core import (
     actions,
     default_db_path,
     default_projects_dir,
-    default_inbox_dir,
     load_config,
 )
 
@@ -22,8 +24,11 @@ __all__ = [
     "SCHEMA_VERSION",
     "FTS5_MISSING_MESSAGE",
     "FTS5Unavailable",
+    "INDEX_MISSING_MESSAGE",
+    "IndexNotBuilt",
     "connect",
     "fts5_available",
+    "index_built",
     "init_db",
     "ingest",
     "search",
@@ -32,6 +37,5 @@ __all__ = [
     "actions",
     "default_db_path",
     "default_projects_dir",
-    "default_inbox_dir",
     "load_config",
 ]

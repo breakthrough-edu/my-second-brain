@@ -4,7 +4,7 @@
 
 **It runs FIRST, and the order is load-bearing.** The distillation half reads the state of the house to decide what is worth keeping; this half is what makes that state true. Distilling out of a drifted house distills the drift.
 
-⛔ **One doorbell, two files.** The owner is never asked to pick a half. The doorbell in the generated command-base skill rings once, this file runs, and then [distill.md](distill.md) runs. An experienced owner who asks for one half by name gets it, and that is the only way a half ever runs alone.
+⛔ **One doorbell, two files.** The doorbell in the generated command-base skill rings once and names the half that is actually overdue rather than handing the owner a choice. This file runs, and then [distill.md](distill.md) runs. An owner who does name a half gets that half, and it runs alone.
 
 Cadence comes from `cadence_days` in `99_Meta/maintenance-state.md` (weekly by default). ⛔ Every staleness comparison in this file reads that key; never assume 7.
 
@@ -18,23 +18,27 @@ It covers the mechanical share of the checks below in seconds, so the human pass
 
 ⛔ **Do not run `deck.py doctor` here and do not fold dark dashboard cells into this report.** Every key it reports is optional in §8, so nothing it finds is a violation, and a weekly list of legal-but-unfilled keys is a nag the owner learns to scroll past. `doctor` runs when the owner asks why a panel is dark, and no other time.
 
-⛔ **The dashboard rebuild is NOT this pass's job.** It belongs to the command-base skill's session start, where it already happens. It used to live here as a backstop for weeks nobody opens a session, and that backstop never worked: this pass is reached through a doorbell that lives in the very session start it was supposed to back up. A backstop that shares a single point of failure with the thing it backs up is decoration.
+⛔ **The dashboard rebuild is NOT this pass's job.** It belongs to the command-base skill's session start, where it already happens. ⛔ Do not add a backstop for it here either: this pass is reached through a doorbell that lives in that very session start, so a backstop here shares a single point of failure with the thing it backs up.
 
-## The eighteen checks
+## The checks
 
 Scan, build ONE report, fix nothing yet.
 
 **Doors, doorplates and the directory**
 
-1. **Doors and the directory, four things at once.** (a) **Exists:** every room, lane, brand subfolder and wing has a door. (b) **Unique:** exactly one `_`-prefixed file per folder, never two (§5). (c) **Content:** the door's text still describes what is actually in the folder. (d) **Directory:** `Home.md` audited against the filesystem **in both directions**, every folder listed exists and every folder that exists is listed, minus the two documented exemptions (inside a project folder, inside `99_Meta/Skills/`).
+1. **Doors and the directory, four things at once.** (a) **Exists:** every room, lane, brand subfolder and wing has a door. (b) **Unique:** exactly one `_`-prefixed file per folder, never two (§5). (c) **Content:** the door's text still describes what is actually in the folder. (d) **Directory:** `Home.md` audited against the filesystem **in both directions**, every folder listed exists and every folder that exists is listed, minus the three documented exemptions (inside a project folder, inside `99_Meta/Skills/`, and `99_Meta/memory-archive/` itself). ⭐ **A folder that turns out to be a whole new wing is not a directory fix.** Home, the doors, `CLAUDE.md` and §8 all have to move together, which is `vault-guardian`'s job; name it here and propose opening it, ⛔ never paper over it with a Home line.
 
-    ⭐ **(c) is the new one and it is the one with teeth.** A door that exists and is unique can still be a lie: it was written the week the room was moved into and the room has had a year since. Scan door **content** for **rooms and brand folders only**, around seventeen files. ⛔ **Do not scan `## Observations` sections**, ⛔ do not scan the SOP menu (`sop-builder` reconciles that itself every time it runs), and ⛔ do not judge a wing guide's `## Current state` here, which is prose and gets its own check below.
+    ⭐ **(c) is the one with teeth.** A door that exists and is unique can still be a lie: it was written the week the room was moved into and the room has had a year since. Scan door **content** for **rooms and brand folders only**, around seventeen files. ⛔ **Do not scan `## Observations` sections**, ⛔ do not scan the SOP menu (`sop-builder` reconciles that itself every time it runs), and ⛔ do not judge a wing guide's `## Current state` here, which is prose and gets its own check below.
 
-    Cross-reference `capture-progress.md`: rooms or lanes captured once and untouched for four cadence periods are listed as **cold**, proposal only (revisit, or mark stable).
+    Cross-reference `capture-progress.md`: rooms or lanes captured once and **untouched** for four cadence periods are listed as **cold**, proposal only (revisit, or mark stable).
+
+    ⭐ **`untouched` means nothing in the folder has changed; ⛔ it does not mean capture has not run again.** Read the newest change inside the folder itself. The other reading makes this check say something that is true of every healthy vault by about the sixth week: rooms are moved in once, in the first week or two, and are never "captured" a second time, so almost every room would be named cold every week from then on, forever. ⚠️ **One alarm the owner knows is empty and they learn to skip the whole report**, which costs more than this check is worth.
+
+    ⚠️ **File timestamps are not durable, and this check has to survive that.** A sync, a restore, or a copy to a second machine rewrites every modification time at once and nothing notices; this product says the same thing about `built_on:` for the same reason. Two rules follow. **A date written inside a note beats the file's timestamp whenever one exists** (`status_since:`, `created:`, the newest dated journal line linking that room): a person wrote it, and copying a vault does not move it. And ⛔ **if the newest timestamps across the whole vault land on or around one day, they were rewritten, not earned**: say so in one line and list nothing as cold this run.
 
 **Machine-layer self-check**
 
-2. **Required `99_Meta` files.** The nine control files are present: `structure-doctrine.md`, `tagging-vocabulary.md`, `filing-log.md`, `bootstrap-progress.md`, `capture-progress.md`, `maintenance-state.md`, `lab-gate-config.md`, `memory.md`, `capture-buffer.md`. A missing one is an error, not a note.
+2. **Required `99_Meta` files.** Every control file `required_meta_files` in `scripts/checkup.py` names is present. ⛔ **Do not copy those names here.** That list is the whole list and not a sample of it, the machine pass above is what reads it (`check_required_meta`), and a second copy on paper is a second thing to keep true: the day the product generates one more control file, the paper copy is the one that goes on saying the old number. A missing one is an error, not a note.
 3. **Standard guards.** Every guard `bootstrap-progress.md` records as installed is still registered where it says it is. ⭐ **This one reports at INFO and never errors**, deliberately: a declined guard and a machine that could not run one are correct outcomes, and a weekly scolding for an answer the owner was asked to give is how a check gets switched off.
 4. **Top-level rooms.** Nothing has appeared at the vault root that the doctrine does not name.
 
@@ -55,7 +59,7 @@ Scan, build ONE report, fix nothing yet.
 
     ⛔ **The `## This week's compass` slot is exempt from all of it.** It is replaced whole every week by check 14 and it has exactly one week in it at a time, so there is nothing in it old enough to rotate; archiving it would file a copy of something that already has its own note in `02_Command-Base/Reviews/`. The other half does not touch it either.
 
-    **The line to hold, past which it is the other half's business:** rotation and trimming are mechanical and land here. ⛔ **"This memory line looks like a durable fact about the owner" is a judgment and does NOT land here**; hand it to the distillation half, which is the only reader and writer of the pool that claims like that have to age in, and where the owner rules on it.
+    **The line to hold, past which it is the other half's business:** rotation and trimming are mechanical and land here. ⛔ **"This memory line looks like a durable fact about the owner" is a judgment and does NOT land here**; hand it to the distillation half, which writes the pool that claims like that have to age in, and where the owner rules on it. ⛔ **This half never writes that pool**; it counts it (check 14's Pool vitals) and nothing more, and `session-report` writes it too, at a session's closeout.
 
     ⭐ **A retired fact line goes to `99_Meta/memory-archive/` like everything else, and this matters more than tidiness.** The failure this product has actually produced is a thing the owner said out loud being silently dropped. Retiring is the owner's "no"; keeping the body is how a no stays reviewable.
 
@@ -69,7 +73,7 @@ Scan, build ONE report, fix nothing yet.
 
     ⚠️ **Ask for the headline; ⛔ never write it.** One line, the owner's own words, pasted back as said. It is the only sentence in the whole ritual that is not mechanical, and it is the seed for the theme check below, which is exactly why the AI's own reading of the week is kept out of it and given its own section in the other half.
 
-    **Pool vitals** is three counts off `04_Methodology/Hypotheses/` itself: open, graduated this week, expired this week. ⛔ Nothing else goes in that section; the metrics an older design had there depended on a citation gate and a session cap that no longer exist.
+    **Pool vitals** is three counts off `99_Meta/Hypotheses/` itself: open, graduated this week, expired this week. ⛔ Nothing else goes in that section.
 
     ⭐ **Two producers hang off this item's close, and they are here for one reason: they read what this check just wrote.** Splitting either into the other half would put a producer and its only input on opposite sides of a handover, which is the exact failure this product keeps finding (an address and a shape with nobody writing into them).
 
@@ -80,8 +84,8 @@ Scan, build ONE report, fix nothing yet.
 
 ## Close
 
-16. **Stamp `maintenance-state.md`.** Set `last_tidy:` and append a one-line history entry (date, items found, items fixed). ⛔ **This half stamps `last_tidy` and nothing else.** The other half stamps `last_distill`; that is the whole reason the file keeps two dates, and it is what lets the doorbell name the half that is actually overdue.
-17. **`CLAUDE.md` drift check.** Read the vault root `CLAUDE.md` against reality (a skill renamed, a second wing added, the language changed, a rule amended). If it has drifted, propose the specific edit and let the owner approve. ⛔ Never rewrite it silently (§4, law 5).
+16. **Stamp `maintenance-state.md`.** Set `last_tidy:` and append a one-line history entry (date, items found, items fixed). ⭐ **`last_tidy` is this pass's own key: the key and the pass carry two names for one thing, and this is the one place that says so.** ⛔ **This half stamps `last_tidy` and nothing else.** The other half stamps `last_distill`; that is the whole reason the file keeps two dates, and it is what lets the doorbell name the half that is actually overdue.
+17. **`CLAUDE.md` drift check.** Read the vault root `CLAUDE.md` against reality (a skill renamed, a second wing added, a rule amended). If it has drifted, propose the specific edit and let the owner approve. ⛔ Never rewrite it silently (§4, law 5). ⭐ **If it drifted because the law itself moved** (a wing opened, a family was added, a rule was loosened), patching this file alone leaves the rest of the amendment undone: that is `vault-guardian`'s job, and the honest move is to propose opening it rather than to fix the sentence here.
 
 ## Then hand over
 

@@ -2,7 +2,7 @@
 
 `01_Assets` is what the business is made of. `02_Work` is what is **moving**: every live piece of work is one project, and every project sits in exactly one of four lanes. This file is the capture-side companion to the filing ladder in doctrine §1: how to ask for in-flight work, how to place it, and what to notice about it.
 
-⚠️ **Lanes are not departments.** The ladder classifies by facts the work observably has (a name, an audience, recurrence), never by which department would own it in a big company. This vault has no departments, which is exactly why the old function rooms are gone.
+⚠️ **Lanes are not departments.** The ladder classifies by facts the work observably has (a name, an audience, recurrence), never by which department would own it in a big company. This vault has no departments, and ⛔ no function room is opened to stand in for one.
 
 ---
 
@@ -27,7 +27,7 @@ Three things the ladder settles that people ask about every time:
 
 ## The four doors (`guide_family: lane`)
 
-⭐ **Scaffold copies these onto the four lane guides verbatim, and capture reads the same lines when it walks someone into a lane.** They are here rather than invented at install time for one reason: a door file is read every time anyone works in that folder, so two installs that improvise two sets of door signs are two different products. ⛔ Do not reword them per vault; translate them on a `中文` install and leave the file names English.
+⭐ **Scaffold copies these onto the four lane guides verbatim, and capture reads the same lines when it walks someone into a lane.** They are here rather than invented at install time for one reason: a door file is read every time anyone works in that folder, so two installs that improvise two sets of door signs are two different products. ⛔ Do not reword them per vault, and leave the file names English.
 
 ### Deliver
 

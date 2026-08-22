@@ -2,7 +2,7 @@
 
 The move-in ritual. Each run: pick one room or one lane, the AI asks one thing at a time, the owner talks (typing or voice, both fine), notes land in the right places, and the session ends with one observation the owner had not noticed plus two good questions. Total 15 to 20 minutes for a first room; regulars finish in 10.
 
-Everything files by `99_Meta/structure-doctrine.md`. Every filing appends to `99_Meta/filing-log.md`. Interaction language comes from `bootstrap-progress.md`.
+Everything files by `99_Meta/structure-doctrine.md`. Every filing appends to `99_Meta/filing-log.md`.
 
 ## Entry
 
@@ -16,7 +16,7 @@ Everything files by `99_Meta/structure-doctrine.md`. Every filing appends to `99
 
 ## Stage 1: Business Profile (everyone starts here, ~5 minutes)
 
-Frame it honestly, then interview. Sample opening (adapt, don't recite; Chinese version if `language: zh`):
+Frame it honestly, then interview. Sample opening (adapt, don't recite):
 
 > "First thing we move in is the business itself. Five minutes, I ask, you talk. Speaking out loud is perfect, you do not need to type carefully. Ready?"
 
@@ -89,7 +89,7 @@ Load the guide for what was chosen: [../references/rooms-assets.md](../reference
    - ⛔ **Never write into `03_SOP/`.** Not because only one tool may write there (hand-written SOPs are legal), but because a real SOP takes a full pass of its own: dictate, structure, draw, correct, critique, finalize. A 15-minute move-in cannot hold that, and a half-walked process written down as if it were finished is worse than no SOP. A process the owner dictates tonight parks in `00_Inbox/<process-name>-sop-draft/` as a draft.
    - ⛔ **Never write into `04_Methodology/`.** Only the owner's yes lands anything there, and capture is never the moment it is given. (Closeout is: a Lesson or Method written at the end of a session lands there with a yes said out loud then. ⛔ That is not a door capture may use.)
 6. **A task must have a project.** When a to-do surfaces mid-capture, either hang it on an existing project or propose opening one (small is fine). If neither happens, it does not get written. There is no parking lot.
-7. **Name the pit out loud, in the moment.** When a pattern shows up that might deserve a rule (the same failure twice, a pothole with a name), say so, and put the plain sentence on the entity note or the capture-buffer line where it belongs. ⛔ **There is no flag to plant**: the tags that existed for that were retired, because a pit is written up as a Lesson at this session's own **closeout**, with the owner's yes, while they still remember what it cost. ⛔ Do not write the lesson yourself mid-capture; naming it is the whole job here.
+7. **Name the pit out loud, in the moment.** When a pattern shows up that might deserve a rule (the same failure twice, a pothole with a name), say so, and put the plain sentence on the entity note or the capture-buffer line where it belongs. ⛔ **There is no flag to plant**: a pit is written up as a Lesson at this session's own **closeout**, with the owner's yes, while they still remember what it cost. ⛔ Do not write the lesson yourself mid-capture; naming it is the whole job here.
 
 **Update as you go, and only two things:** one `filing-log.md` line per filing, and `capture-progress.md` at room close. ⛔ There is no inventory to feed. An entity note is found by its type, its address, and Home; nothing anywhere lists it. Say so plainly if the owner asks: move it in and you are done, there is no register to sign.
 
@@ -122,11 +122,10 @@ This is the payoff. Calibration is strict:
 - **Honesty rules:** never promise analytics this data cannot support (no cashflow-gap claims, no trend claims from one night of capture). Never verdict ("your problem is..."); always map ("your next breakthrough point might be..."). If the capture genuinely surfaced nothing, say so plainly and give the two questions anyway; a thin room is itself an honest observation.
 - **Land the insight in two places:** say it in chat, AND write it with today's date into the `## Observations` section of that folder's `_<Name>-Guide.md`. A `02_Work` move-in lands in the lane's guide, same section. That is what a guide collects (doctrine §3), and it is why guides get richer as rooms fill.
 
-For Chinese sessions, write the insight natively. Sample register (shape, not script): "你刚搬进来的三个客户里, 两个是转介绍来的。但整个流程里没有一个转介绍机制, 它是发生在你身上, 不是你在经营它。两个问题给你想: ..."
 
 ## Stage 5: The four-layer closing screen
 
-Always end a capture session with this screen, rendered as plain indented text in chat (both languages follow the same shape):
+Always end a capture session with this screen, rendered as plain indented text in chat:
 
 ```
 04_<Business>-Business-Wing/
@@ -136,7 +135,7 @@ Always end a capture session with this screen, rendered as plain indented text i
 └── 04_Methodology   <- empty
 ```
 
-Then exactly this beat, in the session language, in your own words but keeping all three moves:
+Then exactly this beat, in your own words but keeping all three moves:
 
 1. **What grew tonight:** name it concretely.
 2. **The two that are still empty, and they are empty in different ways.** Do not blur them into one story. `03_SOP` is not filled by capture: a process becomes an SOP when someone sits down and writes it properly, and any process dictated tonight is already queued as a draft in the Inbox. `04_Methodology` cannot be written into at all: it holds judgment the owner has confirmed, and it stays empty until it is earned. Full stop. No product, no course, no "if you want to go deeper". The empty folders speak for themselves.

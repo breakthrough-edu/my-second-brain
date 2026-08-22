@@ -8,7 +8,7 @@ Slow-cooker mode, best done at home. Two interviews and a build:
 
 Sequence is fixed: profile first (the soul calibrates against it), soul second, wire-up last. Everything can pause anytime; record progress in `99_Meta/bootstrap-progress.md` (`jarvis_progress:`, shape below) and resume cleanly.
 
-`99_Meta/memory.md` is scaffolded at setup, so it normally already exists. At the end of this mode, fill its Current reality section with 2 to 3 sentences from the owner if it is still empty. (Backstop for vaults set up before memory.md was scaffolded: if the file is missing, create it from [../templates/memory.template.md](../templates/memory.template.md) first.)
+`99_Meta/memory.md` is scaffolded at setup, so it normally already exists. At the end of this mode, fill its Current reality section with 2 to 3 sentences from the owner if it is still empty. (Backstop: if the file is missing, create it from [../templates/memory.template.md](../templates/memory.template.md) first.)
 
 ## Two tiers: light and deep
 
@@ -89,7 +89,7 @@ jarvis_progress: {tier: deep, ten_questions: done, deep_roots: done, deep_relati
 
 - `tier:` is `light` or `deep`, set the moment the owner picks. On `light`, the four deep keys are written once as `skipped` and never revisited.
 - Every other key is `pending` / `done` / `skipped` / `stopped`. `stopped` is a deep sitting the owner ended early and it is **not** an invitation to resume it; treat it as done unless they raise it.
-- ⛔ **Update the key the moment a stage ends, not at the end of the session.** A single value could only ever say "somewhere in the middle", and this mode is designed to be interrupted, which made that value useless exactly when it was needed.
+- ⛔ **Update the key the moment a stage ends, not at the end of the session.** A single value could only ever say "somewhere in the middle", and this mode is designed to be interrupted.
 - Resuming: read the mapping, say in one line what is already done, and start at the first `pending`. ⛔ Never re-run a `done` stage to "check it is still right"; the owner answered once.
 
 ## Part A: Profile interview
@@ -115,7 +115,7 @@ Multiple-choice feel, free-form always allowed, "skip" always allowed:
 
 Handling answers: **transcribe, do not interpret** (mechanism 2). Near-verbatim into the profile structure ([../templates/profile.template.md](../templates/profile.template.md)), each entry source-tagged with the date. Thin answers make a thin profile, and that is correct; never invent personality. Add a short "Business context worth holding" paragraph drawn from the Business Profile (stage, pressure, ambition) with the owner's confirmation.
 
-**Light tier stops here.** Run the red-line pass, show the full draft, and on approval write `99_Meta/profile.md` with the three deep-only sections present and empty.
+**Light tier stops here.** Run the red-line pass, show the full draft, and on approval fill `99_Meta/profile.md`, leaving the three deep-only sections present and empty. ⛔ **That file already exists, scaffolded empty. Fill its sections; never replace the file.** The weekly distillation lands graduated lines in it, and those were approved once already.
 
 ### Deep: three sittings and a taste module
 
@@ -158,7 +158,7 @@ Not about them at all, which is why it works. Three prompts, and collect the exa
 
 ⭐ **Taste is stated as a judgment about someone else, so it comes out unguarded and specific**, and it transfers straight into testable voice rules and into the anti-vocabulary list. This module is short, ten minutes, and it is the highest-yield ten minutes in the deep tier.
 
-**Then:** red-line pass over everything (mechanism 5), show the full draft, and on approval write `99_Meta/profile.md`.
+**Then:** red-line pass over everything (mechanism 5), show the full draft, and on approval fill `99_Meta/profile.md` (same rule as the light tier: fill it, ⛔ never replace it).
 
 ## What the two tiers actually produce
 
@@ -223,7 +223,7 @@ Before writing anything, check:
 - "What I am not" is in the owner's own words.
 - The profile names real specifics, not abstract virtues.
 
-FAIL example: "Be clear and concise." PASS example: "Never open with 'Great question'. If I write in Chinese, answer in Chinese. Tell me the risk before the plan."
+FAIL example: "Be clear and concise." PASS example: "Never open with 'Great question'. Tell me the risk before the plan. If I paste a draft, edit it, do not rewrite it."
 
 If an answer lands generic, use the follow-up protocol (mechanism 1). Keep going until the gate passes; say why, once: a generic soul produces the same AI they already had.
 

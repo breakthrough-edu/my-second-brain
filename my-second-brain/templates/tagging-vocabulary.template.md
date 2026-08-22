@@ -44,7 +44,7 @@ version: 1.0
 | `#waiting-for` | Blocked on someone else; the record names who. |
 | `#renewal` | Anything with a `renew_by` date (licenses, insurance, leases, road tax). |
 
-> ⛔ **Three lesson flags used to sit here (`#lesson-candidate`, `#lesson-pooled`, `#lesson-rejected`) and all three were retired on 2026-08-20.** They were one lifecycle for a pit that got noticed one week and looked at the next. A pit is now written up as a Lesson at the **closeout of the session it happened in**, with the owner's yes, so there is no waiting period for a flag to mark. ⛔ Do not re-add them, and ⛔ do not invent a replacement flag: the mechanism they served no longer exists, and a flag with no sweeper is a tag that accumulates.
+> ⛔ **No lesson flag belongs here**, and that includes `#lesson-candidate`, `#lesson-pooled`, `#lesson-rejected` and any replacement invented for them. A pit is written up as a Lesson at the **closeout of the session it happened in**, with the owner's yes, so there is no waiting period for a flag to mark, and a flag with no sweeper is a tag that accumulates.
 
 ## Excluded for now
 
@@ -52,4 +52,4 @@ version: 1.0
 
 ## Revision log
 
-- **{{DATE}}**: v1.0 written at setup. ⛔ It ships **without** any lesson flag, on purpose: a pit is written up at the closeout of the session it happened in, so nothing needs marking for a later sweep. Earlier versions of this product shipped three such flags and swept them weekly; the note above records why they are gone, so nobody re-derives them from first principles.
+- **{{DATE}}**: v1.0 written at setup. ⛔ It ships **without** any lesson flag, on purpose: a pit is written up at the closeout of the session it happened in, so nothing needs marking for a later sweep.

@@ -79,6 +79,7 @@ Everything else in the folder is project material and needs no frontmatter famil
 ---
 type: client
 status: active
+status_since:
 source:
 since:
 current_terms:
@@ -115,6 +116,7 @@ status is active or prospective. Someone you are only pitching is prospective, a
 ---
 type: vendor
 status: active
+status_since:
 supplies:
 terms:
 contact:
@@ -147,6 +149,7 @@ status is active or prospective. A landlord you are still negotiating with, or a
 ---
 type: employee
 status: active
+status_since:
 role:
 started:
 tags: []
@@ -178,6 +181,7 @@ status is active or prospective. A candidate you are interviewing is prospective
 ---
 type: product-service
 status: active
+status_since:
 price:
 cost:
 tags: []
@@ -207,6 +211,7 @@ This note is the SINGLE source of price truth for the whole vault. A price chang
 ---
 type: company-doc
 status: active
+status_since:
 doc_kind:
 renew_by:
 issuer:
@@ -235,6 +240,7 @@ renew_by is the ONE expiry key in this vault, on every family that has a deadlin
 ---
 type: equipment
 status: active
+status_since:
 model:
 purchased:
 renew_by:
@@ -264,6 +270,7 @@ renew_by carries whichever date actually needs acting on: warranty end, inspecti
 ---
 type: outlet
 status: active
+status_since:
 address:
 renew_by:
 licenses:
@@ -292,6 +299,7 @@ The landlord is a Vendor. The premises is this note.
 ---
 type: it-system
 status: active
+status_since:
 holder:
 renew_by:
 tags: []
@@ -327,6 +335,7 @@ renew_by for a domain or a subscription that would actually hurt if it lapsed.
 ---
 type: marketing-asset
 status: active
+status_since:
 asset_kind:
 where_it_lives:
 tags: []
@@ -356,6 +365,7 @@ Making the content is a project in 02_Work/Grow/ while it runs; what survives th
 ---
 type: property
 status: active
+status_since:
 address:
 renew_by:
 tags: []
@@ -379,6 +389,7 @@ renew_by for whatever has a deadline: tenancy end, insurance, assessment.
 ---
 type: vehicle
 status: active
+status_since:
 plate:
 renew_by:
 tags: []
@@ -564,7 +575,6 @@ waiting_on names the person or thing; use it with status: waiting so the morning
 ```markdown
 ---
 type: daily
-date: {{DATE}}
 ---
 
 # {{DATE}}
@@ -641,12 +651,8 @@ Two sections carry a rule the others do not, and both rules exist to keep the fi
     week is the normal outcome. Never manufacture insight from insufficient material; a section
     that gets padded weekly is a section the owner learns to skip, which costs more than the
     paragraph was worth.
-POOL VITALS counts only what 04_Methodology/Hypotheses/ can count about itself: open,
-  graduated, expired. Three older metrics (citation-rejection rate, contested rate, sessions
-  actually read against the cap) are absent because what produced them is gone, not because
-  they were cut: the citation gate and the session cap both retired with the scan they belonged
-  to, and a contradiction now kills a hypothesis on the spot, so nothing sits in a contested
-  state to be counted.
+POOL VITALS counts only what 99_Meta/Hypotheses/ can count about itself: open,
+  graduated, expired.
 There is no "Next week" section: the hook for next week is spoken at the very end of the
   ritual, from next_suggestion: in 99_Meta/capture-progress.md, and a section nobody fills is a
   section nobody reads.
@@ -801,8 +807,7 @@ references: is written ONCE, right here, at birth: the lessons and decisions thi
   lessons inform the next SOP someone writes.
 Prose is the normal, sufficient form of a playbook. A few earn a live feedback loop and grow
   into a folder with lab organs beside them, in place, no move and no link rewrites. That is
-  rare, it is proposed by the weekly scan or asked for by the owner, and the default answer
-  is no.
+  rare, it is asked for by the owner, and the default answer is no.
 -->
 ```
 
@@ -812,9 +817,8 @@ Prose is the normal, sufficient form of a playbook. A few earn a live feedback l
 ---
 type: hypothesis
 status: open
-destination: memory
+destination: profile
 weeks_supported: 0
-contradictions: 0
 weeks_silent: 0
 ---
 
@@ -824,8 +828,9 @@ weeks_silent: 0
 - <verbatim quote> · <session pointer>
 
 <!--
-99_Meta/Hypotheses/. ⛔ WEEKLY MAINTENANCE IS THE ONLY WRITER. Nothing filed by hand ever
+99_Meta/Hypotheses/. ⛔ MAINTENANCE'S DISTILLATION HALF WRITES IT. Nothing filed by hand ever
   lands here, and this template exists so the shape is legible, not as an invitation.
+  session-report writes it too, at a session's closeout; the anti-drift half only reads it.
 The pool is where maintenance parks a claim it has noticed but not yet earned. It graduates
   out on evidence, and evidence means a verbatim quote plus a pointer to where it was said,
   which is why evidence lives in the body where it can be checked rather than in a key.
@@ -833,9 +838,99 @@ The pool is where maintenance parks a claim it has noticed but not yet earned. I
 ⛔ A lab's bets are NOT hypotheses. Those live in that lab's register, they are the owner's
   own, and they are read every time. This pool is the machine observing the owner, and it
   never enters a session's context.
-status: open / contested / expired / graduated / rejected.
-destination: memory / profile / lesson / decision-proposal / guide-observations /
-  memory-line-retirement / lab-register. It answers where this lands IF it graduates.
+status: open / expired / graduated / rejected.
+destination: profile, and that is the whole list. It answers where this lands IF it graduates,
+  and the pool has exactly one landing point: a pattern about the owner that only observation
+  could establish. Anything true the moment it is said lands the day it happens instead.
+-->
+```
+
+## Rubric.md
+
+```markdown
+---
+type: rubric
+updated: {{DATE}}
+---
+
+# <Name> Rubric
+
+## <Criterion 1: the hard business signal>
+<what a pass looks like, in one line anyone can apply in seconds>
+
+## <Criterion 2>
+<what a pass looks like>
+
+## Does this sound like us?
+<the identity veto, in one line: what "us" sounds like on this line of work. A no here
+overrides every number above.>
+
+<!--
+`04_Methodology/Playbooks/<Name>/<Name>-Rubric.md`, one per lab (doctrine section 9.2).
+It is the one organ interviewed into existence when the lab opens, by the `playbook-lab`
+  skill. At most 2 to 3 criteria, at least one hard business signal (money, enquiries,
+  orders, bookings, retention), and the identity veto above.
+Score the market's behaviour, never a friend's politeness: "did anyone act on it" beats
+  "did people like it".
+The scoring test: 30 seconds per output. If applying this to one output takes longer, cut a
+  criterion; a rubric that takes real thought gets applied twice and then abandoned.
+Cards are disposable, the file is permanent: rewrite a criterion in place rather than opening
+  a second rubric.
+Scores do not live here. They live with the outputs they score.
+updated: the day a criterion last changed, not the day something was last scored.
+-->
+```
+
+## Lab-Register.md
+
+```markdown
+---
+type: lab-register
+updated: {{DATE}}
+---
+
+# <Name> Register
+
+| Opened | The bet | Which part of the playbook it tests | What would settle it | Verdict |
+|---|---|---|---|---|
+| {{DATE}} | <one sentence> | <the chapter or move> | <the condition> | open |
+
+<!--
+`04_Methodology/Playbooks/<Name>/<Name>-Register.md`, one per lab (doctrine section 9.2):
+  the ledger of live bets this lab is running. It ships empty and correctly shaped.
+Every row names which part of the methodology it tests AND the condition that would settle
+  it, and that condition is written when the bet opens, before the evidence arrives.
+A lab's bets are NOT the hypothesis pool in `99_Meta/Hypotheses/`. These are the owner's own
+  and they are read every time the lab is opened; that pool is the machine observing the
+  owner and it never enters a session's context.
+Rows are disposable, the file is permanent: a settled bet keeps its row and its verdict.
+updated: the day a bet opened or resolved.
+-->
+```
+
+## Thresholds.md
+
+```markdown
+---
+type: thresholds
+updated: {{DATE}}
+---
+
+# <Name> Thresholds
+
+| Trigger line | Default | This lab | What it fires |
+|---|---|---|---|
+| <the signal that says the playbook needs revising> | <shipped default> | <the owner's number> | a proposal to revise the playbook |
+
+<!--
+`04_Methodology/Playbooks/<Name>/<Name>-Thresholds.md`, one per lab (doctrine section 9.2).
+Ships with defaults and is owner-tunable: the defaults are a starting line, and a number
+  nobody can move is a number everybody ignores.
+A threshold firing is a PROPOSAL to revise the playbook, never an edit. The owner's yes is
+  what revises the authority file, and everything downstream follows because SOPs link the
+  playbook by `playbook:` (doctrine sections 9.3 and 9.7).
+Rows are disposable, the file is permanent.
+updated: the day a line was last tuned.
 -->
 ```
 

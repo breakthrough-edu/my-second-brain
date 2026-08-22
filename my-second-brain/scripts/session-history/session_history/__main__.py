@@ -11,12 +11,11 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import os
 import sys
 
-from .core import DEFAULT_STATE_DIR
 from . import (
     FTS5Unavailable,
+    IndexNotBuilt,
     actions,
     connect,
     default_db_path,
@@ -153,6 +152,9 @@ def main(argv=None) -> int:
         return 3
     try:
         return args.func(conn, args)
+    except IndexNotBuilt as e:
+        print(str(e), file=sys.stderr)
+        return 4
     finally:
         conn.close()
 

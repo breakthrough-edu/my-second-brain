@@ -7,7 +7,7 @@ maintained_by: the owner (AI proposes amendments, owner approves)
 
 # Lab Gate Config
 
-> The thresholds the **`playbook-lab` skill** reads to decide what to put on the table: whether a playbook is really a candidate for a lab, and whether an open lab looks ready to close. ⚠️ **A weekly scan used to read this file and propose candidates unasked; that scan was retired on 2026-08-20.** A lab is opened when the owner asks for one, and this gate is what tells them no. Read `99_Meta/structure-doctrine.md` §9 for what a lab is, the five organs it holds, and the archive-never-destroy law.
+> The thresholds the **`playbook-lab` skill** reads to decide what to put on the table: whether a playbook is really a candidate for a lab, and whether an open lab looks ready to close. ⚠️ **Nothing scans this file on a schedule, and ⛔ no pass may be given one:** a lab is opened when the owner asks for one, and this gate is what tells them no. Read `99_Meta/structure-doctrine.md` §9 for what a lab is, the five organs it holds, and the archive-never-destroy law.
 >
 > **The gate carries a NO-prior.** Prose is the normal, sufficient form of a playbook, and most playbooks never need a lab. These numbers exist to stop a lab being opened out of enthusiasm, not to find as many as possible. Tune them to how this vault actually moves; they are meant to be adjusted.
 

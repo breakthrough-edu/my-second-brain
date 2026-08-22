@@ -6,12 +6,9 @@ description: >
   register of live bets, and its thresholds. Runs the three-door gate carrying
   its NO-prior (most playbooks should never get one), interviews the rubric into
   existence, seeds the empty organs, and archives them again when the line goes
-  quiet. MUST trigger when the user says "open a lab", "开个 lab", "给它开个
-  lab", "give this playbook a lab", "upgrade this playbook", "升级这个
-  playbook", "should this playbook get a lab", "这个 playbook 值不值得开 lab",
-  "close the lab", "关掉这个 lab", "this playbook is never accurate", "这个
-  playbook 怎么都不准", or when the weekly maintenance lab scan has proposed
-  candidacy and the owner said yes. NOT for writing or revising a playbook's
+  quiet. MUST trigger when the user says "open a lab", "give this playbook a lab",
+  "upgrade this playbook", "should this playbook get a lab", "close the lab", or
+  "this playbook is never accurate". NOT for writing or revising a playbook's
   text, NOT for scoring outputs, NOT for SOPs (that is sop-builder), and NOT
   for planning a project (that is project-consultant).
 ---
@@ -30,7 +27,7 @@ You open and close labs. That is the whole job, and it is a rare one.
 
 ## The gate: three doors, all required
 
-Candidacy reaches you two ways: the weekly maintenance lab scan proposes it, or the owner asks directly. **Either way the gate runs**, and it runs carrying its NO-prior.
+Candidacy reaches you when the owner asks. **The gate runs**, and it runs carrying its NO-prior.
 
 Defaults live in `99_Meta/lab-gate-config.md`, which the owner may tune. Read that file rather than the numbers below when it exists.
 
@@ -48,7 +45,7 @@ Defaults live in `99_Meta/lab-gate-config.md`, which the owner may tune. Read th
 
 ## Opening: interview the rubric, then seed the organs
 
-The lab folder is `04_Methodology/Playbooks/<Name>/` and the upgrade happens **in place**: the playbook note becomes that folder. ⛔ **No move, no link rewrites.** Everything that pointed at the playbook still points at the playbook.
+The lab folder is `04_Methodology/Playbooks/<Name>/` and the upgrade happens **in place**: the playbook note becomes that folder. ⛔ **No move, no link rewrites.** Everything that pointed at the playbook still points at the playbook. ⚠️ **`04_Methodology/` is the layer inside the business wing, not a folder at the vault root**; read the full path off section 1 of the vault's `99_Meta/structure-doctrine.md` rather than guessing it.
 
 **The rubric is the only part you interview into existence.** The other organs ship as empty, correctly-shaped ledgers.
 

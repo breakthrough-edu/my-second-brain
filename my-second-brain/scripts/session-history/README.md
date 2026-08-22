@@ -10,10 +10,9 @@ across projects.
   missing, fails soft with a plain-language fix (use python.org Python, not
   Anaconda) instead of a cryptic `no such module: fts5`.
 - **`~/.claude/projects/` is read strictly read-only.** This tool never writes,
-  moves, or modifies anything there. All state (the database, and with it the
-  harvest bookmark) lives in `~/.my-second-brain/session-history.db`,
-  deliberately outside any repo or skill directory so a code update or skill
-  reinstall can never wipe the index or the bookmark.
+  moves, or modifies anything there. All state lives in
+  `~/.my-second-brain/session-history.db`, deliberately outside any repo or
+  skill directory so a code update or skill reinstall can never wipe the index.
 - **Purely local.** Nothing is uploaded anywhere; there is no network code in
   this package at all.
 
@@ -35,10 +34,6 @@ python3 -m session_history ingest        # or: ./sh ingest
 
 # Just the tool calls a session made
 ./sh actions <session-id>
-
-# WS2: weekly harvest pass (PROPOSE long-term memory candidates)
-./sh harvest --now 2026-07-11            # writes ONE review report to the vault Inbox
-./sh harvest commit <report-path>        # AFTER human approval: consume the bookmark
 ```
 
 ## Configuration
@@ -50,17 +45,15 @@ with `SESSION_HISTORY_CONFIG`):
 
 ```json
 {
-  "vault": "/Users/me/Documents/My-Second-Brain"
+  "db": "/Users/me/.my-second-brain/session-history.db",
+  "projects": "/Users/me/.claude/projects"
 }
 ```
 
-Recognised keys: `vault` (harvest reports default to `<vault>/00_Inbox/`),
-`inbox` (explicit report directory, wins over `vault`), `db`, `projects`.
-Environment variables `SESSION_HISTORY_DB` / `SESSION_HISTORY_PROJECTS` /
-`SESSION_HISTORY_INBOX` override the file. Without any of these, `ingest` and
-`search` work out of the box (`~/.claude/projects` in,
-`~/.my-second-brain/session-history.db` out) and `harvest` asks for an
-explicit `--out`.
+Recognised keys: `db` and `projects`. Environment variables
+`SESSION_HISTORY_DB` / `SESSION_HISTORY_PROJECTS` override the file. Without
+any of these, `ingest` and `search` work out of the box (`~/.claude/projects`
+in, `~/.my-second-brain/session-history.db` out).
 
 ## What gets indexed
 
@@ -69,7 +62,10 @@ Each transcript line is one JSON object. Only conversational lines (`user`,
 `queue-operation`, `attachment`) are skipped, and a session's title is pulled
 from a `custom-title` line if present. For every message the indexer emits:
 
-- one row of concatenated `text` + `thinking` blocks,
+- one row of concatenated `text` blocks,
+- one row per `thinking` block, kept out of the prose row and tagged with the
+  pseudo tool name `__thinking__`, so `search` still finds it while `actions`
+  does not list it as a tool call,
 - one row per `tool_use` block (`tool_name` + truncated JSON input),
 - one row per `tool_result` block (truncated result text).
 
@@ -90,47 +86,12 @@ than the stored offset (compaction/rewrite/truncation) its rows are deleted and
 it is re-ingested from offset 0, so running `ingest` twice on an unchanged
 corpus yields byte-identical row and FTS-match counts.
 
-## Harvest (WS2): propose, never auto-write
-
-Once a week, `harvest` reads sessions that have not yet been "harvested" and drafts
-candidate long-term memories / decisions / notes for a human to approve. The AI
-only proposes; nothing is written to memory automatically, and the output is one
-review report in the vault Inbox (`<date>-Harvest-Report.md`).
-
-Selection is `harvested = 0` AND **quiescent** (file mtime older than 24h relative
-to `--now`, so a session still being written is never harvested) AND carries real
-conversation (at least one user turn; `journal.jsonl` bookkeeping is already
-skipped at ingest) AND is a **main session**: subagent transcripts stay fully
-searchable but are never harvested, because they are machine-to-machine (their
-"user" turns are an orchestrator's brief, and their text is dominated by task
-material that reads as false signal). Each pass is capped at the 30 most-recent
-qualifiers; the rest are reported as `sessions_capped_out`, never silently
-dropped. Each selected session is compressed to a small view (title + date +
-project + the user's corrections, explicit decisions, and gotchas) read from
-the indexed `messages` table, never by re-parsing jsonl.
-
-Three noise filters keep the proposals honest: lines inside injected
-`<system-reminder>` context are never mined (standing house rules are not new
-signal); cue matching uses word boundaries on English cues (so "locked" cannot
-fire inside "blocked"); and any line repeating verbatim across 3+ sessions of
-one batch is dropped as boilerplate echo (a human rephrases; injected context
-repeats byte-identical).
-
-**Bookmark discipline is the whole point.** `harvest` does **not** flip
-`harvested`; proposal is idempotent and re-runnable, so a garbage first report can
-be regenerated without silently burning the sessions it covered. The report's
-frontmatter lists the exact session ids it covers. Only after a human approves
-does a Command Base session run `harvest commit <report-path>`, which reads those
-ids back and sets `harvested = 1` / `harvested_at` for exactly them (idempotent).
-`--now` takes an explicit reference instant so a run is deterministic rather than
-clock-dependent.
-
 ## Schema
 
-`schema_version` (single integer row) gates future migrations. `sessions` holds
-one row per transcript with the `byte_offset`/`size_at_ingest` cursor and a
-`harvested`/`harvested_at` bookmark for a later weekly pass; `harvest_state` holds
-that pass's bookkeeping. `messages` is the FTS5 virtual table. Full DDL lives in
+`schema_version` (single integer row) gates migrations, and the v1 to v2 one
+runs today. `sessions` holds one row per transcript with the `byte_offset`
+cursor and a `harvested`/`harvested_at` bookmark; `harvest_state` is a
+single-row table. `messages` is the FTS5 virtual table. Full DDL lives in
 `session_history/core.py`.
 
 ## Tests
@@ -172,5 +133,4 @@ rsync -av --delete \
   <product-repo>/my-second-brain/scripts/session-history/
 ```
 
-Run the tests in BOTH locations after syncing, then the product repo's
-pre-push scans.
+Run the tests in BOTH locations after syncing.

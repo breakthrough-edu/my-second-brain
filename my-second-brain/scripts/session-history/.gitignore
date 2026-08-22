@@ -1,4 +1,4 @@
-# The database and any other local state live here — never commit them.
+# The database and any other local state live here: never commit them.
 data/
 
 # Python

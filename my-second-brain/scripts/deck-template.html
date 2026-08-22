@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{LANG}}">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -52,17 +52,28 @@
     .pane{overflow:visible}
     .pane-r{border-left:none;border-top:1px solid var(--line);margin-top:22px}
   }
-  .wrap{max-width:1220px;margin:0 auto;padding:0 26px}
   .num{font-variant-numeric:tabular-nums}
 
-  .bar{flex:0 0 auto;z-index:40;display:flex;align-items:baseline;gap:11px;padding:0 26px;height:50px;
+  /* ⛔ flex-wrap plus a MINIMUM height, not a fixed one: the bar carries five
+     things now and a narrow window used to squeeze them until the title itself
+     broke across two lines mid-phrase. Wrapping whole items and letting the bar
+     grow keeps every one of them readable; at any width that fits, nothing
+     wraps and the bar is the same 50px it always was. */
+  .bar{flex:0 0 auto;z-index:40;display:flex;flex-wrap:wrap;align-items:baseline;gap:11px;padding:0 26px;min-height:50px;
     background:rgba(14,16,20,.6);backdrop-filter:blur(22px) saturate(1.6);-webkit-backdrop-filter:blur(22px) saturate(1.6);
     border-bottom:1px solid rgba(255,255,255,.06)}
-  .bar h1{font-size:15px;margin:0;font-weight:650;letter-spacing:-.01em;align-self:center}
+  .bar h1{font-size:15px;margin:0;font-weight:650;letter-spacing:-.01em;align-self:center;white-space:nowrap}
   .bar .biz{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.03em;align-self:center}
   .bar .stamp{margin-left:auto;margin-right:12px;font-size:10.5px;color:var(--faint);align-self:center;font-variant-numeric:tabular-nums}
   .bar .stamp.stale{color:var(--st-wf);font-weight:600}
   .bar .stamp.stale .nudge{color:var(--muted);font-weight:400;margin-left:7px}
+  /* What the generator actually read, sitting beside the generation stamp: the
+     same three numbers the build prints, plus the count of files it could not
+     read at all. That last one only appears when it is not zero, and it is the
+     reason this line exists on the page instead of only in a terminal. */
+  .bar .counts{margin-right:12px;font-size:10.5px;color:var(--faint);align-self:center;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bar .counts .warn{color:var(--st-wf);font-weight:600;margin-left:7px}
 
   .ctl{cursor:pointer;user-select:none;font-size:12px;color:var(--ink2);background:rgba(255,255,255,.05);
     box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 1px 0 rgba(255,255,255,.10);
@@ -70,30 +81,9 @@
   .ctl:hover{background:rgba(255,255,255,.09);color:var(--ink)}
   .ctl[data-on="1"]{background:rgba(255,122,31,.16);color:#ffdcb9;box-shadow:inset 0 0 0 1px rgba(255,146,72,.45)}
 
-  .k{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;margin-bottom:9px}
   .sp{flex:1}
 
-  /* ===== 顶部三块 ===== */
-  .attn{display:none;margin-top:20px;display:flex;flex-wrap:wrap;align-items:stretch;border-radius:22px;background:var(--glass);
-    backdrop-filter:blur(26px) saturate(1.7);-webkit-backdrop-filter:blur(26px) saturate(1.7);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.06),0 22px 46px -34px rgba(0,0,0,.7)}
-  .attn + .attn{margin-top:12px}
-  .attn .col{padding:14px 22px;border-right:1px solid var(--hair);min-width:0}
-  .attn .col:last-child{border-right:none}
-  .zoneL{flex:0 0 auto;display:flex;flex-direction:column;justify-content:center}
-  .zoneR{flex:1 1 520px}
-  .statcell{display:flex;align-items:center;gap:18px}
-  .donut{position:relative;flex:0 0 auto}
-  .donut svg{transform:rotate(-90deg);display:block}
-  .dcenter{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-  .dcenter .dt{font-size:19px;font-weight:750;line-height:1;letter-spacing:-.02em}
-  .dcenter .dl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-top:2px}
-  .bignums{display:flex;flex-direction:column;gap:7px}
-  .bn{display:flex;align-items:baseline;gap:9px}
-  .bn-v{font-size:19px;font-weight:750;line-height:1;min-width:26px;text-align:right}
-  .bn-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
-
-  /* 关口倒数卡 */
+  /* Milestone countdown card */
   .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
   .mcard{position:relative;overflow:hidden;padding:12px 13px 15px;border-radius:10px;min-width:0;
     background:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);
@@ -109,70 +99,17 @@
     font-variant-numeric:tabular-nums}
   .mc-cd .u{font-size:10.5px;color:var(--muted)}
   .mcard .mc-date{font-size:10px;color:var(--faint);margin-top:3px}
-  .mc-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.05)}
-  .mc-bar i{position:absolute;left:0;top:0;bottom:0;background:rgba(255,255,255,.22);border-radius:0 3px 3px 0}
   .mcard.next{background:transparent;box-shadow:inset 0 0 0 1px rgba(255,146,72,.38)}
   .mcard.next .mc-tag{color:var(--accent-ink)}
   .mcard.next .mc-tag .gk{border-color:rgba(255,176,104,.7)}
   .mcard.next .mc-cd b{color:var(--accent)}
   .mcard.next .mc-date{color:var(--accent-ink)}
-  .mcard.next .mc-bar i{background:linear-gradient(90deg,rgba(255,122,31,.5),#ff9a4a)}
   .mcard.over{box-shadow:inset 0 0 0 1px rgba(255,140,140,.38)}
   .mcard.over .mc-cd b{color:var(--st-bl)}
-  .mcard.over .mc-bar i{background:linear-gradient(90deg,rgba(220,80,80,.5),#ff8f8f)}
 
-  /* Top priority */
-  .prio{display:grid;grid-template-columns:1fr 1fr;gap:2px 34px}
-  .prio a{display:flex;align-items:baseline;gap:9px;text-decoration:none;color:var(--ink);cursor:pointer;padding:4px 0}
-  .prio .rank{font-size:10px;font-weight:800;color:var(--faint);min-width:14px;font-variant-numeric:tabular-nums}
-  .prio .mk{width:6px;height:6px;border-radius:50%;flex:0 0 auto;transform:translateY(-1px)}
-  .prio .nt{font-size:12.5px;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .prio .np{font-size:10.5px;color:var(--faint);white-space:nowrap}
-  .prio .nw{font-size:10.5px;color:var(--st-wf);white-space:nowrap}
-  .prio .nd{font-size:11px;color:var(--muted);margin-left:auto;white-space:nowrap;font-variant-numeric:tabular-nums}
-  .prio .nd.over{color:var(--st-bl);font-weight:650}
   .emptyline{font-size:12px;color:var(--faint);line-height:1.75}
 
-  /* ===== 小节标题 ===== */
-  .sect{margin-top:22px;padding:0 4px 11px;display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
-  .sect > span:not(.lbl):not(.note){font-size:10.5px;color:var(--muted);text-transform:uppercase;
-    letter-spacing:.08em;font-weight:700}
-  .sect .note{font-size:11.5px;color:var(--faint);font-weight:500}
-
-  /* D2: 一张主卡 + 三行补充, 比四张并排更吃得下窄栏 */
-  .ghero{position:relative;overflow:hidden;padding:12px 14px 15px;border-radius:14px;margin-bottom:11px;
-    background:linear-gradient(180deg,rgba(255,140,60,.16),rgba(255,122,31,.04));
-    box-shadow:inset 0 1px 0 rgba(255,196,148,.24),inset 0 0 0 1px rgba(255,146,72,.4),0 12px 26px -16px rgba(255,96,12,.45)}
-  .ghero.over{background:linear-gradient(180deg,rgba(220,80,80,.16),rgba(220,80,80,.04));
-    box-shadow:inset 0 1px 0 rgba(255,180,180,.22),inset 0 0 0 1px rgba(255,120,120,.4)}
-  .ghero .mc-tag{color:var(--accent-ink)}
-  .ghero .gt{font-size:13.5px;font-weight:650;line-height:1.3;margin:7px 0 9px;color:var(--ink)}
-  .ghero .gcd{display:flex;align-items:baseline;gap:5px}
-  .ghero .gcd b{font-size:26px;font-weight:750;line-height:1;letter-spacing:-.02em;color:#ffdcb9;font-variant-numeric:tabular-nums}
-  .ghero.over .gcd b{color:#ffc4c4}
-  .ghero .gcd .u{font-size:11px;color:var(--accent-ink)}
-  .ghero .gcd .gd{margin-left:auto;font-size:10.5px;color:var(--accent-ink);font-variant-numeric:tabular-nums}
-  .ghero .mc-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.06)}
-  .ghero .mc-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:0 3px 3px 0;
-    background:linear-gradient(90deg,rgba(255,122,31,.5),#ff9a4a);box-shadow:0 0 10px 1px rgba(255,122,31,.5)}
-  .grow2{display:flex;align-items:baseline;gap:9px;padding:6px 0;border-top:1px solid var(--hair)}
-  .grow2 .glane{font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--faint);flex:0 0 46px}
-  .grow2 .gn{flex:1 1 auto;min-width:0;font-size:12.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .grow2 .gd{font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-  /* D3: 单栏两行制, 比原来那条横幅短得多 */
-  .prow{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-top:1px solid var(--hair)}
-  .prow:first-of-type{border-top:none}
-  .prow .rank{font-size:10px;font-weight:800;color:var(--faint);flex:0 0 12px;padding-top:2px;font-variant-numeric:tabular-nums}
-  .prow .mk{width:6px;height:6px;border-radius:50%;flex:0 0 auto;margin-top:6px}
-  .prow .pmain{flex:1 1 auto;min-width:0}
-  .prow .pt{font-size:12.5px;font-weight:550;color:var(--ink);line-height:1.35}
-  .prow .psub{font-size:10.5px;color:var(--faint);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .prow .psub em{font-style:normal;color:var(--st-wf)}
-  .prow .pd{font-size:11px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;padding-top:2px}
-  .prow .pd.over{color:var(--st-bl);font-weight:650}
-
-  /* ===== 视图分页 + 控制列 ===== */
+  /* ===== View tabs and control row ===== */
   .tabs{margin-top:34px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
   .tab{cursor:pointer;user-select:none;font-size:12.5px;font-weight:600;color:var(--muted);padding:7px 15px;border-radius:12px;
     background:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)}
@@ -182,26 +119,9 @@
   .tab .tc{font-size:10px;color:var(--faint);margin-left:6px;font-variant-numeric:tabular-nums}
   .ctlrow{margin-top:11px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:10px 14px;border-radius:16px;
     background:rgba(255,255,255,.028);box-shadow:inset 0 0 0 1px rgba(255,255,255,.055)}
-  .ctlrow .gsep{width:1px;height:18px;background:var(--hair);margin:0 4px}
   .ctlrow .glab{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);font-weight:700;margin-right:2px}
 
-  .lanepop{position:relative}
-  .lanemenu{display:none;position:absolute;left:0;top:33px;z-index:50;width:300px;padding:12px;border-radius:16px;
-    background:rgba(20,23,28,.96);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 30px 60px -26px rgba(0,0,0,.92)}
-  .lanemenu.on{display:block}
-  .lanemenu .lm-h{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;margin:9px 0 6px}
-  .lanemenu .lm-h:first-child{margin-top:0}
-  .lm-row{display:flex;align-items:center;gap:8px;padding:4px 7px;border-radius:8px;cursor:pointer;font-size:12px}
-  .lm-row:hover{background:rgba(255,255,255,.06)}
-  .lm-box{width:12px;height:12px;border-radius:4px;flex:0 0 auto;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
-  .lm-row[data-on="1"] .lm-box{background:var(--accent);box-shadow:inset 0 0 0 1px rgba(255,176,104,.6)}
-  .lm-row .lm-n{flex:1}
-  .lm-row .lm-c{font-size:10.5px;color:var(--faint)}
-  .lm-row.empty .lm-n{color:var(--muted)}
-  .lm-foot{margin-top:10px;padding-top:9px;border-top:1px solid var(--hair);font-size:10.5px;color:var(--faint);line-height:1.6}
-
-  /* ===== 泳道视图 ===== */
+  /* ===== Swimlane view ===== */
   .boardwrap{position:relative;margin-top:18px}
   .board{overflow-x:auto;overflow-y:visible;padding:2px 0 6px}
   .axisbar{position:sticky;top:0;z-index:30;overflow:hidden;margin:0 -40px;padding:6px 40px 0;
@@ -287,7 +207,7 @@
 
   .undated{margin:10px 0 0 var(--labw,176px);font-size:11px;color:var(--faint);line-height:1.6}
   .conn{position:absolute;width:1px;z-index:2;background:linear-gradient(rgba(255,255,255,.28),rgba(255,255,255,.05));pointer-events:none}
-  /* 两套线, 两件事: dep = 跨项目依赖, 正交轨 + 箭头; stream = 同一条泳道内的先后, 直连虚线不带箭头 */
+  /* Two kinds of line, two different facts: dep = a cross-project dependency, orthogonal track with an arrowhead; stream = ordering within one lane, a direct dashed line with no arrowhead */
   .edge{fill:none;stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round}
   .edge.dep{stroke:rgba(255,255,255,.3)}
   .edge.stream{stroke:rgba(255,255,255,.13);stroke-width:1.3;stroke-dasharray:1 6}
@@ -310,7 +230,7 @@
   .td-ns{background:var(--st-ns)}.td-ip{background:var(--st-ip)}.td-wf{background:var(--st-wf)}
   .td-bl{background:var(--st-bl)}.td-dn{background:var(--st-dn)}
 
-  /* ===== 看板 ===== */
+  /* ===== Kanban ===== */
   .kb{margin-top:14px;display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;align-items:flex-start}
   .kb::-webkit-scrollbar{height:8px}
   .kb::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:99px}
@@ -356,7 +276,7 @@
     box-shadow:inset 0 0 0 1px rgba(255,255,255,.09)}
   .pendbtns{display:flex;align-items:center;gap:8px}
 
-  /* ===== 表格 ===== */
+  /* ===== Table ===== */
   .grid{margin-top:14px;border-radius:20px;overflow:hidden;background:var(--glass);
     backdrop-filter:blur(26px) saturate(1.7);-webkit-backdrop-filter:blur(26px) saturate(1.7);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.06)}
@@ -380,7 +300,7 @@
   table.gt td.d.over{color:var(--st-bl);font-weight:650}
   table.gt td.w{color:var(--st-wf)}
 
-  /* ===== 月历 ===== */
+  /* ===== Calendar ===== */
   .calbar{margin-top:14px;display:flex;align-items:center;gap:9px}
   .calnav{cursor:pointer;user-select:none;font-size:12px;color:var(--ink2);padding:4px 10px;border-radius:9px;
     box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
@@ -407,40 +327,13 @@
   .ev.proj .sq{background:var(--accent)}
   .ev.ren .sq{background:var(--st-wf);border-radius:50%}
 
-  /* ===== 驾驶舱三节 ===== */
+  /* ===== The three cockpit sections ===== */
 
-  .panel{border-radius:20px;padding:16px 18px;background:var(--glass);
-    backdrop-filter:blur(26px) saturate(1.7);-webkit-backdrop-filter:blur(26px) saturate(1.7);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.10),inset 0 0 0 1px rgba(255,255,255,.06),0 22px 46px -34px rgba(0,0,0,.7)}
-  .panel .ph{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
-  .panel .ph .k{margin-bottom:0}
-  .panel .ph .src{font-size:10px;color:var(--faint);margin-left:auto;white-space:nowrap}
-  .row{display:flex;align-items:baseline;gap:9px;padding:6px 0;border-top:1px solid var(--hair)}
-  .row:first-of-type{border-top:none}
-  .row .rt{font-size:12px;font-weight:500;color:var(--ink);line-height:1.4;flex:1 1 auto;min-width:0}
-  .row .rd{font-size:10.5px;color:var(--faint);white-space:nowrap;font-variant-numeric:tabular-nums}
-  .row .rsub{font-size:10.5px;color:var(--muted);margin-top:2px}
-  .row.sup .rt{text-decoration:line-through;color:var(--faint)}
-  .cd{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;white-space:nowrap;font-variant-numeric:tabular-nums}
-  .cd.red{color:#ffc4c4;background:rgba(220,80,80,.2);box-shadow:inset 0 0 0 1px rgba(255,140,140,.3)}
-  .cd.amb{color:#ffd9a8;background:rgba(214,150,50,.18);box-shadow:inset 0 0 0 1px rgba(240,180,94,.28)}
-  .cd.cool{color:var(--muted);background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
-  .wingdot{width:6px;height:6px;border-radius:50%;flex:0 0 auto;transform:translateY(-2px)}
-  .wingdot.p{background:#9dc0ff}.wingdot.b{background:var(--accent)}
   .spark{display:flex;align-items:flex-end;gap:3px;height:38px;margin:2px 0 12px}
   .spark i{flex:1 1 auto;background:rgba(255,255,255,.14);border-radius:2px 2px 0 0;min-height:2px}
-  .spark i.hot{background:linear-gradient(180deg,#ff9a4a,rgba(255,122,31,.35))}
-  .spark i.zero{background:rgba(255,255,255,.05)}
-  .sparkax{display:flex;justify-content:space-between;font-size:9.5px;color:var(--faint);margin-top:-9px;margin-bottom:12px}
-  .silent{margin-top:12px;padding-top:11px;border-top:1px solid var(--hair)}
-  .silent .sh{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--st-wf);font-weight:700;margin-bottom:7px}
   .more{font-size:11px;color:var(--faint);padding-top:7px}
 
-  /* ===== 契约表 (讨论用) ===== */
-
-  .knote{text-transform:none;letter-spacing:0;font-weight:500;color:var(--faint);margin-left:8px}
-
-  /* ===== 菜单 (Filter / Display / Layers / Lanes) ===== */
+  /* ===== Menus (Filter / Display / Layers / Lanes) ===== */
   .menuwrap{position:relative;display:inline-flex}
   .mbtn .car{font-size:8px;color:var(--muted);margin-left:1px}
   .mbtn .badge{font-size:10px;font-weight:700;padding:0 5px;border-radius:99px;background:rgba(255,122,31,.22);color:#ffdcb9}
@@ -469,7 +362,7 @@
   .segb[data-on="1"]{background:rgba(255,122,31,.18);color:#ffdcb9}
   .ctl.reset{color:var(--accent-ink);box-shadow:inset 0 0 0 1px rgba(255,146,72,.4)}
 
-  /* 筛选状态外露: 一眼扫的 dashboard 最怕把子集当全量 */
+  /* Filter state is always visible: the worst failure of a scan-at-a-glance dashboard is reading a subset as the whole */
   .statusline{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 4px 0;font-size:11.5px}
   .statusline:empty{display:none}
   .showing{color:var(--muted)}.showing b{color:var(--ink)}
@@ -478,85 +371,17 @@
   .fchip:hover{background:rgba(255,255,255,.11)}
   .fchip .fx{color:var(--faint);font-size:12px}
   .freset{cursor:pointer;color:var(--accent-ink);text-decoration:underline dotted;text-underline-offset:3px}
-
-  /* ===== cockpit 三块: 同一套 headline 排版 ===== */
-  .head1{display:flex;align-items:baseline;gap:9px;margin-bottom:3px}
-  .hnum{font-size:36px;font-weight:700;line-height:1;letter-spacing:-.03em}
-  .hnum.dim{opacity:.3}.hnum.accent{color:var(--accent)}
-  .hslash{font-size:18px;font-weight:600;color:var(--muted);letter-spacing:-.02em}
-  .hlab{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;line-height:1.3}
-  .hside{margin-left:auto;font-size:11.5px;color:var(--faint);white-space:nowrap}
-  .hside.warn{color:var(--st-wf)}
-  .head1sub{font-size:12.5px;color:var(--ink);margin-bottom:14px}
-  .head1sub span{font-size:11px;color:var(--faint);margin-left:6px}
-
-  /* L · rug */
-  .lanestrip{display:flex;gap:2px;height:6px;margin:13px 0 7px}
-  .lanestrip i{border-radius:3px}
-  .ls0{background:rgba(255,255,255,.34)}.ls1{background:rgba(255,255,255,.26)}
-  .ls2{background:rgba(255,255,255,.19)}.ls3{background:rgba(255,255,255,.13)}
-  .ls4{background:rgba(157,192,255,.3)}
-  .lanelegend{display:flex;flex-wrap:wrap;gap:10px;font-size:9.5px;letter-spacing:.05em;color:var(--faint);font-weight:700}
-  .lanelegend span{display:inline-flex;align-items:center;gap:4px}
-  .lanelegend i{width:7px;height:7px;border-radius:2px}
-  .lanelegend b{color:var(--ink2);font-weight:700}
-  .rug{position:relative;height:46px;margin:15px 0 4px}
-  .rugbase{position:absolute;left:0;right:0;top:26px;height:1px;background:rgba(255,255,255,.12)}
-  .rt{position:absolute;width:2px;border-radius:1px}
-  .rt.up{top:8px;height:18px;background:rgba(255,255,255,.6)}
-  .rt.dn{top:27px;height:9px;background:rgba(255,255,255,.18)}
-  .rt.newest{width:3px;top:2px;height:24px;background:var(--accent);box-shadow:0 0 9px 1px rgba(255,122,31,.55)}
-  .rugax{display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:.05em;color:var(--faint);margin-bottom:12px}
-  .drow{display:flex;align-items:baseline;gap:10px;padding:7px 0;border-top:1px solid var(--hair)}
-  .ddate{font-size:10px;color:var(--faint);letter-spacing:.04em;flex:0 0 52px}
-  .dmain{flex:1 1 auto;min-width:0}
-  .drow .dt{font-size:12.5px;color:var(--ink);line-height:1.35}
-  .dsup{font-size:11px;color:var(--faint);text-decoration:line-through;margin-top:2px}
-  .dlane{font-size:9px;font-weight:700;letter-spacing:.07em;color:var(--faint)}
-
-  /* M · rail */
-  .rail{position:relative;margin-top:8px}
-  .bnd{position:relative;padding:0 0 5px 0}
-  .bnd::before{content:"";position:absolute;left:4px;top:18px;bottom:5px;width:1px;background:rgba(255,255,255,.11)}
-  .bnd.off::before{display:none}
-  .bndh{display:flex;align-items:baseline;gap:8px;padding:7px 0 3px;border-top:1px dashed rgba(255,255,255,.1)}
-  .bndh span{font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--faint)}
-  .bndh b{margin-left:auto;font-size:10.5px;color:var(--muted)}
-  .bnd.off .bndh span,.bnd.off .bndh b{opacity:.45}
-  .bndnone{font-size:10.5px;color:var(--faint);padding-left:20px;line-height:1.1}
-  .railrow{position:relative;display:flex;align-items:baseline;gap:10px;padding:3px 0}
-  .raildot{position:absolute;left:0;top:8px;width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.5)}
-  .raildot.hollow{background:transparent;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55)}
-  .railtx{margin-left:20px;flex:1 1 auto;min-width:0}
-  .railrow .rn{font-size:12.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .railrow .rs{font-size:10px;color:var(--faint);margin-top:1px}
-  .rday{font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap}
-  .railrow.hot .raildot{background:var(--accent);box-shadow:0 0 10px 2px rgba(255,122,31,.5)}
-  .railrow.hot .rn{color:#ffdcb9}.railrow.hot .rday{color:var(--accent-ink);font-weight:700}
-  .railrow.red .raildot{background:var(--st-bl)}.railrow.red .rday{color:#ffc4c4}
-  .railrow.amb .raildot{background:var(--st-wf)}.railrow.amb .rday{color:#ffd9a8}
-
-  /* N · pulse */
-  .pulse{display:flex;align-items:flex-end;gap:2px;height:36px;margin:14px 0 3px}
-  .pulse i{flex:1 1 auto;background:rgba(255,255,255,.24);border-radius:1.5px}
-  .pulse i.z{background:rgba(255,255,255,.07)}
-  .pulse i.recent{background:rgba(255,255,255,.55)}
-  .pulse i.today{background:var(--accent);box-shadow:0 0 8px 1px rgba(255,122,31,.5)}
-  .pulseax{display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:.05em;color:var(--faint);margin-bottom:12px}
-  .rrow{position:relative;display:flex;align-items:center;gap:9px;height:26px;padding:0 9px;border-radius:7px;overflow:hidden}
-  .rrow i{position:absolute;left:0;top:0;bottom:0;background:rgba(255,255,255,.08)}
-  .rname{position:relative;flex:1 1 auto;min-width:0;font-size:12.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .rnum{position:relative;font-size:11.5px;color:var(--muted);font-weight:600}
-  .rnum.amb{color:var(--st-wf)}.rnum.red{color:var(--st-bl)}
   .quiet{margin-top:11px;padding-top:10px;border-top:1px solid var(--hair)}
-  .qh{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--st-wf);font-weight:700;margin:0 0 5px 9px}
-  .qrow .rname{color:var(--muted)}
 
-  /* ================= option A 的排版原语 (照搬, 只改两个撞名的 class) ================= */
+  /* ================= Option A layout primitives (carried over as-is; only two clashing class names were changed) ================= */
   .kick{display:flex;align-items:baseline;gap:10px;font-size:10px;font-weight:700;
     letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
   .kick .r{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:.05em;
     text-transform:none;color:var(--faint)}
+  /* Where the panel read it: a panel that names its own source can be checked
+     against the vault. Sits with the title, before .r claims the right edge. */
+  .kick .src{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:none;
+    color:var(--faint);opacity:.8;white-space:nowrap}
   .kick.acc{color:var(--accent)}
   .hn{font-weight:300;line-height:.88;letter-spacing:-.045em;color:var(--ink);font-variant-numeric:tabular-nums}
   .hn.acc{color:var(--accent)}
@@ -612,12 +437,6 @@
   .p-d{font-size:11px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
   .p-n{font-size:11px;color:var(--faint);text-align:right;font-variant-numeric:tabular-nums}
   .plist li:hover .p-t{color:var(--ink)}
-
-  /* 右栏共用: 领头那一坨 */
-  .rlead{display:flex;align-items:baseline;gap:12px;margin:13px 0 8px}
-  .rlead>span{min-width:0}
-  .rlead .t{display:block;font-size:14px;font-weight:600;color:var(--ink);line-height:1.2}
-  .rlead .m{display:block;margin-top:3px;font-size:10.5px;color:var(--muted);line-height:1.35}
   .blead{display:flex;align-items:baseline;gap:11px;margin:11px 0}
   .blead>span{min-width:0}
   .blead .t{display:block;font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.25}
@@ -625,18 +444,10 @@
   .sublab{margin:9px 0 4px;font-size:9.5px;font-weight:700;letter-spacing:.14em;
     text-transform:uppercase;color:var(--faint)}
 
-  /* R1 · countdown */
-  .glist{list-style:none;margin:13px 0 0;padding:0}
-  .glist li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px;align-items:start;
-    padding:4px 0 5px;border-top:1px solid var(--hair)}
-  .g-n{font-size:14px;color:var(--ink2);text-align:right;line-height:1.3;font-variant-numeric:tabular-nums}
-  .g-row{display:flex;align-items:baseline;gap:8px;min-width:0}
-  .g-t{font-size:12.5px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .g-m{margin-left:auto;font-size:10px;color:var(--faint);white-space:nowrap;flex:0 0 auto}
-  .glist .hbar,.rl-bar{margin-top:6px}
+  /* L3 · countdown */
   .legend{margin-top:7px;font-size:10px;color:var(--faint);line-height:1.5}
 
-  /* R2 · expires */
+  /* R1 · expires */
   .nlist{list-style:none;margin:0;padding:0}
   .nlist li{display:grid;grid-template-columns:minmax(0,1fr) 46px 32px;gap:8px;
     align-items:baseline;padding:3.5px 0;border-top:1px solid var(--hair)}
@@ -647,7 +458,7 @@
   .n-d{font-size:10.5px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
   .n-n{font-size:10.5px;color:var(--faint);text-align:right;font-variant-numeric:tabular-nums}
 
-  /* R3 · moving */
+  /* R2 · moving */
   .spark{display:flex;align-items:flex-end;gap:1px;height:28px;margin:1px 0 0}
   .spark i{flex:1 1 0;min-width:0;background:rgba(255,255,255,.26);border-radius:1px}
   .spark i.now{background:var(--accent)}
@@ -661,7 +472,7 @@
   .quiet b{color:var(--muted);font-weight:600}
   .quiet i{font-style:normal;color:var(--faint);padding:0 3px}
 
-  /* R4 · standing rules */
+  /* R3 · standing rules */
   .dlist{list-style:none;margin:0;padding:0}
   .dlist li{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;
     align-items:baseline;padding:3.5px 0;border-top:1px solid var(--hair)}
@@ -673,16 +484,19 @@
   .retired s{color:var(--faint);text-decoration-color:rgba(255,255,255,.22)}
   .retired i{font-style:normal;padding:0 2px}
 
-  /* ===== 定位标签 (讨论用, 不进产品) ===== */
+  /* ===== Position labels =====
+     ⛔ These SHIP. The JS prints a `span.lbl` in fourteen places: L1 L2 L3 down
+     the left column, R1 R2 R3 down the right, E on the tabs, F on the control
+     row, G H I J on the four views, and a band letter on each swimlane band.
+     `body.nolabel` below hides every one of them, which is the only reason the
+     page looks label-free. `<body class="nolabel">` is the switch: drop that one
+     class and each region names its own position, which is how the regions are
+     referred to throughout this file. */
   .lbl{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:16px;padding:0 4px;
     border-radius:5px;font-size:10px;font-weight:800;letter-spacing:.02em;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
     color:#ff6161;background:rgba(255,70,70,.14);box-shadow:inset 0 0 0 1px rgba(255,95,95,.5);
     margin-right:8px;flex:0 0 auto;vertical-align:1px}
   body.nolabel .lbl{display:none}
-  body{}
-
-  /* ===== mockup 控制 (浮在右下, 不属于产品) ===== */
-  .panel{align-self:stretch}
 </style>
 </head>
 <body class="nolabel">
@@ -690,6 +504,7 @@
 <div class="bar">
   <h1 id="ttl">Command Deck</h1><span class="biz" id="biz"></span>
   <span class="stamp" id="stamp"></span>
+  <span class="counts" id="counts"></span>
   <span class="ctl railbtn" id="railbtn"></span>
 </div>
 
@@ -729,8 +544,10 @@
 
 <script>
 /* ============================================================================
-   Command Deck · TEMPLATE MOCKUP v2
-   背后没有活数据。DATA 就是生成器该产出的东西, 每个 key 对应 doctrine §8 一个键。
+   Command Deck · display layer
+   ⛔ This is the shipped page, not a mockup. SETUP and DECK below are filled in
+   by scripts/deck.py at build time, one key per doctrine section 8 key; opened
+   straight from the repo the two placeholders are still there and nothing draws.
    ========================================================================== */
 
 const TODAY = "{{TODAY}}";
@@ -740,135 +557,69 @@ const SETUP = {{SETUP_JSON}};
 const DECK = {{DATA_JSON}};
 
 const DICT = {
-  en:{
-    deck:"Command Deck", cockpit:"Cockpit",
-    sidebar:"Sidebar", openTasks:"open tasks", k_actionable:"actionable", k_waiting:"waiting", k_blocked:"blocked",
-    nextAction:"Next action", thenWord:"Then", byDueDate:"by due date",
-    daysLeft:"days left", daysOver:"days over", dueWord:"due", moreOpen:"more open, priority 1 and 2",
-    deadlinesWord:"deadlines", runwayGone:"of the runway gone", furtherOut:"further out",
-    mileNote:"Milestones only: a due date and no start date. Anything with a start is a bar on the swimlane; anything with renew_by lives under What expires and is not on the timeline at all.",
-    tracked:"tracked", dleftLong:"days", businessThen:"Business · then", personalWord:"Personal",
-    journalLast:"journal, last", daysShort:"d", projectsTouched:"projects touched",
-    ofWord:"of", activeWord:"active", barsNote:"bars = journal lines per day, ending today",
-    mostMentioned:"Most mentioned", logged:"logged", rulingsInForce:"rulings still in force",
-    newestFirst:"newest first", retiredWord:"retired", closedWord:"closed", supersededWord:"superseded",
-    moreActive:"more active rulings", retiredLabel:"Retired:", replaces:"replaces",
+  deck:"Command Deck",
+  sidebar:"Sidebar", openTasks:"open tasks", k_actionable:"actionable", k_waiting:"waiting", k_blocked:"blocked",
+  nextAction:"Next action", thenWord:"Then", byDueDate:"by due date",
+  daysLeft:"days left", daysOver:"days over", dueWord:"due", moreOpen:"more open, priority 1 and 2",
+  deadlinesWord:"deadlines", furtherOut:"further out",
+  mileNote:"Milestones only: a due date and no start date. Anything with a start is a bar on the swimlane; anything with renew_by lives under What expires and is not on the timeline at all.",
+  tracked:"tracked", dleftLong:"days", businessThen:"Business · then", personalWord:"Personal",
+  journalLast:"journal, last", daysShort:"d", projectsTouched:"projects touched",
+  ofWord:"of", activeWord:"active", barsNote:"bars = journal lines per day, ending today",
+  mostMentioned:"Most mentioned", kindBrief:"brief", kindGuide:"guide",
+  logged:"logged", rulingsInForce:"rulings still in force",
+  newestFirst:"newest first", retiredWord:"retired", closedWord:"closed", supersededWord:"superseded",
+  moreActive:"more active rulings", retiredLabel:"Retired:", replaces:"replaces",
 
-    staleNudge:"say \"rebuild my deck\" to refresh",
-    cocknote:"what needs you now, and what quietly stands behind it",
-    genat:"generated", health:"Project health", gates:"Countdown", prio:"Top Priority",
-    tabLane:"Swimlanes", tabKanban:"Kanban", tabGrid:"Grid", tabCal:"Calendar",
-    filter:"Filter", display:"Display", layers:"Layers", lanesBtn:"Lanes", reset:"Reset",
-    groupBy:"Group", byStatus:"Status", byStage:"Stage",
-    mInclude:"Include", mNarrow:"Narrow down", mWings:"Wings", mLines:"Brand lines",
-    mThisView:"This view", mLayers:"Show on the calendar", columns:"Columns",
-    showDone:"Show done", showParked:"Show parked projects", overdueOnly:"Overdue only",
-    showEmptyLanes:"Show empty lanes", showTaskCards:"Show task cards", showDeps:"Show dependencies",
-    showEmptyCols:"Show empty columns", weekStartMon:"Week starts Monday", expandGroups:"Expand groups",
-    layTask:"Task due", layProj:"Project due", layRen:"Renewals",
-    filterFoot:"Filter only narrows the view below. The cards above and the sidebar always show everything.",
-    displayFoot:"Display only changes how this one view is drawn. It never changes a number.",
-    layersFoot:"Three kinds of date, three colours, each can be switched off.",
-    renewNote:"projects carry renew_by, which belongs to What expires and to nothing else on this timeline. A Brief should not carry that key at all.",
-    renewNote1:"project carries renew_by, which belongs to What expires and to nothing else on this timeline. A Brief should not carry that key at all.",
-    undatedNote:"projects carry neither a start nor a due date, so this timeline has nowhere to put them. They are still on the kanban and the grid.",
-    undatedNote1:"project carries neither a start nor a due date, so this timeline has nowhere to put it. It is still on the kanban and the grid.",
-    laneEmptyNote:"Every lane ships on day one. Switching one off hides it, it still exists. To park a single project for good, set hide_on_deck in its Brief.",
-    chipOverdue:"Due before today", chipDone:"Done hidden", chipParked:"Parked hidden",
-    chipNoPersonal:"Personal off", chipNoBusiness:"Business off", chipLineOff:"Off:",
-    chipLanesOff:"lanes off", showing:"This view shows", of:"of", projects:"projects", tasksWord:"tasks",
-    personal:"Personal", general:"General", thisMonth:"today",
-    deliver:"Deliver", grow:"Grow", run:"Run", build:"Build", personalProjects:"Personal Projects",
-    q_deliver:"work for a named customer", q_grow:"aimed at people who have not bought",
-    q_run:"would exist even without growth", q_build:"leaves the business different",
-    q_personal:"personal work with an end",
-    empty:"empty", none:"none", dleft:"d", overdue:"overdue", waiting:"waiting on", noTaskDate:"undated",
-    dec:"Standing rules", ren:"What expires", pulse:"What is moving",
-    srcDec:"cb: decision", srcRen:"renew_by", srcPulse:"01_Daily backlinks",
-    standingRules:"standing rules", retired:"retired", showAll:"Show all", todayWord:"TODAY",
-    daysWord:"days to the nearest", nothingExpires:"nothing expiring",
-    thisMonthBand:"THIS MONTH", thisQuarterBand:"THIS QUARTER", thisYearBand:"THIS YEAR", beyondBand:"BEYOND",
-    touchedWeek:"projects touched this week", quietWord:"quiet", weeksAgo:"8 WEEKS AGO",
-    silent:"Not mentioned",
-    st_ns:"not started", st_ip:"in progress", st_wf:"waiting", st_bl:"blocked", st_dn:"done",
-    sg_pending:"Pending", sg_planning:"Planning", sg_pursuing:"Pursuing",
-    sg_executing:"Executing", sg_closed:"Closed", sg_none:"No stage yet",
-    dragHintTask:"drag a card to change a task's status",
-    dragHintProj:"drag a card to change a project's stage",
-    pend:"Pending edits", pendH:"These edits are not in your vault yet",
-    pendBody:"The deck is generated, it never writes a file itself. Hand the block below to your assistant, or just say \"apply deck edits\".",
-    pendCopy:"Copy", pendClear:"Discard", pendClose:"Close",
-    prioNote:"open tasks under priority 1 and 2 projects, overdue first",
-    emptyGates:"No milestone yet.<br>A Brief with a due date and no start date is a point in time, and it counts down here.",
-    emptyPrio:"Nothing open under priority 1 and 2.",
-    emptyDec:"No decisions yet. The first one you record becomes rule number one.",
-    emptyRen:"Nothing expires yet. Add a renewal date to any document and it lands here.",
-    emptyPulse:"No journal backlinks yet. Link a project from a daily note and it starts moving."
-  },
-  zh:{
-    deck:"Command Deck", cockpit:"驾驶舱",
-    sidebar:"侧栏", openTasks:"件开着的 task", k_actionable:"可动", k_waiting:"等人", k_blocked:"卡住",
-    nextAction:"下一个动作", thenWord:"接着", byDueDate:"按到期日",
-    daysLeft:"天后到期", daysOver:"天前就该好", dueWord:"到期", moreOpen:"件还开着 (priority 1 与 2)",
-    deadlinesWord:"个截止", runwayGone:"的跑道已经跑掉", furtherOut:"个更远",
-    mileNote:"只收 milestone: 有 due 没有 start 的。有 start 的是跑道, 泳道上画成长条; 带 renew_by 的归 What expires, 根本不上这条时间轴。",
-    tracked:"个在追", dleftLong:"天后", businessThen:"生意 · 接着", personalWord:"个人",
-    journalLast:"日记, 最近", daysShort:"天", projectsTouched:"个 project 这周动过",
-    ofWord:"共", activeWord:"个在跑", barsNote:"每根 = 那天写了几行日记, 最后一根是今天",
-    mostMentioned:"提得最多", logged:"条在册", rulingsInForce:"条规矩还站着",
-    newestFirst:"新的在上", retiredWord:"条已退", closedWord:"条结案", supersededWord:"条被取代",
-    moreActive:"条还在效力内", retiredLabel:"已退役:", replaces:"取代了",
-
-    staleNudge:"说一句「rebuild my deck」就更新",
-    cocknote:"现在该看什么, 底下垫着什么",
-    genat:"生成于", health:"项目健康", gates:"关口倒数", prio:"Top Priority",
-    tabLane:"泳道", tabKanban:"看板", tabGrid:"表格", tabCal:"月历",
-    filter:"筛选", display:"显示", layers:"图层", lanesBtn:"泳道", reset:"复位",
-    groupBy:"分组", byStatus:"Status", byStage:"Stage",
-    mInclude:"收进来", mNarrow:"收窄", mWings:"翼", mLines:"品牌线",
-    mThisView:"只影响这个 view", mLayers:"月历上显示什么", columns:"栏位",
-    showDone:"显示已完结", showParked:"显示已停放的 project", overdueOnly:"只看逾期",
-    showEmptyLanes:"显示空泳道", showTaskCards:"显示 task 卡", showDeps:"显示依赖线",
-    showEmptyCols:"显示空栏", weekStartMon:"周一起头", expandGroups:"展开分组",
-    layTask:"task due", layProj:"project due", layRen:"到期续约",
-    filterFoot:"筛选只收窄底下那个 view。上面那些卡与右栏永远是全量。",
-    displayFoot:"显示只改这一个 view 怎么画, 永远不改任何数字。",
-    layersFoot:"三种日期三个颜色, 各自可关。",
-    renewNote:"个 project 带着 renew_by, 那个键只属于 What expires, 不进这条时间轴。Brief 本来就不该带这个键。",
-    renewNote1:"个 project 带着 renew_by, 那个键只属于 What expires, 不进这条时间轴。Brief 本来就不该带这个键。",
-    undatedNote:"个 project 既没有 started 也没有 due, 时间轴放不下它们。它们仍然在看板与表格上。",
-    undatedNote1:"个 project 既没有 started 也没有 due, 时间轴放不下它。它仍然在看板与表格上。",
-    laneEmptyNote:"空泳道装机就位, 关掉只是不看, 不是不存在。个别 project 要长期不出现, 在它的 Brief 写 hide_on_deck。",
-    chipOverdue:"只看今天之前到期", chipDone:"已完结隐藏", chipParked:"已停放隐藏",
-    chipNoPersonal:"个人翼关", chipNoBusiness:"生意翼关", chipLineOff:"关:",
-    chipLanesOff:"条泳道关着", showing:"这个 view 只显示", of:"/", projects:"个 project", tasksWord:"个 task",
-    personal:"个人", general:"通线", thisMonth:"本月",
-    deliver:"Deliver", grow:"Grow", run:"Run", build:"Build", personalProjects:"Personal Projects",
-    q_deliver:"有名有姓的客户的活", q_grow:"面向还没买单的人", q_run:"生意不成长也照做的",
-    q_build:"做完之后生意会不一样", q_personal:"个人这边有终点的事",
-    empty:"空", none:"(空)", dleft:"天", overdue:"逾期", waiting:"等", noTaskDate:"件没日期",
-    dec:"还站着的规矩", ren:"什么到期", pulse:"谁在动",
-    srcDec:"cb: decision", srcRen:"renew_by", srcPulse:"01_Daily 反链",
-    standingRules:"条还站着的规矩", retired:"条已退", showAll:"全部", todayWord:"今天",
-    daysWord:"天后最近的一个到期", nothingExpires:"没有东西到期",
-    thisMonthBand:"这个月", thisQuarterBand:"这一季", thisYearBand:"今年内", beyondBand:"更远",
-    touchedWeek:"个 project 这周动过", quietWord:"个没人提", weeksAgo:"8 周前",
-    silent:"没人提起",
-    st_ns:"未开始", st_ip:"在跑", st_wf:"等人", st_bl:"卡住", st_dn:"完结",
-    sg_pending:"待启动", sg_planning:"规划中", sg_pursuing:"追单中",
-    sg_executing:"执行中", sg_closed:"已结案", sg_none:"未定阶段",
-    dragHintTask:"拖一张卡换 task 的 status",
-    dragHintProj:"拖一张卡换 project 的 stage",
-    pend:"未落地的改动", pendH:"这些改动还没有进你的宅",
-    pendBody:"Deck 是生成物, 它自己永远不写档。把下面这段交给你的 assistant, 或者说一句「apply deck edits」。",
-    pendCopy:"复制", pendClear:"丢弃", pendClose:"关闭",
-    prioNote:"priority 1 与 2 的 project 底下还开着的 task, 逾期排最前",
-    emptyGates:"还没有 milestone。<br>Brief 上有 due 没有 started 的就是一个时间点, 它会出现在这里倒数。",
-    emptyPrio:"priority 1 与 2 底下没有开着的 task。",
-    emptyDec:"还没有拍过板。第一条记下来的, 就是第一条规矩。",
-    emptyRen:"还没有任何东西带着到期日。在那份 note 写一行 renew_by, 就再也不用记得它。",
-    emptyPulse:"日记还没有反链。收工说一句 compile, 今天做过的事就会连到它属于的 project。"
-  }
+  staleNudge:"say \"rebuild my deck\" to refresh",
+  cBriefs:"projects", cTasks:"tasks", cScanned:"notes scanned",
+  cUnreadable:"unreadable, say \"fix my deck\"",
+  genat:"generated", gates:"Countdown",
+  tabLane:"Swimlanes", tabKanban:"Kanban", tabGrid:"Grid", tabCal:"Calendar",
+  filter:"Filter", display:"Display", layers:"Layers", lanesBtn:"Lanes", reset:"Reset",
+  groupBy:"Group", byStatus:"Status", byStage:"Stage",
+  mInclude:"Include", mNarrow:"Narrow down", mWings:"Wings", mLines:"Brand lines",
+  mThisView:"This view", mLayers:"Show on the calendar", columns:"Columns",
+  showDone:"Show done", showParked:"Show parked projects", overdueOnly:"Overdue only",
+  showEmptyLanes:"Show empty lanes", showTaskCards:"Show task cards", showDeps:"Show dependencies",
+  colTask:"task", colStatus:"status", colStart:"start", colDue:"due",
+  colWaitingOn:"waiting_on", colPriority:"priority",
+  showEmptyCols:"Show empty columns", weekStartMon:"Week starts Monday", expandGroups:"Expand groups",
+  layTask:"Task due", layProj:"Project due", layRen:"Renewals",
+  filterFoot:"Filter only narrows the view below. The cards above and the sidebar always show everything.",
+  displayFoot:"Display only changes how this one view is drawn. It never changes a number.",
+  layersFoot:"Three kinds of date, three colours, each can be switched off.",
+  renewNote:"projects carry renew_by, which belongs to What expires and to nothing else on this timeline. A Brief should not carry that key at all.",
+  renewNote1:"project carries renew_by, which belongs to What expires and to nothing else on this timeline. A Brief should not carry that key at all.",
+  undatedNote:"projects carry neither a start nor a due date, so this timeline has nowhere to put them. They are still on the kanban and the grid.",
+  undatedNote1:"project carries neither a start nor a due date, so this timeline has nowhere to put it. It is still on the kanban and the grid.",
+  laneEmptyNote:"Every lane ships on day one. Switching one off hides it, it still exists. To park a single project for good, set hide_on_deck in its Brief.",
+  chipOverdue:"Due before today", chipDone:"Done hidden", chipParked:"Parked hidden",
+  chipNoPersonal:"Personal off", chipNoBusiness:"Business off", chipLineOff:"Off:",
+  chipLanesOff:"lanes off", showing:"This view shows", of:"of", projects:"projects", tasksWord:"tasks",
+  personal:"Personal", general:"General", thisMonth:"today",
+  deliver:"Deliver", grow:"Grow", run:"Run", build:"Build", personalProjects:"Personal Projects",
+  q_deliver:"work for a named customer", q_grow:"aimed at people who have not bought",
+  q_run:"would exist even without growth", q_build:"leaves the business different",
+  q_personal:"personal work with an end",
+  empty:"empty", none:"none", dleft:"d", overdue:"overdue", waiting:"waiting on", noTaskDate:"undated",
+  dec:"Standing rules", ren:"What expires", pulse:"What is moving",
+  srcDec:"cb: decision", srcRen:"renew_by", srcPulse:"01_Daily backlinks",
+  todayWord:"TODAY",
+  silent:"Last mentioned",
+  st_ns:"not started", st_ip:"in progress", st_wf:"waiting", st_bl:"blocked", st_dn:"done",
+  sg_pending:"Pending", sg_planning:"Planning", sg_pursuing:"Pursuing",
+  sg_executing:"Executing", sg_closed:"Closed", sg_none:"No stage yet",
+  dragHintTask:"drag a card to change a task's status",
+  dragHintProj:"drag a card to change a project's stage",
+  pend:"Pending edits", pendH:"These edits are not in your vault yet",
+  pendBody:"The deck is generated, it never writes a file itself. Hand the block below to your assistant, or just say \"update my deck\".",
+  pendCopy:"Copy", pendClear:"Discard", pendClose:"Close",
+  emptyGates:"No milestone yet.<br>A Brief with a due date and no start date is a point in time, and it counts down here.",
+  emptyPrio:"Nothing open under priority 1 and 2.",
+  emptyDec:"No decisions yet. The first one you record becomes rule number one.",
+  emptyRen:"Nothing expires yet. Add a renewal date to any document and it lands here.",
+  emptyPulse:"No journal backlinks yet. Link a project from a daily note and it starts moving."
 };
 
 
@@ -876,7 +627,7 @@ const DEFAULTS = { showDone:false, showParked:false, overdueOnly:false,
   showEmptyLanes:true, showTaskCards:true, showDeps:true, showEmptyCols:true,
   gridCollapsed:false, kbGroup:"status" };
 
-const S = { lang:"{{LANG}}", tab:"lane", showRail:true,
+const S = { tab:"lane", showRail:true,
   showDone:false, showParked:false, overdueOnly:false,
   wings:{personal:true, business:true},
   lines:Object.fromEntries([["general",true]].concat(SETUP.brands.map(b => [b,true]))),
@@ -893,7 +644,7 @@ const ISO = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-$
 const dayDiff = (a,b) => Math.round((D(b) - D(a)) / 86400000);
 const fmt = s => s.slice(5).replace("-","/");
 const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-const L = () => DICT[S.lang];
+const L = () => DICT;
 const DATA = () => DECK;
 
 const ST = {
@@ -902,13 +653,22 @@ const ST = {
 };
 const ST_ORDER = ["not-started","in-progress","waiting","blocked","done"];
 const stName = k => L()[ST[k].key];
-/* stage 住在 Brief 上, 不在 task 上 (doctrine §8)。所以 by stage 拖的是 project。 */
+/* stage lives on the Brief, not on a task (doctrine §8), so grouping by stage drags the project. */
 const STAGE_ORDER = ["pending","planning","pursuing","executing","closed"];
 const sgName = k => L()["sg_" + (k || "none")];
+/* ⛔ `kind` is not a word anybody typed: deck.py derives it for each mention in a
+   daily note, `brief` when the link names a Brief and `guide` for everything
+   else, so the pair is closed at two. Both halves read through DICT like every
+   other visible string rather than shipping the generator's own token to a page. */
+const kindName = k => k === "guide" ? L().kindGuide : L().kindBrief;
 
 const PENDING = [];
+/* ⛔ Both wings come from SETUP, never spelled out here. The generator renames
+   nothing, so a vault whose personal wing is `01_Personal-Wing` (or any other
+   prefix) would be handed a path that does not exist on disk, and every pending
+   edit copied out of the deck would point a session at the wrong file. */
 const projPath = p => p.wing === "personal"
-  ? `03_Personal-Wing/Personal-Projects/${p.name.replace(/\s+/g,"-")}/`
+  ? `${SETUP.personalWing}/Personal-Projects/${p.name.replace(/\s+/g,"-")}/`
   : `${SETUP.business.wing}/02_Work/${p.lane}/${p.name.replace(/\s+/g,"-")}/`;
 const briefPath = p => `${projPath(p)}_${p.name.replace(/\s+/g,"-")}-Brief.md`;
 function addPending(file, key, from, to){
@@ -917,11 +677,15 @@ function addPending(file, key, from, to){
   else PENDING.push({file, key, from, to});
 }
 
-/* ---- 泳道矩阵: 从 SETUP 推, 不从数据推。空的也要在 ---- */
+/* ---- Lane matrix: derived from SETUP, never from the data. Empty lanes still appear ---- */
 function buildMatrix(){
   const l = L(), b = SETUP.business.name;
   const bands = [];
-  if(S.wings.personal) bands.push({ id:"personal", title:l.personal, sub:"03_Personal-Wing",
+  /* ⛔ The empty-string case is a real vault, not a defect: a vault built with
+     no personal wing sends personalWing:"". Drawing the band anyway would put a
+     folder name on screen that nobody could open. */
+  if(S.wings.personal && SETUP.personalWing) bands.push({
+    id:"personal", title:l.personal, sub:SETUP.personalWing,
     lanes:[{id:"personal", name:l.personalProjects, q:l.q_personal}] });
   const mk = (prefix, brand) => SETUP.lanes.map(x => ({ id:prefix+"/"+x, name:l[x], q:l["q_"+x], brand }));
   if(S.wings.business){
@@ -934,12 +698,30 @@ function buildMatrix(){
 const laneKeyOf = p => p.wing === "personal" ? "personal"
   : (p.brand ? "br-"+p.brand : "gen") + "/" + p.lane;
 
-const WIN_A = "2026-07-14", WIN_B = "2026-11-22";
+/* The swimlane's x-axis window, derived on every rebuild.
+   ⛔ Never a written-down pair of dates. Every bar, every diamond, every month
+   tick and the TODAY line are all positioned as an offset from WIN_A, so a
+   fixed pair is true for the afternoon it was typed and quietly wrong for every
+   vault afterwards: work would sit off the left edge, or the whole board would
+   float months away from today with nothing on it.
+   It covers today plus every span the deck holds, snapped out to whole months
+   so the month ticks have somewhere to land, and widened to at least four
+   months so a vault whose work all falls in one month still reads as a runway. */
+function deckWindow(){
+  const lo = [TODAY], hi = [TODAY];
+  DECK.projects.forEach(p => { const [a, b] = projSpan(p); lo.push(a); hi.push(b); });
+  lo.sort(); hi.sort();
+  const A = D(lo[0]); A.setDate(1);
+  const B = D(hi[hi.length - 1]); B.setMonth(B.getMonth() + 1, 1);
+  while(dayDiff(ISO(A), ISO(B)) < 120) B.setMonth(B.getMonth() + 1, 1);
+  return [ISO(A), ISO(B)];
+}
+const [WIN_A, WIN_B] = deckWindow();
 const SPAN = dayDiff(WIN_A, WIN_B), PXD = 7.6, LABW = 176;
 const x = d => dayDiff(WIN_A, d) * PXD;
 const bodyW = SPAN * PXD;
 
-/* JW 2026-08-16: ONE predicate, used by the swimlane and by Countdown, so the two
+/* ONE predicate, used by the swimlane and by Countdown, so the two
    can never disagree about what a milestone is. A project that declares a due
    date and no start date is a point in time, not a runway: swimlane draws it as
    a diamond, and Countdown holds exactly this set and nothing else.
@@ -949,14 +731,14 @@ const bodyW = SPAN * PXD;
 /* SHAPE: due with no start is a point in time, so the swimlane draws a diamond. */
 const isMilestone = p => !!p.due && !p.started;
 /* PANEL: Countdown is the diamonds MINUS anything carrying `renew_by`.
-   JW 2026-08-16: a record that carries renew_by belongs to What expires (R1) and
+   A record that carries renew_by belongs to What expires (R1) and
    nowhere else, or the same date counts down in two panels and the owner has to
    work out that they are one thing. ⛔ R1 wins because renew_by is the more
    specific claim: it says this lapses, not that work on it ends.
    ⭐ Countdown is DERIVED from the diamond set rather than defined beside it, so
    the two can never drift into disagreeing about what a milestone is. */
 const inCountdown = p => isMilestone(p) && !p.renew_by;
-/* JW 2026-08-16, second reading: renew_by appears in What expires and NOWHERE
+/* renew_by appears in What expires and NOWHERE
    else on the timeline. So a Brief carrying it is off the swimlane too, not just
    out of Countdown. ⛔ A Brief should not carry renew_by at all (section 8
    declares that key on `entity`, and all six templates that use it are entity
@@ -974,15 +756,15 @@ function projSpan(p){
 }
 const isOver = t => t.due && t.status !== "done" && dayDiff(TODAY, t.due) < 0;
 
-/* 正典集合: 整张 Deck 的固定口径 = 还活着的 project。
-   排除两种: Brief 自己声明 hide_on_deck 的, 与已经结案的。
-   ⛔ 不受 F 那排钮影响, 那排只管底下那个 view。 */
+/* The canonical set: the whole Deck counts one thing, projects that are still alive.
+   Two exclusions: Briefs that declare hide_on_deck, and projects already closed.
+   The F control row does not touch this; that row only governs the view below. */
 function deckProjects(){
   return DATA().projects.filter(p => !p.hide_on_deck && p.status !== "done");
 }
-/* view 的分母: 这张 Deck 有可能显示的全部 (含已结案, 因为 Show done 打开就会出现) */
+/* The view's denominator: everything this Deck could show, closed ones included, since Show done brings them back */
 const deckScope = () => DATA().projects.filter(p => !p.hide_on_deck);
-/* view 专用: F 那排钮全部只作用在这里 */
+/* View only: every button in the F row acts here and nowhere else */
 function visibleProjects(){
   return DATA().projects.filter(p =>
     (S.showDone || p.status !== "done") &&
@@ -1004,7 +786,7 @@ const md = iso => { const d=D(iso), y=D(TODAY).getFullYear();
   return d.getDate()+" "+MON[d.getMonth()]+(d.getFullYear()!==y?" "+String(d.getFullYear()).slice(2):""); };
 const dleft = iso => dayDiff(TODAY, iso);
 
-/* 左栏上半: L1 health 当 standfirst · L2 next action 当唯一一块有底色的面 */
+/* Top of the left column: L1 health as the standfirst, L2 next action as the only filled panel */
 function renderTop(){
   const l = L(), ps = deckProjects();
   const open = ps.flatMap(p => p.tasks).filter(t => t.status !== "done");
@@ -1059,7 +841,7 @@ function renderTop(){
     </div></div>`;
 }
 
-/* ======================= E 分页 ======================= */
+/* ======================= E · Tabs ======================= */
 function renderTabs(){
   const l = L();
   const nProj = visibleProjects().length, nTask = visibleTasks().length;
@@ -1071,10 +853,10 @@ function renderTabs(){
   $("#tabs").querySelectorAll(".tab").forEach(t => t.onclick = () => { S.tab = t.dataset.t; renderAll(); });
 }
 
-/* ======================= F 控制列 =======================
-   结构照 Linear 的二分: Filter 管「收进来什么」, Display 管「长什么样」。
-   Group 与 Layers 外露, 因为它们改的是这个 view 在讲什么, 不是筛选。
-   极性统一成「开 = 显示更多」, 筛选状态一律外露成可删 chip + Reset。      */
+/* ======================= F · Control row =======================
+   Split the way Linear splits it: Filter governs what comes in, Display governs what it looks like.
+   Group and Layers sit outside the menus, because they change what this view is saying rather than filtering it.
+   One polarity throughout, on = show more, and filter state is always surfaced as removable chips plus Reset. */
 function isDirty(){
   return Object.keys(DEFAULTS).some(k => S[k] !== DEFAULTS[k])
     || S.laneOff.size > 0
@@ -1086,7 +868,11 @@ function resetAll(){
   Object.keys(DEFAULTS).forEach(k => S[k] = DEFAULTS[k]);
   S.laneOff.clear();
   S.wings = {personal:true, business:true};
-  S.lines = {general:true, Sunrise:true, Nightowl:true};
+  /* ⛔ Rebuilt from SETUP.brands, exactly the way S.lines was first built.
+     Naming brands here would reset the owner's real lines out of existence: any
+     brand not in the list would arrive as undefined, read as off, and every
+     project on it would leave the board with no chip to bring it back. */
+  S.lines = Object.fromEntries([["general", true]].concat(SETUP.brands.map(b => [b, true])));
   S.calLayers = {task:true, proj:true, ren:true};
   renderAll();
 }
@@ -1120,7 +906,7 @@ function renderControls(){
   if(isDirty()) h += `<span class="ctl reset" data-act="reset">${l.reset}</span>`;
   $("#ctlrow").innerHTML = h;
 
-  /* 菜单内容 */
+  /* Menu contents */
   const M = {};
   M.filter = `<div class="mh">${l.mInclude}</div>` +
     chk(S.showDone, l.showDone, "showDone") +
@@ -1143,8 +929,8 @@ function renderControls(){
     (S.tab === "cal" ? chk(S.weekStartMon, l.weekStartMon, "weekStartMon") : "") +
     (S.tab === "grid" ? chk(!S.gridCollapsed, l.expandGroups, "gridCollapsed") +
                         `<div class="mh">${l.columns}</div>` +
-                        chk(S.gridCols.start, "start", "col:start") +
-                        chk(S.gridCols.priority, "priority", "col:priority") : "") +
+                        chk(S.gridCols.start, l.colStart, "col:start") +
+                        chk(S.gridCols.priority, l.colPriority, "col:priority") : "") +
     `<div class="mfoot">${l.displayFoot}</div>`;
 
   M.layers = `<div class="mh">${l.mLayers}</div>` +
@@ -1188,7 +974,7 @@ function renderControls(){
   renderStatusLine();
 }
 
-/* 筛过的东西必须外露, 不然一眼扫会把子集当全量 */
+/* Anything filtered out has to be visible, or a glance reads a subset as the whole */
 function renderStatusLine(){
   const l = L(), chips = [];
   if(S.overdueOnly) chips.push([l.chipOverdue, "overdueOnly"]);
@@ -1219,10 +1005,10 @@ function renderStatusLine(){
   });
 }
 
-/* ======================= G 泳道 ======================= */
+/* ======================= G · Swimlanes ======================= */
 function renderLaneView(){
   const l = L(), bands = buildMatrix(), byLane = {};
-  /* JW 2026-08-16: a project with neither started nor due is not on this timeline.
+  /* A project with neither started nor due is not on this timeline.
      ⛔ It used to be drawn as a bar from today to today+7, which is a runway the
      owner never declared and cannot be told apart from a real one. It is still on
      the kanban, the grid and the health ring; only a timeline cannot place it. */
@@ -1347,12 +1133,14 @@ function gridlines(){
   }
   return g;
 }
-/* 依赖轨。照本宅 cb-control-tower.py 产出的那套 (只读参考, 没有改它):
-   · dep    = 跨项目依赖, 从**源的左缘**出发, 横到目标左侧一条共享竖通道, 竖直走到目标那一行,
-              再右转进目标左缘。实线 + 开口 chevron 箭头 (冷白, 不是橙), 源头一颗插头点,
-              底下垫一条粗而极淡的 vein 当光晕。
-   · stream = 同一条泳道内按开始日排出的先后, 前一条右缘直连下一条左缘, 1/6 点虚线, ⛔ 不带箭头。
-   两者不可互换: 有箭头 = 真的有依赖; 虚线只是同一条泳道里的顺序。 */
+/* Dependency tracks:
+   · dep    = a cross-project dependency. It leaves the SOURCE's left edge, runs across to a shared
+              vertical channel on the target's left, drops to the target's row, then turns right into
+              the target's left edge. Solid line plus an open chevron arrowhead (cool white, not orange),
+              a plug dot at the source, and a thick, very faint vein underneath as the glow.
+   · stream = ordering inside one lane by start date: the previous bar's right edge joins the next bar's
+              left edge, 1/6 dotted, and never an arrowhead.
+   The two are not interchangeable: an arrowhead means a real dependency; a dashed line is only sequence within a lane. */
 const CH_MARGIN = 22, CH_TRACK = 5, CH_TARGET_GAP = 16, RAIL_R = 8;
 function orthPath(ax, ay, cx, bx, by, r){
   if(Math.abs(by-ay) < 1) return `M${ax},${ay} L${bx},${by}`;
@@ -1371,7 +1159,7 @@ function drawEdges(){
         stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
   if(!S.showDeps){ svg.innerHTML = defs; return; }
 
-  /* 每条长条的左缘 · 右缘 · 中线 */
+  /* Each bar's left edge, right edge and midline */
   const pos = {};
   inner.querySelectorAll(".pbar[data-p]").forEach(el => {
     const r = el.getBoundingClientRect();
@@ -1381,7 +1169,7 @@ function drawEdges(){
 
   let veins = "", rails = "", plugs = "";
 
-  /* stream: 同一条泳道内的先后 */
+  /* stream: ordering within one lane */
   const byLane = new Map();
   DATA().projects.forEach(p => { const q = pos[p.id]; if(!q) return;
     if(!byLane.has(q.lane)) byLane.set(q.lane, []);
@@ -1395,7 +1183,7 @@ function drawEdges(){
     }
   });
 
-  /* dep: 跨项目依赖, 走左侧共享通道 */
+  /* dep: a cross-project dependency, routed through the shared left channel */
   const de = [];
   DATA().projects.forEach(p => (p.depends_on||[]).forEach(src => {
     const A = pos[src], B = pos[p.id];
@@ -1419,7 +1207,7 @@ function drawEdges(){
   svg.innerHTML = defs + veins + rails + plugs;
 }
 
-/* ======================= H 看板 ======================= */
+/* ======================= H · Kanban ======================= */
 function renderKanbanView(){
   const l = L();
   let cols, unit;
@@ -1446,7 +1234,7 @@ function renderKanbanView(){
       const over = isOver(it);
       return `<div class="kcard${it.status==="done"?" fin":""}" draggable="true" data-id="${it.id}">
         <div class="kt">${esc(it.title)}</div>
-        <div class="km"><span class="chip">${esc(it.proj.lane ? l[it.proj.lane] : l.personal)}</span>
+        <div class="km"><span class="chip">${esc(it.proj.lane ? (l[it.proj.lane] || it.proj.lane) : l.personal)}</span>
           <span class="kp">${esc(it.proj.name)}</span>
           <span class="kd${over?" over":""}">${it.due ? (over ? l.overdue : fmt(it.due)) : "·"}</span></div></div>`;
     }
@@ -1454,7 +1242,7 @@ function renderKanbanView(){
     const open = it.tasks.filter(t => t.status !== "done").length;
     return `<div class="kcard proj${it.status==="done"?" fin":""}" draggable="true" data-id="${it.id}">
       <div class="kt">${esc(it.name)}</div>
-      <div class="km"><span class="chip">${esc(it.lane ? l[it.lane] : l.personal)}</span>
+      <div class="km"><span class="chip">${esc(it.lane ? (l[it.lane] || it.lane) : l.personal)}</span>
         ${it.brand?`<span class="chip">${esc(it.brand)}</span>`:""}
         <span class="kp">${open} ${l.tasksWord}</span>
         <span class="kd${left!==null&&left<0?" over":""}">${left===null?"·":(left<0?l.overdue:left+l.dleft)}</span></div></div>`;
@@ -1509,10 +1297,16 @@ function renderPending(){
   };
 }
 
-/* ======================= I 表格 ======================= */
+/* ======================= I · Table ======================= */
 function renderGridView(){
   const l = L(), ps = visibleProjects(), c = S.gridCols;
-  const head = `<tr><th style="width:36%">task</th><th>status</th>${c.start?"<th>start</th>":""}<th>due</th><th>waiting_on</th>${c.priority?"<th>priority</th>":""}</tr>`;
+  /* ⛔ Through DICT like every other visible string. The values happen to be
+     the doctrine key names, which is the point: the owner reads the column and
+     knows which key to type. That is a wording decision, so it lives with the
+     other wording. */
+  const head = `<tr><th style="width:36%">${l.colTask}</th><th>${l.colStatus}</th>${
+    c.start?`<th>${l.colStart}</th>`:""}<th>${l.colDue}</th><th>${l.colWaitingOn}</th>${
+    c.priority?`<th>${l.colPriority}</th>`:""}</tr>`;
   const span = 4 + (c.start?1:0) + (c.priority?1:0);
   $("#viewhost").innerHTML = `<div class="axishead"><span class="lbl">I</span></div><div class="grid">` +
     ps.map(p => {
@@ -1523,7 +1317,7 @@ function renderGridView(){
           ${p.stage?`<span class="chip stage">${sgName(p.stage)}</span>`:""}
           ${p.brand?`<span class="chip">${esc(p.brand)}</span>`:""}
           <span class="gpath">${esc(projPath(p))}</span>
-          <span class="gcnt">${ts.length} ${l.tasksWord} · due ${p.due||l.none} · priority ${p.priority||l.none}</span></summary>
+          <span class="gcnt">${ts.length} ${l.tasksWord} · ${l.colDue} ${p.due||l.none} · ${l.colPriority} ${p.priority||l.none}</span></summary>
         <table class="gt"><thead>${head}</thead><tbody>` +
         (ts.length ? ts.map(t => `<tr class="${t.status==="done"?"fin":""}">
           <td class="t">${esc(t.title)}</td>
@@ -1537,7 +1331,7 @@ function renderGridView(){
     }).join("") + `</div>`;
 }
 
-/* ======================= J 月历 ======================= */
+/* ======================= J · Calendar ======================= */
 function renderCalView(){
   const l = L(), d = DATA();
   const [Y,M] = S.calMonth.split("-").map(Number);
@@ -1579,27 +1373,34 @@ function renderView(){
   else renderGridView();
 }
 
-/* ======================= 右栏 · R1 R2 R3 R4 =======================
-   顺序照 JW 定的: Countdown → Expires → Moving → Standing rules。
-   四节共用 option A 的 headline 文法 (大数字领头 + 一句名字 + 一行小字尾巴)。 */
+/* ============ L3 (bottom of the left column) and the right column R1 R2 R3 ===
+   ⛔ ONE numbering scheme: the position labels the panels themselves print.
+   Countdown is L3 because it sits in the left column's lead row; Expires,
+   Moving and Standing rules are R1, R2 and R3 down the right column. There is
+   no R4, and the locals below are named after the panel rather than a number so
+   a second scheme can never grow back.
+   All four share the same headline grammar: a big number in front, one line
+   naming it, one small line trailing. The three right-column panels each add a
+   `.src` naming the vault key they were read from; Countdown does not, because
+   it holds the same milestones the swimlane beside it already draws. */
 function renderCockpit(){
   const l = L(), d = DATA(), ps = deckProjects();
 
-  /* ---- L3 Countdown · 卡片式, 一张卡一个关口 ---- */
-  /* JW 2026-08-16: milestones ONLY, the same set the swimlane draws as diamonds.
+  /* ---- L3 Countdown: card style, one card per milestone ---- */
+  /* Milestones ONLY, the same set the swimlane draws as diamonds.
      ⛔ A project carrying both a start and a due is a runway, and it belongs on
      the swimlane where its span is visible, not in a countdown that would report
      only its last day. The hairline went with this change: a point in time has
      no runway to have half-run. */
   const gates = ps.filter(inCountdown).map(p => ({
     name:p.name, due:p.due, left:dleft(p.due),
-    lane:(p.lane ? l[p.lane] : l.personal).toUpperCase()
+    lane:(p.lane ? (l[p.lane] || p.lane) : l.personal).toUpperCase()
   })).sort((a,b) => a.left - b.left);
   const GSHOW = 4;
-  let R1 = `<div class="kick"><span class="lbl">L3</span>${l.gates}<span class="r">${gates.length} ${l.deadlinesWord}</span></div>`;
-  if(!gates.length) R1 += `<div class="emptyline" style="margin-top:14px">${l.emptyGates}</div>`;
+  let pGates = `<div class="kick"><span class="lbl">L3</span>${l.gates}<span class="r">${gates.length} ${l.deadlinesWord}</span></div>`;
+  if(!gates.length) pGates += `<div class="emptyline" style="margin-top:14px">${l.emptyGates}</div>`;
   else {
-    R1 += `<div class="mgrid" style="margin-top:12px">` + gates.slice(0,GSHOW).map((g,i) => `
+    pGates += `<div class="mgrid" style="margin-top:12px">` + gates.slice(0,GSHOW).map((g,i) => `
       <div class="mcard${i===0&&g.left>=0?" next":""}${g.left<0?" over":""}">
         <span class="mc-tag"><span class="gk"></span>${esc(g.lane)}</span>
         <div class="mc-title">${esc(g.name)}</div>
@@ -1607,58 +1408,61 @@ function renderCockpit(){
         <div class="mc-date">${md(g.due)}</div>
       </div>`).join("") + `</div>`;
     const tail = gates.slice(GSHOW);
-    if(tail.length) R1 += `<div class="more">+${tail.length} ${l.furtherOut} · ${
+    if(tail.length) pGates += `<div class="more">+${tail.length} ${l.furtherOut} · ${
       tail.map(g => `<span class="num">${g.left}d</span>`).join(" · ")}</div>`;
-    R1 += `<div class="legend">${l.mileNote}</div>`;
+    pGates += `<div class="legend">${l.mileNote}</div>`;
   }
-  $("#p-gates").innerHTML = R1;
+  $("#p-gates").innerHTML = pGates;
 
-  /* ---- R2 Expires ---- */
+  /* ---- R1 Expires ---- */
   const rens = d.renewals.map(r => ({...r, left:dleft(r.renew_by)})).sort((a,b) => a.left-b.left);
-  let R2 = `<div class="kick"><span class="lbl">R1</span>${l.ren}<span class="r">${rens.length} ${l.tracked}</span></div>`;
-  if(!rens.length) R2 += `<div class="emptyline" style="margin-top:12px">${l.emptyRen}</div>`;
+  let pRen = `<div class="kick"><span class="lbl">R1</span>${l.ren}<span class="src">${l.srcRen}</span><span class="r">${rens.length} ${l.tracked}</span></div>`;
+  if(!rens.length) pRen += `<div class="emptyline" style="margin-top:12px">${l.emptyRen}</div>`;
   else {
     const r0 = rens[0], tail = rens.slice(1);
-    const row = r => `<li><span class="n-t"><span>${esc(r.name)}</span><em>${r.room}</em></span>
+    /* ⛔ room and wing are frontmatter and folder names the owner typed, exactly
+       as untrusted as the name beside them: one `<` in a folder name and the
+       rest of the panel stops rendering. */
+    const row = r => `<li><span class="n-t"><span>${esc(r.name)}</span><em>${esc(r.room)}</em></span>
       <span class="n-d num">${md(r.renew_by)}</span><span class="n-n num">${r.left}d</span></li>`;
     const biz = tail.filter(r => r.wing === "business"), per = tail.filter(r => r.wing === "personal");
-    R2 += `<div class="blead"><b class="hn hn-m num acc">${r0.left}</b>
+    pRen += `<div class="blead"><b class="hn hn-m num acc">${r0.left}</b>
         <span><span class="t">${l.dleftLong} · ${esc(r0.name)}</span>
-        <span class="s">${r0.room} · ${r0.wing} · ${md(r0.renew_by)}</span></span></div>`
+        <span class="s">${esc(r0.room)} · ${esc(r0.wing)} · ${md(r0.renew_by)}</span></span></div>`
       + (biz.length?`<div class="sublab">${l.businessThen}</div><ul class="nlist">${biz.map(row).join("")}</ul>`:"")
       + (per.length?`<div class="sublab">${l.personalWord}</div><ul class="nlist">${per.map(row).join("")}</ul>`:"");
   }
-  $("#p-ren").innerHTML = R2;
+  $("#p-ren").innerHTML = pRen;
 
-  /* ---- R3 Moving ---- */
+  /* ---- R2 Moving ---- */
   const pu = d.pulse, mx = Math.max(1, ...pu.days), tmx = Math.max(1, ...pu.top.map(t => t.n));
   const nActive = d.projects.filter(p => p.status !== "done").length;
-  let R3 = `<div class="kick"><span class="lbl">R2</span>${l.pulse}<span class="r">${l.journalLast} ${pu.days.length}${l.daysShort}</span></div>
+  let pPulse = `<div class="kick"><span class="lbl">R2</span>${l.pulse}<span class="src">${l.srcPulse}</span><span class="r">${l.journalLast} ${pu.days.length}${l.daysShort}</span></div>
     <div class="blead"><b class="hn hn-m num${pu.touched?"":" dim"}">${pu.touched}</b>
       <span><span class="t">${l.projectsTouched}</span>
       <span class="s">${l.ofWord} ${nActive} ${l.activeWord} · ${l.barsNote}</span></span></div>
     <div class="spark">${pu.days.map((v,i) =>
       `<i class="${i===pu.days.length-1?"now":""}" style="height:${v?Math.max(v/mx*100,8).toFixed(1)+"%":"2px"}"></i>`).join("")}</div>`;
   if(pu.top.length){
-    R3 += `<div class="sublab">${l.mostMentioned}</div><ul class="tlist">${pu.top.map(t =>
-        `<li><span class="t-t">${esc(t.name)} <em>${t.kind}</em></span>
+    pPulse += `<div class="sublab">${l.mostMentioned}</div><ul class="tlist">${pu.top.map(t =>
+        `<li><span class="t-t">${esc(t.name)} <em>${kindName(t.kind)}</em></span>
           <span class="hbar"><i style="width:${Math.round(t.n/tmx*100)}%"></i></span>
           <span class="t-n num">${t.n}</span></li>`).join("")}</ul>`;
-    if(pu.silent.length) R3 += `<div class="sublab">${l.silent}</div><div class="quiet">${
+    if(pu.silent.length) pPulse += `<div class="sublab">${l.silent}</div><div class="quiet">${
       pu.silent.map(sv => `<b>${esc(sv.name)}</b> <span class="num">${sv.days}d</span>`).join("<i>·</i>")}</div>`;
-  } else R3 += `<div class="emptyline" style="margin-top:11px">${l.emptyPulse}</div>`;
-  $("#p-pulse").innerHTML = R3;
+  } else pPulse += `<div class="emptyline" style="margin-top:11px">${l.emptyPulse}</div>`;
+  $("#p-pulse").innerHTML = pPulse;
 
-  /* ---- R4 Standing rules ---- */
+  /* ---- R3 Standing rules ---- */
   const decs = d.decisions.slice().sort((a,b) => a.date < b.date ? -1 : 1);
   const act = decs.filter(v => v.status === "active").reverse();
   const ret = decs.filter(v => v.status !== "active");
   const sup = ret.filter(v => v.status === "superseded").length, clo = ret.length - sup;
   const DSHOW = 5;
-  let R4 = `<div class="kick"><span class="lbl">R3</span>${l.dec}<span class="r">${decs.length} ${l.logged}</span></div>`;
-  if(!decs.length) R4 += `<div class="emptyline" style="margin-top:12px">${l.emptyDec}</div>`;
+  let pDec = `<div class="kick"><span class="lbl">R3</span>${l.dec}<span class="src">${l.srcDec}</span><span class="r">${decs.length} ${l.logged}</span></div>`;
+  if(!decs.length) pDec += `<div class="emptyline" style="margin-top:12px">${l.emptyDec}</div>`;
   else {
-    R4 += `<div class="blead"><b class="hn hn-m num">${act.length}</b>
+    pDec += `<div class="blead"><b class="hn hn-m num">${act.length}</b>
         <span><span class="t">${l.rulingsInForce}</span>
         <span class="s">${l.newestFirst} · ${ret.length} ${l.retiredWord} (${clo} ${l.closedWord}, ${sup} ${l.supersededWord})</span></span></div>
       <ul class="dlist">${act.slice(0,DSHOW).map(v => `<li>
@@ -1669,15 +1473,15 @@ function renderCockpit(){
       ${act.length>DSHOW?`<div class="more">+${act.length-DSHOW} ${l.moreActive}</div>`:""}
       ${ret.length?`<div class="retired">${l.retiredLabel} ${ret.map(v=>`<s>${esc(v.title)}</s>`).join("<i>·</i>")}</div>`:""}`;
   }
-  $("#p-dec").innerHTML = R4;
+  $("#p-dec").innerHTML = pDec;
 }
 
-/* ======================= 组装 ======================= */
+/* ======================= Assembly ======================= */
 function renderAll(){
   const l = L();
   $("#ttl").textContent = l.deck;
   $("#biz").textContent = SETUP.business.name;
-  /* JW 2026-08-14: a deck read from a bookmark, outside any session, must say
+  /* A deck read from a bookmark, outside any session, must say
      when it is looking at yesterday's numbers rather than let them read as today's. */
   const genDay = (DATA().meta.generatedDate || DATA().meta.generated || "").slice(0,10);
   const nowDay = new Date().toISOString().slice(0,10);
@@ -1685,6 +1489,16 @@ function renderAll(){
   $("#stamp").innerHTML = esc(l.genat + " " + DATA().meta.generated)
     + (stale ? `<span class="nudge">${esc(l.staleNudge)}</span>` : "");
   $("#stamp").classList.toggle("stale", !!stale);
+  /* What the scan actually saw. A project whose Brief will not parse still ships
+     here at every default, and a task note whose frontmatter never closes does
+     not reach the page at all: without this count the second kind of file is
+     invisible from the page itself, which is the one failure an owner could
+     never spot by reading it. The build prints the same numbers once, into a
+     terminal that scrolls away; the page keeps them. */
+  const m = DATA().meta;
+  $("#counts").innerHTML =
+    `${m.briefs} ${l.cBriefs} · ${m.tasks} ${l.cTasks} · ${m.scanned} ${l.cScanned}`
+    + (m.unreadable ? `<span class="warn">${m.unreadable} ${l.cUnreadable}</span>` : "");
   document.querySelector(".split").classList.toggle("norail", !S.showRail);
   $("#railbtn").innerHTML = `<span class="gl2"><i></i><i></i></span>${l.sidebar}`;
   $("#railbtn").dataset.on = S.showRail ? 1 : 0;
