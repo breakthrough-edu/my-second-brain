@@ -4,7 +4,7 @@ s8-accept.py - acceptance harness for section 8 of the structure doctrine
 (the machine-readable record schema).
 
 WHAT THIS IS
-    Seven checks that section 8 is still the thing it claims to be: parseable,
+    Eight checks that section 8 is still the thing it claims to be: parseable,
     self-describing, and readable by the code that actually ships. It replaces
     the throwaway script that the 2026-08-15 shape-fix session wrote into a
     scratchpad and lost; that loss is the reason this file exists at all.
@@ -17,7 +17,9 @@ WHEN TO RUN IT
     $ python3 dev/s8-accept.py
 
     The template path defaults to this script's own repo-relative sibling and
-    can be overridden with --template.
+    can be overridden with --template. Check 8 reads a second file, the
+    vault-guardian reference table, on the same terms: repo-relative default,
+    overridable with --guards.
 
 ONE COPY, WHICH IS WHY CHECK 5 IS NO LONGER A DIFF
     Until 2026-08-16 this harness checked TWO copies of section 8 against each
@@ -39,6 +41,25 @@ ONE COPY, WHICH IS WHY CHECK 5 IS NO LONGER A DIFF
     drifted apart. Both sit outside the ```yaml fence, and every check here
     reads inside it. The lesson kept: this harness sees the block, not the
     section, and it should not be trusted with prose.
+
+WHY CHECK 8 READS A FILE THAT IS NOT SECTION 8
+    Section 8 declares the required keys. It says nothing about what any of
+    them is for, and the file that does say so is a separate one that ships
+    inside the payload: skills/vault-guardian/references/what-each-rule-guards.md.
+    A required key added to the block and never explained there is a rule the
+    guardian cannot answer for, and nothing until now noticed the gap.
+
+    Check 8 walks the shipped reader's specs and demands one row in that table
+    for every required key of every shape. The two mounting keys are exempt,
+    because a note mounts on them rather than being described by them, and they
+    are taken from `schema.marker_key` and `schema.type_key` rather than typed
+    in: rename either one in the block and the exemption follows the rename
+    instead of going quietly blind.
+
+    ⛔ It reads the table's ROW KEYS, never the sentences in the cells. Whether
+    an entry says something true is a human judgment and stays one; the only
+    machine question is whether an entry exists at all. That keeps the promise
+    below intact: this harness still refuses to be trusted with prose.
 
 IT DOES NOT SHIP
     This file sits at the repo root under dev/, outside my-second-brain/. The
@@ -66,7 +87,7 @@ WHAT IT DELIBERATELY DOES NOT DO
     shape, and say so in the commit.
 
 EXIT CODES
-    0  all seven checks ran and passed
+    0  all eight checks ran and passed
     1  a check failed - the report says which check and what differs
 """
 
@@ -243,7 +264,7 @@ def closed_lists(families, reserved):
     return out
 
 
-# --- the seven checks ----------------------------------------------------------
+# --- the eight checks ----------------------------------------------------------
 
 def check1(parsed):
     print("CHECK 1 - the block parses with yaml.safe_load")
@@ -561,6 +582,125 @@ def check7(body, open_names):
              "list would be enforced on every note")
 
 
+def documented_keys(lines):
+    """The guardian table read as a lookup table, which is all it claims to be.
+
+    Returns {shape-name-or-family-prefix: {key names that have a row}}. Both
+    halves are derived from the file's own shape rather than listed here:
+
+      * a section is a `## ` heading, and the shapes it covers are whatever it
+        names in backticks. One heading may name several (`lab.rubric` and its
+        two siblings share one), and a heading may name a family prefix that
+        stands for all of its subtypes (`entity`).
+      * a key has a row when its name appears in backticks in the FIRST cell of
+        a table row inside that section. First cell only: a key named in a
+        sentence in the third column has been mentioned, not documented.
+
+    Backticked things that are not key names (a closed list written as
+    `[active, prospective]` beside the key it belongs to) fall out on their own,
+    because they do not match an identifier.
+    """
+    ident = re.compile(r"`([a-z][a-z0-9_]*)`")
+    named = re.compile(r"`([a-z][a-z0-9_.-]*)`")
+    heads = [i for i, l in enumerate(lines) if l.startswith("## ")]
+    out = {}
+    for i, start in enumerate(heads):
+        end = heads[i + 1] if i + 1 < len(heads) else len(lines)
+        keys = set()
+        for line in lines[start + 1:end]:
+            stripped = line.strip()
+            if not stripped.startswith("|"):
+                continue
+            cells = stripped.split("|")
+            if len(cells) < 3:
+                continue
+            keys |= set(ident.findall(cells[1]))
+        for name in named.findall(lines[start]):
+            out.setdefault(name, set()).update(keys)
+    return out
+
+
+def check8(body, guards_path):
+    """Every required key section 8 declares can be looked up in the guardian's table.
+
+    Section 8 is the law and says nothing about purpose; the table is the other
+    half and says what each rule stops. A required key added to the block and
+    never written into the table is the failure this catches, and it is a quiet
+    one: everything parses, both enforcers work, and the guardian simply cannot
+    answer why the key exists when an owner asks to drop it.
+
+    ⭐ The two mounting keys are exempt, and are read off the parsed schema
+    rather than typed in. A note mounts on them; they are not one more thing
+    described per shape, which is why six shapes carry no row for the type key
+    and are correct as they stand.
+
+    One direction only, on purpose. A row left behind after its key leaves the
+    block is stale, not dangerous, and demanding a key for every row would make
+    the table's own preamble rows (the mechanics notes) into failures.
+    """
+    print("CHECK 8 - every required key has a row in the guardian's table")
+    text = "\n".join(body)
+    try:
+        schema = doctrine_schema.parse_block(text, source="template")
+    except doctrine_schema.SchemaError as exc:
+        fail("8", "doctrine_schema", f"the shipped reader could not read the block: {exc}")
+        return
+    exempt = {k for k in (schema.marker_key, schema.type_key) if k}
+    if not exempt:
+        fail("8", "doctrine_schema",
+             "the reader derived no mounting keys, so this check cannot tell a key "
+             "a note mounts on from a key the table owes an entry for")
+        return
+    try:
+        with open(guards_path, encoding="utf-8") as fh:
+            lines = fh.read().split("\n")
+    except OSError as exc:
+        fail("8", guards_path, f"the guardian's table could not be read: {exc}")
+        return
+
+    documented = documented_keys(lines)
+    if not documented:
+        fail("8", guards_path,
+             "no `## ` section of that file names a shape in backticks, so nothing "
+             "in it can be looked up; the file was probably restructured")
+        return
+
+    checked, exempted, missing, homeless = 0, 0, [], []
+    for name in sorted(schema.specs):
+        owners = [n for n in documented if name == n or name.startswith(n + ".")]
+        if not owners:
+            homeless.append(name)
+            continue
+        rows = set().union(*(documented[n] for n in owners))
+        for key in schema.specs[name].required:
+            if key in exempt:
+                exempted += 1
+                continue
+            checked += 1
+            if key not in rows:
+                missing.append(f"{name}.{key}")
+    if homeless:
+        fail("8", os.path.basename(guards_path),
+             f"shape(s) with no section of their own: {homeless}. No required key of "
+             "theirs can be looked up. Add one '## `<shape>`' heading each, or name "
+             "the shape in an existing heading beside its siblings.")
+    if missing:
+        fail("8", os.path.basename(guards_path),
+             f"required key(s) with no row saying what they guard: {missing}. Section "
+             "8 makes each one mandatory on every note of its shape and this file "
+             "cannot say why. Add one table row per key, the key name in backticks in "
+             "the row's first cell.")
+    if not homeless and not missing:
+        print(f"    template  {len(schema.specs)} shapes, {checked} required keys, "
+              f"every one has a row")
+        print(f"    guards    {len(documented)} shape names read out of the table's "
+              f"own headings, in {guards_path}")
+        print(f"    exempt    the mounting keys, read from the parsed schema and not "
+              f"hard-coded here:")
+        print(f"              marker_key={schema.marker_key!r} "
+              f"type_key={schema.type_key!r} -> {exempted} required-key slots skipped")
+
+
 def check6(parsed, bodies):
     print(f"CHECK 6 - family count is still {EXPECT_FAMILIES}")
     for label, body in bodies.items():
@@ -583,10 +723,15 @@ def main():
     here = os.path.dirname(os.path.abspath(__file__))
     default_template = os.path.join(
         here, os.pardir, "my-second-brain", "templates", "structure-doctrine.template.md")
+    default_guards = os.path.join(
+        here, os.pardir, "my-second-brain", "skills", "vault-guardian", "references",
+        "what-each-rule-guards.md")
 
     ap = argparse.ArgumentParser(description="Acceptance harness for doctrine section 8.")
     ap.add_argument("--template", default=os.path.normpath(default_template),
                     help="the doctrine template to check (default: this repo's)")
+    ap.add_argument("--guards", default=os.path.normpath(default_guards),
+                    help="the guardian's rule table, read by check 8 (default: this repo's)")
     args = ap.parse_args()
 
     print(f"PyYAML {yaml.__version__} at {yaml.__file__}")
@@ -644,6 +789,8 @@ def main():
     print()
     check7(body, open_names)
     print()
+    check8(body, args.guards)
+    print()
 
     if failures:
         print(f"FAILURES: {len(failures)}")
@@ -652,7 +799,7 @@ def main():
         return 1
 
     print("FAILURES: none")
-    print("PASS - seven checks against the single source.")
+    print("PASS - eight checks against the single source.")
     return 0
 
 
