@@ -9,8 +9,10 @@ The full product story (philosophy, design decisions, day-to-day life with it) l
 ## Install
 
 ```bash
-npx skills add breakthrough-edu/my-second-brain
+npx skills add -g breakthrough-edu/my-second-brain
 ```
+
+The `-g` is not optional here: without it the install lands in the current project folder, and this skill has to sit at the user level to find its own payload.
 
 Then open Claude Code and say:
 

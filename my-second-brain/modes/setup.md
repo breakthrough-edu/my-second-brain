@@ -87,7 +87,7 @@ One line on what they just got: "From now on, in any session, say 'morning' or '
 - **`playbook-lab`** opens and closes the rare feedback loop around a playbook that has earned one (doctrine §9). ⛔ It matters that this one ships: §9 is law in every vault this skill builds, and that law says a lab is **never** hand-built. Shipping the section but not the tool would leave the owner forbidden to do the thing by hand and unequipped to do it any other way.
 - **`vault-guardian`** carries one change to the owner's own law through every file that change touches: section 8, the template it teaches from, the tag vocabulary, `Home.md`, the doors, `CLAUDE.md`. ⛔ It matters that this one ships for a different reason than the three above, and the reason is on paper in the vault it just built: §8 names this skill as the recommended route for an amendment. Ship the law without it and the owner's own constitution points at something that is not on their machine. ⚠️ **The by-hand test below does not decide this one**, because amending by hand is explicitly legal (§8 says so in the same sentence); what decides it is that the law names the tool.
 
-**Install every folder under `<payload>/skills/` as its own entry, and link rather than copy wherever the platform allows.** Resolve the running skill's folder (via `npx` install it is `~/.claude/skills/my-second-brain/`, resolved at runtime). ⭐ **Linking is what makes `npx skills update my-second-brain` carry them along**: update the payload and every companion skill is updated in the same breath, with nothing to re-run here.
+**Install every folder under `<payload>/skills/` as its own entry, and link rather than copy wherever the platform allows.** Resolve the running skill's folder (via a global `npx skills add -g` install it is `~/.claude/skills/my-second-brain/`, resolved at runtime). ⭐ **Linking is what makes `npx skills update my-second-brain` carry them along**: update the payload and every companion skill is updated in the same breath, with nothing to re-run here.
 
 1. **Check first.** If `~/.claude/skills/<name>` already exists for either name, ⛔ do not touch it. Say what is there and move on; an owner may have installed one by hand, and clobbering it loses their copy.
 2. **macOS / Linux:** `ln -s "<payload>/skills/<name>" ~/.claude/skills/<name>` for each folder found (create `~/.claude/skills/` if missing).
@@ -214,7 +214,7 @@ Two halves of one step, in this order. The order is the whole point: the deck is
 
 ## Step 7: Official Obsidian skills (optional, recommended)
 
-Offer once: the Obsidian team publishes official skills (Bases syntax, Obsidian-flavored markdown, web clipping) that make the AI sharper inside Obsidian. Install with `npx skills add kepano/obsidian-skills`. Recommended yes; a no costs nothing tonight. Record the answer in `bootstrap-progress.md` (`obsidian_skills_offered:`).
+Offer once: the Obsidian team publishes official skills (Bases syntax, Obsidian-flavored markdown, web clipping) that make the AI sharper inside Obsidian. Install with `npx skills add -g kepano/obsidian-skills`. Recommended yes; a no costs nothing tonight. Record the answer in `bootstrap-progress.md` (`obsidian_skills_offered:`).
 
 ## Step 7.5: Connect a calendar (optional, recommended)
 

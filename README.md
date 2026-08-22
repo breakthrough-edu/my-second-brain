@@ -13,8 +13,10 @@ And it does the two things note systems never do: it **grows its own memory** (e
 ## Install
 
 ```bash
-npx skills add breakthrough-edu/my-second-brain
+npx skills add -g breakthrough-edu/my-second-brain
 ```
+
+The `-g` is not optional here: without it the install lands in the current project folder, and this skill has to sit at the user level to find its own payload.
 
 Then open Claude Code and say:
 
