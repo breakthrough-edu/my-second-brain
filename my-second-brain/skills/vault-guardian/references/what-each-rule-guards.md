@@ -196,7 +196,7 @@ Every subtype declares `required: [type, status]` and carries `renew_by` and `st
 |---|---|---|---|
 | `type` | A3. | A3. | ⛔ |
 | `lane` | An SOP that belongs to no line of the business is invisible to every lane-filtered view; `modes/maintenance.md:50` says to watch `lane:` in particular for exactly this. ⭐ The `multi` half guards something separate: `multi` is a reserved word in the block, and without it `lane: [deliver, run]` is reported as several values in a single-valued field (`scripts/doctrine_schema.py:563`). | A2 fires here · `modes/maintenance.md:50`. | ⛔ And ⛔ separately: do not drop `multi` while keeping the key. |
-| `owner` | A process nobody answers for. The template defines the key as the A of every RACI row, which is why the step table does not repeat it (`templates/note-templates.md:490`). | ⚠️ No machine reader. | A7 works mechanically. ⚠️ Weigh it first: this family's required set is small and each member answers a different question (which line, who answers for it, when it was last walked). Dropping one leaves the note unable to answer that question at all. |
+| `owner` | A process nobody answers for. The template defines the key as the A of every RACI row, which is why the step table does not repeat it (`templates/note-templates.md:521`). | ⚠️ No machine reader. | A7 works mechanically. ⚠️ Weigh it first: this family's required set is small and each member answers a different question (which line, who answers for it, when it was last walked). Dropping one leaves the note unable to answer that question at all. |
 | `last_verified` | A process nobody has walked in three years reading exactly like one walked yesterday. | `templates/command-base-SKILL.template.md:75`, verbatim: bump it "only if the process was actually re-walked, never because the note was touched". | A7. |
 | `playbook` | The judgment layer above the steps cannot be reached from the steps. | The distillation chain (`modes/distill.md`) and §7's one-way pointer rule. | Already optional. |
 
@@ -218,7 +218,7 @@ Every subtype declares `required: [type, status]` and carries `renew_by` and `st
 | Key | What it stops | Who reads it | If the owner wants it gone |
 |---|---|---|---|
 | `lane` `confirmed_by_owner` | As `process.method`. | As `process.method`. | ⛔ |
-| `status` · one value | A closed list of one refuses **every** other word. Section 8 states why: the value describes the methodology's maturity, not this note's fill state, and no second value is sourced anywhere. | `templates/note-templates.md:781` is the only source. | ⭐ Wanting `mature` or `retired` is a legitimate amendment, not a rule to talk them out of. Ask the second question with it: who reads the new value, and what changes when it is set. Nothing reads this key today, so a new value that changes no action is a wish rather than a rule. |
+| `status` · one value | A closed list of one refuses **every** other word. Section 8 states why: the value describes the methodology's maturity, not this note's fill state, and no second value is sourced anywhere. | `templates/note-templates.md:812` is the only source. | ⭐ Wanting `mature` or `retired` is a legitimate amendment, not a rule to talk them out of. Ask the second question with it: who reads the new value, and what changes when it is set. Nothing reads this key today, so a new value that changes no action is a wish rather than a rule. |
 | `references` | The playbook and the lessons and decisions behind it lose their one link. §7 makes this the single pointer, written once when the playbook is born, on the note being written anyway. ⛔ There is deliberately no matching key on the lesson or decision side: a back-list would need revisiting forever. | `modes/distill.md:40`. | Already optional. |
 
 ## `process.lesson`
@@ -266,7 +266,7 @@ Each: `required: [type, updated]`. The family also declares `cardinality: {count
 | Key | What it stops | Who reads it | If the owner wants it gone |
 |---|---|---|---|
 | `type` | A3, and here it has real readers: both halves of the weekly ritual find this file by `type: weekly-review`, one after the other, and write into the same note. | `modes/maintenance.md:70` · `modes/distill.md:59`. | ⛔ |
-| `week_of` `reviewed_on` | A review written three weeks late reading as though it were written that week. The template gives the reason in its own words: `week_of` is the Monday of the week reviewed, `reviewed_on` is when the review actually happened, and they differ often enough that one key cannot answer both (`templates/note-templates.md:642-643`). | ⚠️ Neither has a reader. | A7 on both, ⭐ **never one alone**: they are a pair, and downgrading half of it leaves the distinction unanswerable while looking maintained. ⚠️ Weigh it against this: a weekly review is never backfilled once written, so what is left out is left out permanently, and the filename is the only fallback (§5 does not fix a filename shape for reviews the way `references/scaffold-spec.md:283` does for tasks). |
+| `week_of` `reviewed_on` | A review written three weeks late reading as though it were written that week. The template gives the reason in its own words: `week_of` is the Monday of the week reviewed, `reviewed_on` is when the review actually happened, and they differ often enough that one key cannot answer both (`templates/note-templates.md:673-674`). | ⚠️ Neither has a reader. | A7 on both, ⭐ **never one alone**: they are a pair, and downgrading half of it leaves the distinction unanswerable while looking maintained. ⚠️ Weigh it against this: a weekly review is never backfilled once written, so what is left out is left out permanently, and the filename is the only fallback (§5 does not fix a filename shape for reviews the way `references/scaffold-spec.md:283` does for tasks). |
 
 ## `ritual.monthly-theme`
 
@@ -285,7 +285,7 @@ Each: `required: [type, updated]`. The family also declares `cardinality: {count
 | Key | What it stops | Who reads it | If the owner wants it gone |
 |---|---|---|---|
 | `type` | ⭐ This is the one family whose own closed list **is** its mounting value (`scripts/doctrine_schema.py:497-505` takes the family-list branch rather than the spec-name branch). Each value is a folder that exists under the resources room, so a sixth value is a note with nowhere to land. | `references/scaffold-spec.md:24` `:146` · `scripts/doctrine_schema.py:497-505`. | A new kind of resource is a value **plus** a folder, added in one breath. ⛔ Neither half alone. |
-| `source` | Where the clipping came from is lost. | ⚠️ No machine reader; the template teaches it (`templates/note-templates.md:942`). | Already optional. |
+| `source` | Where the clipping came from is lost. | ⚠️ No machine reader; the template teaches it (`templates/note-templates.md:973`). | Already optional. |
 
 ## `brand-strategy`
 
@@ -295,6 +295,21 @@ Each: `required: [type, updated]`. The family also declares `cardinality: {count
 |---|---|---|---|
 | `pillar` | A pillar missing or duplicated with nobody noticing. The wiring check requires one stub per value with no repeats, so the list is what makes "all of them are there" a checkable statement. | `references/scaffold-spec.md:212-225` gives each pillar its door sign and its empty cost · `:422` wiring check `brand-stubs-in-place` · `templates/note-templates.md:416` `:432`. | ⛔ |
 | `status` · `[empty, filled]` | ⭐⭐ **The most expensive rule in the block to lose.** This is the only `status` in section 8 that describes the note's own fill state instead of a real-world lifecycle, and the vault's `CLAUDE.md` reads it in **every** session: stubs marked `status: empty` are to be treated as gaps to fill, "not answers" (`templates/CLAUDE.template.md:15`). Without it, an unanswered brand pillar gets quoted into outward-facing work as though it were the answer. | `templates/CLAUDE.template.md:15`, every session · `references/scaffold-spec.md:228`, the machine signal that any outward-facing work reads to know it is running generic · `:422` · `modes/capture.md:48`, which flips the stubs it fills · `references/rooms-assets.md:34`, which asks which empty stub is the most expensive one · `templates/note-templates.md:434`. | ⛔⛔ Do not downgrade and do not open the list. |
+
+## `brand-research`
+
+`required: [type, updated]` · `optional: [source, brand]`
+
+⭐ **Read this next to `brand-strategy` above, because the pair is the point.** The pillars are the answers; this family is the evidence they were built on, the owner's own convictions included. Section 8 names it "the evidence behind the pillars" and refuses "market research" for one stated reason: a family named after looking outward would push the owner's own beliefs somewhere else. ⚠️ Unlike the brand rooms, `Brand-Research/` is not scaffolded. It is made the first time evidence is written, so the wiring checks never see it and the folder's own door is a runtime door like a lab's.
+
+| Key | What it stops | Who reads it | If the owner wants it gone |
+|---|---|---|---|
+| `type` | A3. | A3. | ⛔ |
+| `updated` | A pillar being rebuilt on a customer read or a competitor scan from two years ago. This is the one family in the block whose **age** decides whether the content can be trusted, and a stale finding reads exactly as certain as a fresh one. | ⚠️ Nothing. ⛔ **And do not reach for the freshness check to fill this column:** `scripts/checkup.py:640` reads `maintenance-state.md` only, fields at `:138` (`last_tidy`, `last_distill`). Section 8 says so itself so that nobody offers the owner a guarantee that does not exist. The reader is the person who opens the note. | A7 works mechanically, and weigh it against the paragraph above before offering it: dropped, the note keeps its authority and loses its expiry. ⭐ If what they want is to stop typing it, that is the session's job to fill, not a key to remove. |
+| `source` | Something the owner recalled over coffee and something that was actually looked up ending up indistinguishable, which is the difference between a finding and a hunch. ⭐ Blank is a legal, meaningful value here: it means the owner's own knowledge. | ⚠️ No machine reader; the template teaches it, and it follows `resources.source` above. | Already optional. |
+| `brand` | A5, and only that: in a multi-brand vault a session writes the brand out of habit, and undeclared it comes back as a judgment call on a note the product's own template shaped. The folder path already carries the answer. | ⚠️ None. `brief.brand` is the key it copies. | Already optional. |
+
+⛔ **The request to expect, and the answer.** An owner running a named research method will ask for the topics as a closed list (`type: [consumer-research, competitor-research, ...]` or a `research_kind` key). Section 8 refuses it in its own words, and the reason is worth stating plainly: the topic set belongs to a school of practice, not to this vault, so putting it in the law means every change to somebody else's vocabulary arrives as an amendment to their constitution. The subject already has a home the law does not have to police, which is the filename and the title. ⭐ If they want the set visible rather than enforced, that is a line in their own `Brand-Research/` door, and the door needs no amendment.
 
 ## `control.doctrine` · `control.vocabulary` · `control.lab-gate-config` · `control.profile`
 

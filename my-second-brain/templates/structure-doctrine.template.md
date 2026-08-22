@@ -23,7 +23,7 @@ Read this before creating or filing anything in this vault. This file is the sin
    - Retired material → `98_Archive/`
    - A hypothesis → `99_Meta/Hypotheses/`. **The machine writes it: the weekly ritual's distillation half, and the `session-report` skill when a session throws off a claim.** Nothing you file by hand ever lands here: the pool is where maintenance parks a claim that is not yet earned, and it graduates out on evidence. Do not create one to hold an idea. ⚠️ **A lab's bets are not this.** They live in that lab's `lab-register` (§9) and they are the owner's own, written by the `playbook-lab` skill and by scoring: the pool is the machine observing the owner, a lab register is the owner testing their own method. The pool never enters a session's context; a register must be read every time, which is why they cannot be one family.
 2. **Everything else: identify the type family** (§8 has the closed list).
-   **2b. Map the family to its home:** entity → its room in `01_Assets/` (or the matching Personal-Wing room) · process (sop) → `03_SOP/` · playbook / lesson → `04_Methodology/` · brand-strategy → that brand's `<Brand>-Brand-Assets/` · resources → `02_Command-Base/Resources/` · guide / brief / menu → with the folder or project they describe · control → `99_Meta/`, and setup is what puts them there (the control plane is declared in §8 so a correct install is not flagged for its own machinery, not so that new ones get filed by hand).
+   **2b. Map the family to its home:** entity → its room in `01_Assets/` (or the matching Personal-Wing room) · process (sop) → `03_SOP/` · playbook / lesson → `04_Methodology/` · brand-strategy → that brand's `<Brand>-Brand-Assets/` · brand-research → that brand's `<Brand>-Brand-Assets/Brand-Research/` · resources → `02_Command-Base/Resources/` · guide / brief / menu → with the folder or project they describe · control → `99_Meta/`, and setup is what puts them there (the control plane is declared in §8 so a correct install is not flagged for its own machinery, not so that new ones get filed by hand).
 3. **If no family fits: STOP.** Do not force it in. Do not invent frontmatter. Propose a new family: a new template plus a new row in §8, get a yes, then file. (The frontmatter guard blocks a hard schema violation: a bad filename, a missing required key, a value outside a closed list. A key §8 has not declared is a judgment call, not a violation, so the guard **flags it to this session** instead of blocking: register it in §8 if this kind of note always carries it, drop it if it was invented on the spot.)
 4. **Two plausible homes?** Check the precedent table (§2). If the case is genuinely new, ask the owner once, then record the answer as a new precedent line. Never ask the same question twice.
 5. **Every filing appends one line to `99_Meta/filing-log.md`** (date · what · where · which rule decided it). Weekly maintenance reads the log for patterns: three filings to the same missing home become a proposal.
@@ -46,7 +46,7 @@ Top level (numbers are anchors, gaps in the middle are allowed):
 - **02_Command-Base** holds: `Home.md` (the vault's full directory, see §3), `Decisions/`, `Reviews/`, `Resources/` (the owner's library: Clippings, Courses, Books, Prompts, Tools), `Command-Deck.html` (generated dashboard).
 - **03_Personal-Wing** holds: `Personal-Projects/` plus six life rooms (`Family/ Health/ Finance-Personal/ Property/ Vehicles/ People/`). Nothing else.
 - **Business wing, four layers** (numbers tell the story: what it's made of, what's moving, how things get done, why decisions go the way they go):
-  - `01_Assets/`: what the business is made of. Entity rooms: `Clients/ Vendors/ Employees/ Company-Docs/ Marketing-Assets/ IT-Systems/` (plus `Equipment/ Outlets/` when relevant) and one `<Brand>-Brand-Assets/` folder per brand (holding `Brand-Strategy/`, `Target-Audience/`, `Products-Services/`).
+  - `01_Assets/`: what the business is made of. Entity rooms: `Clients/ Vendors/ Employees/ Company-Docs/ Marketing-Assets/ IT-Systems/` (plus `Equipment/ Outlets/` when relevant) and one `<Brand>-Brand-Assets/` folder per brand (holding `Brand-Strategy/`, `Target-Audience/`, `Products-Services/`; a fourth room, `Brand-Research/`, is legal beside them and holds the evidence those brand answers rest on, and it is made the first time evidence is written rather than at setup).
     ⚠️ **The eight brand pillars are one family (`type: brand-strategy`) living across two of those subfolders**: seven in `Brand-Strategy/`, and the Journey pillar in `Target-Audience/` (it is the customer journey, so it files with the audience it maps). Type comes from the family, never from the folder (§0 step 2), and this is the case where the two do not line up in the obvious way. All eight carry a `pillar` value from the closed list in §8.
   - `02_Work/`: the activity layer, four lanes. Every project lives in exactly ONE lane, chosen by the filing ladder (ask in order, first yes wins):
     - `Deliver/`: is this work for a specific NAMED customer or hot prospect? A client job (an engagement) is one project here from pursuit to handover; its `stage:` field tracks the lifecycle (pursuing → executing → closed), the project never moves. Recurring service for a named customer (a standing weekly order) stays ONE Deliver project indefinitely at `stage: executing`; Run is internal-only, and Deliver is deliberately excluded from the re-homing rule below.
@@ -328,6 +328,39 @@ families:
                      status: [empty, filled]}   # unlike every other status family below,
                                                 # this describes THIS NOTE's own fill state,
                                                 # not a real-world lifecycle.
+  brand-research:   {required: [type, updated],
+                     optional: [source, brand]}
+                                        # the evidence behind the pillars: what was found, and
+                                        # what the owner already believed, both of which the
+                                        # answers in Brand-Strategy/ get built on. ⛔ Not
+                                        # "market research". An owner's own conviction is
+                                        # evidence here too, and a family named after looking
+                                        # outward would push it somewhere else.
+                                        # `updated` is required the way it is on guide, brief
+                                        # and menu; what differs is the REASON. This is the one
+                                        # family whose age changes whether you can still trust
+                                        # what it says: a competitor read or a customer read
+                                        # goes stale while the note goes on sounding just as
+                                        # certain, and a pillar built on it inherits that
+                                        # without saying so. ⛔ Nothing checks this date. The
+                                        # freshness check reads maintenance-state.md's
+                                        # `last_tidy` and `last_distill` and nothing else, so
+                                        # the key is a date for a person to weigh, not a rule
+                                        # with teeth.
+                                        # `source` follows resources: it separates what was
+                                        # actually looked up from what was recalled. The two
+                                        # read identically on the page and are not worth the
+                                        # same.
+                                        # `brand` is for a vault holding more than one, the
+                                        # same key brief carries. The note's folder already
+                                        # names the brand, so declaring the key is what keeps
+                                        # the guard quiet when a session writes it anyway.
+                                        # ⛔ No closed list of research topics, now or later.
+                                        # Which question a note answers is carried by its
+                                        # filename and its title. A list here would freeze one
+                                        # school's vocabulary into this vault's law, and every
+                                        # change to that vocabulary would arrive as an
+                                        # amendment.
   control:                                  # this vault's own machinery: one file each,
                                             # directly in 99_Meta/, written by setup rather
                                             # than filed by hand. Declared here so a correct

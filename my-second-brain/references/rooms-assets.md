@@ -10,12 +10,12 @@ For each room: the door sign (also used on its `_<Name>-Guide.md`), the filing t
 
 ## The brand folder: `<Brand>-Brand-Assets/`
 
-One folder per brand, holding three rooms: `Brand-Strategy/`, `Target-Audience/`, `Products-Services/`. A single-brand business has exactly one, named after the business; ask which brand something belongs to only when a second one exists.
+One folder per brand. Scaffold builds three rooms in it: `Brand-Strategy/`, `Target-Audience/`, `Products-Services/`. A fourth is legal and scaffold does not build it: `Brand-Research/` holds the evidence the brand answers rest on (doctrine §1, §8 family `brand-research`), and it is made the first time evidence is written, with its own door, the way a playbook lab's folder is. A single-brand business has exactly one brand folder, named after the business; ask which brand something belongs to only when a second one exists.
 
-**Door sign** (for `_<Brand>-Brand-Assets-Guide.md`, the folder's own door): everything that makes this brand this brand: what it stands for (`Brand-Strategy/`), who it is for (`Target-Audience/`), and what it sells (`Products-Services/`).
-**Filing test:** an answer ABOUT the brand files in one of the three rooms below; the reusable output that expresses the brand (the post, the photo set, the deck) lives in `Marketing-Assets/`; the METHOD for doing brand work lives in `04_Methodology/`.
+**Door sign** (for `_<Brand>-Brand-Assets-Guide.md`, the folder's own door): everything that makes this brand this brand: what it stands for (`Brand-Strategy/`), who it is for (`Target-Audience/`), what it sells (`Products-Services/`), and the evidence those answers rest on, where that research has been written down (`Brand-Research/`).
+**Filing test:** an answer ABOUT the brand files in one of the rooms below; the evidence behind that answer files in `Brand-Research/`; the reusable output that expresses the brand (the post, the photo set, the deck) lives in `Marketing-Assets/`; the METHOD for doing brand work lives in `04_Methodology/`.
 
-⚠️ **`guide_family` on these four doors, because the two sources read differently and the doctrine wins.** §8's own comment defines `brand` as "a subfolder of `<Brand>-Brand-Assets/`", so all three subfolders (`Brand-Strategy/`, `Target-Audience/` **and** `Products-Services/`) carry `guide_family: brand`. The `<Brand>-Brand-Assets/` folder itself is not a subfolder of one, it IS one, and doctrine §1 lists it among the entity rooms of `01_Assets/`, so its own door carries `guide_family: room`.
+⚠️ **`guide_family` on these doors, because the two sources read differently and the doctrine wins.** §8's own comment defines `brand` as "a subfolder of `<Brand>-Brand-Assets/`", so every subfolder door carries `guide_family: brand`: `Brand-Strategy/`, `Target-Audience/`, `Products-Services/`, **and** `Brand-Research/` in a brand that has one. The `<Brand>-Brand-Assets/` folder itself is not a subfolder of one, it IS one, and doctrine §1 lists it among the entity rooms of `01_Assets/`, so its own door carries `guide_family: room`.
 
 ### Brand-Strategy and Target-Audience (filled by intake, not by interview)
 

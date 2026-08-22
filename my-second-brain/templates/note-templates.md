@@ -436,6 +436,37 @@ status flips off `empty` the moment the pillar is actually answered. Anything ou
 -->
 ```
 
+## Brand-Research.md
+
+```markdown
+---
+type: brand-research
+updated: {{DATE}}
+source:
+---
+
+# <The question this note answers>
+
+## What it says
+
+## What it means for the pillars
+
+<!--
+<Brand>-Brand-Assets/Brand-Research/, the evidence behind the pillars. One note per question,
+  and the question is the filename and the title: section 8 declares no list of research
+  topics, so the name is the only place the subject is written. Watch the filename law (§5):
+  a name like `Findings.md` or `Notes.md` will not land.
+updated: the day this was last checked against reality. Nothing reads the date. It is here so
+  whoever opens the note can weigh how old the evidence is before building on it.
+source: where it came from. Left blank when the answer came from the owner's own knowledge,
+  which is evidence too, and is not worth the same as something looked up.
+brand: only in a vault holding more than one.
+⛔ The pillar wins. Outward-facing work reads the pillar note in Brand-Strategy/, never this
+  file. When a pillar changes later, it changes there; this note stays as it was written,
+  because dated evidence that gets edited afterwards is worth nothing.
+-->
+```
+
 ## SOP.md
 
 Copied from the `sop-builder` skill's `references/finalize.md` section 3, which is the shape that skill actually writes. ⛔ Do not edit this block independently: two sources for one shape drift, and the vault would end up with hand-written SOPs and skill-written SOPs that do not match.

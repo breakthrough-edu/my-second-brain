@@ -85,10 +85,11 @@ sys.path.insert(0, os.path.join(
 import doctrine_schema  # noqa: E402
 
 # --- acceptance criteria (see header: change only with a shape change) -------
-EXPECT_FAMILIES = 13
-EXPECT_SPECS = 35  # families with subtypes contribute their subtypes, not themselves
+EXPECT_FAMILIES = 14  # 13 until 2026-08-22, when brand-research was added
+EXPECT_SPECS = 36  # families with subtypes contribute their subtypes, not themselves
                    # 24 until 2026-08-20, when process.method was opened
                    # 25 until 2026-08-21, when entity's eleven types became eleven subtypes
+                   # 35 until 2026-08-22, when brand-research was added
 EXPECT_IN_FAMILY_CLOSED_LISTS = 14  # 13 until 2026-08-19, when entity.status was closed;
                                     # 14 until 2026-08-20, when process.method.status opened;
                                     # 15 until 2026-08-21, when entity.type stopped being a list
