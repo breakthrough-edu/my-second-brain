@@ -253,7 +253,7 @@ tags: []
 ## Manual / supplier pointer
 
 ## Maintenance log
-- 
+-
 
 <!--
 One machine, one note, in 01_Assets/Equipment/ (the room exists only if the equipment toggle
@@ -317,7 +317,7 @@ this note holds the pointer to which manager and whose)
 (the pointer: which tool, which account, who can see it)
 
 ## Monthly snapshot
-- 
+-
 
 <!--
 One system, one note, in 01_Assets/IT-Systems/: POS, accounting software, the domain name,
@@ -400,7 +400,7 @@ tags: []
 ## Papers and where they are
 
 ## Service log
-- 
+-
 
 <!--
 Personal wing, 03_Personal-Wing/Vehicles/. A company vehicle is Equipment in the business wing.
@@ -552,9 +552,9 @@ lane:
 supersedes:
 ---
 
-**Decided:** 
+**Decided:**
 
-**Why:** 
+**Why:**
 
 **Alternatives:** (rejected because )
 
@@ -617,13 +617,13 @@ type: daily
 # {{DATE}}
 
 ## What moved
-- 
+-
 
 ## Decided
 (one line each; the decision note itself lives in 02_Command-Base/Decisions/)
 
 ## Observed
-- 
+-
 
 ## Reflection
 
@@ -654,9 +654,9 @@ reviewed_on: {{DATE}}
 
 ## Top 3
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## Drifts
 (what slipped, what went stale, what the machine pass flagged)
@@ -667,9 +667,9 @@ reviewed_on: {{DATE}}
 
 ## Pool vitals
 
-- Open: 
-- Graduated: 
-- Expired: 
+- Open:
+- Graduated:
+- Expired:
 
 ## What I noticed
 
