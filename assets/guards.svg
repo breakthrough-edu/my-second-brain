@@ -13,7 +13,7 @@
   <ellipse cx="800" cy="300" rx="720" ry="300" fill="url(#guardglow)"/>
 
   <text x="800" y="78" text-anchor="middle" font-size="30" font-weight="600" letter-spacing="7" fill="#F2F2F4">MACHINES STAND GUARD</text>
-  <text x="800" y="116" text-anchor="middle" font-size="18" fill="#8A8A93">written rules die without enforcement · three guards ship with the skill</text>
+  <text x="800" y="116" text-anchor="middle" font-size="18" fill="#8A8A93">written rules die without enforcement · the guards that ship with the skill</text>
 
   <!-- Guard 1: the inspector -->
   <text x="300" y="196" text-anchor="middle" font-size="12" letter-spacing="3" fill="#6A6A74">IT FINDS</text>

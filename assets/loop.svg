@@ -30,7 +30,7 @@
   <rect x="375" y="210" width="250" height="130" rx="16" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
   <text x="500" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#E8E8EC">TIDY SCAN</text>
   <text x="500" y="294" text-anchor="middle" font-size="14" fill="#85858E">orphans, misfiles,</text>
-  <text x="500" y="316" text-anchor="middle" font-size="14" fill="#85858E">stale maps, 7 checks</text>
+  <text x="500" y="316" text-anchor="middle" font-size="14" fill="#85858E">stale maps, read only</text>
 
   <line x1="625" y1="275" x2="663" y2="275" stroke="#6A6A74" stroke-width="1.5" marker-end="url(#arrowG)"/>
 

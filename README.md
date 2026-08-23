@@ -152,14 +152,14 @@ Same law as everywhere else in this system, now with your own past conversations
 Written rules die without enforcement, so the rules that matter most are backed by machinery, all of it shipped in this skill:
 
 <p align="center">
-  <img src="assets/guards.svg" alt="The three guards: the inspector finds, the safety lock blocks, the draft firewall drafts; every arrow reports to one desk, only you rule" width="100%">
+  <img src="assets/guards.svg" alt="The guards: the inspector finds, the safety lock blocks, the draft firewall drafts; every arrow reports to one desk, only you rule" width="100%">
 </p>
 
 - **The inspector** (`scripts/checkup.py`): a read-only hygiene sweep over the whole vault, run before every weekly tidy.
 - **The safety lock** (optional setup step, macOS only): a hook that blocks recursive deletes aimed at your vault or your skills folder, the one category of accident there is no undo for.
 - **The draft firewall** in session memory: the machine's weekly sift is written to the tool's own state directory, never into your vault. Only what an AI has actually read and drafted reaches your Inbox, and only words you approved reach the memory your AI loads at session start.
 
-One contract across all three: machines find, block, and propose. Only you rule.
+One contract across every one of them: machines find, block, and propose. Only you rule.
 
 ## Create-My-Jarvis: your AI gets a character
 
@@ -178,6 +178,18 @@ What this buys you day to day:
 - It holds your real situation in mind during routine work: the actual business, the actual stakes, in your own words.
 - It deliberately watches the angles you told it you reliably miss, instead of mirroring you.
 - The soul is a markdown file in your vault. Lived use will reshape it in the first weeks; you edit the file and the character follows.
+
+## What else comes in the box
+
+Setup also installs a few smaller skills that travel inside this one's payload, so `npx skills update` refreshes them in the same breath. None is generated and none is personalised. The registry is the [`my-second-brain/skills/`](my-second-brain/skills/) folder itself; what follows says what each one is for, not how many there are.
+
+- **`project-consultant`** thinks a project through before it gets built and proposes the smallest set of working files that project earns, usually a bare brief and nothing else. A project is born legally without it.
+- **`session-report`** closes a working session and feeds your methodology layer: the lesson the session earned, the decision that was made but never written, and an offer for anything reusable.
+- **`method-builder`** writes one Method when a whole job closes: how you did that kind of thing, in your words. The other half of the closeout pair.
+- **`playbook-lab`** opens and closes the feedback loop around a playbook that has earned one (see [Playbook labs](#playbook-labs-when-one-way-of-working-earns-a-feedback-loop)). It ships because the doctrine says a lab is never hand-built.
+- **`vault-guardian`** carries one change to your vault's own law through every file that change touches, and afterwards proves the guard can still read the law. It ships because the doctrine names it.
+
+One tool does **not** come in the box. **`sop-builder`** writes an SOP properly, in its own sitting. It is published separately, you install it if you want it, and nothing in the vault breaks without it: hand-writing an SOP is legal, which is the whole reason it can live outside.
 
 ## Design decisions
 
@@ -205,7 +217,7 @@ The upgrade happens **in place**. No move, no renamed files, no rewritten links,
 
 Three guardrails keep this from bloating your vault. The gate carries a **no by default** and needs all three doors open at once: the line is genuinely alive, judgment is actually accruing, and a countable signal exists **outside your own opinion**. Busy with no judgment wants a better SOP, not a lab. Activity with no outside signal can only measure how pleased you are with yourself. And the weekly pass proposes closing a lab that has gone silent or stopped resolving its bets, archiving the organs rather than deleting them.
 
-Opening and closing one runs on `playbook-lab`, a separate skill you install if you ever want it. Most vaults never need it, and that is the expected outcome, not a failure.
+Opening and closing one runs on `playbook-lab`, one of the skills that comes in the box with this one (see [What else comes in the box](#what-else-comes-in-the-box)). Most vaults never need it, and that is the expected outcome, not a failure.
 
 ## Honest boundaries
 
