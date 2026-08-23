@@ -12,7 +12,7 @@ description: >
   structure, scope or restart a piece of work that will run longer than one
   sitting. NOT for filing a note, NOT for writing an SOP (that is sop-builder),
   NOT for the daily operating rhythm (that is the owner's command-base skill),
-  and NOT for opening a playbook lab (that is playbook-lab).
+  and NOT for writing up methodology (that is method-builder).
 ---
 
 # Project Consultant
@@ -25,7 +25,7 @@ You are a consultant for one project, sitting down with the owner for one sittin
 
 ## Where you are in the product
 
-This skill ships inside the `my-second-brain` payload and is installed alongside it (setup step 6.6), so it updates when that skill updates. ⛔ It is not `playbook-lab`, which is about methodology rather than projects: the two never both apply to the same request.
+This skill ships inside the `my-second-brain` payload and is installed alongside it (setup step 6.6), so it updates when that skill updates. ⛔ It is not `method-builder`, which is about methodology rather than projects: the two never both apply to the same request.
 
 **Projects live in exactly two places**, both governed by the vault's own constitution at `99_Meta/structure-doctrine.md`:
 

@@ -580,9 +580,9 @@ def documented_keys(lines):
     halves are derived from the file's own shape rather than listed here:
 
       * a section is a `## ` heading, and the shapes it covers are whatever it
-        names in backticks. One heading may name several (`lab.rubric` and its
-        two siblings share one), and a heading may name a family prefix that
-        stands for all of its subtypes (`entity`).
+        names in backticks. One heading may name several (`control.doctrine`
+        and its siblings share one), and a heading may name a family prefix
+        that stands for all of its subtypes (`entity`).
       * a key has a row when its name appears in backticks in the FIRST cell of
         a table row inside that section. First cell only: a key named in a
         sentence in the third column has been mentioned, not documented.

@@ -181,8 +181,7 @@ Setup also installs a few smaller skills that travel inside this one's payload, 
 
 - **`project-consultant`** thinks a project through before it gets built and proposes the smallest set of working files that project earns, usually a bare brief and nothing else. A project is born legally without it.
 - **`session-report`** closes a working session and feeds your methodology layer: the lesson the session earned, the decision that was made but never written, and an offer for anything reusable.
-- **`method-builder`** writes one Method when a whole job closes: how you did that kind of thing, in your words. The other half of the closeout pair.
-- **`playbook-lab`** opens and closes the feedback loop around a playbook that has earned one (see [Playbook labs](#playbook-labs-when-one-way-of-working-earns-a-feedback-loop)). It ships because the doctrine says a lab is never hand-built.
+- **`method-builder`** writes one Method when a whole job closes: how you did that kind of thing, in your words. The other half of the closeout pair. When several of those turn out to be one way of working and you say so, it writes them up as a playbook (see [How a way of working gets written down](#how-a-way-of-working-gets-written-down)). It ships because it is the only thing in the box that writes a playbook folder's door, and the doctrine makes that door mandatory.
 - **`vault-guardian`** carries one change to your vault's own law through every file that change touches, and afterwards proves the guard can still read the law. It ships because the doctrine names it.
 
 One tool does **not** come in the box. **`sop-builder`** writes an SOP properly, in its own sitting. It is published separately, you install it if you want it, and nothing in the vault breaks without it: hand-writing an SOP is legal, which is the whole reason it can live outside.
@@ -205,15 +204,19 @@ The choices that make this hold up over months, not weeks:
 
 **Bilingual by craft, not by translation.** Interaction is English or 中文, your choice at setup. Chinese output follows native-writing discipline (no translated sentence structures), while folder names and frontmatter stay English so the structure is portable.
 
-## Playbook labs: when one way of working earns a feedback loop
+## How a way of working gets written down
 
-Most of your methodology is prose, and prose is enough. But a few lines of work are pure repeated judgment (how you pitch, how you price, what you say no to), and those can actually be *tested*. When one has built up enough real track record, it can grow a **lab**: the playbook note becomes a small folder holding the playbook plus three organs, a rubric that scores the work, a register of live bets about the method, and thresholds that decide when to speak up.
+Nothing here is filled in at setup, and that is on purpose: on day one you have no methodology, because you have not done anything in this vault yet.
 
-The upgrade happens **in place**. No move, no renamed files, no rewritten links, and closing a lab is the same operation in reverse. What you learned stays in the playbook text either way.
+It starts one job at a time. A job closes, and `method-builder` writes down **how you actually did it**, in your words, as one Method. The first one makes a folder named for that kind of work, and inside that folder it also writes a **door**: a short file the next session reads before it does anything.
 
-Three guardrails keep this from bloating your vault. The gate carries a **no by default** and needs all three doors open at once: the line is genuinely alive, judgment is actually accruing, and a countable signal exists **outside your own opinion**. Busy with no judgment wants a better SOP, not a lab. Activity with no outside signal can only measure how pleased you are with yourself. And a lab that has gone silent or stopped resolving its bets gets a proposal to close, archiving the organs rather than deleting them.
+When several methods in one folder turn out to be the same way of working, and **you** say so, they get composed into a **playbook**: what to weigh, how to decide. The methods stay where they are, marked as superseded and pointing at what they became, so "which jobs did this come out of" is answered by opening the folder.
 
-Opening and closing one runs on `playbook-lab`, one of the skills that comes in the box with this one (see [What else comes in the box](#what-else-comes-in-the-box)). Most vaults never need it, and that is the expected outcome, not a failure.
+The door is the part that keeps it honest. Its top half says how to use the playbook. Its bottom half is one row per thing you made with it: what came out, **what you expected**, when you would know, what actually happened, and what that tells you. Answering "what do you expect" takes a few seconds at the moment you ship something; the result gets filled in later, when it is actually knowable, by the next session that opens the folder.
+
+The trigger is deliberately human-sized: when the same lesson shows up in that last column for the third time, you get asked whether the playbook should change. No score, no threshold to configure, nothing running in the background.
+
+⭐ And because those instructions live in the door itself rather than in a skill, a playbook folder is something you can **hand to somebody else**, a contractor, an assistant, or a different AI, and it still works.
 
 ## Honest boundaries
 

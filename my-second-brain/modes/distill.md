@@ -30,20 +30,22 @@ Merge near-duplicates, adding their evidence together. **Graduation needs all fo
 
 ### 2 · Audit the methods
 
-Read `04_Methodology/Playbooks/*-method.md` together, which is the thing nobody does while writing them one at a time. Two questions:
+Read every method in `04_Methodology/Playbooks/`, which is now one folder per kind of work: walk the folders and read `<folder>/*-method.md` inside each. ⛔ **Not a flat glob at the top of the layer**, which under the folder form matches nothing and would report a clean audit over an empty read (doctrine §9.1). Reading them together is the thing nobody does while writing them one at a time. Two questions:
 
-- **Do several of these turn out to be the same kind of work?** ⭐ Judge **relatedness, not count.** "The same move three times" is not the bar and never was: the bar is that several different moves add up to one way of working.
+- **Do several of these turn out to be the same kind of work?** ⭐ Judge **relatedness, not count.** "The same move three times" is not the bar and never was: the bar is that several different moves add up to one way of working. ⚠️ **Read across folders as well as inside them**: two folders that turn out to be one kind of work is a proposal to merge them, and the folder boundary was one binary call made in a hurry at writing time.
 - **Is any single one now wrong?** A method that the last three jobs quietly stopped following is a proposal to rewrite it, in place, under the same name.
 
 ### 3 · Compose a playbook, when several methods have earned one
 
-The chain, and each link needs the owner: **several related methods → you name the pattern out loud → the owner says yes → one `<the-kind-of-work>-playbook.md`** in `04_Methodology/Playbooks/`, `references:` filled at birth with the lessons and decisions it leans on, `confirmed_by_owner: true` → **each contributing method flips to `status: superseded` and gets `distilled_into:` naming the playbook.**
+The chain, and each link needs the owner: **several related methods → you name the pattern out loud → the owner says yes → one `<the-kind-of-work>-playbook.md`** in the folder those methods already share, `references:` filled at birth with the lessons and decisions it leans on, `confirmed_by_owner: true` → **each contributing method flips to `status: superseded` and gets `distilled_into:` naming the playbook.**
 
 ⛔ **Superseded methods are never deleted.** "Which fights did this playbook come out of" has to stay answerable, and the pointer is written on the method because the method is the note being edited at that moment anyway.
 
 ⛔ **Only methods compose.** A run of decisions resolved the same way is not a playbook candidate, however striking the pattern (§7). Say the pattern out loud if it is interesting; ⛔ do not file it.
 
-⛔ **Never hand-build a lab's organs from this pass.** A playbook that has earned a live feedback loop is §9's business, not this one: the owner asks for a lab, and the `playbook-lab` skill opens it through the §9.5 gate. A playbook composed here is a playbook, and that is all it is.
+⭐ **Then update that folder's door**, top half only: it stops pointing at a method and becomes this playbook's summary. ⛔ **Do not touch the bottom half.** Those rows are things that already happened, and this pass has no business rewriting them.
+
+⚠️ **A folder with no door is a finding, not something to fix silently.** Every playbook folder is supposed to have one from the day it was made (doctrine §9.1). If one is missing, propose writing it like any other proposal in this pass, ⛔ and do not fill in rows for work that happened before the door existed: an unbet row invented after the fact is a guess wearing a record's clothes.
 
 ### 4 · Filing patterns
 
