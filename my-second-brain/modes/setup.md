@@ -1,6 +1,6 @@
 # Setup Mode: from bare machine to wired second brain
 
-Fast by design: a handful of decisions from the user, then one scaffold burst. Target: under 10 minutes on a normal connection, most of it Obsidian downloading. Keep momentum; no lectures between steps. Record every step's state in `99_Meta/bootstrap-progress.md` as you go (create it first inside the vault once the vault location exists), so an interrupted setup resumes cleanly: on entry, if `bootstrap-progress.md` exists with `setup_complete: false`, resume from the first unchecked step instead of restarting.
+Fast by design: a handful of decisions from the user, then one scaffold burst. Target: under 10 minutes on a normal connection, most of it Obsidian downloading. Keep momentum; no lectures between steps. Record every step's state in `99_Meta/bootstrap-progress.md` as you go (create it first inside the vault once the vault location exists), so an interrupted setup resumes cleanly: on entry, if `bootstrap-progress.md` exists with `setup_complete: false`, resume from the first unchecked step instead of restarting. ⛔ **Only a `- [ ]` line in that file's body is a step.** Its body also carries the wiring check's results, one line per check, and those are findings rather than work left to do.
 
 ## Step 1: Confirm
 
@@ -14,7 +14,7 @@ Check if Obsidian is installed. If the user simply says it is already installed,
 - Windows: `winget list Obsidian.Obsidian` or check `%LOCALAPPDATA%\Programs\Obsidian`
 - Linux: `which obsidian`, flatpak list, or ask
 
-If missing, offer to install it now (recommended; capture works without it, but the payoff screen and daily browsing live there):
+If missing, offer to install it now (recommended; every step of setup works without it, but reading and browsing the vault live there):
 
 - macOS with Homebrew: `brew install --cask obsidian`
 - macOS without Homebrew: download the official DMG with curl from `https://obsidian.md/download`, mount with `hdiutil attach`, copy the .app to `/Applications`, detach. If any step fails, give the download link and move on; do not stall setup.
@@ -23,6 +23,8 @@ If missing, offer to install it now (recommended; capture works without it, but 
 - Any failure: link `https://obsidian.md/download`, tell them to install it later, continue setup. Nothing downstream hard-depends on it.
 
 Nothing about the dashboard depends on Obsidian: it is a generated HTML file that opens in a browser (step 6.95). Obsidian is the reading and graph surface, nothing more.
+
+⛔ **This is the only step that touches Obsidian, and it touches it once.** Setup does not register the vault with Obsidian, does not launch the app, does not bring it to the front, does not open a graph view, and does not teach a keystroke. ⛔ **And it installs no plugin, community or otherwise:** the official URI scheme has no action for the graph, and no third-party plugin gets installed for one keystroke on one night. The close says where the vault is, once (step 8); opening it is the owner's, whenever they like. ⚠️ **This paragraph exists because all of that used to be here and was cut on purpose** (2026-08-23), so a session reading these steps does not helpfully put it back.
 
 ## Step 3: Vault location
 
@@ -45,11 +47,13 @@ Four quick things, one message each or one compact message, their call:
 
 ## Step 5: The scaffold burst
 
+⛔ **This session builds it. Do not hand this step to a subagent** (behaviour rule 8). The burst copies three long files whole, and a copy made under context pressure comes back as a summary; a session that made that copy itself can at least see what it did, while a session reading a report cannot. ⛔ The same holds for every other step here, and step 6.8 says why it matters most there.
+
 Execute [../references/scaffold-spec.md](../references/scaffold-spec.md) in one go: all folders, every door file (`_<Name>-Guide.md` per room, lane, brand subfolder and wing, plus `_SOP-Menu.md`), `Home.md` as the vault's full directory, `Business-Profile` at the wing root (empty schema), doctrine (from [../templates/structure-doctrine.template.md](../templates/structure-doctrine.template.md)), tagging vocabulary (from [../templates/tagging-vocabulary.template.md](../templates/tagging-vocabulary.template.md)), note templates (from [../templates/note-templates.md](../templates/note-templates.md)), the pre-seeded brand rooms (`Brand-Strategy/` with seven pillar stubs + `Target-Audience/` with the Journey stub, per the spec), and the state files, including `99_Meta/lab-gate-config.md` (from [../templates/lab-gate-config.template.md](../templates/lab-gate-config.template.md)) and working memory `99_Meta/memory.md` (from [../templates/memory.template.md](../templates/memory.template.md); this is what the command-base skill reads and appends every session, so it exists from day one).
 
 Two layers ship deliberately bare and it is worth not "fixing" them mid-burst: `03_SOP/` holds nothing but its menu, and `04_Methodology/` holds two empty folders and zero `.md` files, doors included.
 
-Report one line: "Scaffolded N folders, M files. Home lists all of it." ⚠️ **The wiring check does not run here.** It is step 7.9, because four of its eleven checks test things that do not exist yet at this point (the vault `CLAUDE.md`, the guards, the starter project, the dashboard).
+Report one line: "Scaffolded N folders, M files. Home lists all of it." ⚠️ **The wiring check does not run here.** It is step 7.9, because several of its checks test things that do not exist yet at this point (the vault `CLAUDE.md`, the guards, the starter project, the dashboard). ⛔ **Never write a count of those checks, here or anywhere**, for the reason step 6.8 gives about the guard set; and ⛔ never report a partial run of them as a score, because a "most of them pass so far" carried forward is how a real install arrived at a total nobody had measured.
 
 ## Step 5.5: Vault CLAUDE.md (the always-on context layer)
 
@@ -159,7 +163,9 @@ On yes, per guard in the set, then once for the settings file:
 
 **Uninstall** (tell the owner this once, for the set): delete the scripts from `~/.claude/hooks/` and remove their entries from `~/.claude/settings.json`. Nothing else in the system references them, and nothing breaks without them.
 
-**Record one key per guard** in `bootstrap-progress.md`, using **the key that guard's own `MSB-GUARD:` line declares** (`key=`), each set to `installed` / `installed-not-enforcing` / `declined` / `skipped-platform`. ⭐ **One key per guard rather than one key for the set**, because that is what lets the wiring check count what this step actually did without a number written anywhere, and what lets a later guard join by adding a key instead of by changing a schema.
+⛔⛔ **This session installs the guards and watches the probes itself. Do not hand this step to a subagent** (behaviour rule 8). ⭐ **This is the step where that matters most:** `installed` is a claim about behaviour, and the only thing that can honestly make it is whoever saw the exit code. A session that says "verified live" on a report it was handed has verified nothing, and the sentence reads identically either way.
+
+**Record one key per guard** in `bootstrap-progress.md`, using **the key that guard's own `MSB-GUARD:` line declares** (`key=`), each set to `installed` / `installed-not-enforcing` / `declined` / `skipped-platform`. ⭐ **Write the probe result beside the keys, in the body, as it happens**, one line per guard in the guard's own words: which probe, what it demanded, what it exited (`rm-guard expect=block actual_exit=2`). ⛔ **That line is written here, by the step that ran the probe, and never reconstructed at step 7.9**, which reads files and settings and has no exit code of its own to report; setup can also resume in a new session, and an exit code that only ever lived in a sentence is gone by then. ⭐ **One key per guard rather than one key for the set**, because that is what lets the wiring check count what this step actually did without a number written anywhere, and what lets a later guard join by adding a key instead of by changing a schema.
 
 ⛔ **`installed` means step 4 passed.** A guard whose file is in place and registered but whose probe did not behave gets **`installed-not-enforcing`**, plus one line to the owner in plain words saying which guard, what it is not doing, and what would fix it (for the frontmatter guard that is almost always the PyYAML install above). ⛔ Never write `installed` on an unrun or failed probe, and ⛔ never quietly downgrade the probe to "the file looks right". **A guard recorded as installed while enforcing nothing is worse than no guard**, because the owner stops watching for the thing it was supposed to catch. The wiring check `guards-registered` reads these keys, so this value is what makes the failure visible at the end of setup instead of six weeks later.
 
@@ -207,8 +213,8 @@ Two halves of one step, in this order. The order is the whole point: the deck is
 
 1. **Probe `python3`.** Present on macOS and most Linux; on Windows it is often absent.
 2. **If it is missing, explain before you touch anything.** Say what is missing, what it is for (the dashboard, and the same interpreter the weekly checker and session search already need), and where to get it. ⛔ **Never install it, or change the owner's PATH or system settings, without their explicit yes.** If they decline or cannot right now: record `deck: skipped-no-python` in `bootstrap-progress.md`, say in one line that the dashboard is pending and that "fix my deck" builds it the moment Python is there, and move on. Nothing else in setup depends on it. The fallback for those days is `Home.md` and the starter project's Brief, both plain markdown.
-3. **Run it once:** `python3 "<payload>/scripts/deck.py" build "<vault-path>"`. Record `deck: built`.
-4. **Report one line, the one it printed**, e.g. "Command Deck rebuilt: 1 projects, 3 tasks, N notes scanned." ⛔ Do not paste the path and do not open it yet; the deck belongs to the graph moment.
+3. **Run it once:** `python3 "<payload>/scripts/deck.py" build "<vault-path>"`. Record `deck: built`, and record what the run actually produced in `deck_build_result:`, an inline mapping carrying the process exit code and the counts the run printed (`{exit: 0, briefs: 1, tasks: 3}`). ⭐ **That key is the whole evidence for the first item of `deck-is-alive`**, which is why it is written here, by the step that ran the build, rather than recalled later: the spec forbids a second rebuild to prove it, and setup can resume in a new session where the run is not in living memory. A build that fails records its real exit code, not an absent key.
+4. **Report one line, the one it printed**, e.g. "Command Deck rebuilt: 1 projects, 3 tasks, N notes scanned." ⛔ Do not paste the path and do not open it yet; the deck is handed over at the close (step 8).
 
 ⚠️ If the build exits non-zero, say so plainly, record `deck: skipped-no-python` only when Python was the actual reason, and carry on. A failed dashboard must never end a setup that otherwise worked.
 
@@ -230,23 +236,22 @@ Always record the outcome in `bootstrap-progress.md` (`calendar_offered: true` +
 
 ## Step 7.9: Wiring check
 
-Run the wiring check at the end of [../references/scaffold-spec.md](../references/scaffold-spec.md), all eleven, by name. ⛔ **Refer to each by its name, never by its number**, for the reason written at the top of that list. Two of them read state rather than the filesystem: `guards-registered` reads what step 6.8 recorded, one key per guard, and confirms each one it says it installed is actually registered (a declined or platform-skipped guard passes; session memory is not a guard and is not counted). `deck-is-alive` reads step 6.95's own build result, including the skipped-as-passed case when there is no `python3`.
+Run the wiring check at the end of [../references/scaffold-spec.md](../references/scaffold-spec.md), every check on that list, by name. ⛔ **Refer to each by its name, never by its number, and never by a count of them**, for the reason written at the top of that list. Two of them read state rather than the filesystem: `guards-registered` reads what step 6.8 recorded, one key per guard, and confirms each one it says it installed is actually registered (a declined or platform-skipped guard passes; session memory is not a guard and is not counted). `deck-is-alive` reads what step 6.95 recorded in `deck_build_result:`, including the skipped-as-passed case when there is no `python3`.
 
-Report failures plainly and fix what is mechanically fixable (a missing `Home.md` line, a leftover `{{` placeholder). ⛔ Do not hide a failure to keep the ending clean: the graph moment below is the payoff, and a payoff on top of a broken wiring is how a vault gets abandoned in month three.
+⛔⛔ **Every check writes its own line into `99_Meta/bootstrap-progress.md` as it finishes**, under a `## Wiring check` heading: its name, its verdict, and **the value it judged on**. The shape and the reason are in that section of the spec. ⛔ **A verdict with no value beside it is not a finished check**, and ⛔ **nothing anywhere reports a total**, in the file or out loud. ⭐ The reason is the failure this whole step exists to catch: a score is a claim, and the file is the only thing anyone can check it against tomorrow.
 
-## Step 8: The graph moment
+Report failures plainly and fix what is mechanically fixable (a missing `Home.md` line, a leftover `{{` placeholder). ⛔ Do not hide a failure to keep the ending clean: the handover below is where the owner starts trusting this thing, and a clean-sounding ending on top of broken wiring is how a vault gets abandoned in month three.
 
-Close setup with the payoff:
+## Step 8: The handover
 
-1. **Open Obsidian on the vault yourself; do not read them a menu path.** Obsidian registers an `obsidian://` URL scheme, so the whole thing is one command.
-   - **Try to open it first:** `open "obsidian://open?path=<url-encoded absolute vault path>"` on macOS (`xdg-open` on Linux, `start` on Windows). If the vault is already registered with Obsidian, it comes to the front on the right vault and you are done.
-   - **If nothing opens, the vault is not registered yet**, which is the normal case for a brand-new folder: Obsidian only knows the vaults it has been shown. Register it, then open it again. Obsidian keeps its vault list in `obsidian.json` under its config folder (macOS `~/Library/Application Support/obsidian/`, Linux `~/.config/obsidian/`, Windows `%APPDATA%\obsidian\`); add an entry for this vault path and retry the URI. ⛔ Read that file before writing it and preserve every vault already listed; it is the owner's own list of every vault they have, and it is not ours to rewrite.
-   - **If it still does not open**, stop trying and say the one sentence that gets them there by hand: Obsidian, Open folder as vault, pick the path. ⛔ A setup must never end stuck on its own last step; the payoff is the graph, not the automation that reached it.
-2. **Then tell them the one keystroke, because this part genuinely is theirs to press:** Cmd+G on macOS, Ctrl+G elsewhere, or the network icon in the left ribbon. ⛔ Do not go looking for a way to open the graph automatically: the official URI scheme has no action for it, and no third-party plugin gets installed for one keystroke on one night.
-3. Then the other window: open `02_Command-Base/Command-Deck.html` in their browser and tell them to bookmark it. One line on how it stays true: it is rebuilt at the start of every session, so it is always as fresh as the last time they worked, and saying "rebuild my deck" refreshes it on the spot. (Skip this if step 6.95 recorded `deck: skipped-no-python`; say the dashboard is waiting on Python instead.)
+Close setup by handing over what was built, in this order:
 
-What they see is their second brain as a constellation: every door wired to Home, business wing on one side, personal wing on the other, all of it empty and waiting. Say it straight, something like: "That is your second brain, half built. The structure is done; the memories are not moved in yet. That is what capture mode is for, and the first ten minutes of it is your Business Profile. Want to move the first thing in now?"
+1. **Report what was created:** the folder and file counts the last wiring check just wrote down. ⛔ Report the numbers that check actually counted, not a fresh estimate; a count improvised at the close has already been measured going wrong on a real install.
+2. **The dashboard, which is the thing they will open tomorrow:** open `02_Command-Base/Command-Deck.html` in their browser and tell them to bookmark it. One line on how it stays true: it is rebuilt at the start of every session, so it is always as fresh as the last time they worked, and saying "rebuild my deck" refreshes it on the spot. (Skip this if step 6.95 recorded `deck: skipped-no-python`; say the dashboard is waiting on Python instead.)
+3. **Say where the vault is, once:** the absolute path, and that Obsidian opens it whenever they want it. ⛔ **Do not open it for them, do not register it, do not name a keystroke.** Setup touched Obsidian once, at step 2, and that was the whole of it. A setup that ends by driving another application is a setup that can get stuck on its own last step.
+
+Then say what they have, straight, something like: "That is your second brain, half built. The structure is done; the memories are not moved in yet. That is what capture mode is for, and the first ten minutes of it is your Business Profile. Want to move the first thing in now?"
 
 Set `setup_complete: true` in `bootstrap-progress.md`. If they say yes, load capture mode and go.
 
-⛔ **Nothing else gets offered at the close.** Setup ends on the graph and the first capture. Anything that adds structure to a vault with nothing in it yet is stacking empty rooms, and every capability in this system is earned by activity rather than granted at install.
+⛔ **Nothing else gets offered at the close.** Setup ends on the deck and the first capture. Anything that adds structure to a vault with nothing in it yet is stacking empty rooms, and every capability in this system is earned by activity rather than granted at install.

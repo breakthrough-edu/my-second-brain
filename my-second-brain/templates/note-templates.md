@@ -703,7 +703,7 @@ status_since: {{DATE}}
 
 # <Theme>
 
-Follows [[<the theme this one replaces>]]
+Follows <the theme this one replaces, as a wiki link; delete this line if this is the first one>
 
 ## Why this, this month
 

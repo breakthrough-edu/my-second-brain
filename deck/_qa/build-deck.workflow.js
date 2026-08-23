@@ -202,7 +202,7 @@ const BRIEFS = [
     idiom: '2x2 card grid of the four modes',
     spec: `A 2x2 grid, four equal cards. Each card: mode number (01..04) mono, mode name ZH + EN,
       a time budget chip, a one-line "what it does", and a one-line "payoff" (rust).
-      01 Setup 搭建 · ~10 min · 装好 Obsidian,建好整个 vault,生成你的指挥中心 skill · 结束在一张 graph 星图.
+      01 Setup 搭建 · ~10 min · 装好 Obsidian,建好整个 vault,生成你的指挥中心 skill · 结束在你的仪表盘.
       02 Capture 捕捉 · ~10-15 min / 房间 · 一次搬一个房间,一次问一个问题 · 每次给你一个没注意到的观察.
       03 Distill 蒸馏 · ~10 min / 周 · 先体检整理,再用三条管道提炼 · 你只裁 yes / no.
       04 Create-My-Jarvis 造你的 Jarvis · 45-60 min · 两场访谈:profile + 性格 · 让 AI 不再像自动贩卖机.
@@ -210,15 +210,15 @@ const BRIEFS = [
   },
   {
     file: '16-setup.html', num: '16', authored: false,
-    metaZH: '16 · Setup · 结束在星图', kickerEN: 'Mode 01 · Setup',
-    titleHTML: '十分钟，从<em>空机器</em>到一张星图',
+    metaZH: '16 · Setup · 结束在仪表盘', kickerEN: 'Mode 01 · Setup',
+    titleHTML: '十分钟，从<em>空机器</em>到一座住得进去的宅',
     idiom: 'horizontal step sequence (HTML chips/rail) + a payoff callout',
     spec: `A left-to-right step sequence (HTML numbered chips, not SVG unless clean):
       选语言 → 装 Obsidian → 选 vault 位置 → 答 3 个行业开关 + 4 个生意问题 → 一次性 scaffold
-      (文件夹 / MOC / Home / 模板 / 仪表盘 / CLAUDE.md) → 生成指挥中心 skill → 打开 graph view.
+      (文件夹 / MOC / Home / 模板 / 仪表盘 / CLAUDE.md) → 生成指挥中心 skill → 交出仪表盘.
       Show the 3 industry toggles explicitly somewhere small: 有门店? 有设备? 进口货?
       Then a payoff callout (bordered, rust): "那就是你的第二大脑,搭好了一半。结构齐了,记忆还没搬进来。"
-      Caption EN italic: "Ends on the graph view: your half-built brain, as a constellation."`,
+      Caption EN italic: "Ends on the dashboard: your half-built brain, ready to move into."`,
   },
   {
     file: '17-capture.html', num: '17', authored: false,
