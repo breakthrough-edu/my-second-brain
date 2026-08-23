@@ -51,13 +51,18 @@ A pit: something that actually hurt. On a yes, write **one Lesson** into `04_Met
 
 ### 3 · "Did we produce anything you will reach for again?"
 
-⭐ **Three destinations and they are genuinely different things**, so name which one and let the owner pick:
+⭐ **Four destinations and they are genuinely different things**, so name which one and let the owner pick:
 
 - **A way of doing something** → a Method (see question 2, `method-builder` writes it).
 - **A thing you now own** (a template, a script, a calculator, an asset) → it belongs in a real room in the vault, filed by doctrine §0, not described in a note about it.
 - **Material worth keeping to read again** (a reference, a source, someone else's document) → `02_Command-Base/Resources/`. ⭐ That is the owner's library, kept by the owner; ⛔ nothing reads it on a schedule.
+- **Something made by following a playbook** (a post, a proposal, a pitch, a quote) → **one row on that playbook folder's door**, in `04_Methodology/Playbooks/<the-work>/_<Name>-Guide.md`, under `## Recent runs`. Three columns: what came out, what the owner expects, and when it counts. ⭐ **The owner answers only "what do you expect", and the row lands with their yes** like anything else in that layer.
 
 ⛔ **"None of the above" is the usual answer** and it is a correct one. Say it and move on.
+
+⚠️ **The fourth one is a backstop, not the main road, and the difference matters.** The session that used the playbook is supposed to write that row itself, because the door says so in its own words (doctrine §9.3, beat 4) and that runs with nothing installed. This skill catches the case where the work happened and nobody opened the door. ⛔ **Never let this become the normal way rows get written**: a door that only gets filled when somebody says "wrap up" is a door that depends on a skill, which is exactly what §9 refuses.
+
+⛔ **No bet, no row.** If the owner has no expectation about the thing that was made, it does not go on the door at all. That table is a record of bets and what came back, ⛔ not a list of everything the playbook produced.
 
 ## The backstop: decisions that were made but never written
 
