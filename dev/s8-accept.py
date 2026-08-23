@@ -86,6 +86,53 @@ WHAT IT DELIBERATELY DOES NOT DO
     acceptance criteria. Change one only when section 8 legitimately changes
     shape, and say so in the commit.
 
+    Since 2026-08-24 what is hard-coded is the NAMES. Every count is derived
+    from a name list with `len()`, so a count can no longer disagree with the
+    list it is a count of, and a rename moves something instead of moving
+    nothing. See the next section, which exists to stop the next reader
+    "simplifying" the names back into numbers.
+
+IS A LIST OF FAMILY NAMES A SECOND COPY OF SECTION 8?
+    No, and the test that decides it is not "will this list ever change".
+
+    The test is whether a drift is LOUD or QUIET. What the one-copy rule
+    forbids is a copy that gets read INSTEAD OF the original: the original
+    changes, the copy is still believed, and nothing anywhere makes a sound.
+    The ABORT message further down names that failure in as many words,
+    `it would rot without raising`.
+
+    An acceptance expectation is the opposite shape. It is never read instead
+    of section 8; its only use is to be compared against it. Section 8 changes,
+    the comparison fails on the very next run, and a human is sent to look. It
+    cannot rot quietly, because making noise when it drifts is the entire job.
+    That is the thing the ban wants to happen, not the thing it forbids.
+
+    The header above had already ruled this way about the counts, in as many
+    words: `The expected counts below ARE hard-coded, on purpose: they are the
+    acceptance criteria.` Names are the same ruling carried one step further.
+
+    ⛔ So do not fold these lists back into counts. On 2026-08-24 the counted
+    version was measured against four hand-seeded renames, and three of the
+    four passed green: a subtype rename (`entity.client`), a personal lane
+    rename (`family`), and a family rename that the guardian's table was
+    renamed to match. Only the fourth was caught, a family rename the
+    guardian's table did NOT follow, and even that one only by borrowing check
+    8's cross-file table. A defence that lives in a second file is not this
+    file's defence.
+
+    ⛔ WHERE THIS STOPS, three places, all deliberate:
+
+      * the expectations pin NAMES and never the VALUES inside a closed list.
+        Pinning the members of `brief.status` would turn this file into a full
+        mirror of section 8's enum layer, and THAT is the second copy the ban
+        is about. Ruled 2026-08-24.
+      * check 5 pins nothing. The mounting keys and the reserved keys are built
+        to follow a rename, which is the promise doctrine_schema.py opens with;
+        pinning them would break it.
+      * check 8 is left alone. It is a cross-file consistency check, and the
+        third seeded rename above is the proof it cannot double as an
+        acceptance pin. Checks 3c and 6 cover that ground now.
+
 EXIT CODES
     0  all eight checks ran and passed
     1  a check failed - the report says which check and what differs
@@ -106,21 +153,103 @@ sys.path.insert(0, os.path.join(
 import doctrine_schema  # noqa: E402
 
 # --- acceptance criteria (see header: change only with a shape change) -------
-EXPECT_FAMILIES = 13  # 13 until 2026-08-22, when brand-research was added;
-                      # 14 until 2026-08-24, when the lab family was removed
-EXPECT_SPECS = 32  # families with subtypes contribute their subtypes, not themselves
-                   # 24 until 2026-08-20, when process.method was opened
-                   # 25 until 2026-08-21, when entity's eleven types became eleven subtypes
-                   # 35 until 2026-08-22, when brand-research was added
-                   # 36 until 2026-08-24, when the three lab organs and
-                   # control.lab-gate-config went with the lab
-EXPECT_IN_FAMILY_CLOSED_LISTS = 14  # 13 until 2026-08-19, when entity.status was closed;
-                                    # 14 until 2026-08-20, when process.method.status opened;
-                                    # 15 until 2026-08-21, when entity.type stopped being a list
-                                    # and became the family's subtypes
-EXPECT_GLOBAL_CLOSED_LISTS = 2  # lane, domain
-EXPECT_PERSONAL_LANES = 7
-EXPECT_DECISION_LANES = 11  # the four work lanes plus the seven personal ones
+# NAMES, not counts. Every count is derived below with len(), so a count can
+# never disagree with the list it is a count of, and a rename now moves
+# something instead of moving nothing. Mapping key order is layout rather than
+# law, so the lists taken from mappings are written sorted and compared sorted.
+# The two lane lists are YAML sequences whose order is part of the block, so
+# they are written in block order and compared position by position.
+EXPECT_FAMILY_NAMES = [
+    # 13 until 2026-08-22, when brand-research was added;
+    # 14 until 2026-08-24, when the lab family was removed
+    "brand-research",
+    "brand-strategy",
+    "brief",
+    "control",
+    "entity",
+    "guide",
+    "hypothesis",
+    "menu",
+    "process",
+    "record",
+    "resources",
+    "ritual",
+    "singletons",
+]
+EXPECT_SPEC_NAMES = [
+    # families with subtypes contribute their subtypes, not themselves
+    # 24 until 2026-08-20, when process.method was opened
+    # 25 until 2026-08-21, when entity's eleven types became eleven subtypes
+    # 35 until 2026-08-22, when brand-research was added
+    # 36 until 2026-08-24, when the three lab organs and
+    # control.lab-gate-config went with the lab
+    "brand-research",
+    "brand-strategy",
+    "brief",
+    "control.doctrine",
+    "control.profile",
+    "control.vocabulary",
+    "entity.client",
+    "entity.company-doc",
+    "entity.employee",
+    "entity.equipment",
+    "entity.it-system",
+    "entity.marketing-asset",
+    "entity.outlet",
+    "entity.product-service",
+    "entity.property",
+    "entity.vehicle",
+    "entity.vendor",
+    "guide",
+    "hypothesis",
+    "menu",
+    "process.lesson",
+    "process.method",
+    "process.playbook",
+    "process.sop",
+    "record.decision",
+    "record.task",
+    "resources",
+    "ritual.daily",
+    "ritual.monthly-theme",
+    "ritual.weekly-review",
+    "singletons.business-profile",
+    "singletons.home",
+]
+EXPECT_IN_FAMILY_CLOSED_LIST_PATHS = [
+    # 13 until 2026-08-19, when entity.status was closed;
+    # 14 until 2026-08-20, when process.method.status opened;
+    # 15 until 2026-08-21, when entity.type stopped being a list
+    # and became the family's subtypes
+    "brand-strategy.pillar",
+    "brand-strategy.status",
+    "brief.stage",
+    "brief.status",
+    "entity.status",
+    "guide.guide_family",
+    "hypothesis.destination",
+    "hypothesis.status",
+    "process.method.status",
+    "process.playbook.status",
+    "record.decision.status",
+    "record.task.status",
+    "resources.type",
+    "ritual.monthly-theme.status",
+]
+EXPECT_GLOBAL_CLOSED_LIST_NAMES = ["domain", "lane"]
+# A decision's legal lanes are the work lanes plus the personal ones. Pinning
+# both lists subsumes the old count of the union: an overlap between them can
+# no longer appear without one of these two comparisons failing first.
+EXPECT_WORK_LANE_NAMES = ["deliver", "grow", "run", "build"]
+EXPECT_PERSONAL_LANE_NAMES = [
+    "personal",
+    "family",
+    "health",
+    "finance-personal",
+    "property",
+    "vehicles",
+    "people",
+]
 EXPECT_MULTI = {"process.sop": ["lane"], "process.playbook": ["references"]}
 # process.playbook.references added 2026-08-20: the one pointer a playbook writes at birth
 RENDER_TAGS = ["aroma-coffee", "laowang-coffee", "noodlebar"]
@@ -132,6 +261,17 @@ failures = []
 def fail(check, where, detail):
     failures.append((check, where, detail))
     print(f"    FAIL [{check}] {where}: {detail}")
+
+
+def name_diff(got, expected):
+    """(missing, unexpected) between observed names and their expectation.
+
+    A count says a list is the wrong size. This says which names went and which
+    arrived, which is the difference between a report that sends someone
+    reading and a report that sends someone counting.
+    """
+    return ([n for n in expected if n not in got],
+            [n for n in got if n not in expected])
 
 
 # --- locating the block ------------------------------------------------------
@@ -314,15 +454,27 @@ def check3(parsed, reserved):
                 break
         if ext is None:
             fail("3a", label, "no reserved key on record.decision carries an extending lane list")
-        elif len(ext) != EXPECT_PERSONAL_LANES:
-            fail("3a", label, f"{len(ext)} personal lanes, expected {EXPECT_PERSONAL_LANES}: {ext}")
         else:
-            legal = list(doc.get("lane", [])) + list(ext)
-            if len(set(legal)) != EXPECT_DECISION_LANES:
+            # Both lists are YAML sequences, so order is part of the block and
+            # the comparison is positional: a reordering is a change to section
+            # 8 and this check is the acceptance step for changes to section 8.
+            work, personal = list(doc.get("lane", [])), list(ext)
+            ok = True
+            if work != EXPECT_WORK_LANE_NAMES:
+                missing, unexpected = name_diff(work, EXPECT_WORK_LANE_NAMES)
                 fail("3a", label,
-                     f"a decision has {len(set(legal))} legal lane values, expected {EXPECT_DECISION_LANES}: {legal}")
-            else:
-                print(f"    3a {label:8s} personal lanes = {ext}")
+                     f"work lanes = {work}, expected {EXPECT_WORK_LANE_NAMES}; "
+                     f"missing={missing}, unexpected={unexpected}")
+                ok = False
+            if personal != EXPECT_PERSONAL_LANE_NAMES:
+                missing, unexpected = name_diff(personal, EXPECT_PERSONAL_LANE_NAMES)
+                fail("3a", label,
+                     f"personal lanes = {personal}, expected {EXPECT_PERSONAL_LANE_NAMES}; "
+                     f"missing={missing}, unexpected={unexpected}")
+                ok = False
+            if ok:
+                legal = work + personal
+                print(f"    3a {label:8s} personal lanes = {personal}")
                 print(f"       {'':8s} legal lanes for a decision = {legal}")
 
         # 3b - multi-value fields
@@ -336,14 +488,18 @@ def check3(parsed, reserved):
 
         # 3c - one uniform walk reaches every spec, no exceptions
         skipped = [n for n, s in specs.items() if not isinstance(s, dict) or "required" not in s]
+        reached = sorted(specs)
         if errors:
             fail("3c", label, f"walk errors: {errors}")
         if skipped:
             fail("3c", label, f"specs with no reachable 'required': {skipped}")
-        if len(specs) != EXPECT_SPECS:
-            fail("3c", label, f"{len(specs)} specs reached, expected {EXPECT_SPECS}: {sorted(specs)}")
-        if not errors and not skipped and len(specs) == EXPECT_SPECS:
-            print(f"    3c {label:8s} {len(specs)} specs reached, 0 skipped, 0 exceptions")
+        if reached != EXPECT_SPEC_NAMES:
+            missing, unexpected = name_diff(reached, EXPECT_SPEC_NAMES)
+            fail("3c", label,
+                 f"{len(specs)} specs reached, expected {len(EXPECT_SPEC_NAMES)}; "
+                 f"missing={missing}, unexpected={unexpected}")
+        if not errors and not skipped and reached == EXPECT_SPEC_NAMES:
+            print(f"    3c {label:8s} {len(specs)} specs reached by name, 0 skipped, 0 exceptions")
 
         # 3d - every closed list is keyed by a field its own spec declares
         lists = closed_lists(fams, reserved)
@@ -361,16 +517,23 @@ def check3(parsed, reserved):
                 declared = field in (spec.get("required", []) or []) + (spec.get("optional", []) or [])
             if not declared:
                 bad.append(path)
-        if len(lists) != EXPECT_IN_FAMILY_CLOSED_LISTS:
+        paths = sorted(p for p, _, _ in lists)
+        if paths != EXPECT_IN_FAMILY_CLOSED_LIST_PATHS:
+            missing, unexpected = name_diff(paths, EXPECT_IN_FAMILY_CLOSED_LIST_PATHS)
             fail("3d", label,
-                 f"{len(lists)} in-family closed lists, expected {EXPECT_IN_FAMILY_CLOSED_LISTS}: {[p for p, _, _ in lists]}")
+                 f"{len(lists)} in-family closed lists, expected "
+                 f"{len(EXPECT_IN_FAMILY_CLOSED_LIST_PATHS)}; "
+                 f"missing={missing}, unexpected={unexpected}")
         if bad:
             fail("3d", label, f"closed lists not keyed by a field their spec declares: {bad}")
-        globals_ = [k for k, v in doc.items() if k != "families" and isinstance(v, list)]
-        if len(globals_) != EXPECT_GLOBAL_CLOSED_LISTS:
+        globals_ = sorted(k for k, v in doc.items() if k != "families" and isinstance(v, list))
+        if globals_ != EXPECT_GLOBAL_CLOSED_LIST_NAMES:
+            missing, unexpected = name_diff(globals_, EXPECT_GLOBAL_CLOSED_LIST_NAMES)
             fail("3d", label,
-                 f"{len(globals_)} global closed lists, expected {EXPECT_GLOBAL_CLOSED_LISTS}: {globals_}")
-        if not bad and len(lists) == EXPECT_IN_FAMILY_CLOSED_LISTS and len(globals_) == EXPECT_GLOBAL_CLOSED_LISTS:
+                 f"{len(globals_)} global closed lists, expected "
+                 f"{len(EXPECT_GLOBAL_CLOSED_LIST_NAMES)}; "
+                 f"missing={missing}, unexpected={unexpected}")
+        if not bad and paths == EXPECT_IN_FAMILY_CLOSED_LIST_PATHS and globals_ == EXPECT_GLOBAL_CLOSED_LIST_NAMES:
             print(f"    3d {label:8s} {len(lists)} in-family closed lists, all keyed by a declared field; "
                   f"{len(globals_)} global ({globals_})")
 
@@ -693,16 +856,35 @@ def check8(body, guards_path):
 
 
 def check6(parsed, bodies):
-    print(f"CHECK 6 - family count is still {EXPECT_FAMILIES}")
+    """The families are still the same names, and still written the same way.
+
+    Two questions, not one. The name comparison asks whether section 8 declares
+    the families it is expected to declare. The exactly-two-space count asks a
+    different thing, one no name list can answer: whether the block is still
+    LAID OUT the way every reader here assumes, one family per line at one
+    indent level. A family folded into flow style would parse identically and
+    change that count, so the count stays.
+    """
+    print(f"CHECK 6 - the families are still the same {len(EXPECT_FAMILY_NAMES)} names")
     for label, body in bodies.items():
         by_indent = [l for l in body if re.match(r"^  [a-z-]+:", l)]
-        by_parse = len(parsed[label][0].get("families", {}))
-        if len(by_indent) != EXPECT_FAMILIES or by_parse != EXPECT_FAMILIES:
+        fams = parsed[label][0].get("families", {})
+        by_parse = len(fams)
+        expected = len(EXPECT_FAMILY_NAMES)
+        ok = True
+        if len(by_indent) != expected or by_parse != expected:
             fail("6", label,
                  f"exactly-two-space keys = {len(by_indent)}, len(families) = {by_parse}, "
-                 f"expected {EXPECT_FAMILIES} both ways")
-        else:
-            names = list(parsed[label][0]["families"].keys())
+                 f"expected {expected} both ways")
+            ok = False
+        if sorted(fams) != EXPECT_FAMILY_NAMES:
+            missing, unexpected = name_diff(sorted(fams), EXPECT_FAMILY_NAMES)
+            fail("6", label,
+                 f"family names differ from the acceptance list; "
+                 f"missing={missing}, unexpected={unexpected}")
+            ok = False
+        if ok:
+            names = list(fams.keys())
             print(f"    {label:8s} exactly-two-space keys = {len(by_indent)}   "
                   f"len(families) = {by_parse}   match=True")
             print(f"    {'':8s} {names}")
