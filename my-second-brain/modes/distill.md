@@ -12,7 +12,7 @@
 
 ### 1 · Audit the hypothesis pool
 
-`99_Meta/Hypotheses/`. **This pass reads the pool and writes to it, and so does `session-report` at a session's closeout; the anti-drift half only reads it.** ⛔ The pool never enters a session's context anywhere else.
+`99_Meta/Hypotheses/`. **This pass reads the pool and writes to it, and so does `breakthrough-session-report` at a session's closeout; the anti-drift half only reads it.** ⛔ The pool never enters a session's context anywhere else.
 
 ⭐ **The pool has exactly one landing point now: patterns about the owner that only observation can establish, destined for `99_Meta/profile.md`.** The dividing line is not where something ends up, it is **whether the claim needs time to become true**: "he said he never discounts" is true the moment he says it and lands now; "he reaches for price before he reaches for scope" is only ever true after you have watched it three times, and that is what a pool is for. The profile template's own discipline already draws this line: record what has been revealed, meaning **said outright, or seen three or more times**.
 

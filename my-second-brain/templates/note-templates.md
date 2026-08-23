@@ -541,7 +541,7 @@ brand: only in a vault holding more than one.
 
 ## SOP.md
 
-Copied from the `sop-builder` skill's `references/finalize.md` section 3, which is the shape that skill actually writes. ⛔ Do not edit this block independently: two sources for one shape drift, and the vault would end up with hand-written SOPs and skill-written SOPs that do not match.
+Copied from the `breakthrough-sop-builder` skill's `references/finalize.md` section 3, which is the shape that skill actually writes. ⛔ Do not edit this block independently: two sources for one shape drift, and the vault would end up with hand-written SOPs and skill-written SOPs that do not match.
 
 ```markdown
 ---
@@ -939,7 +939,7 @@ weeks_silent: 0
 <!--
 99_Meta/Hypotheses/. ⛔ MAINTENANCE'S DISTILLATION HALF WRITES IT. Nothing filed by hand ever
   lands here, and this template exists so the shape is legible, not as an invitation.
-  session-report writes it too, at a session's closeout; the anti-drift half only reads it.
+  breakthrough-session-report writes it too, at a session's closeout; the anti-drift half only reads it.
 The pool is where maintenance parks a claim it has noticed but not yet earned. It graduates
   out on evidence, and evidence means a verbatim quote plus a pointer to where it was said,
   which is why evidence lives in the body where it can be checked rather than in a key.

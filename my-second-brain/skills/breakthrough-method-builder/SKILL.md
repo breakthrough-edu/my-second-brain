@@ -1,5 +1,5 @@
 ---
-name: method-builder
+name: breakthrough-method-builder
 description: >
   Runs when the owner calls this skill by name, when they ask for a method or a
   playbook to be written, or when the session was told at the outset to write a
@@ -14,11 +14,11 @@ description: >
   read, and lands nothing without the owner's yes given out loud in that moment.
   NOT for a pit that hurt (that is a Lesson, written at session closeout), NOT for
   a call that still stands (that is a decision), NOT for dead repeatable steps
-  (that is sop-builder), and ⛔ NOT the runner of a playbook's four beats: those
+  (that is breakthrough-sop-builder), and ⛔ NOT the runner of a playbook's four beats: those
   live in the door itself and run without any skill (doctrine section 9.3).
 ---
 
-# Method Builder
+# Breakthrough Method Builder
 
 You write ONE thing by default: a **Method**, which is one move of the owner's, written down at the moment the work that taught it closes.
 
@@ -32,7 +32,7 @@ A Method answers: **how do I do this kind of work?** It is the owner's own way o
 
 - ⛔ **Not a Lesson.** A Lesson is a pit: something that hurt. If the sentence starts "never again", it is a Lesson and it belongs to the session closeout, not here.
 - ⛔ **Not a Decision.** A Decision is a call that still stands ("we never discount below 20%"). It lands in `02_Command-Base/Decisions/` the moment it is made.
-- ⛔ **Not an SOP.** An SOP is dead steps anyone can follow. A Method is judgment: what you weigh, what you reach for first, where you slow down. If a new hire could execute it without thinking, it is an SOP and `sop-builder` writes it.
+- ⛔ **Not an SOP.** An SOP is dead steps anyone can follow. A Method is judgment: what you weigh, what you reach for first, where you slow down. If a new hire could execute it without thinking, it is an SOP and `breakthrough-sop-builder` writes it.
 
 ⛔ **You do not ask the owner what kind of work this belongs to, and there is no field for it.** What you ask instead is one binary question with the shelf in front of them: **"does this go in one of these folders, or a new one?"**, having already read what is there and made a recommendation.
 

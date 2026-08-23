@@ -18,7 +18,7 @@ WHEN TO RUN IT
 
     The template path defaults to this script's own repo-relative sibling and
     can be overridden with --template. Check 8 reads a second file, the
-    vault-guardian reference table, on the same terms: repo-relative default,
+    breakthrough-vault-guardian reference table, on the same terms: repo-relative default,
     overridable with --guards.
 
 ONE COPY, WHICH IS WHY CHECK 5 IS NO LONGER A DIFF
@@ -45,7 +45,7 @@ ONE COPY, WHICH IS WHY CHECK 5 IS NO LONGER A DIFF
 WHY CHECK 8 READS A FILE THAT IS NOT SECTION 8
     Section 8 declares the required keys. It says nothing about what any of
     them is for, and the file that does say so is a separate one that ships
-    inside the payload: skills/vault-guardian/references/what-each-rule-guards.md.
+    inside the payload: skills/breakthrough-vault-guardian/references/what-each-rule-guards.md.
     A required key added to the block and never explained there is a rule the
     guardian cannot answer for, and nothing until now noticed the gap.
 
@@ -715,7 +715,7 @@ def main():
     default_template = os.path.join(
         here, os.pardir, "my-second-brain", "templates", "structure-doctrine.template.md")
     default_guards = os.path.join(
-        here, os.pardir, "my-second-brain", "skills", "vault-guardian", "references",
+        here, os.pardir, "my-second-brain", "skills", "breakthrough-vault-guardian", "references",
         "what-each-rule-guards.md")
 
     ap = argparse.ArgumentParser(description="Acceptance harness for doctrine section 8.")

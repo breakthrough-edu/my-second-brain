@@ -4,7 +4,7 @@ This vault is {{YOUR_NAME}}'s second brain: one home, two wings. Personal life l
 
 ## Rules of the house
 
-- **Filing, naming, and tag rules live in the constitution: `99_Meta/structure-doctrine.md`.** Read it before filing or creating anything. It opens with a decision tree (§0) that answers most filings without judgment; two-way calls are settled by the precedent table (§2), and settled ones do not get relitigated. Every AI filing appends one line to `99_Meta/filing-log.md`. Amending it goes through the `vault-guardian` skill: propose, get {{YOUR_NAME}}'s yes, then every file the change touches moves in one breath.
+- **Filing, naming, and tag rules live in the constitution: `99_Meta/structure-doctrine.md`.** Read it before filing or creating anything. It opens with a decision tree (§0) that answers most filings without judgment; two-way calls are settled by the precedent table (§2), and settled ones do not get relitigated. Every AI filing appends one line to `99_Meta/filing-log.md`. Amending it goes through the `breakthrough-vault-guardian` skill: propose, get {{YOUR_NAME}}'s yes, then every file the change touches moves in one breath.
 - **Every folder's `_*-Guide.md` is its manual: read it before working there. `_*-Brief.md` is a project's status card.** Neither is a directory: `02_Command-Base/Home.md` is the only directory this vault has.
 - **Link once, derive the rest.** A journal line links the brief or guide of what it belongs to, and nothing else is written twice. Briefs are linked bare; **guides are always linked with their path**, because the same room name repeats across wings.
 - **A task must have a project.** Tasks live in `<Project>/Tasks/` and carry no project, lane or domain key: the path already says all three. If no project fits, propose one before the task exists (unsure which lane or wing it belongs to, ask). There is no parking lot.
@@ -32,4 +32,4 @@ These questions have a place to be read before they are answered:
 
 **Owner:** {{YOUR_NAME}} · **Business:** {{BUSINESS_NAME}} · **Created:** {{DATE}}
 
-Written once at setup. Later sessions never rewrite it silently; amendments are proposed during weekly maintenance and approved by the owner, same discipline as doctrine amendments, or through `vault-guardian` when a change to the law is what brought the session here and this file is one of the files that change touches.
+Written once at setup. Later sessions never rewrite it silently; amendments are proposed during weekly maintenance and approved by the owner, same discipline as doctrine amendments, or through `breakthrough-vault-guardian` when a change to the law is what brought the session here and this file is one of the files that change touches.

@@ -1,5 +1,5 @@
 ---
-name: session-report
+name: breakthrough-session-report
 description: >
   Close out a working session in the owner's second-brain vault: land what this
   session actually produced, while whoever was in it still remembers. Writes any
@@ -12,11 +12,11 @@ description: >
   the end of the day, which is the owner's own command-base skill: a day ending
   is not a piece of work ending, and the two have separate words. NOT the weekly
   maintenance ritual (that is my-second-brain's distill mode), and NOT the place
-  to write a Method (that is method-builder, which runs when a piece of WORK
+  to write a Method (that is breakthrough-method-builder, which runs when a piece of WORK
   closes, not when a session does).
 ---
 
-# Session Report
+# Breakthrough Session Report
 
 **The one job: nothing this session learned leaves with the session.**
 
@@ -47,13 +47,13 @@ A pit: something that actually hurt. On a yes, write **one Lesson** into `04_Met
 
 ### 2 · "What kept coming up that you had to judge?"
 
-⭐ **This question belongs to `method-builder`, and this skill's job is to notice and hand over, not to answer it.** If the session closed a piece of WORK (a case, a project, a job), say so in one line and hand the action back: "that is a method, and `method-builder` writes it properly. Say `method-builder` whenever you want it written, now or months from now." ⛔ Do not write a Method from here. ⛔ Do not press if they say later; the offer is the whole contribution.
+⭐ **This question belongs to `breakthrough-method-builder`, and this skill's job is to notice and hand over, not to answer it.** If the session closed a piece of WORK (a case, a project, a job), say so in one line and hand the action back: "that is a method, and `breakthrough-method-builder` writes it properly. Say `breakthrough-method-builder` whenever you want it written, now or months from now." ⛔ Do not write a Method from here. ⛔ Do not press if they say later; the offer is the whole contribution.
 
 ### 3 · "Did we produce anything you will reach for again?"
 
 ⭐ **Four destinations and they are genuinely different things**, so name which one and let the owner pick:
 
-- **A way of doing something** → a Method (see question 2, `method-builder` writes it).
+- **A way of doing something** → a Method (see question 2, `breakthrough-method-builder` writes it).
 - **A thing you now own** (a template, a script, a calculator, an asset) → it belongs in a real room in the vault, filed by doctrine §0, not described in a note about it.
 - **Material worth keeping to read again** (a reference, a source, someone else's document) → `02_Command-Base/Resources/`. ⭐ That is the owner's library, kept by the owner; ⛔ nothing reads it on a schedule.
 - **Something made by following a playbook** (a post, a proposal, a pitch, a quote) → **one row on that playbook folder's door**, in `04_Methodology/Playbooks/<the-work>/_<Name>-Guide.md`, under `## Recent runs`. Three columns: what came out, what the owner expects, and when it counts. ⭐ **The owner answers only "what do you expect", and the row lands with their yes** like anything else in that layer.

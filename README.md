@@ -139,7 +139,7 @@ Most AI setups have amnesia: every conversation starts from zero, and the fix yo
 </p>
 
 - **Every conversation becomes searchable.** Session memory (optional, offered at setup, validated on macOS) is a small local tool that indexes Claude Code's own transcripts into a full-text search database, so "how did we solve that before?" gets answered from history. It reads only the transcripts, read-only; it writes only its own database in `~/.my-second-brain/`; it is purely local, with no network code and no background process. It is a filing cabinet, not a colleague who reads it over the weekend: it answers when somebody asks, and it never speaks first.
-- **What a session taught is written down at its closeout.** Say "wrap up" and the `session-report` skill lands what the session actually produced, while whoever was in it still remembers: the lesson a pit earned, the decision that was made but never written, the claim about you that is still a hypothesis rather than memory, and a one-paragraph baton your next session reads. Nothing reaches your methodology layer until you have seen the exact words.
+- **What a session taught is written down at its closeout.** Say "wrap up" and the `breakthrough-session-report` skill lands what the session actually produced, while whoever was in it still remembers: the lesson a pit earned, the decision that was made but never written, the claim about you that is still a hypothesis rather than memory, and a one-paragraph baton your next session reads. Nothing reaches your methodology layer until you have seen the exact words.
 
 Same law as everywhere else in this system: the AI proposes, you rule. A memory that only ever grows goes stale, so the weekly distill audits what closeouts left behind and proposes what to promote, what to merge, and what to retire. That is what "grows its own memory" means here, and it is the part a notes app cannot copy, because the raw material is your working history with the AI itself.
 
@@ -179,12 +179,12 @@ What this buys you day to day:
 
 Setup also installs a few smaller skills that travel inside this one's payload, so `npx skills update` refreshes them in the same breath. None is generated and none is personalised. The registry is the [`my-second-brain/skills/`](my-second-brain/skills/) folder itself; what follows says what each one is for, not how many there are.
 
-- **`project-consultant`** thinks a project through before it gets built and proposes the smallest set of working files that project earns, usually a bare brief and nothing else. A project is born legally without it.
-- **`session-report`** closes a working session and feeds your methodology layer: the lesson the session earned, the decision that was made but never written, and an offer for anything reusable.
-- **`method-builder`** writes one Method when a whole job closes: how you did that kind of thing, in your words. The other half of the closeout pair. When several of those turn out to be one way of working and you say so, it writes them up as a playbook (see [How a way of working gets written down](#how-a-way-of-working-gets-written-down)). It ships because it is the only thing in the box that writes a playbook folder's door, and the doctrine makes that door mandatory.
-- **`vault-guardian`** carries one change to your vault's own law through every file that change touches, and afterwards proves the guard can still read the law. It ships because the doctrine names it.
+- **`breakthrough-project-consultant`** thinks a project through before it gets built and proposes the smallest set of working files that project earns, usually a bare brief and nothing else. A project is born legally without it.
+- **`breakthrough-session-report`** closes a working session and feeds your methodology layer: the lesson the session earned, the decision that was made but never written, and an offer for anything reusable.
+- **`breakthrough-method-builder`** writes one Method when a whole job closes: how you did that kind of thing, in your words. The other half of the closeout pair. When several of those turn out to be one way of working and you say so, it writes them up as a playbook (see [How a way of working gets written down](#how-a-way-of-working-gets-written-down)). It ships because it is the only thing in the box that writes a playbook folder's door, and the doctrine makes that door mandatory.
+- **`breakthrough-vault-guardian`** carries one change to your vault's own law through every file that change touches, and afterwards proves the guard can still read the law. It ships because the doctrine names it.
 
-One tool does **not** come in the box. **`sop-builder`** writes an SOP properly, in its own sitting. It is published separately, you install it if you want it, and nothing in the vault breaks without it: hand-writing an SOP is legal, which is the whole reason it can live outside.
+One tool does **not** come in the box. **`breakthrough-sop-builder`** writes an SOP properly, in its own sitting. It is published separately, you install it if you want it, and nothing in the vault breaks without it: hand-writing an SOP is legal, which is the whole reason it can live outside.
 
 ## Design decisions
 
@@ -208,7 +208,7 @@ The choices that make this hold up over months, not weeks:
 
 Nothing here is filled in at setup, and that is on purpose: on day one you have no methodology, because you have not done anything in this vault yet.
 
-It starts one job at a time. A job closes, and `method-builder` writes down **how you actually did it**, in your words, as one Method. The first one makes a folder named for that kind of work, and inside that folder it also writes a **door**: a short file the next session reads before it does anything.
+It starts one job at a time. A job closes, and `breakthrough-method-builder` writes down **how you actually did it**, in your words, as one Method. The first one makes a folder named for that kind of work, and inside that folder it also writes a **door**: a short file the next session reads before it does anything.
 
 When several methods in one folder turn out to be the same way of working, and **you** say so, they get composed into a **playbook**: what to weigh, how to decide. The methods stay where they are, marked as superseded and pointing at what they became, so "which jobs did this come out of" is answered by opening the folder.
 

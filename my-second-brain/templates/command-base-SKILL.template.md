@@ -72,7 +72,7 @@ Skip the full load only when clearly mid-conversation.
 
 > An operational "how do we do X" question: find the SOP in `03_SOP/`, answer FROM it, and update it in the same move if answering revealed it is stale. No SOP yet? Say so and offer to write one. ⛔ Do not improvise a finished-looking SOP from one answer.
 
-Two details belong to this skill rather than to the always-on layer. Bump the SOP's `last_verified` **only if the process was actually re-walked**, never because the note was touched. And when no SOP exists, the offer has two honest shapes, not one: capture what {{YOUR_NAME}} tells you as a draft in `00_Inbox/<process-name>-sop-draft/`, or write it up properly, which is its own sitting and runs on the separately installed `sop-builder` skill.
+Two details belong to this skill rather than to the always-on layer. Bump the SOP's `last_verified` **only if the process was actually re-walked**, never because the note was touched. And when no SOP exists, the offer has two honest shapes, not one: capture what {{YOUR_NAME}} tells you as a draft in `00_Inbox/<process-name>-sop-draft/`, or write it up properly, which is its own sitting and runs on the separately installed `breakthrough-sop-builder` skill.
 
 ## Command Base protocol
 

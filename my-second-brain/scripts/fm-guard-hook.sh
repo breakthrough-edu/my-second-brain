@@ -273,7 +273,7 @@ def schema_gate(root, path, content):
                 "row to §8, get the owner's yes, then file. §8 is amended by "
                 "propose-and-approve; it is never widened by a note that "
                 "arrived first.\n"
-                "  The vault-guardian skill, if this vault has it, carries "
+                "  The breakthrough-vault-guardian skill, if this vault has it, carries "
                 "that whole change, including the files outside §8 that it "
                 "touches."
                 % declared, None)
