@@ -279,9 +279,12 @@ families:
                                     # is set by the weekly distillation when several methods
                                     # compose into a playbook, and `distilled_into` names
                                     # that playbook. ⛔ No `kind:` key and there never will
-                                    # be one: which sort of work a method belongs to is
-                                    # judged by whoever reads them together, not declared by
-                                    # whoever writes one.
+                                    # be one. The FOLDER records which kind of work this is
+                                    # (§9.1), chosen by one binary question at writing time,
+                                    # "this folder or a new one", ⛔ never by asking what
+                                    # category the work falls under. The burden this rule
+                                    # guards against is being asked to classify at the moment
+                                    # the job just closed; picking off the shelf is not that.
     playbook: {required: [type, lane, status, confirmed_by_owner],
                optional: [references], multi: [references],
                status: [forming]}   # only sourced value (Playbook.md template); describes

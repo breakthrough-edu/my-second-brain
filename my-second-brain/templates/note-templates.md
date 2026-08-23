@@ -24,13 +24,79 @@ updated: {{DATE}}
 
 <!--
 Filename is `_<Name>-Guide.md`, one per folder, and at most one `_`-prefixed file per folder.
-guide_family: one of wing / room / lane / brand / lab. A layer folder (01_Assets, 02_Work,
+guide_family: one of wing / room / lane / brand / playbook. A layer folder (01_Assets, 02_Work,
   03_SOP, 04_Methodology) gets NO guide: it is a container of rooms, not a room, and none of
   the five values would be true.
 Guides are linked path-qualified, never bare: the same room name repeats across wings, so
   [[04_Acme-Business-Wing/02_Work/Run/_Run-Guide]], not [[_Run-Guide]].
 ⛔ No inventory and no navigation section. Home.md is the only directory this vault has.
+⭐ One deliberate exception, and it is named rather than left to judgment, the same way
+  _SOP-Menu.md is named as one in doctrine §4: a playbook folder's door carries a table of
+  the bets placed on that playbook (Playbook-Guide.md below). That table is a record of what
+  was expected and what came back, ⛔ not a list of what the folder holds and ⛔ not a way to
+  reach anything, which is what the rule above is protecting. An output with no bet on it
+  gets no row.
 The wing guide is the one that also carries a `## Current state` section.
+-->
+```
+
+## Playbook-Guide.md
+
+```markdown
+---
+type: guide
+guide_family: playbook
+updated: {{DATE}}
+---
+
+# <The kind of work>
+
+<One line: what kind of work this folder holds.>
+
+## Read this before working, in this order
+
+1. **Settle what is open.** Read "Recent runs" below. Any row whose date has passed with
+   nothing in "What happened" gets looked up where the answer lives (the messages, the
+   orders, the sign-ups), drafted, and put to the owner as one question.
+2. **Revise, if a sentence just came up for the third time.** In "So". The owner's yes
+   first, then "How we do this work" changes.
+3. **Do the work**, with the section above brought up to date a minute ago.
+4. **Register what came out**, in this same session: one row, the first three columns.
+
+## How we do this work
+
+<While this folder holds only methods, one line pointing at the method. Once a playbook is
+earned, this is that playbook's summary. Revised only with the owner's yes.>
+
+## What we have learned
+
+- <A "So" sentence that came up for the third time. Permanent. A few lines at most.>
+
+## Recent runs
+
+| What came out | What I expect | When it counts | What happened | So |
+|---|---|---|---|---|
+| | | | | |
+
+<!--
+Filename is `_<Name>-Guide.md`, one per playbook folder, and it is mandatory from the day
+  the folder is made (doctrine §9.1). At most one `_`-prefixed file per folder.
+⭐ This door is written to be handed over. A contractor, an assistant or another AI should
+  be able to work from this folder with no skill installed, which is why the four beats are
+  written out above instead of living in a skill.
+The two halves age differently. "How we do this work" goes stale and gets revised; the rows
+  below are things that already happened and are never rewritten to stay correct.
+⛔ Every row lands with the owner's yes, drafted by whoever is in the session (§4 law 4 is
+  not carved out for this table).
+"When it counts" is the owner's own number: a post answers in about a week, a proposal in
+  about a month, a course in about a quarter. Ask; the maturing time belongs to the line of
+  work and nothing else knows it.
+⭐ Third time the same sentence appears in "So" = propose revising "How we do this work".
+  That is the whole trigger mechanism, and it is a person noticing a repeat on purpose.
+⚠️ This file is read every time the folder is opened, so it must not be allowed to grow
+  without limit: keep "What we have learned" to a few permanent lines and let old rows sink
+  to the bottom of "Recent runs".
+⛔ An output with no bet gets no row. This is a record of bets, not a directory of outputs.
 -->
 ```
 
@@ -790,7 +856,8 @@ tags: []
 ## What I judge along the way
 
 <!--
-04_Methodology/Playbooks/, flat, beside the playbooks. A method is ONE MOVE OF YOURS: how
+04_Methodology/Playbooks/<the-work>/, the folder for this kind of work, beside the other
+  methods for it and the playbook if it has earned one. A method is ONE MOVE OF YOURS: how
   you personally do one kind of work, written at the closeout of the work that taught it,
   with the owner saying yes in that moment (that is what confirmed_by_owner records).
 Named for the WORK, never for the case it came out of: <the-work>-method.md. "quoting-a-
@@ -799,12 +866,15 @@ Named for the WORK, never for the case it came out of: <the-work>-method.md. "qu
 ⛔ Same name, same file. Found a better way? Rewrite this note whole. ⛔ Do NOT create a
   second file with a version in the name: one note per move is what lets the note carry how
   many times you have done this without anybody counting anything.
-⛔ There is no kind: key and there will not be one. Which sort of work a method belongs to
-  is judged by whoever reads several of them together in the weekly distillation, not
-  declared by whoever writes one. Declaring it would put the classification burden on the
-  moment you least want it, which is the moment you just finished the job.
-status: flips to superseded when the weekly distillation composes this and its relatives
-  into a playbook; distilled_into: then names that playbook. Superseded methods are never
+⛔ There is still no kind: key and there will not be one. The folder is where this method's
+  kind of work is recorded, and it is chosen by one binary question at writing time, "this
+  existing folder, or a new one", ⛔ never by asking what category the work falls under. The
+  burden that rule has always guarded against is being asked to classify at the moment you
+  just finished the job; picking between the folders already on the shelf is not that, and
+  a wrong pick is one move away from right in the next weekly pass.
+status: flips to superseded when this and its relatives are composed into a playbook,
+  either by the weekly distillation or because the owner asked; distilled_into: then names
+  that playbook. Superseded methods are never
   deleted: "which fights did this playbook come out of" has to stay answerable.
 -->
 ```
@@ -830,10 +900,12 @@ tags: []
 ## The moves
 
 <!--
-04_Methodology/Playbooks/. A playbook is JUDGMENT COMPOSED: what to weigh and how to decide
+04_Methodology/Playbooks/<the-work>/, in the folder with the methods it came out of. A
+  playbook is JUDGMENT COMPOSED: what to weigh and how to decide
   for a kind of work. An SOP is the other thing entirely, dead steps anyone can follow.
-It is EARNED in the weekly distillation, when several related methods turn out to be one way
-  of working. Those methods flip to status: superseded and carry distilled_into: pointing
+It is EARNED, two ways and no third: the weekly distillation reads the methods together and
+  proposes one, or the owner asks for one out loud. Both need several related methods that
+  turn out to be one way of working, and ⛔ a skill never decides this by itself. Those methods flip to status: superseded and carry distilled_into: pointing
   here, so the fights this came out of stay traceable.
 references: is written ONCE, right here, at birth: the lessons and decisions this playbook
   leans on. ⛔ Leave it as an empty list when there are none. ⛔ Those notes never register
@@ -842,9 +914,9 @@ references: is written ONCE, right here, at birth: the lessons and decisions thi
   "grow into" a playbook. Only methods BECOME a playbook; lessons and decisions are only
   ever referenced by one. What travels between them otherwise is content: playbooks and
   lessons inform the next SOP someone writes.
-Prose is the normal, sufficient form of a playbook. A few earn a live feedback loop and grow
-  into a folder with lab organs beside them, in place, no move and no link rewrites. That is
-  rare, it is asked for by the owner, and the default answer is no.
+The folder's door (Playbook-Guide.md) is where this playbook's track record lives: the bets
+  placed on it and what came back. Update the door's top half when this note changes, and
+  ⛔ do not copy the playbook's text into the door.
 -->
 ```
 
@@ -872,102 +944,14 @@ The pool is where maintenance parks a claim it has noticed but not yet earned. I
   out on evidence, and evidence means a verbatim quote plus a pointer to where it was said,
   which is why evidence lives in the body where it can be checked rather than in a key.
 ⛔ This is not an idea box. An idea with no observed instance behind it is an aspiration.
-⛔ A lab's bets are NOT hypotheses. Those live in that lab's register, they are the owner's
-  own, and they are read every time. This pool is the machine observing the owner, and it
-  never enters a session's context.
+⛔ The bets on a playbook door are NOT hypotheses. Those live on the bottom half of that
+  folder's own door, they are the owner's own, and they are read every time the folder is
+  opened. This pool is the machine observing the owner, and it never enters a session's
+  context.
 status: open / expired / graduated / rejected.
 destination: profile, and that is the whole list. It answers where this lands IF it graduates,
   and the pool has exactly one landing point: a pattern about the owner that only observation
   could establish. Anything true the moment it is said lands the day it happens instead.
--->
-```
-
-## Rubric.md
-
-```markdown
----
-type: rubric
-updated: {{DATE}}
----
-
-# <Name> Rubric
-
-## <Criterion 1: the hard business signal>
-<what a pass looks like, in one line anyone can apply in seconds>
-
-## <Criterion 2>
-<what a pass looks like>
-
-## Does this sound like us?
-<the identity veto, in one line: what "us" sounds like on this line of work. A no here
-overrides every number above.>
-
-<!--
-`04_Methodology/Playbooks/<Name>/<Name>-Rubric.md`, one per lab (doctrine section 9.2).
-It is the one organ interviewed into existence when the lab opens, by the `playbook-lab`
-  skill. At most 2 to 3 criteria, at least one hard business signal (money, enquiries,
-  orders, bookings, retention), and the identity veto above.
-Score the market's behaviour, never a friend's politeness: "did anyone act on it" beats
-  "did people like it".
-The scoring test: 30 seconds per output. If applying this to one output takes longer, cut a
-  criterion; a rubric that takes real thought gets applied twice and then abandoned.
-Cards are disposable, the file is permanent: rewrite a criterion in place rather than opening
-  a second rubric.
-Scores do not live here. They live with the outputs they score.
-updated: the day a criterion last changed, not the day something was last scored.
--->
-```
-
-## Lab-Register.md
-
-```markdown
----
-type: lab-register
-updated: {{DATE}}
----
-
-# <Name> Register
-
-| Opened | The bet | Which part of the playbook it tests | What would settle it | Verdict |
-|---|---|---|---|---|
-| {{DATE}} | <one sentence> | <the chapter or move> | <the condition> | open |
-
-<!--
-`04_Methodology/Playbooks/<Name>/<Name>-Register.md`, one per lab (doctrine section 9.2):
-  the ledger of live bets this lab is running. It ships empty and correctly shaped.
-Every row names which part of the methodology it tests AND the condition that would settle
-  it, and that condition is written when the bet opens, before the evidence arrives.
-A lab's bets are NOT the hypothesis pool in `99_Meta/Hypotheses/`. These are the owner's own
-  and they are read every time the lab is opened; that pool is the machine observing the
-  owner and it never enters a session's context.
-Rows are disposable, the file is permanent: a settled bet keeps its row and its verdict.
-updated: the day a bet opened or resolved.
--->
-```
-
-## Thresholds.md
-
-```markdown
----
-type: thresholds
-updated: {{DATE}}
----
-
-# <Name> Thresholds
-
-| Trigger line | Default | This lab | What it fires |
-|---|---|---|---|
-| <the signal that says the playbook needs revising> | <shipped default> | <the owner's number> | a proposal to revise the playbook |
-
-<!--
-`04_Methodology/Playbooks/<Name>/<Name>-Thresholds.md`, one per lab (doctrine section 9.2).
-Ships with defaults and is owner-tunable: the defaults are a starting line, and a number
-  nobody can move is a number everybody ignores.
-A threshold firing is a PROPOSAL to revise the playbook, never an edit. The owner's yes is
-  what revises the authority file, and everything downstream follows because SOPs link the
-  playbook by `playbook:` (doctrine sections 9.3 and 9.7).
-Rows are disposable, the file is permanent.
-updated: the day a line was last tuned.
 -->
 ```
 
