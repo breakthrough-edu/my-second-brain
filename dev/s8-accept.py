@@ -133,6 +133,37 @@ IS A LIST OF FAMILY NAMES A SECOND COPY OF SECTION 8?
         third seeded rename above is the proof it cannot double as an
         acceptance pin. Checks 3c and 6 cover that ground now.
 
+THE OPEN-KEY TABLE IS THE EXPENSIVE ONE TO LOSE
+    `EXPECT_OPEN_KEY_NAMES` was added a run later than the other five, and for a
+    louder reason than symmetry. Until 2026-08-24 check 7 opened with "no open
+    keys declared in the block; nothing to check" and returned, so deleting the
+    whole `open_keys:` table was a green run, measured, exit 0.
+
+    Nothing hard breaks when that table goes, which is exactly the trap. The
+    table has one member today, `tags`. Sixteen of the note templates shipped in
+    templates/note-templates.md carry a `tags:` line. The frontmatter guard
+    builds its idea of a known key as `set(spec.required) | set(spec.optional) |
+    set(spec.enums)`, and the shipped reader is what puts an open key onto every
+    spec's `optional`. Take the table away and `tags` stops being known, on
+    every spec, all at once.
+
+    The guard does not block over it. Its own annotation at that branch reads
+    `A key §8 has not declared: a judgment call, so it is flagged, not blocked.`
+    So the vault does not stop. Instead every write to any of those sixteen
+    shapes gets told it "carries key(s) §8 has not declared", forever, about a
+    key the vault ships on purpose.
+
+    ⛔ And the guard's own header already says how that story ends, in as many
+    words: `A guard that blocks judgment calls gets switched off in week one,
+    and a switched-off guard enforces nothing.` Crying wolf on every normal note
+    is the same road with a slower car. The real price of losing `open_keys` is
+    not one wrong answer in one report. It is the owner reaching for the switch,
+    and the whole guard going with it.
+
+    That is why this one list is compared before the early exit rather than
+    after it. An expectation that only runs when the thing it protects still
+    exists protects nothing.
+
 EXIT CODES
     0  all eight checks ran and passed
     1  a check failed - the report says which check and what differs
@@ -237,6 +268,10 @@ EXPECT_IN_FAMILY_CLOSED_LIST_PATHS = [
     "ritual.monthly-theme.status",
 ]
 EXPECT_GLOBAL_CLOSED_LIST_NAMES = ["domain", "lane"]
+# Declaring a second open key is an amendment to section 8, and amending
+# section 8 already requires a run of this script. This line moving in the same
+# commit is the process working, not a tax on it.
+EXPECT_OPEN_KEY_NAMES = ["tags"]
 # A decision's legal lanes are the work lanes plus the personal ones. Pinning
 # both lists subsumes the old count of the union: an overlap between them can
 # no longer appear without one of these two comparisons failing first.
@@ -684,8 +719,19 @@ def check7(body, open_names):
     nobody has watched run.
     """
     print("CHECK 7 - open keys: known on every spec, closed nowhere")
+    # The comparison runs BEFORE any early exit. Until 2026-08-24 an empty table
+    # meant "nothing to check" and returned, so deleting the table outright was
+    # the one shape of this failure nothing here was watching. See THE OPEN-KEY
+    # TABLE IS THE EXPENSIVE ONE TO LOSE in the header.
+    declared = sorted(open_names)
+    if declared != EXPECT_OPEN_KEY_NAMES:
+        missing, unexpected = name_diff(declared, EXPECT_OPEN_KEY_NAMES)
+        fail("7", "template",
+             f"open keys = {declared}, expected {EXPECT_OPEN_KEY_NAMES}; "
+             f"missing={missing}, unexpected={unexpected}")
     if not open_names:
-        print("    template  no open keys declared in the block; nothing to check")
+        print("    template  the block declares no open key at all, so the rest of "
+              "this check has no subject to run on")
         return
     text = "\n".join(body)
     try:
