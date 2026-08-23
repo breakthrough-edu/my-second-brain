@@ -122,14 +122,27 @@ DEFAULTS = {
     # Tag vocabulary: the markdown file the whitelist is parsed from, relative
     # to meta_dir.
     "tag_vocabulary_file": "tagging-vocabulary.md",
-    # Dirs whose notes are skipped when scanning for tags / schema (archive and
-    # template shapes are not live content).
+    # Dirs whose notes are skipped when scanning for tags / schema. Retired
+    # material, template shapes and the drawers the machine keeps for itself are
+    # not live content.
     # ⚠️ 99_Meta/Templates is listed here AND named separately below. Content
     # checks must skip it (a template's placeholders are not a schema violation),
     # but template reconciliation has to be able to walk exactly that folder, and
     # a single list cannot say both. Naming it twice is the point, not an
     # oversight.
-    "scan_skip_dirs": ["98_Archive", "99_Meta/Templates", "99_Meta/memory-archive"],
+    # ⚠️ 99_Meta/Skills holds generated skill packages, and a SKILL.md carries a
+    # skill's own frontmatter (`name`, `description`) rather than a section 8
+    # family, so section 8 has no verdict to give on one. A skill package is
+    # addressed as ~/.claude/skills/<name>; the vault folder is where the file
+    # happens to sit.
+    # ⚠️ references/scaffold-spec.md's `home-is-true` check carries an exempt
+    # list that reads much like this one, and they are two mechanisms answering
+    # two questions: that list decides whether Home.md has to name a folder,
+    # this one decides whether the content checks judge a note inside it. The
+    # membership overlaps because the same folders are machinery in both senses.
+    # ⛔ Keep the two lists apart.
+    "scan_skip_dirs": ["98_Archive", "99_Meta/Skills", "99_Meta/Templates",
+                       "99_Meta/memory-archive"],
     "template_dir": "99_Meta/Templates",
     # Freshness. Fields read from maintenance-state.md frontmatter, and the day
     # threshold past which each is called stale. If the file carries its own

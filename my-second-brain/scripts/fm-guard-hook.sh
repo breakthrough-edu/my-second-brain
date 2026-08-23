@@ -130,12 +130,23 @@ def in_vault(path):
     return None
 
 # --- the exemption table, copied from nowhere -------------------------------
-# ⛔ These three are the checker's `scan_skip_dirs` default, and they are here
-# because every enforcer that walks a vault has to agree on what is not live
+# ⛔ This is the checker's `scan_skip_dirs` default, and it is here because
+# every enforcer that walks a vault has to agree on what is not live
 # content, and this list is the shared answer. A template full
 # of {{PLACEHOLDER}} is not a schema violation; blocking writes into Templates/
-# would make the product unable to ship its own templates.
-EXEMPT_DIRS = ("98_Archive", "99_Meta/Templates", "99_Meta/memory-archive")
+# would make the product unable to ship its own templates. 99_Meta/Skills/ is
+# the same class of case from the other direction: a generated skill package's
+# SKILL.md carries a skill's own frontmatter (`name`, `description`), which is
+# not a section 8 family and was never meant to be one, so section 8 has no
+# verdict to give on it and a guard that judged it anyway would refuse the
+# product's own generated skills.
+# ⚠️ references/scaffold-spec.md's `home-is-true` check carries an exempt list
+# that reads much like this one, and they are two mechanisms answering two
+# questions: that list decides whether Home.md has to name a folder, this one
+# decides whether section 8 judges a note inside it. The membership overlaps
+# because the same folders are machinery in both senses. ⛔ Keep the two apart.
+EXEMPT_DIRS = ("98_Archive", "99_Meta/Skills", "99_Meta/Templates",
+               "99_Meta/memory-archive")
 
 def exempt(root, path):
     rel = os.path.relpath(os.path.realpath(os.path.abspath(path)), root)

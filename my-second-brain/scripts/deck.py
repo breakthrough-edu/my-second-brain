@@ -105,7 +105,12 @@ LANE_ORDER = ["Deliver", "Grow", "Run", "Build"]
 # Skipped for the same reason checkup skips them: templates are shapes, not
 # records, and archive is retired. `99_Meta/Templates` in particular would
 # otherwise put a `{{DATE}}` brief on the deck as a real project.
-SKIP_DIRS = ["98_Archive", os.path.join("99_Meta", "Templates"),
+# `99_Meta/Skills` is neither a shape nor retired, and belongs here for the
+# third reason the checker states at its `scan_skip_dirs`: a generated skill
+# package carries a skill's own frontmatter, not a doctrine family, so the deck
+# has nothing true to draw from one. ⛔ The reason is written once, there.
+SKIP_DIRS = ["98_Archive", os.path.join("99_Meta", "Skills"),
+             os.path.join("99_Meta", "Templates"),
              os.path.join("99_Meta", "memory-archive")]
 
 PULSE_DAYS = 56  # eight weeks, the width of the sparkline in the template
