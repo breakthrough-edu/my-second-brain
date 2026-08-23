@@ -425,10 +425,16 @@ status: empty
 
 > Status: not defined yet. To fill: run the brand intake, or drop in a brand strategy you already have.
 
+Part of <the room this stub sits in, as a wiki link to that room's guide, path-qualified>
+
 <!--
 Eight pillars, one family, across TWO folders: seven in <Brand>-Brand-Assets/Brand-Strategy/,
   and Journey in <Brand>-Brand-Assets/Target-Audience/ (it maps the audience, so it files with
   the audience). Type comes from the family, never from the folder.
+The "Part of" line points at the guide of the folder this stub is actually in, so the seven and
+  the one point at two different doors. It is one line rather than a navigation section: a stub
+  is a note, not a directory, and this is the link that keeps eight files from sitting in the
+  graph with no relationship to anything, which is what they did until 2026-08-23.
 pillar: one of DNA / Personality / Proposition / Relationship / Sensory-Cues / Positioning /
   Style / Journey. Closed list, and a value outside it will not land.
 status flips off `empty` the moment the pillar is actually answered. Anything outward-facing
