@@ -206,13 +206,13 @@ The choices that make this hold up over months, not weeks:
 
 ## How a way of working gets written down
 
-Nothing here is filled in at setup, and that is on purpose: on day one you have no methodology, because you have not done anything in this vault yet.
+Nothing here is filled in at setup, and that is on purpose: this layer holds your judgment, and nobody else can put it there.
 
-It starts one job at a time. A job closes, and `breakthrough-method-builder` writes down **how you actually did it**, in your words, as one Method. The first one makes a folder named for that kind of work, and inside that folder it also writes a **door**: a short file the next session reads before it does anything.
+**It can start from either end, and day one counts.** Say "this is how I do X, write it down" and you get a **playbook** on the spot: what to run it for, what to weigh, the moves, in your words. No waiting, no quota of notes to accumulate first. Or let it build up the other way: a job closes, `breakthrough-method-builder` writes down **how you actually did it** as one Method, and when several of those turn out to be the same way of working and **you** say so, they get composed into a playbook, with the methods left in place pointing at what they became.
 
-When several methods in one folder turn out to be the same way of working, and **you** say so, they get composed into a **playbook**: what to weigh, how to decide. The methods stay where they are, marked as superseded and pointing at what they became, so "which jobs did this come out of" is answered by opening the folder.
+Either way, the first note makes a folder named for that kind of work, and inside it a **door**: a short file the next session reads before it does anything.
 
-The door is the part that keeps it honest. Its top half says how to use the playbook. Its bottom half is one row per thing you made with it: what came out, **what you expected**, when you would know, what actually happened, and what that tells you. Answering "what do you expect" takes a few seconds at the moment you ship something; the result gets filled in later, when it is actually knowable, by the next session that opens the folder.
+The door is the part that keeps it honest. Its top half says how to use the playbook. **Its bottom half is one row per thing you made with it, and the first column is where that thing is**, so three months later "what have I actually made with this" is one glance instead of a search. If you had an expectation when you shipped it, the row also carries what you expected, when you would know, what happened, and what that tells you. If you did not, the row is just the address, and nothing ever comes back to nag you about it.
 
 The trigger is deliberately human-sized: when the same lesson shows up in that last column for the third time, you get asked whether the playbook should change. No score, no threshold to configure, nothing running in the background.
 

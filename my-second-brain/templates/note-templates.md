@@ -31,11 +31,12 @@ Guides are linked path-qualified, never bare: the same room name repeats across 
   [[04_Acme-Business-Wing/02_Work/Run/_Run-Guide]], not [[_Run-Guide]].
 ⛔ No inventory and no navigation section. Home.md is the only directory this vault has.
 ⭐ One deliberate exception, and it is named rather than left to judgment, the same way
-  _SOP-Menu.md is named as one in doctrine §4: a playbook folder's door carries a table of
-  the bets placed on that playbook (Playbook-Guide.md below). That table is a record of what
-  was expected and what came back, ⛔ not a list of what the folder holds and ⛔ not a way to
-  reach anything, which is what the rule above is protecting. An output with no bet on it
-  gets no row.
+  _SOP-Menu.md is named as one in doctrine §4: a playbook folder's door indexes the outputs
+  made with that playbook, by address, plus what came back on the ones the owner bet on
+  (Playbook-Guide.md below). ⛔ It indexes that playbook's own outputs and nothing else, so
+  Home stays the only vault-wide directory, which is what the rule above is protecting.
+  ⛔ It is not a list of what the FOLDER holds either: the folder's own contents are visible
+  by opening it and never get restated here.
 The wing guide is the one that also carries a `## Current state` section.
 -->
 ```
@@ -57,16 +58,21 @@ updated: {{DATE}}
 
 1. **Settle what is open.** Read "Recent runs" below. Any row whose date has passed with
    nothing in "What happened" gets looked up where the answer lives (the messages, the
-   orders, the sign-ups), drafted, and put to the owner as one question.
+   orders, the sign-ups), drafted, and put to the owner as one question. ⛔ A row with a
+   blank date carried no bet: it is an index entry, it is never chased, and it is not
+   something to settle.
 2. **Revise, if a sentence just came up for the third time.** In "So". The owner's yes
    first, then "How we do this work" changes.
 3. **Do the work**, with the section above brought up to date a minute ago.
-4. **Register what came out**, in this same session: one row, the first three columns.
+4. **Register what came out**, in this same session: one row, ⭐ its address in the
+   first column, then what the owner expects and when that counts if they have an
+   expectation. "Nothing in particular" is a real answer and the row still goes in.
 
 ## How we do this work
 
-<While this folder holds only methods, one line pointing at the method. Once a playbook is
-earned, this is that playbook's summary. Revised only with the owner's yes.>
+<This playbook's summary: when to run it, what to weigh, the moves. Written from day one
+when the owner dictated the playbook. If this folder holds only methods so far, one line
+pointing at the method instead, until a playbook lands. Revised only with the owner's yes.>
 
 ## What we have learned
 
@@ -76,7 +82,7 @@ earned, this is that playbook's summary. Revised only with the owner's yes.>
 
 | What came out | What I expect | When it counts | What happened | So |
 |---|---|---|---|---|
-| | | | | |
+| [[the-thing-i-made]] or a URL | | | | |
 
 <!--
 Filename is `_<Name>-Guide.md`, one per playbook folder, and it is mandatory from the day
@@ -86,17 +92,28 @@ Filename is `_<Name>-Guide.md`, one per playbook folder, and it is mandatory fro
   written out above instead of living in a skill.
 The two halves age differently. "How we do this work" goes stale and gets revised; the rows
   below are things that already happened and are never rewritten to stay correct.
+⭐ "What came out" is an ADDRESS, and it is the point of this table: a wikilink or path
+  when the thing lives in the vault, a URL or a plain-words location when it does not.
+  Three months later "what have I made with this, and where is it" is one glance.
 ⛔ Every row lands with the owner's yes, drafted by whoever is in the session (§4 law 4 is
   not carved out for this table).
 "When it counts" is the owner's own number: a post answers in about a week, a proposal in
   about a month, a course in about a quarter. Ask; the maturing time belongs to the line of
-  work and nothing else knows it.
+  work and nothing else knows it. ⛔ Blank on a row that carried no bet, and blank is what
+  tells beat 1 to leave that row alone forever.
 ⭐ Third time the same sentence appears in "So" = propose revising "How we do this work".
   That is the whole trigger mechanism, and it is a person noticing a repeat on purpose.
 ⚠️ This file is read every time the folder is opened, so it must not be allowed to grow
   without limit: keep "What we have learned" to a few permanent lines and let old rows sink
   to the bottom of "Recent runs".
-⛔ An output with no bet gets no row. This is a record of bets, not a directory of outputs.
+⭐ EVERY output made with this playbook gets a row, whether or not the owner had an
+  expectation about it. This is that playbook's own index plus its track record, and it is
+  one of the two content-mapping exceptions doctrine §4 names (Home stays the only
+  vault-wide directory; this indexes one folder's own outputs and nothing else).
+⛔ ONE carve-out, from iron law 1: a line that ships at high frequency (daily content is
+  the case that exists) does not get a row per output. Put ONE pointer line here naming
+  where those rows really live, and keep individual rows only for the outputs that carried
+  a bet. High-frequency rows never enter the vault, and a door is still the vault.
 -->
 ```
 
@@ -857,7 +874,7 @@ tags: []
 
 <!--
 04_Methodology/Playbooks/<the-work>/, the folder for this kind of work, beside the other
-  methods for it and the playbook if it has earned one. A method is ONE MOVE OF YOURS: how
+  methods for it and the playbook if the folder has one. A method is ONE MOVE OF YOURS: how
   you personally do one kind of work, written at the closeout of the work that taught it,
   with the owner saying yes in that moment (that is what confirmed_by_owner records).
 Named for the WORK, never for the case it came out of: <the-work>-method.md. "quoting-a-
@@ -874,7 +891,10 @@ Named for the WORK, never for the case it came out of: <the-work>-method.md. "qu
   a wrong pick is one move away from right in the next weekly pass.
 status: flips to superseded when this and its relatives are composed into a playbook,
   either by the weekly distillation or because the owner asked; distilled_into: then names
-  that playbook. Superseded methods are never
+  that playbook.
+A method written into a folder that ALREADY has a playbook does not supersede anything and
+  is not a mistake: it is a move the playbook has not absorbed yet, and it feeds that
+  playbook's next revision at the weekly distillation. Superseded methods are never
   deleted: "which fights did this playbook come out of" has to stay answerable.
 -->
 ```
@@ -903,10 +923,15 @@ tags: []
 04_Methodology/Playbooks/<the-work>/, in the folder with the methods it came out of. A
   playbook is JUDGMENT COMPOSED: what to weigh and how to decide
   for a kind of work. An SOP is the other thing entirely, dead steps anyone can follow.
-It is EARNED, two ways and no third: the weekly distillation reads the methods together and
-  proposes one, or the owner asks for one out loud. Both need several related methods that
-  turn out to be one way of working, and ⛔ a skill never decides this by itself. Those methods flip to status: superseded and carry distilled_into: pointing
-  here, so the fights this came out of stay traceable.
+It is EARNED, two ways and no third, and the two have deliberately different bars. The
+  weekly distillation may propose one only off several related methods that turn out to be
+  one way of working. The owner asking for one out loud needs nothing at all: this can be
+  the FIRST note in its folder, written on day one, dictated from how they already work.
+  EARNED means the owner's confirmed judgment put it here, ⛔ never a count of methods, and
+  ⛔ a skill never decides this by itself. When it was composed from methods, those methods flip to status: superseded and carry
+  distilled_into: pointing here, so the fights this came out of stay traceable. A playbook
+  the owner dictated on day one has none of that, which is normal and is also how a reader
+  can tell the two apart.
 references: is written ONCE, right here, at birth: the lessons and decisions this playbook
   leans on. ⛔ Leave it as an empty list when there are none. ⛔ Those notes never register
   that they were cited; a back-list would have to be revisited forever (doctrine §7).
@@ -944,9 +969,9 @@ The pool is where maintenance parks a claim it has noticed but not yet earned. I
   out on evidence, and evidence means a verbatim quote plus a pointer to where it was said,
   which is why evidence lives in the body where it can be checked rather than in a key.
 ⛔ This is not an idea box. An idea with no observed instance behind it is an aspiration.
-⛔ The bets on a playbook door are NOT hypotheses. Those live on the bottom half of that
-  folder's own door, they are the owner's own, and they are read every time the folder is
-  opened. This pool is the machine observing the owner, and it never enters a session's
+⛔ What sits on a playbook door is NOT a hypothesis. That door's bottom half indexes what
+  the playbook produced and carries the owner's own bets on the rows that had one, and it is
+  read every time the folder is opened. This pool is the machine observing the owner, and it never enters a session's
   context.
 status: open / expired / graduated / rejected.
 destination: profile, and that is the whole list. It answers where this lands IF it graduates,

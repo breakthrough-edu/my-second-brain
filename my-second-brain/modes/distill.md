@@ -45,7 +45,7 @@ The chain, and each link needs the owner: **several related methods → you name
 
 ⭐ **Then update that folder's door**, top half only: it stops pointing at a method and becomes this playbook's summary. ⛔ **Do not touch the bottom half.** Those rows are things that already happened, and this pass has no business rewriting them.
 
-⚠️ **A folder with no door is a finding, not something to fix silently.** Every playbook folder is supposed to have one from the day it was made (doctrine §9.1). If one is missing, propose writing it like any other proposal in this pass, ⛔ and do not fill in rows for work that happened before the door existed: an unbet row invented after the fact is a guess wearing a record's clothes.
+⚠️ **A folder with no door is a finding, not something to fix silently.** Every playbook folder is supposed to have one from the day it was made (doctrine §9.1). If one is missing, propose writing it like any other proposal in this pass, ⛔ and do not fill in rows for work that happened before the door existed: a row invented after the fact is a guess wearing a record's clothes.
 
 ### 4 · Filing patterns
 

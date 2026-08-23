@@ -56,13 +56,17 @@ A pit: something that actually hurt. On a yes, write **one Lesson** into `04_Met
 - **A way of doing something** → a Method (see question 2, `breakthrough-method-builder` writes it).
 - **A thing you now own** (a template, a script, a calculator, an asset) → it belongs in a real room in the vault, filed by doctrine §0, not described in a note about it.
 - **Material worth keeping to read again** (a reference, a source, someone else's document) → `02_Command-Base/Resources/`. ⭐ That is the owner's library, kept by the owner; ⛔ nothing reads it on a schedule.
-- **Something made by following a playbook** (a post, a proposal, a pitch, a quote) → **one row on that playbook folder's door**, in `04_Methodology/Playbooks/<the-work>/_<Name>-Guide.md`, under `## Recent runs`. Three columns: what came out, what the owner expects, and when it counts. ⭐ **The owner answers only "what do you expect", and the row lands with their yes** like anything else in that layer.
+- **Something made by following a playbook** (a post, a proposal, a pitch, a quote) → **one row on that playbook folder's door**, in `04_Methodology/Playbooks/<the-work>/_<Name>-Guide.md`, under `## Recent runs`. ⭐ **The first column is the address**: a wikilink or path when the thing lives in the vault, a URL or a plain-words location when it does not. Then what the owner expects and when that counts, if they have an expectation. ⭐ **The owner is asked only "what do you expect", and the row lands with their yes** like anything else in that layer.
 
 ⛔ **"None of the above" is the usual answer** and it is a correct one. Say it and move on.
 
 ⚠️ **The fourth one is a backstop, not the main road, and the difference matters.** The session that used the playbook is supposed to write that row itself, because the door says so in its own words (doctrine §9.3, beat 4) and that runs with nothing installed. This skill catches the case where the work happened and nobody opened the door. ⛔ **Never let this become the normal way rows get written**: a door that only gets filled when somebody says "wrap up" is a door that depends on a skill, which is exactly what §9 refuses.
 
-⛔ **No bet, no row.** If the owner has no expectation about the thing that was made, it does not go on the door at all. That table is a record of bets and what came back, ⛔ not a list of everything the playbook produced.
+⭐ **"Nothing in particular" is a real answer and the row still goes in**, address only, the bet columns blank. That table is the playbook's own index of what it produced, plus what came back on the rows that carried a bet, and finding the work again three months later is the half that matters most.
+
+⛔ **A row with no bet is never chased.** Nothing comes back later to ask how it went, because nothing was asked in the first place. ⛔ Do not invent an expectation to make a row look complete.
+
+⛔ **One carve-out, from iron law 1.** A line that ships at high frequency (daily content is the case that exists) does not get a row per output: those are high-frequency rows and they never enter the vault. Its door carries one pointer line naming where those rows really live, and individual rows only for the outputs that carried a bet.
 
 ## The backstop: decisions that were made but never written
 
