@@ -1,6 +1,6 @@
 ---
 type: doctrine
-doctrine_version: 2
+doctrine_version: 3
 created: {{DATE}}
 last_updated: {{DATE}}
 maintained_by: the owner (AI proposes amendments, owner approves)
@@ -21,7 +21,7 @@ Read this before creating or filing anything in this vault. This file is the sin
    - Weekly review / monthly theme → `02_Command-Base/Reviews/`
    - A template → `99_Meta/Templates/`
    - Retired material → `98_Archive/`
-   - A hypothesis → `99_Meta/Hypotheses/`. **The machine writes it: the weekly ritual's distillation half, and the `session-report` skill when a session throws off a claim.** Nothing you file by hand ever lands here: the pool is where maintenance parks a claim that is not yet earned, and it graduates out on evidence. Do not create one to hold an idea. ⚠️ **A lab's bets are not this.** They live in that lab's `lab-register` (§9) and they are the owner's own, written by the `playbook-lab` skill and by scoring: the pool is the machine observing the owner, a lab register is the owner testing their own method. The pool never enters a session's context; a register must be read every time, which is why they cannot be one family.
+   - A hypothesis → `99_Meta/Hypotheses/`. **The machine writes it: the weekly ritual's distillation half, and the `session-report` skill when a session throws off a claim.** Nothing you file by hand ever lands here: the pool is where maintenance parks a claim that is not yet earned, and it graduates out on evidence. Do not create one to hold an idea. ⚠️ **The bets on a playbook door are not this.** They live on the bottom half of that folder's own door (§9) and they are the owner's own: the pool is the machine observing the owner, a door's bottom half is the owner testing their own way of working. The pool never enters a session's context; a door is read every time its folder is opened, which is why they cannot be one family.
 2. **Everything else: identify the type family** (§8 has the closed list).
    **2b. Map the family to its home:** entity → its room in `01_Assets/` (or the matching Personal-Wing room) · process (sop) → `03_SOP/` · playbook / lesson → `04_Methodology/` · brand-strategy → that brand's `<Brand>-Brand-Assets/` · brand-research → that brand's `<Brand>-Brand-Assets/Brand-Research/` · resources → `02_Command-Base/Resources/` · guide / brief / menu → with the folder or project they describe · control → `99_Meta/`, and setup is what puts them there (the control plane is declared in §8 so a correct install is not flagged for its own machinery, not so that new ones get filed by hand).
 3. **If no family fits: STOP.** Do not force it in. Do not invent frontmatter. Propose a new family: a new template plus a new row in §8, get a yes, then file. (The frontmatter guard blocks a hard schema violation: a bad filename, a missing required key, a value outside a closed list. A key §8 has not declared is a judgment call, not a violation, so the guard **flags it to this session** instead of blocking: register it in §8 if this kind of note always carries it, drop it if it was invented on the spot.)
@@ -57,7 +57,7 @@ Top level (numbers are anchors, gaps in the middle are allowed):
     Lanes hold projects, never loose materials; the files inside a project (transcripts, drafts, exports) are project materials, live with it, and need no frontmatter family. **When a project closes, its reusable outputs graduate to the entity room that owns them** (campaign output → `Marketing-Assets/`); the rest archives with the project. Standing materials go to `01_Assets`: first try the entity room that naturally owns them; only when nothing absorbs them and they keep accumulating does a new materials room get proposed (IT-Systems and Marketing-Assets are the two standing precedents).
     **Naming a room: name it after what it holds, and add a suffix only when the bare noun would be ambiguous.** `Clients` needs nothing. `Marketing` is both an activity and a pile of material, so it is `Marketing-Assets`. `IT` alone says too little, so it is `IT-Systems`. ⛔ Never name a room by which lane produced its contents: lanes move (a `Grow` project that turns routine re-homes to `Run`), and a name that records a moving fact becomes a lie the day it moves (§5). ⛔ And never a name any file could belong to: no `Materials/`, no `Assets/`.
   - `03_SOP/`: ships empty. One process, one note, flat. **Flat means no category subfolders**; a note's own same-named folder is not a subfolder, and a finished SOP normally has one (its swimlane diagram and every other non-markdown file live beside their note, per §2). The `sop-builder` skill is the recommended way to write one, **not the only legal writer**: it ships separately, so a vault can be running without it, and **hand-writing an SOP here is legal**. Either way the shape is governed by the template and the frontmatter guard. Steps dictated before the shape settles park in a working folder, `00_Inbox/<process-name>-sop-draft/`. Cross-lane by nature, so it lives centrally and links out via frontmatter.
-  - `04_Methodology/`: `Lessons/ Playbooks/`. Ships empty on purpose. **Capture never writes here**, and nothing lands without the owner's yes. Weekly maintenance is the usual proposer; the `playbook-lab` skill and the owner asking directly are the other two.
+  - `04_Methodology/`: `Lessons/ Playbooks/`. Ships empty on purpose. **Capture never writes here**, and nothing lands without the owner's yes. Weekly maintenance is the usual proposer, and the owner asking for it out loud is the other; `method-builder` is the skill that carries out either.
 - **Business-Profile.md** sits at the wing root: the one-page anchor of what this business is.
 - **A second business** = a new wing (05_), same internal shape, its own value in the domain vocabulary. The wing shape is pre-approved here; adding its domain value to §8 rides along without a separate amendment.
 
@@ -131,6 +131,8 @@ A name is an address. Two regimes, and the test is one question: **is this file 
 
 ⭐ **Methods and playbooks are where that rule bites hardest, so they name it in the filename itself:** `<the-work>-method.md` and `<the-kind-of-work>-playbook.md`, named for **the work**, ⛔ never for the case that taught it. `quoting-a-renovation-method.md`, ⛔ not `the-tan-house-method.md`. A method written during one job is about the job, not the client, and the client is exactly the fact that changes.
 
+⭐ **The folder they live in carries that same work name with no suffix** (`04_Methodology/Playbooks/quoting-a-renovation/`), ⛔ never `<the-work>-playbook/`. A folder holds methods before it holds a playbook, so a folder named for a maturity it has not reached is false on the day it is made, and it would have to be renamed on the day it stops being false. That is the rule directly above: a name carries only facts that do not change.
+
 **The `_` prefix means front door.** `_<Name>-Guide.md`, `_<Project>-Brief.md`, `_SOP-Menu.md`. **At most one `_`-prefixed file per folder**, so an agent that globs `_*.md` in a folder gets exactly one hit. A file without the prefix is content, never a door.
 
 Names are English, hyphenated, no spaces (§4, law 6).
@@ -147,8 +149,8 @@ Five kinds, five questions:
 
 - **Decision = a call that still stands.** One decision, one note, in `02_Command-Base/Decisions/`, landed the moment it is made. A decision's `lane:` is the lane of the work it governs (pricing and offer rules: `grow`; delivery-of-work rules: `deliver`; routine and upkeep rules: `run`; capability bets: `build`). The set of ACTIVE decisions, filtered by lane, IS the rulebook: "never discount below 20%" is simply a decision that never expires. When a new decision replaces an old one, the NEW note names what it replaces via `supersedes:` (written once, at birth) and the old note just flips to `status: superseded`; history comes free. Event decisions (hire this person, buy that oven) flip to `closed` once executed, so the active set stays a rulebook and not a junk drawer. **Guardrail duty: before landing a new decision, check the active set; on conflict, ask the owner "change the rule, or break it once?"** ⛔ The guardrail runs **before the note lands, in the same breath as the decision**, never on a queue that clears later. Its entire value is in the word "before": deferred to the end of the day, a ten o'clock decision and a three o'clock decision that contradicts it both land, and the conflict waits for a human to trip over it. A decision the owner made and nobody wrote down gets caught at closeout as a backstop, and ⛔ **the backstop runs the same guardrail** rather than skipping it for being late.
 - **Lesson = a pit.** Something that actually hurt, recorded so it never surprises twice. `04_Methodology/Lessons/`, grouped in subfolders when a string of them shares a subject. It lands at the closeout of the session the pit happened in, with the owner's yes. Two sections and they are not the same kind of sentence: **what happened is history and never changes**; **what we now do differently is alive and gets edited** when the world moves. If the reason for a change is that you got better rather than that the world changed, that is a Method, not an edit to a Lesson.
-- **Method = one move of yours, written down.** How you personally do one kind of thing, landed at the closeout of the work that taught it. `04_Methodology/Playbooks/`, flat, named `<the-work>-method.md`. Named for the work, ⛔ never for the case it came from (§5). Rewritten whole when you find a better way; the same name is updated rather than a second file created, so the note carries how many times you have done this without counting anything.
-- **Playbook = judgment composed.** The methodology of a kind of work: what to weigh, how to decide. `04_Methodology/Playbooks/`, beside the methods it came from. It is **earned in the weekly distillation**, when several related methods turn out to be one way of working.
+- **Method = one move of yours, written down.** How you personally do one kind of thing, landed at the closeout of the work that taught it. `04_Methodology/Playbooks/<the-work>/`, the folder for that kind of work, named `<the-work>-method.md`. Named for the work, ⛔ never for the case it came from (§5). Rewritten whole when you find a better way; the same name is updated rather than a second file created, so the note carries how many times you have done this without counting anything.
+- **Playbook = judgment composed.** The methodology of a kind of work: what to weigh, how to decide. In the same folder, beside the methods it came from. It is **earned**, and there are exactly two ways to earn it: the weekly distillation reads the methods together and proposes one, or the owner asks for one out loud. Both need several related methods that turn out to be one way of working, and ⛔ neither of them is a skill deciding on its own (§9, and `method-builder` is the skill that writes it either way).
 - **SOP = steps.** A dead process anyone can follow. Lives flat in `03_SOP/`; usually written through the `sop-builder` skill, legally hand-written when that skill is not installed (§1).
 
 **Only two kinds of edge exist between them: BECOMING and REFERENCING.** They are not interchangeable and the difference decides whether a note moves:
@@ -442,67 +444,99 @@ Example frontmatter, a decision: `cb: decision · date: {{DATE}} · status: acti
 
 Adding a family or a required key = amending this file (propose-and-approve). There is no other copy to keep in sync. The `vault-guardian` skill is the recommended way to carry an amendment through every file it touches (this file, the note templates, the tag vocabulary, `Home.md`, the folder doors, `CLAUDE.md`); amending by hand is legal, and the guard and the checker read the result the same way either way.
 
-## 9 · Playbook labs (the upgraded form of a playbook)
+## 9 · Playbook folders: one folder per kind of work, and its door
 
-9.1 What a lab is. A playbook whose methodology has earned a live feedback loop. The
-playbook note grows into a folder under `04_Methodology/Playbooks/<Name>/`, holding the
-playbook itself plus its lab organs. The upgrade happens in place: no move, no link
-rewrites; closing a lab is the same operation in reverse. Most playbooks never need this;
-prose is the normal, sufficient form of a playbook, and the default answer to opening a
-lab is NO.
+9.1 What a playbook folder is. `04_Methodology/Playbooks/` holds folders, not loose
+files: **one folder per kind of work**, named for the work with no suffix (§5). A folder
+holds the method or methods that came out of that work, the playbook once several of
+them turn out to be one way of working (§7), and **one door, `_<Name>-Guide.md`, which
+is mandatory from the day the folder exists**. Whoever writes the first method for a
+kind of work makes the folder and writes the door in the same breath; ⛔ a folder
+without its door is the one shape this layer does not have.
 
-⭐ **This is the third and last degree of maturity, and all three live at one address**
-(`04_Methodology/Playbooks/`, flat): a `<work>-method.md` is one move of yours · a
-`<kind-of-work>-playbook.md` is several of them turning out to be one way of working (§7)
-· a `<Name>/` folder is a playbook that earned a feedback loop. ⛔ Nothing moves folders
-to climb: a method that gets distilled keeps its filename and gains `distilled_into:`,
-and a playbook that opens a lab becomes a folder where it already sits. That is what
-makes one address show the whole ladder at a glance.
+⭐ **Why a folder rather than a flat file.** "Which fights did this come out of" is the
+question a playbook has to be able to answer (§7), and a folder answers it by opening
+rather than by searching. ⛔ A folder holding only a playbook would not be worth making,
+and that is the test for whether one belongs here at all.
 
-A lab is opened when the OWNER asks, and the `playbook-lab` skill runs the §9.5 gate
-and refuses a candidate that does not pass it. ⛔ Never hand-build a lab's organs.
+⚠️ **What this costs, said plainly rather than discovered later.** The older form kept
+every degree of maturity at one flat address, so a single listing showed the whole
+ladder at a glance. A listing of folders shows the **kinds of work** instead, and how
+far any one of them has got takes one more opening to see. That is the trade that was
+made: the ladder is a little less visible, the provenance is a lot more.
 
-9.2 Shape (fixed; changing it is an amendment). A lab folder holds exactly five things:
-`_<Name>-Guide.md` (the door: reading order, who writes what, when) · the playbook (the
-single authority; revised only through proposals) · a rubric (at most 2-3 criteria; at
-least one hard business signal; one identity veto: "does this sound like us") · a
-hypothesis register (a ledger of live bets, each naming which part of the methodology it
-tests and its verdict condition) · thresholds (trigger lines, shipped with defaults,
-owner-tunable). One organ set per lab; plurality lives inside the organs: multiple rubric
-cards, multiple concurrent bets, rows disposable, files permanent. The scoreboard is
-deliberately NOT in the lab: scores live with the outputs they score. (View mechanism for
-the scoreboard is shared ground with the dashboard design; decided there, not here.)
+9.2 The door has two halves, and they do not age at the same rate.
 
-9.3 The loop. Output → scored against the rubric (seconds, never ceremony) → scores feed
-the register, bets resolve → a threshold fires → the owner's yes revises the playbook →
-everything downstream follows automatically, because SOPs link the playbook (`playbook:`)
-and sessions reach it through the standard reading order; the authority is one file, so
-the latest distillation is simply what everyone reads. No step relies on anyone
-remembering, and no step bypasses the owner.
+**Top half: how to use this playbook.** While the folder holds only methods it is one
+line pointing at the method; once there is a playbook it is that playbook's own summary.
+It goes stale, so it gets revised, and ⛔ revising it takes the owner's yes like
+everything else in this layer (§4 law 4).
 
-9.4 One line, one playbook (the split test). Methodology segments that score the same
-outputs live as chapters of one playbook, sharing one scoreboard. A stream with its own
-outputs and its own feedback signal is its own playbook; split before opening a lab.
+**Bottom half: what this playbook has been used for, and what came back.** One row per
+output that carried a bet:
 
-9.5 Opening a lab (the gate). Candidacy is requested by the owner; the gate runs,
-carrying its NO-prior. Three doors, all required:
-the line is alive (default: 4+ new outputs in the last 30 days, counted from journal
-backlinks and output rooms) · judgment is accruing (default: 3+ related lessons or
-decisions; busy-but-no-judgment wants a better SOP, not a lab) · an external, countable
-feedback signal exists (inquiries, orders, saves; a lab without an outside signal can
-only measure self-satisfaction). Opening is guided by the `playbook-lab` skill: it runs
-the gate, interviews the rubric into existence, and seeds the register and thresholds.
-Nothing lands without the owner's yes.
+| What came out | What I expect | When it counts | What happened | So |
+|---|---|---|---|---|
 
-9.6 Closing a lab. Two signals, both propose-only: silence (90 days without output) and
-idling (outputs continue but scores stop, bets never resolve, proposals never land; ask
-"recommit?" once, then propose closing). Closing archives the organs and a scoreboard
-snapshot to `98_Archive/`; the playbook text keeps every criterion it earned. Learning is
-archived, never destroyed; a revived line gets its organs back.
+The first three columns are filled when the output ships, and the owner answers exactly
+one question, which is what they expect. The last two are filled when the result is
+back. ⛔ **Every row lands the way everything else in this layer lands: the machine
+drafts it, the owner says yes.** §4 law 4 is not carved out here and does not need to
+be; a table the machine could write into by itself would be the first thing in
+`04_Methodology/` that the owner did not put there.
 
-9.7 Discipline. Both directions run propose → approve → log, like every structural change
-in this vault.
+⭐ **"When it counts" is the owner's own number, not the calendar's.** A post is
+answered in about a week, a proposal in about a month, a course in about a quarter.
+Whoever writes the row asks, because the maturing time belongs to that line of work and
+nothing else knows it.
+
+⭐ **The same sentence appearing in the "So" column for the third time is the signal to
+revise the top half.** That is the whole trigger mechanism. It is deliberately a person
+noticing a repeat rather than a number crossing a configured line, because the number
+would need somebody to tune it and the repeat needs nobody.
+
+⛔ **An output with no bet gets no row.** This table is a record of bets and what they
+returned, ⛔ never a directory of what this playbook has produced: Home is the only
+directory this vault has (§4), and nobody reaches an output through this table.
+
+⚠️ **The bottom half grows, and it is read every single time the folder is opened**, so
+it is kept in two layers: **what has been learned** (a few permanent lines, which are
+the "So" sentences that came up a third time) and **the recent rows**. Older rows sink
+below them. ⛔ Skipping this is how the door dies: not by being wrong, by being long.
+
+9.3 The order of a session that uses a playbook, and ⭐ the order is the design.
+
+1. **Settle what is open.** Read the bottom half first. Any row whose date has passed
+   with nothing in "What happened" gets looked up wherever the answer actually lives
+   (the messages, the orders, the sign-ups), drafted, and put to the owner as one
+   question.
+2. **Revise, if a sentence just came up for the third time.** The owner's yes first,
+   then the top half changes.
+3. **Do the work**, with a top half that was brought up to date a minute ago.
+4. **Register what came out**, in the same session, one row, three columns.
+
+⭐ **Settling comes before the work and not after it.** Put it after and it becomes a
+chore attached to a finished job, which is where rituals of this kind die.
+
+⛔ **The door carries these four beats in its own words**, at its own top. That is what
+makes a playbook folder something the owner can hand to an assistant, a contractor or
+another AI and have it still work: ⭐ **nothing in this section depends on which skills
+happen to be installed.**
+
+9.4 One kind of work, one folder (the split test). Segments of methodology that get used
+on the same outputs live as chapters of one playbook, sharing one door. A stream with
+its own outputs and its own feedback is a different kind of work, so it is its own
+folder. Split before the door's bottom half starts holding two conversations.
+
+9.5 A line that goes cold needs no closing ceremony. ⭐ **Rows sitting unsettled past
+their date are themselves the evidence that the line went quiet**, visible to anyone who
+opens the door, which is why nothing here scans for silence and no folder is ever
+closed. ⛔ Nothing in this layer is deleted either: a kind of work that comes back finds
+its own history waiting, which is the point of having written it down.
+
+9.6 Discipline. Every change here runs propose → approve → log, like every structural
+change in this vault.
 
 ## Revision log
 
-- **{{DATE}}**: v2, written at vault setup. Four-layer business wing (`01_Assets` / `02_Work` / `03_SOP` / `04_Methodology`), guide files as folder doors, `02_Command-Base` as its own top-level layer, §8 as the machine-readable record schema, §9 as playbook labs. The prose here is the human record; `doctrine_version: 2` in the frontmatter is the same fact in the form a machine can read, and the two say v2 together or one of them is wrong.
+- **{{DATE}}**: v3, written at vault setup. Four-layer business wing (`01_Assets` / `02_Work` / `03_SOP` / `04_Methodology`), guide files as folder doors, `02_Command-Base` as its own top-level layer, §8 as the machine-readable record schema, §9 as playbook folders: one folder per kind of work, each holding the methods it came from, its playbook once earned, and a mandatory door whose bottom half records the bets placed on it. The prose here is the human record; `doctrine_version: 3` in the frontmatter is the same fact in the form a machine can read, and the two say v3 together or one of them is wrong.
