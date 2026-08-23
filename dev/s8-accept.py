@@ -106,11 +106,14 @@ sys.path.insert(0, os.path.join(
 import doctrine_schema  # noqa: E402
 
 # --- acceptance criteria (see header: change only with a shape change) -------
-EXPECT_FAMILIES = 14  # 13 until 2026-08-22, when brand-research was added
-EXPECT_SPECS = 36  # families with subtypes contribute their subtypes, not themselves
+EXPECT_FAMILIES = 13  # 13 until 2026-08-22, when brand-research was added;
+                      # 14 until 2026-08-24, when the lab family was removed
+EXPECT_SPECS = 32  # families with subtypes contribute their subtypes, not themselves
                    # 24 until 2026-08-20, when process.method was opened
                    # 25 until 2026-08-21, when entity's eleven types became eleven subtypes
                    # 35 until 2026-08-22, when brand-research was added
+                   # 36 until 2026-08-24, when the three lab organs and
+                   # control.lab-gate-config went with the lab
 EXPECT_IN_FAMILY_CLOSED_LISTS = 14  # 13 until 2026-08-19, when entity.status was closed;
                                     # 14 until 2026-08-20, when process.method.status opened;
                                     # 15 until 2026-08-21, when entity.type stopped being a list
@@ -120,7 +123,6 @@ EXPECT_PERSONAL_LANES = 7
 EXPECT_DECISION_LANES = 11  # the four work lanes plus the seven personal ones
 EXPECT_MULTI = {"process.sop": ["lane"], "process.playbook": ["references"]}
 # process.playbook.references added 2026-08-20: the one pointer a playbook writes at birth
-EXPECT_LAB_CARDINALITY = {"count": 1, "per": "lab-folder"}
 RENDER_TAGS = ["aroma-coffee", "laowang-coffee", "noodlebar"]
 PLACEHOLDER = "{{BUSINESS_TAG}}"
 
@@ -372,18 +374,6 @@ def check3(parsed, reserved):
             print(f"    3d {label:8s} {len(lists)} in-family closed lists, all keyed by a declared field; "
                   f"{len(globals_)} global ({globals_})")
 
-        # 3e - the lab cardinality
-        card = None
-        for k in reserved:
-            v = fams.get("lab", {}).get(k)
-            if isinstance(v, dict) and "count" in v:
-                card = v
-                break
-        if card != EXPECT_LAB_CARDINALITY:
-            fail("3e", label, f"lab cardinality = {card}, expected {EXPECT_LAB_CARDINALITY}")
-        else:
-            print(f"    3e {label:8s} lab cardinality = {card}")
-
         # 3f - a reserved key stranded at a family level that has subtypes.
         # The meta-rule says a family with subtypes contributes its subtypes and
         # not itself, so a `required` / `optional` / `multi` / `marker` written
@@ -391,7 +381,8 @@ def check3(parsed, reserved):
         # nothing raises, which is the quiet failure this check exists to make
         # loud. Which keys those are is derived, not typed: they are the reserved
         # keys the shipped reader keeps a slot for on one Spec. `cardinality` is
-        # not among them and is legitimately family-level (see 3e); a family-level
+        # not among them and is legitimately family-level; the meta-rule still
+        # reserves the name, and no family declares one today; a family-level
         # closed LIST is legitimate too and still reaches every subtype, which is
         # why only the slot keys are looked at here.
         per_spec = set(doctrine_schema.Spec.__slots__) & set(reserved)

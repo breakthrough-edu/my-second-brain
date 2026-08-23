@@ -103,7 +103,6 @@ DEFAULTS = {
         "bootstrap-progress.md",
         "capture-progress.md",
         "maintenance-state.md",
-        "lab-gate-config.md",
         "memory.md",
         "profile.md",
         "capture-buffer.md",
@@ -517,8 +516,8 @@ def _check_against_schema(vault, cfg, mounted_on_marker):
     # ⛔ There is no exemption for the control plane here, and that is the point.
     # An earlier version of this function skipped every file sitting directly in
     # the meta dir, because section 8 declared no family for the doctrine, the
-    # tag vocabulary, the lab-gate config or profile, and checking them meant
-    # four warnings on a brand-new correct install. That was a rule living in
+    # tag vocabulary or profile, and checking them meant warnings on a
+    # brand-new correct install. That was a rule living in
     # code instead of in the law, which is the exact disease this whole
     # enforcement line exists to cure. Section 8 now declares a `control`
     # family, so they mount and pass like anything else, and a control file
@@ -571,7 +570,7 @@ def check_type_families(vault, cfg):
     """The type-mounted half: every family that is not a `cb:` record.
 
     Before this existed, `if marker not in fm: continue` meant guide, brief,
-    menu, entity, process, hypothesis, lab, ritual, resources and
+    menu, entity, process, hypothesis, ritual, resources and
     brand-strategy were invisible to the checker."""
     return _check_against_schema(vault, cfg, mounted_on_marker=False)
 

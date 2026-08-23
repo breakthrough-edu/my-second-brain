@@ -69,7 +69,7 @@ The guard builds its `known` set from required, optional, the enum fields, the m
 
 ### A8 · Structure changes have a second cost on the product side only
 
-The product's own acceptance script pins the shape of section 8: the family and shape totals, the count of in-family and global closed lists, the personal and decision lane counts, which fields are multi-value, and the lab cardinality. Removing a family, a shape or a closed list turns it red. ⛔ **It does not ship with the payload and never runs against an owner's vault**, so no amendment made in a vault can reach it. ⭐ **Adding a required key does reach one thing, and it is THIS file.** Check 8 of that script walks every shape in section 8 and demands a row here for each of its required keys, so a key added to the block turns the script red until an entry beside it says what the key stops. The script never counts required keys and does not care how many there are; it cares that each one can be looked up. The two mounting keys are exempt (`cb` and `type`, taken from the parsed schema rather than typed into the script), which is why the six shapes whose tables carry no `type` row are correct as they stand. Removing a required key still turns nothing red: the row it leaves behind here is stale and nothing reports it.
+The product's own acceptance script pins the shape of section 8: the family and shape totals, the count of in-family and global closed lists, the personal and decision lane counts, and which fields are multi-value. Removing a family, a shape or a closed list turns it red. ⛔ **It does not ship with the payload and never runs against an owner's vault**, so no amendment made in a vault can reach it. ⭐ **Adding a required key does reach one thing, and it is THIS file.** Check 8 of that script walks every shape in section 8 and demands a row here for each of its required keys, so a key added to the block turns the script red until an entry beside it says what the key stops. The script never counts required keys and does not care how many there are; it cares that each one can be looked up. The two mounting keys are exempt (`cb` and `type`, taken from the parsed schema rather than typed into the script), which is why the six shapes whose tables carry no `type` row are correct as they stand. Removing a required key still turns nothing red: the row it leaves behind here is stale and nothing reports it.
 
 ---
 
@@ -98,7 +98,7 @@ Declared once at the bottom of section 8, in the `open_keys` table rather than o
 
 ## `guide`
 
-`required: [type, guide_family, updated]` · `guide_family: [wing, room, lane, brand, lab]`
+`required: [type, guide_family, updated]` · `guide_family: [wing, room, lane, brand, playbook]`
 
 | Key | What it stops | Who reads it | If the owner wants it gone |
 |---|---|---|---|
@@ -241,16 +241,6 @@ Every subtype declares `required: [type, status]` and carries `renew_by` and `st
 | `destination` · one value | The pool growing a second landing point without the judgment that would have to move with it. Section 8 states the principle: a closed list earns its keep only by refusing what is not on it. `modes/distill.md:17` says the pool has exactly one landing point, and the first-pass test (does this claim need time to become true) only makes sense for that one destination. | ⚠️ Nothing reads the key by name. The reader is that pass, which assumes one destination throughout. | A second value is a real amendment, and ⛔ it is not done by adding the value alone: the distillation test moves with it. |
 | `weeks_supported` `weeks_silent` | A hypothesis that never expires. `modes/distill.md:21` ages one on corroboration, `:23` ages the other on silence and expires the hypothesis after about four cadence periods of nothing. Without the counters there is no line to cross. | `modes/distill.md:21` `:23`. | ⛔ |
 
-## `lab.rubric` · `lab.thresholds` · `lab.lab-register`
-
-Each: `required: [type, updated]`. The family also declares `cardinality: {count: 1, per: lab-folder}`.
-
-| Key | What it stops | Who reads it | If the owner wants it gone |
-|---|---|---|---|
-| `type` | Three organs, one family each. Without them a correctly opened lab is reported three times over as shapes section 8 does not declare. | A3 · `skills/playbook-lab/SKILL.md:63-65`. | ⛔ |
-| `updated` | As `guide.updated`, applied to a lab's own machinery. | ⚠️ No reader. | A7. |
-| `cardinality` | Not a key: it is the family's declared shape, one file each per lab. Section 8 says outright that no check anywhere counts these files against it. | ⚠️ Nothing enforces it. | ⛔ Keep it. A written shape is the entire value here, and a person noticing a lab with two rubrics is the intended enforcement. |
-
 ## `ritual.daily`
 
 `required: [type]`
@@ -300,7 +290,7 @@ Each: `required: [type, updated]`. The family also declares `cardinality: {count
 
 `required: [type, updated]` · `optional: [source, brand]`
 
-⭐ **Read this next to `brand-strategy` above, because the pair is the point.** The pillars are the answers; this family is the evidence they were built on, the owner's own convictions included. Section 8 names it "the evidence behind the pillars" and refuses "market research" for one stated reason: a family named after looking outward would push the owner's own beliefs somewhere else. ⚠️ Unlike the brand rooms, `Brand-Research/` is not scaffolded. It is made the first time evidence is written, so the wiring checks never see it and the folder's own door is a runtime door like a lab's.
+⭐ **Read this next to `brand-strategy` above, because the pair is the point.** The pillars are the answers; this family is the evidence they were built on, the owner's own convictions included. Section 8 names it "the evidence behind the pillars" and refuses "market research" for one stated reason: a family named after looking outward would push the owner's own beliefs somewhere else. ⚠️ Unlike the brand rooms, `Brand-Research/` is not scaffolded. It is made the first time evidence is written, so the wiring checks never see it and the folder's own door is a runtime door, like the door on a playbook folder.
 
 | Key | What it stops | Who reads it | If the owner wants it gone |
 |---|---|---|---|
@@ -311,14 +301,14 @@ Each: `required: [type, updated]`. The family also declares `cardinality: {count
 
 ⛔ **The request to expect, and the answer.** An owner running a named research method will ask for the topics as a closed list (`type: [consumer-research, competitor-research, ...]` or a `research_kind` key). Section 8 refuses it in its own words, and the reason is worth stating plainly: the topic set belongs to a school of practice, not to this vault, so putting it in the law means every change to somebody else's vocabulary arrives as an amendment to their constitution. The subject already has a home the law does not have to police, which is the filename and the title. ⭐ If they want the set visible rather than enforced, that is a line in their own `Brand-Research/` door, and the door needs no amendment.
 
-## `control.doctrine` · `control.vocabulary` · `control.lab-gate-config` · `control.profile`
+## `control.doctrine` · `control.vocabulary` · `control.profile`
 
-Each: `required: [type]`, plus, on the ones whose shipped file carries them, the keys that file carries: `vocabulary` takes `maintained_by` `last_updated` `version`; `lab-gate-config` takes `created` `last_updated` `maintained_by`; `profile` takes `subject` `last_updated` `maintained_by`.
+Each: `required: [type]`, plus, on the ones whose shipped file carries them, the keys that file carries: `vocabulary` takes `maintained_by` `last_updated` `version`; `profile` takes `subject` `last_updated` `maintained_by`.
 
 | Key | What it stops | Who reads it | If the owner wants it gone |
 |---|---|---|---|
 | `type` on all four | A brand-new, entirely correct install being warned every week about its own control plane. `scripts/checkup.py:517-526` records the ruling in the code it replaced: an earlier version skipped every file sitting directly in the meta directory, and, verbatim, "That was a rule living in code instead of in the law". Declared here, they mount and pass like anything else, and a control file that arrives **without** an amendment is correctly surfaced instead of waved through by a path test. | `scripts/checkup.py:517-555` · `:99-110`, which separately checks the control files exist. | ⛔ |
-| The optional keys | A5: undeclared, the product's own frontmatter is reported back as judgment calls on every install. | `templates/tagging-vocabulary.template.md:3` · `templates/lab-gate-config.template.md:5` · `templates/profile.template.md:5`. | Already optional. |
+| The optional keys | A5: undeclared, the product's own frontmatter is reported back as judgment calls on every install. | `templates/tagging-vocabulary.template.md:3` · `templates/profile.template.md:5`. | Already optional. |
 
 ⭐ Section 8 explains why `required` is thin across this family and it is worth repeating to an owner who wants to tighten it: a constitution, a tag table, a threshold config and a person's dossier have almost nothing in common to demand, and a schema invented to cover all of them would fit none. Tighten one when its own shape settles.
 

@@ -181,8 +181,10 @@ The frontmatter guard and the checker read this section live and keep no copies:
 # price of the rule rather than an oversight.
 families:
   guide:      {required: [type, guide_family, updated],
-               guide_family: [wing, room, lane, brand, lab]}   # brand = a subfolder of
-                                          # <Brand>-Brand-Assets/ ; lab = a playbook lab folder
+               guide_family: [wing, room, lane, brand, playbook]}   # brand = a subfolder
+                                          # of <Brand>-Brand-Assets/ ; playbook = one playbook
+                                          # folder under 04_Methodology/Playbooks/, holding one
+                                          # kind of work. Every playbook folder has one.
   brief:      {required: [type, status, updated],
                optional: [started, due, owner, brand, stage, depends_on, hide_on_deck, priority],
                status: [active, done, killed],
@@ -299,18 +301,6 @@ families:
                                         # a closed list earns its keep only by refusing what is
                                         # not on it, and a list of values nobody writes refuses
                                         # nothing while looking like it does.
-  lab:                                    # the three lab organs, one file each per lab,
-                                          # rows inside are disposable, the files are permanent
-    cardinality: {count: 1, per: lab-folder}   # "one file each per lab", written down
-                                               # for the person reading this block. It is a
-                                               # description of the shape a lab has; no check
-                                               # anywhere counts these files against it, and
-                                               # a lab holding the wrong number of them is
-                                               # something a person notices, not something
-                                               # this block enforces.
-    rubric:       {required: [type, updated]}
-    thresholds:   {required: [type, updated]}
-    lab-register: {required: [type, updated]}
   ritual:
     daily:          {required: [type]}
     weekly-review:  {required: [type, week_of, reviewed_on]}
@@ -412,8 +402,6 @@ families:
                                         # no other way.
     vocabulary:      {required: [type],
                       optional: [maintained_by, last_updated, version]}
-    lab-gate-config: {required: [type],
-                      optional: [created, last_updated, maintained_by]}
     profile:         {required: [type],
                       optional: [subject, last_updated, maintained_by]}
   singletons:
