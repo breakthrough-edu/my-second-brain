@@ -88,7 +88,7 @@ Precedent table (settled, do not re-argue):
 
 Three ways anything is found, and only three:
 
-1. **Home.md**: the full directory of the vault (folders plus guide files). The only **vault-wide** directory that exists; §4 names the two deliberate exceptions, and both are scoped indexes of one folder's own business rather than second directories of the vault. Maintained by machine: the structure-evolution skill updates it when folders are born; weekly maintenance audits it against the filesystem.
+1. **Home.md**: the full directory of the vault (folders plus guide files). The only **vault-wide** directory that exists; §4 names the two deliberate exceptions, and both are scoped indexes of one folder's own business rather than second directories of the vault. Maintained by machine: whoever makes a folder writes its name in, in the same breath, and the frontmatter guard injects that duty on every `mkdir`; weekly maintenance audits it against the filesystem.
 2. **Type queries**: frontmatter (`type:`, `cb:`, `renew_by:` and friends) is how dashboards, radars and checkers find things. Entity notes are found by type plus address, not by links.
 3. **Backlinks**: activity lives in `01_Daily/` as journal lines that **link to the guide or brief of what they belong to**. One mention, everything else derives. Briefs are linked bare; guides are linked path-qualified (§5).
 

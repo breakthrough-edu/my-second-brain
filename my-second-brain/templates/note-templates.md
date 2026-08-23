@@ -601,8 +601,10 @@ tags: []
 <!--
 How to fill this in (only what §8 of the structure doctrine does not already say)
 
-Filename is the process name, plain, in the folder `03_SOP/`. The swimlane HTML lives in
-`03_SOP/<Process-Name>/` next to it: this note is the address, that folder is its closet.
+Filename is the process name, plain, flat in the SOP folder this note sits in (with a vault that
+is the wing's SOP floor; the doctrine's floor map, not this comment, says where that is). The
+swimlane HTML lives in `<Process-Name>/` next to it: this note is the address, that folder is its
+closet.
 
 lane: multi-value, from the closed list deliver / grow / run / build. A process that serves a
   named customer is deliver; if it would still exist with zero growth, it is run. Leave empty

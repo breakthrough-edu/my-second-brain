@@ -261,6 +261,8 @@ The skill payload lives in [`my-second-brain/`](my-second-brain/) (the nesting i
 
 `dev/` holds maintainer tooling that is deliberately kept out of the payload, so it is version-controlled but never installed, such as [`dev/s8-accept.py`](dev/s8-accept.py), the acceptance harness for section 8 of `templates/structure-doctrine.template.md` (the machine-readable record schema that the frontmatter guard and the checker both read live). **Run it after any change to section 8** (a new family, a renamed key, a moved value) and require exit 0 before calling the change done. It needs PyYAML.
 
+Beside it, [`dev/citations-accept.py`](dev/citations-accept.py) holds the guardian's citation table to its own form: every citation there is a file plus a string that appears verbatim in that file, never a line number. **Run it after editing any file that table cites**, and after editing the table. ⭐ The reason it tests anchors rather than line numbers is on paper in the script's own header: a line number can only be tested for landing on a non-blank line, which passes green on a citation that has quietly slid onto unrelated code, and a check that certifies a broken file as healthy is worse than no check at all.
+
 ## License
 
 MIT. Built and maintained by [Breakthrough EDU](https://github.com/breakthrough-edu).
