@@ -264,3 +264,5 @@ The skill payload lives in [`my-second-brain/`](my-second-brain/) (the nesting i
 ## License
 
 MIT. Built and maintained by [Breakthrough EDU](https://github.com/breakthrough-edu).
+
+This skill directs an AI agent running on your machine to read and modify your own files. Review what it proposes before approving it, keep backups of anything you care about, and note that everything here is provided as is, without warranty of any kind (see LICENSE).
