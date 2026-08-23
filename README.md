@@ -8,7 +8,7 @@
 
 A Claude Code skill that builds and runs a complete second brain for a business owner: one vault, two wings (your life in a personal wing, your business in a four-layer knowledge map), operated in plain conversation, with Obsidian as the viewing deck.
 
-And it does the two things note systems never do: it **grows its own memory** (every AI conversation becomes searchable history, and once a week the AI reads what is new and hands you a handful of already-written memory proposals; nothing is kept until you approve the exact words), and it **keeps machines on guard** (a read-only inspector that sweeps the vault, plus a safety lock that blocks the one delete you cannot undo). The rules are not just written down; they are enforced.
+And it does the two things note systems never do: it **grows its own memory** (every AI conversation becomes searchable history, and what a working session taught is written down at its closeout, while whoever was in it still remembers; nothing is kept until you approve the exact words), and it **keeps machines on guard** (a read-only inspector that sweeps the vault, plus a safety lock that blocks the one delete you cannot undo). The rules are not just written down; they are enforced.
 
 ## Install
 
@@ -26,15 +26,15 @@ Ten minutes later you are looking at the graph view of your half-built brain.
 
 Already running it? Updating to the latest version is one line, and it never touches your vault, only the skill files.
 
-⚠️ **Read this before you update, if your vault was built before August 2026.** The vault's shape changed in that release: the business wing moved and gained an activity layer, folder doors changed name, and one frontmatter field was renamed. Because an update never touches your vault, **an older vault and a newer skill no longer describe the same house**, and the skill now notices instead of proceeding as though they matched. What that means in practice: it will tell you, in specifics, which parts differ; reading, answering, searching and the morning brief go on working; **and it will decline to move your files or open new rooms until you say what you want** (Capture and the tidy scan are the two that stop). Nothing is changed or deleted, and no migration runs behind your back. **There is no migration tool yet**: moving a house full of real content is its own piece of work, and it is not written. If your vault is fine as it is, staying on your current version is a legitimate choice.
+⚠️ **Read this before you update, if your vault was built before August 2026.** The vault's shape changed in that release: the business wing moved and gained an activity layer, folder doors changed name, and one frontmatter field was renamed. Because an update never touches your vault, **an older vault and a newer skill no longer describe the same house**, and the skill now notices instead of proceeding as though they matched. What that means in practice: it will tell you, in specifics, which parts differ; reading, answering, searching and the morning brief go on working; **and it will decline to move your files or open new rooms until you say what you want** (Capture and the tidy scan are the two that stop). Nothing is changed or deleted, and no migration runs behind your back. **There is no migration tool**: moving a house full of real content is its own piece of work, and it is not written. If your vault is fine as it is, staying on your current version is a legitimate choice.
 
 ```bash
 npx skills update my-second-brain
 ```
 
-One thing the update command cannot do: the two machine guards (the safety lock and session memory) are offered during Setup, so a vault built before they shipped will not have them yet. Say **"add the safety lock"** or **"set up session memory"** in any session and the skill retrofits the one you asked for onto your existing vault.
+One thing the update command cannot do: the machine guards and session memory are offered during Setup, so a vault built before they shipped will not have them. Say **"add the safety lock"** or **"set up session memory"** in any session and the skill retrofits the one you asked for onto your existing vault.
 
-For the same reason, the weekly harvest rhythm lives in the command-base skill Setup generated for you, and an update never touches generated skills. A vault built before it shipped keeps the ask-first doorbell; say **"update my harvest doorbell"** to bring the new one over.
+For the same reason, the weekly rhythm's doorbell lives in the command-base skill Setup generated for you, and an update never touches generated skills. A vault built before the rhythm changed keeps the doorbell it was born with; say **"update my maintenance doorbell"** and the skill brings the current one over, verifying through the installed path before it reports anything.
 
 ## The idea underneath
 
@@ -62,11 +62,11 @@ The idea only works if the vault survives contact with daily life, and this is w
   <img src="assets/modes.svg" alt="Four modes, one conversation: Setup once, Capture room by room, Distill weekly, Create-My-Jarvis once at home" width="100%">
 </p>
 
-**Setup** (10 min). Installs Obsidian if needed, builds a fully wired vault (every room has a front desk, navigation live from day zero), asks 3 questions (your business name, and whether you have outlets or equipment), offers an optional calendar connection so your morning brief sees the day's schedule, and generates a **personal command-base skill named after your business**. You install one skill; it builds you another one that only fits you.
+**Setup** (10 min). Installs Obsidian if needed, builds a fully wired vault (every room has a front desk, navigation live from day zero), asks only what it needs (what to call you, your business name, and whether you have outlets or equipment), offers an optional calendar connection so your morning brief sees the day's schedule, and generates a **personal command-base skill named after your business**. You install one skill; it builds you another one that only fits you.
 
 **Capture** (15 min per room). Your Business Profile first, then one room at a time: clients, products, SOPs, whichever you pick. One question at a time, talking is fine, and there is a bulk lane when you already have material. Every session ends with one observation about your business you had not noticed, plus two good questions.
 
-**Distill** (10 min weekly). The AI tidies the vault (orphans, misfiles, stale maps), then proposes distillations: decision patterns, lessons, rollups. You only rule yes or no. The third layer of your business map fills from your judgment, never from raw capture.
+**Distill** (10 min weekly). Two halves behind one doorbell. First the anti-drift pass: the inspector sweeps, then orphans, misfiles, stale maps and the week's rollup. Then the distillation pass: the AI audits what the week's closeouts left behind and proposes what they add up to, up to a playbook when several methods have earned one. You only rule yes or no. The methodology layer of your business map fills from your judgment, never from raw capture.
 
 **Create-My-Jarvis** (45 to 60 min, at home). Two interviews, one about you and one about the character, that give your AI a real persona and a real understanding of who you are, so it stops sounding like a vending machine.
 
@@ -92,7 +92,7 @@ Your-Vault/
 
 **The numbers tell the story of the business**: what it is made of, what is moving, how things get done, why you decide the way you do. The activity layer is the one most vaults are missing, and it is where the work you are actually carrying lives.
 
-**Four lanes, and they are not departments.** A project goes to **Deliver** (work for a named customer), **Grow** (aimed at people who have not bought yet), **Run** (recurring upkeep that would exist even with zero growth), or **Build** (finite internal work that leaves the business different). You ask those four questions in order and the first yes wins. No vault-wide argument about whether something is "marketing" or "sales", because this house has no departments to argue about.
+**Four lanes, and they are not departments.** A project goes to **Deliver** (work for a named customer), **Grow** (aimed at people who have not bought), **Run** (recurring upkeep that would exist even with zero growth), or **Build** (finite internal work that leaves the business different). You ask those four questions in order and the first yes wins. No vault-wide argument about whether something is "marketing" or "sales", because this house has no departments to argue about.
 
 ## Day to day: living with it
 
@@ -100,14 +100,14 @@ After Setup, your daily driver is the command-base skill it generated for you. A
 
 | You say | What happens |
 |---|---|
-| "morning" | A brief: today's schedule (if a calendar is connected), tasks due, red flags, who you are waiting on, business renewals coming up, and about once a week one line from the session harvest if it found something worth keeping |
+| "morning" | A brief: today's schedule (if a calendar is connected), tasks due, red flags, who you are waiting on, business renewals coming up, and a one-time doorbell when a weekly half is overdue |
 | "client X finally signed, closed at RM 4,500" | Captured on the spot, buffered durably, compiled into your daily note at end of day |
 | "we decided to drop the entry-level package" | A structured decision record, filed in the central Decisions room with domain and reasoning |
 | "follow up with the printer on Friday" | A waiting-for task that will resurface on its own |
 | "how do we onboard a new hire again?" | Answered FROM your own SOP note, and if the answer reveals the SOP is stale, it gets updated in the same move |
 | "how did we fix this last time?" | Answered from your searchable session history, if session memory is installed, instead of re-deriving a solved problem |
 | "compile" (end of day) | The day's captures become one dated daily note. There is one journal, shared by both wings |
-| "distill" (weekly, 10 min) | Vault hygiene scan, then distillation proposals for your methodology layer. You rule yes or no |
+| "distill" (weekly, 10 min) | Anti-drift pass (hygiene scan, weekly rollup), then distillation proposals for your methodology layer. You rule yes or no |
 
 The handbook stays alive because answering and updating are the same motion. The vault stays trustworthy because every filing decision follows written law.
 
@@ -119,12 +119,12 @@ Most second brains die the same death: capture keeps adding, nothing ever settle
   <img src="assets/loop.svg" alt="The weekly loop: capture, tidy scan, propose, you rule, the methodology layer grows, and your AI's answers get sharper week after week" width="100%">
 </p>
 
-Say "distill" once a week and four things happen, in order:
+Say "distill" once a week, or let the doorbell name the half that is overdue, and the ritual runs in order:
 
-1. **Tidy scan.** Seven hygiene checks across the vault: orphan notes, misfiled items, stale maps, and the rest. The AI reports; files move only after you approve.
-2. **Distillation proposals.** The AI reads the week's decisions, session logs, and daily notes (and, when session memory is installed, your unreviewed AI conversations), then proposes what they add up to: a decision pattern, a lesson, a rollup.
+1. **Tidy scan.** The inspector runs its hygiene checks across the vault, then the AI scans for orphan notes, misfiled items, stale maps, and an Inbox that needs draining. It reports; files move only after you approve. The week's daily notes compress into one weekly review in the same pass.
+2. **Distillation proposals.** The AI reads what the week's session closeouts left behind (lessons, decisions, hypotheses, the methods written when jobs closed) and proposes what they add up to: a hypothesis that has earned promotion, two methods that contradict each other, a playbook when several methods have earned one.
 3. **You rule.** Yes or no on each proposal. Nothing writes itself into your methodology layer, ever.
-4. **The methodology layer grows.** Approved distillations land in `04_Methodology` as your own reviewed judgment. The same pass also watches for a playbook that has earned a live feedback loop, and for one that has gone quiet.
+4. **The methodology layer grows.** Approved distillations land in `04_Methodology` as your own reviewed judgment.
 
 This is the part most tools skip, because it cannot be automated away: the loop only compounds if a human keeps ruling. Ten minutes a week is the whole price. In exchange, the answers your AI gives you stop being generic, because they are grounded in what you actually decided, reviewed, and signed off on.
 
@@ -132,32 +132,28 @@ This is the part most tools skip, because it cannot be automated away: the loop 
 
 ## It grows its own memory
 
-Most AI setups have amnesia: every conversation starts from zero, and the fix you found in April gets re-derived in July. **Session memory** (optional, offered at setup, macOS first) closes that gap:
+Most AI setups have amnesia: every conversation starts from zero, and the fix you found in April gets re-derived in July. Two pieces close that gap, and they are deliberately not the same piece:
 
 <p align="center">
-  <img src="assets/memory.svg" alt="The memory loop: sessions are the negatives, a weekly harvest develops them, you tick what to keep, approved items become memory" width="100%">
+  <img src="assets/memory.svg" alt="The memory loop: sessions are the negatives, indexed and searchable; a closeout develops what one session taught; you approve the exact words; approved judgment is what the next session reads" width="100%">
 </p>
 
-- **Every conversation becomes searchable.** A small local tool indexes Claude Code's own transcripts into a full-text search database, so "how did we solve that before?" gets answered from history. It reads only the transcripts, read-only; it writes only its own database in `~/.my-second-brain/`; it is purely local, with no network code and no background process.
-- **A weekly harvest proposes memories.** Once a week, while your morning brief is being prepared, the AI reads the conversations nobody has reviewed yet and curates them down to at most 3 to 5 proposals: each already written to the point where yes is the only action left, each with a pointer to the conversation it came from, plus any standing memory line that looks stale enough to retire. A quiet week ends in silence. A week with something in it costs one line in the brief and a ten-second yes. The pass marks what it read as reviewed so nothing is re-proposed forever; the conversations stay indexed and searchable either way. Nothing enters the files your AI loads at session start until you have seen the exact words. Prefer to be asked each time? Set `harvest_auto: false` in `99_Meta/bootstrap-progress.md`.
+- **Every conversation becomes searchable.** Session memory (optional, offered at setup, validated on macOS) is a small local tool that indexes Claude Code's own transcripts into a full-text search database, so "how did we solve that before?" gets answered from history. It reads only the transcripts, read-only; it writes only its own database in `~/.my-second-brain/`; it is purely local, with no network code and no background process. It is a filing cabinet, not a colleague who reads it over the weekend: it answers when somebody asks, and it never speaks first.
+- **What a session taught is written down at its closeout.** Say "wrap up" and the `session-report` skill lands what the session actually produced, while whoever was in it still remembers: the lesson a pit earned, the decision that was made but never written, the claim about you that is still a hypothesis rather than memory, and a one-paragraph baton your next session reads. Nothing reaches your methodology layer until you have seen the exact words.
 
-<p align="center">
-  <img src="assets/harvest-report.svg" alt="A sample week with fake data: one line in the morning brief, then a note holding two drafted memory proposals and one stale line proposed for retirement, each with a pointer to where it came from" width="100%">
-</p>
-
-Same law as everywhere else in this system, now with your own past conversations as one of the inlets: the AI proposes, you rule, including proposing what to retire, because a memory that only ever grows goes stale. That is what "grows its own memory" means here, and it is the part a notes app cannot copy, because the raw material is your working history with the AI itself.
+Same law as everywhere else in this system: the AI proposes, you rule. A memory that only ever grows goes stale, so the weekly distill audits what closeouts left behind and proposes what to promote, what to merge, and what to retire. That is what "grows its own memory" means here, and it is the part a notes app cannot copy, because the raw material is your working history with the AI itself.
 
 ## Machines stand guard
 
 Written rules die without enforcement, so the rules that matter most are backed by machinery, all of it shipped in this skill:
 
 <p align="center">
-  <img src="assets/guards.svg" alt="The guards: the inspector finds, the safety lock blocks, the draft firewall drafts; every arrow reports to one desk, only you rule" width="100%">
+  <img src="assets/guards.svg" alt="The guards: the inspector finds, the safety lock blocks, the frontmatter guard refuses; every arrow reports to one desk, only you rule" width="100%">
 </p>
 
 - **The inspector** (`scripts/checkup.py`): a read-only hygiene sweep over the whole vault, run before every weekly tidy.
-- **The safety lock** (optional setup step, macOS only): a hook that blocks recursive deletes aimed at your vault or your skills folder, the one category of accident there is no undo for.
-- **The draft firewall** in session memory: the machine's weekly sift is written to the tool's own state directory, never into your vault. Only what an AI has actually read and drafted reaches your Inbox, and only words you approved reach the memory your AI loads at session start.
+- **The safety lock** (offered at setup, validated on macOS): a hook that blocks recursive deletes aimed at your vault or your skills folder, the one category of accident there is no undo for.
+- **The frontmatter guard** (offered in the same breath): a hook that judges a note at the moment it is about to be born. A filename that breaks the doctrine or frontmatter that breaks the record schema is refused, and on a pass the session is handed the filing protocol, so notes get filed by the law rather than from memory. It reads the law live out of your vault's own constitution, so it can never disagree with the weekly inspector.
 
 One contract across every one of them: machines find, block, and propose. Only you rule.
 
@@ -199,9 +195,9 @@ The choices that make this hold up over months, not weeks:
 
 **The methodology layer cannot be filled by capture.** `04_Methodology` starts empty on purpose. Only reviewed judgment fills it: the AI proposes, you rule. A second brain that auto-generates your "methodology" is generating someone else's.
 
-**Insights are observations, never verdicts.** Every capture session ends with one thing you had not noticed plus two good questions. The skill will not promise analytics your data cannot support yet, and it says so.
+**Insights are observations, never verdicts.** Every capture session ends with one thing you had not noticed plus two good questions. The skill will not promise analytics your data cannot support, and it says so.
 
-**Nothing nags.** Overdue maintenance, an uncompiled yesterday, the Jarvis offer: each is raised exactly once, then dropped. The weekly harvest goes one further and does not even ask: it runs quietly, speaks only when it found something worth keeping, and `harvest_auto: false` turns the asking back on. A tool that nags gets abandoned in three months, and this system is built for years.
+**Nothing nags.** Overdue maintenance, an uncompiled yesterday, the Jarvis offer: each is raised exactly once, then dropped. Session memory goes one further and never speaks first: it answers when you ask. A tool that nags gets abandoned in three months, and this system is built for years.
 
 **A crashed session loses nothing.** Every capture lands in a durable buffer file the moment it arrives. If the session dies before you compile, the next morning brief offers to backfill yesterday's note from the buffer.
 
@@ -215,7 +211,7 @@ Most of your methodology is prose, and prose is enough. But a few lines of work 
 
 The upgrade happens **in place**. No move, no renamed files, no rewritten links, and closing a lab is the same operation in reverse. What you learned stays in the playbook text either way.
 
-Three guardrails keep this from bloating your vault. The gate carries a **no by default** and needs all three doors open at once: the line is genuinely alive, judgment is actually accruing, and a countable signal exists **outside your own opinion**. Busy with no judgment wants a better SOP, not a lab. Activity with no outside signal can only measure how pleased you are with yourself. And the weekly pass proposes closing a lab that has gone silent or stopped resolving its bets, archiving the organs rather than deleting them.
+Three guardrails keep this from bloating your vault. The gate carries a **no by default** and needs all three doors open at once: the line is genuinely alive, judgment is actually accruing, and a countable signal exists **outside your own opinion**. Busy with no judgment wants a better SOP, not a lab. Activity with no outside signal can only measure how pleased you are with yourself. And a lab that has gone silent or stopped resolving its bets gets a proposal to close, archiving the organs rather than deleting them.
 
 Opening and closing one runs on `playbook-lab`, one of the skills that comes in the box with this one (see [What else comes in the box](#what-else-comes-in-the-box)). Most vaults never need it, and that is the expected outcome, not a failure.
 
@@ -224,21 +220,21 @@ Opening and closing one runs on `playbook-lab`, one of the skills that comes in 
 - Obsidian has no permission layers; if staff need a piece, export that piece.
 - Not an ERP and not a CRM. Structured high-frequency data stays in the systems built for it.
 - Early insights are observations, and the skill says so honestly. Depth comes from months of captured judgment, not from week one.
-- The two machine guards are platform-gated for now: the safety lock is macOS only, session memory is macOS first. The vault, the modes, and the inspector work everywhere, with one exception worth naming rather than burying: the branch inside Setup that installs your generated command-base skill behaves differently on Windows and is not verified there (details in the Windows self-serve path below). Windows owners who want session memory have a documented, self-driven route (see [Windows self-serve path](#windows-self-serve-path)); the safety lock is not ported, so there is no machine-level block on accidental deletes on Windows.
+- The machine guards and session memory are validated on macOS, the machine this is built on. The vault, the modes, and the inspector work everywhere, with one exception worth naming rather than burying: the branch inside Setup that installs your generated command-base skill behaves differently on Windows and is not verified there (details in the Windows self-serve path below). On Windows and Linux, Setup says so plainly and then tries each guard anyway, with a real probe on your machine deciding whether it counts as installed; Windows owners who want session memory have a documented, self-driven route (see [Windows self-serve path](#windows-self-serve-path)).
 
 ## Requirements
 
 - [Claude Code](https://claude.com/claude-code)
-- [Obsidian](https://obsidian.md) (free; the skill can install it for you). Enable the **Bases** core plugin for the dashboard.
-- Python 3, for the inspector and session memory. macOS ships everything they need; on Windows use Python from python.org (not Anaconda, whose SQLite lacks the FTS5 extension session memory needs).
-- Works on macOS, Windows, Linux. The optional machine guards are macOS-gated for now (safety lock macOS only, session memory macOS first); see Honest boundaries and the [Windows self-serve path](#windows-self-serve-path) below.
+- [Obsidian](https://obsidian.md) (free; the skill can install it for you). The dashboard is a plain HTML page the vault writes, so no plugin is needed for it.
+- Python 3, for the inspector, the guards, the dashboard and session memory. macOS ships everything they need; on Windows use Python from python.org (not Anaconda, whose SQLite lacks the FTS5 extension session memory needs).
+- Works on macOS, Windows, Linux. The machine guards and session memory are validated on macOS only; see Honest boundaries and the [Windows self-serve path](#windows-self-serve-path) below.
 - English or 中文 interaction; your choice at setup.
 
 ## Windows self-serve path
 
-The vault, the Obsidian layer, and the inspector work on Windows as-is. The four modes run there too, with one branch inside Setup that behaves differently and is described below. Two machine-layer pieces have platform boundaries. This is how a Windows owner gets what is portable and knows what is not.
+The vault, the Obsidian layer, and the inspector work on Windows as-is. The four modes run there too, with one branch inside Setup that behaves differently and is described below. The machine-layer pieces are validated on macOS only. This is how a Windows owner gets what is portable and knows what is not.
 
-**How your command-base skill gets installed, and the one trade in it.** On macOS and Linux, Setup symlinks the generated skill from your vault into `~/.claude/skills/`, so editing the vault copy edits the live skill. **On Windows the default is a plain copy**, which means an edit to the vault copy does not reach the live skill until it is copied over again. That is handled rather than ignored: the retrofit path reads the installed file back and re-copies before it will report that anything changed, so you do not get told about an update you cannot load. If you would rather have the link behaviour, Setup can make a **junction** instead (`mklink /J`, no elevation needed) when you ask for it, and it will tell you the trade first: the safety lock below is the thing that stops a recursive delete from following that link into your vault, **and the safety lock is macOS only**. A copy cannot be followed, which is the one advantage the copy has. Junctions also do not work on network paths, and can confuse a sync client if your vault lives inside OneDrive or Dropbox.
+**How your command-base skill gets installed, and the one trade in it.** On macOS and Linux, Setup symlinks the generated skill from your vault into `~/.claude/skills/`, so editing the vault copy edits the live skill. **On Windows the default is a plain copy**, which means an edit to the vault copy does not reach the live skill until it is copied over again. That is handled rather than ignored: the retrofit path reads the installed file back and re-copies before it will report that anything changed, so you do not get told about an update you cannot load. If you would rather have the link behaviour, Setup can make a **junction** instead (`mklink /J`, no elevation needed) when you ask for it, and it will tell you the trade first: the safety lock below is the thing that stops a recursive delete from following that link into your vault, **and the safety lock is unverified on Windows**. A copy cannot be followed, which is the one advantage the copy has. Junctions also do not work on network paths, and can confuse a sync client if your vault lives inside OneDrive or Dropbox.
 
 **Session memory works on native Windows**, as long as your Python ships SQLite with the FTS5 extension. Run Claude Code on native Windows (the PowerShell or CMD installer). WSL works too, but if your vault lives on the Windows drive (reached from WSL as `/mnt/c/...`), file operations and search run 5 to 20 times slower, so native is the recommended path.
 
@@ -252,7 +248,7 @@ The vault, the Obsidian layer, and the inspector work on Windows as-is. The four
 5. On first run the tool probes for FTS5. If it reports FTS5 missing, you are almost certainly on Anaconda; switch to python.org Python and run it again.
 6. The inspector (`checkup.py`) runs the same way and needs nothing special.
 
-**What you do NOT get on Windows: the safety lock.** It is macOS-first and is not ported, so there is no machine-level block on accidental recursive deletes of your vault or skills folder. Lean on your own backups instead. ⚠️ This is also why the copy install is the Windows default: with a copy there is no link for a recursive delete to follow into your vault, so the missing lock costs you less. Taking the junction gives that back up, on the platform where nothing is watching.
+**What is unverified on Windows: the safety lock.** It is built and validated on macOS. Setup will try to install it and then probe it on your machine; if the probe fails it says so, and then there is no machine-level block on accidental recursive deletes of your vault or skills folder. Lean on your own backups in that case. ⚠️ This is also why the copy install is the Windows default: with a copy there is no link for a recursive delete to follow into your vault, so a missing lock costs you less. Taking the junction gives that back up, on a platform where the lock may not be watching.
 
 This path is best-effort and community-validated rather than officially tested on Windows: it is built on macOS and we have no Windows machine to verify against, which is why the FTS5 probe hands you a clear pass or fail rather than the skill claiming "works on Windows." If something breaks, tell us; it feeds the next iteration.
 
@@ -260,7 +256,7 @@ This path is best-effort and community-validated rather than officially tested o
 
 The skill payload lives in [`my-second-brain/`](my-second-brain/) (the nesting is what the `npx skills` installer ships as a unit: modes, templates, references, scripts). `deck/` holds presentation material about the system, and ⚠️ it still describes the previous generation's layout; it has not been redrawn for the shape above.
 
-`dev/` holds maintainer tooling that is deliberately kept out of the payload, so it is version-controlled but never installed. One file so far: [`dev/s8-accept.py`](dev/s8-accept.py), the acceptance harness for section 8 of `templates/structure-doctrine.template.md` (the machine-readable record schema that the frontmatter guard and the checker both read live). **Run it after any change to section 8** (a new family, a renamed key, a moved value) and require exit 0 before calling the change done. It needs PyYAML.
+`dev/` holds maintainer tooling that is deliberately kept out of the payload, so it is version-controlled but never installed, such as [`dev/s8-accept.py`](dev/s8-accept.py), the acceptance harness for section 8 of `templates/structure-doctrine.template.md` (the machine-readable record schema that the frontmatter guard and the checker both read live). **Run it after any change to section 8** (a new family, a renamed key, a moved value) and require exit 0 before calling the change done. It needs PyYAML.
 
 ## License
 

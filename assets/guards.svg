@@ -29,12 +29,12 @@
   <text x="800" y="294" text-anchor="middle" font-size="14" fill="#85858E">stops recursive deletes aimed at your vault,</text>
   <text x="800" y="316" text-anchor="middle" font-size="14" fill="#85858E">the one accident with no undo</text>
 
-  <!-- Guard 3: the draft firewall -->
-  <text x="1300" y="196" text-anchor="middle" font-size="12" letter-spacing="3" fill="#6A6A74">IT DRAFTS</text>
+  <!-- Guard 3: the frontmatter guard -->
+  <text x="1300" y="196" text-anchor="middle" font-size="12" letter-spacing="3" fill="#6A6A74">IT REFUSES</text>
   <rect x="1120" y="210" width="360" height="130" rx="16" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
-  <text x="1300" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#E8E8EC">THE DRAFT FIREWALL</text>
-  <text x="1300" y="294" text-anchor="middle" font-size="14" fill="#85858E">the machine sifts outside your vault; only</text>
-  <text x="1300" y="316" text-anchor="middle" font-size="14" fill="#85858E">words you approved enter standing memory</text>
+  <text x="1300" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#E8E8EC">THE FRONTMATTER GUARD</text>
+  <text x="1300" y="294" text-anchor="middle" font-size="14" fill="#85858E">checks a note the moment it is born: a name</text>
+  <text x="1300" y="316" text-anchor="middle" font-size="14" fill="#85858E">or frontmatter against the law is refused</text>
 
   <!-- Three posts report to one desk -->
   <path d="M 300 340 C 300 420, 620 455, 770 466" fill="none" stroke="#6A6A74" stroke-width="1.5" marker-end="url(#garrowG)"/>

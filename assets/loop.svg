@@ -35,7 +35,7 @@
   <line x1="625" y1="275" x2="663" y2="275" stroke="#6A6A74" stroke-width="1.5" marker-end="url(#arrowG)"/>
 
   <!-- Station 3: Propose (session memory feeds it when installed) -->
-  <text x="795" y="162" text-anchor="middle" font-size="13" fill="#85858E">plus your unreviewed AI sessions, when session memory is on</text>
+  <text x="795" y="162" text-anchor="middle" font-size="13" fill="#85858E">plus what each session's closeout wrote down</text>
   <line x1="795" y1="172" x2="795" y2="202" stroke="#6A6A74" stroke-width="1.5" stroke-dasharray="5 5" marker-end="url(#arrowG)"/>
   <rect x="670" y="210" width="250" height="130" rx="16" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
   <text x="795" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#E8E8EC">PROPOSE</text>
@@ -52,9 +52,9 @@
 
   <line x1="1215" y1="275" x2="1253" y2="275" stroke="#6A6A74" stroke-width="1.5" marker-end="url(#arrowG)"/>
 
-  <!-- Station 5: Layer 3 grows -->
+  <!-- Station 5: Layer 4 grows -->
   <rect x="1260" y="210" width="250" height="130" rx="16" fill="#131318" stroke="#2A2A32" stroke-width="1"/>
-  <text x="1385" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#E8E8EC">LAYER 3 GROWS</text>
+  <text x="1385" y="262" text-anchor="middle" font-size="19" font-weight="600" letter-spacing="2" fill="#E8E8EC">LAYER 4 GROWS</text>
   <text x="1385" y="294" text-anchor="middle" font-size="14" fill="#85858E">your reviewed judgment,</text>
   <text x="1385" y="316" text-anchor="middle" font-size="14" fill="#85858E">filed as methodology</text>
 
