@@ -185,7 +185,25 @@ Setup also installs a few smaller skills that travel inside this one's payload, 
 - **`breakthrough-vault-guardian`** carries one change to your vault's own law through every file that change touches, and afterwards proves the guard can still read the law. It ships because the doctrine names it.
 - **`breakthrough-vault-migrator`** moves what you already have into the vault without breaking the links between your documents: an old vault, an export from another tool, or years of loose folders. You freeze what is coming across so the boundary stops moving, you approve where things go before anything moves, and it works in batches over as many short sittings as it takes, picking up where it left off each time. Nothing is deleted and your originals are never touched.
 
-One tool does **not** come in the box. **`breakthrough-sop-builder`** writes an SOP properly, in its own sitting. It is published separately, you install it if you want it, and nothing in the vault breaks without it: hand-writing an SOP is legal, which is the whole reason it can live outside.
+## Tools that live outside the box
+
+### The ones your vault points at
+
+Some jobs have their own tool, published separately, installed by you when you want it. These are named here because the vault setup builds points at them by name or by instruction: nothing breaks while they are missing, but a door sign is left waiting.
+
+- **`breakthrough-sop-builder`** writes an SOP properly, in its own sitting. `03_SOP/` ships empty by design and hand-writing an SOP is legal, which is the whole reason this one can live outside. Install with `npx skills add -g breakthrough-edu/breakthrough-sop-builder`.
+- **`breakthrough-brand-strategy`** carries your brand pillars off `status: empty`, one lock at a time: it does the reading and brings real candidates traced to evidence in your vault, and you rule on every one. Setup writes those pillar stubs with a closing line telling you to run the brand intake, and this is what answers to it. It reads your vault's own law live and stops rather than invent a folder. Install with `npx skills add -g breakthrough-edu/breakthrough-brand-strategy`.
+
+### Other skills from the same workshop
+
+These have nothing to do with this vault and it needs none of them. They are listed because people who learn this system tend to want them next.
+
+- **`breakthrough-meeting-scribe`** turns meeting audio into a corrected transcript, a visual canvas and a written summary, transcribing locally with Whisper so the recording never leaves the machine.
+- **`breakthrough-whatsapp-triage`** turns a WhatsApp backlog into a one-page daily action board, each conversation carrying a draft reply you edit before anything is sent. The export and everything after it stay on your own computer.
+- **`breakthrough-meta-performance-skills`** is one repo carrying more than one skill: `breakthrough-performance-db-setup` installs a Meta ad performance database and wires the daily sync, and `breakthrough-performance-analysis` reads that database each week and says in plain language whose problem the numbers are.
+- **`breakthrough-content-engine`** takes one business objective and returns a whole cycle of content planning, down to the draft. ⚠️ It works in Chinese, unlike everything else on this page.
+
+Each installs the same way: `npx skills add -g breakthrough-edu/<repo-name>`.
 
 ## Design decisions
 

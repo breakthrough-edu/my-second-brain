@@ -27,7 +27,7 @@ Update anytime with `npx skills update my-second-brain` (your vault is never tou
 - **Distill** (weekly, two passes behind one doorbell): first the anti-drift pass, which keeps the house from rotting, then distillation proposals for your methodology layer. You rule yes or no.
 - **Create-My-Jarvis** (a light tier in one 45 to 60 min sitting, or a deep tier across three separate conversations): interviews that give your AI a real character and a real understanding of who you are.
 
-The companion skills (`breakthrough-project-consultant`, `breakthrough-session-report`, `breakthrough-method-builder`, `breakthrough-vault-guardian`, `breakthrough-vault-migrator`) ride in this payload and setup installs them for you, so they update when this skill updates. One tool is published separately and installed by you when you want it, and nothing here breaks without it: `breakthrough-sop-builder` writes an SOP properly in its own sitting.
+The companion skills (`breakthrough-project-consultant`, `breakthrough-session-report`, `breakthrough-method-builder`, `breakthrough-vault-guardian`, `breakthrough-vault-migrator`) ride in this payload and setup installs them for you, so they update when this skill updates. Other tools are published separately and installed by you when you want them, and nothing here breaks while they are missing: `breakthrough-sop-builder` writes an SOP properly in its own sitting, and `breakthrough-brand-strategy` carries the brand pillar stubs setup leaves behind off `status: empty`. The repo front page lists both, plus the skills from the same workshop that do work this vault does not do.
 
 ## What is in this folder
 

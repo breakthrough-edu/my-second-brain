@@ -106,13 +106,16 @@ One line on what they just got, no more, and ⛔ without a count: "A few more sk
 
 ⚠️ **One worked example, because the test's answer was overridden once and the next editor to run it honestly would otherwise move the skill.** `breakthrough-vault-migrator` fails the test: the doctrine permits an owner to move their own files by hand, no rule names the skill, and nothing it writes is mandatory from the day something exists. On the test alone it belongs in 6.7 beside `breakthrough-sop-builder`. **It is installed here anyway, and the reason is mechanical rather than doctrinal:** it was ruled to ship with the payload, which puts it under `skills/`, and `ls <payload>/skills/` is this step's registry. Keeping it out of 6.6 while it sits in `skills/` would take an exclusion list, and an exclusion list is a second registry that drifts from the first. ⭐ **So the test decides the line for a tool that could be published separately; it does not decide it for a tool already riding the payload.** ⛔ Do not "correct" this by moving the skill to 6.7: that would leave it installed by 6.6 and described in 6.7 at the same time.
 
-## Step 6.7: Name the one skill that does not ship here (one line, no install)
+## Step 6.7: Name the tools this vault points at but does not contain (one line each, no install)
 
-One piece of work has its own tool, published separately and installed by the owner when they want it. Say this once, in one line, and only so nothing later reads as if it were already on the machine:
+Some pieces of work have their own tool, published separately and installed by the owner when they want it. Say each one once, in one line, and only so nothing later reads as if it were already on the machine:
 
 - **Writing an SOP** runs on the `breakthrough-sop-builder` skill. `03_SOP/` ships empty by design and hand-writing an SOP is perfectly legal (doctrine §1); the skill is the comfortable path, not the only legal writer.
+- **Filling the brand pillars** runs on the `breakthrough-brand-strategy` skill. The pillar stubs the scaffold just wrote each close with "run the brand intake", and this is what answers to that line, so an owner who is not told the name reads an instruction with nothing behind it. Hand-writing a pillar is legal too, and the skill reads this vault's own law live rather than carrying a copy of it.
 
-⛔ Do not install it here, and do not present it as a missing piece. Nothing in this vault breaks without it. **The test for whether a skill belongs in this step rather than the one above is written at the end of 6.6; apply it before moving anything here.**
+⛔ Do not install them here, and do not present them as missing pieces. Nothing in this vault breaks while they are absent. **The test for whether a skill belongs in this step rather than the one above is written at the end of 6.6; apply it before moving anything here.**
+
+⚠️ **What this step is scoped to, because widening it will be tempting and nobody would notice it had happened.** A tool earns a line here only when something this setup wrote into the vault sends the owner to it: `03_SOP/` shipping empty under a doctrine clause that names the skill, and the stubs' own closing line for the other. ⛔ **The authors publish other skills, and none of them belong in this step**: they do work this vault does not do, no file setup wrote points at them, and appending them would quietly turn "the door signs you are obliged to answer" into a catalogue of everything for sale. They are on the repo front page, where anyone looking for them is already standing.
 
 ## Step 6.8: The standard guards (one explanation, one install, one uninstall)
 
