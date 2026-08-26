@@ -18,6 +18,9 @@ The vault is a **two-wing second brain**: `03_Personal-Wing/` and `04_{{BUSINESS
 
 ⛔ **The gate: this section runs only when {{YOUR_NAME}} is opening the day.** A morning greeting ("morning"), a day-opening ask ("what's on my plate", "what should I focus on"), or an explicit request for the brief runs it in full. Every other entry (a capture, a decision, a compile, a deck press, a question) goes straight to its router row and reads only what that row needs, carrying just step 10. ⭐ Why the gate exists: ten reads and a dashboard rebuild cost real context, and a session opened to log one decision should spend its window on the decision, not on a brief nobody asked for. A lean session that later wants the day opened ("give me my morning brief") runs this section at that moment.
 
+<!-- boot-gate-rev: 1 -->
+⚠️ Same rules as the doorbell marker further down: the marker and its number belong to the `my-second-brain` skill, which reads it to tell which version of the gate this machine actually loads. Leave both alone.
+
 Run these in parallel, then respond:
 
 1. Read `{{VAULT_PATH}}/99_Meta/memory.md` (working memory; scaffolded at setup, so it should exist. If it is somehow missing, recreate it at closeout with the standard sections rather than skipping the memory loop).
