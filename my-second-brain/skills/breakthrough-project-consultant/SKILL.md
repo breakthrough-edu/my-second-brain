@@ -92,13 +92,13 @@ Default: **a bare brief, and nothing else.** Then, for each additional file, say
 |---|---|---|
 | **Plan** | The authority. What we are doing and why, in the owner's own words. Everything else in the folder points at this | If the plan is buried inside a thinking document, nobody can tell settled from speculative |
 | **Braindump** | Unfiltered thinking, contradictions welcome, nothing here is decided | Mixing it with the plan poisons the plan: a future session cannot tell which lines are commitments |
-| **Handoff** | Where we got to · what was tried and failed · what is next | Written while the session is still smart. ⭐ **The failed-approaches half is the valuable half**, and it is the half everyone drops |
+| **Handoff** | Where we got to · what was tried and failed · what is next | Written while the session is still smart. ⭐ **The failed-approaches half is the valuable half**, and it is the half everyone drops. One rolling file per project; the writing discipline has its own entry below |
 
 Other roles (pitch, protocol, meeting minutes) have no shipped shape here and are written only when asked for. **A role can be invented on the spot**, on two conditions: it has a stated purpose, and it passes the same worth-opening test as the three above.
 
 ⛔ **A person, a vendor or a system is never one of these roles.** Those are entity notes, and they live in the room that owns them, in `01_Assets/` or the matching Personal-Wing room (doctrine §1). When the work turns out to touch one the vault has no note for, name the gap to the owner and move on: opening it is not this skill's job, and folding it into the project's working set is worse.
 
-**Naming, so the vault stays navigable.** Project files are **project materials** under doctrine §1: they live with the project and need no frontmatter family. ⛔ **But never a bare `Plan.md`.** Project names are unique vault-wide and file names are not, so carry the project name or the date: `<Project>-Plan.md`, `<Project>-Handoff-2026-08-16.md`.
+**Naming, so the vault stays navigable.** Project files are **project materials** under doctrine §1: they live with the project and need no frontmatter family. ⛔ **But never a bare `Plan.md`.** Project names are unique vault-wide and file names are not, so carry the project name: `<Project>-Plan.md`, `<Project>-Handoff.md`.
 
 ## Step 4: Write back, narrowly
 
@@ -123,6 +123,17 @@ When the brief's `status:` flips to `done` or `killed`, reconcile **once**:
 3. **The gap between proposal and reality is the lesson.** If the advice was wrong in a way that will repeat, propose a Lesson for `04_Methodology/Lessons/` (owner's yes required, always).
 
 ⚠️ **This is not the vault's general project close-out**, and the two must not race each other. The general one asks what was learned on any project; **this one only asks whether this skill's own advice was any good**, and it only makes sense on projects that used this skill. When both apply, the general close-out runs and this reconciliation is one extra section inside it.
+
+## The handoff entry, which skips the consult
+
+"Write me a handoff" mid-project is not a consulting moment and does not pay for one: ⛔ skip Step 1's homework and Step 2's interview. Read the project folder and its brief, nothing else, and write the handoff. Everything below is the writing discipline; the three-section shape and its reason live in the Step 3 table.
+
+- **One question first, if the answer is not already in the room: what will the next session do with this?** Then cut the handoff to that purpose. A handoff for someone new taking over delivery and one for the owner returning after two weeks away carry different things, and a handoff written for nobody in particular carries everything and helps no one.
+- **One rolling file per project, `<Project>-Handoff.md`, newest sitting at the top.** It is a project material under doctrine §1: lives with the project, needs no frontmatter family. The frontmatter guard will note the missing frontmatter when the file first lands; §1 is the answer to that note, ⛔ not an invented family. On first creation, append the filing-log line (date · the file · the project folder · "doctrine §1, project material") and add the file's one line to the brief's `Working files` section, Step 4 discipline, same as any file this skill opens.
+- **Pointers, never copies.** Anything already written in the brief, the plan, a decision note, or anywhere else in the vault is linked, not restated: link once, derive the rest is the house law, and a handoff that re-narrates the plan is stale the day the plan moves. What earns full sentences here is exactly what lives nowhere else: where the work stopped, what was tried and failed, what is next.
+- **Close the file with a `Suggested skills` section**: which skills the next session should load, by name, and which notes to read before touching anything (the brief always; the lane's guide when the reader is new to the lane). A cold session's first ten minutes are spent finding out what to load; this section is those ten minutes, prepaid.
+- **Redact as you write.** No passwords, keys, or tokens, ever: point at where a credential lives, never at what it is.
+- **The worth-opening test still applies at first creation.** Work that will never change hands and never pause does not need this file; say so instead of writing one.
 
 ## Settled, and not to be reopened
 
