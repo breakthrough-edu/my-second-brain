@@ -14,7 +14,9 @@ The vault is a **two-wing second brain**: `03_Personal-Wing/` and `04_{{BUSINESS
 
 **Every folder's `_*-Guide.md` is its manual: read it before working there. `_*-Brief.md` is a project's status card.** That sentence is written word for word in three places (the vault's `CLAUDE.md`, doctrine §3, and here) so it reaches a session whichever one it loads first; ⛔ never paraphrase it here and never edit one copy alone.
 
-## Session start (first message of the day)
+## Session start (the morning entry only)
+
+⛔ **The gate: this section runs only when {{YOUR_NAME}} is opening the day.** A morning greeting ("morning"), a day-opening ask ("what's on my plate", "what should I focus on"), or an explicit request for the brief runs it in full. Every other entry (a capture, a decision, a compile, a deck press, a question) goes straight to its router row and reads only what that row needs, carrying just step 10. ⭐ Why the gate exists: ten reads and a dashboard rebuild cost real context, and a session opened to log one decision should spend its window on the decision, not on a brief nobody asked for. A lean session that later wants the day opened ("give me my morning brief") runs this section at that moment.
 
 Run these in parallel, then respond:
 
@@ -42,7 +44,7 @@ Run these in parallel, then respond:
    <!-- doorbell-rev: 4 -->
    ⚠️ Leave that marker alone, and leave the number in it alone. It is not decoration: it is how a later session can tell **which version of these paragraphs this machine is actually loading**, which on a copy install is not the same file as the one in the vault. The `my-second-brain` skill sets it when it rewrites this block. Editing it by hand makes it lie.
 9. **Dashboard doorbell (one line, and it never changes).** Run the `deck.py build` that ships in the `my-second-brain` skill's payload against `{{VAULT_PATH}}`, fail-soft. ⭐ **This is the only rebuild there is**, and ⛔ a second one must not be added to the weekly pass: that pass is reached through a doorbell living in this very session start, so the two would share a single point of failure. One rebuild that runs whenever {{YOUR_NAME}} shows up is the whole mechanism. The engine, the display template and every rule about what it draws live over there and are updated by `npx skills update`; this skill only presses the button. If it errors or `python3` is missing, say nothing and carry on: a dashboard must never delay a morning brief.
-10. If a companion-soul skill exists ({{COMPANION_SOUL_NAME}}), load it LAST so the character is the freshest context. If it does not exist yet, read `99_Meta/bootstrap-progress.md` and split three ways on what it says, because "no soul" has three different causes and only one of them is normal:
+10. ⚠️ **The one step the gate does not touch: this runs on EVERY entry, morning or lean.** If a companion-soul skill exists ({{COMPANION_SOUL_NAME}}), load it LAST so the character is the freshest context; it is one file read, and a lean session without it answers in a voice {{YOUR_NAME}} never chose. If it does not exist yet, read `99_Meta/bootstrap-progress.md` and split three ways on what it says, because "no soul" has three different causes and only one of them is normal (on a lean entry, say the doorbell line only if the first case below applies; the other two belong to mornings):
 
     - **`jarvis_progress:` says the wire-up finished** (`wired: done`) **and yet nothing loads at that name** -> say one line, once: "Your soul skill {{COMPANION_SOUL_NAME}} is recorded as installed but I cannot find it at that name; say 'fix my jarvis' and I will look." ⭐ **This is the only case worth interrupting a morning for**, and it is the one that used to be invisible: an owner who spent an evening authoring a character gets a generic AI back and has no way of knowing anything broke, because a missing soul and an unwritten soul look identical from here. The usual causes are a renamed slug or a copy install where the folder never reached `~/.claude/skills/`. ⛔ Do not go looking for it now and ⛔ do not rebuild it: this is a doorbell, and the repair belongs to a session that was asked for it.
     - **`jarvis_offered:` is not yet true** (nobody has ever been told this exists) -> add one line to the morning brief ("Your AI is still running generic. When you have a quiet 45 minutes, say 'create my jarvis' and it stops being one."), then set `jarvis_offered: true`. The offer happens exactly once, same discipline as the maintenance doorbell.
@@ -50,13 +52,11 @@ Run these in parallel, then respond:
 
     Fail-soft throughout: a missing or unreadable `bootstrap-progress.md` means skip silently. (Create-My-Jarvis lives in the `my-second-brain` skill.)
 
-Skip the full load only when clearly mid-conversation.
-
 ## Mode router
 
 | Trigger | Action |
 |---|---|
-| "morning" / first message of the day | Morning brief: today's schedule (if a calendar is connected), today's tasks, red flags, waiting-fors, renewals coming up, maintenance doorbell if due |
+| "morning" / a day-opening ask ("what's on my plate") | Run `## Session start` in full, then the morning brief: today's schedule (if a calendar is connected), today's tasks, red flags, waiting-fors, renewals coming up, maintenance doorbell if due |
 | "connect my calendar" / "hook up my calendar" | Walk the calendar-connect flow (Google one-click connector, or Lark CLI), then record `calendar_provider:` in `99_Meta/bootstrap-progress.md`. Same read-only, fail-soft posture as session start |
 | Short diary-style capture | Append one dated raw line to `99_Meta/capture-buffer.md` the moment it arrives (the durable copy), hold in session, acknowledge with something specific, compile at end of day |
 | "compile" / "done for today" / "let's end the day" | Write today's daily note in `01_Daily/` from the session's captures plus today's `capture-buffer.md` lines, keeping each line's anchor link intact; then clear today's lines from the buffer |
