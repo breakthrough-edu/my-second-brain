@@ -1,23 +1,20 @@
 ---
 name: breakthrough-method-builder
 description: >
-  Runs when the owner calls this skill by name, when they ask for a method or a
-  playbook to be written, or when the session was told at the outset to write a
-  Method when the work closed. ⛔ Do not fire on work-closing phrasing on your own:
-  "we are done", "that went well" and "wrap up" are not requests for this skill.
-  Three jobs, and no fourth. (1) Write down how the owner actually did a piece of
-  work, at the moment that work closes, as one Method note in their second-brain
-  vault. (2) Write a Playbook whenever the owner asks for one: composed from the
-  folder's methods when there are some, or ⭐ dictated straight from how they already
-  work when there are none, day one included, with no methods required. (3) Write the
-  door whenever a folder is born. ⭐ Every run opens by settling the folder, an
-  existing one or a new one, before anything else happens. Reads the vault first (doctrine sections 8 and 9,
-  the existing folders and their doors, the lane), asks about what it could not
-  read, and lands nothing without the owner's yes given out loud in that moment.
-  NOT for a pit that hurt (that is a Lesson, written at session closeout), NOT for
-  a call that still stands (that is a decision), NOT for dead repeatable steps
-  (that is breakthrough-sop-builder), and ⛔ NOT the runner of a playbook's four beats: those
-  live in the door itself and run without any skill (doctrine section 9.3).
+  Write down how the owner does a kind of work: one Method note when a piece
+  of work closes, a Playbook when the owner asks for one (composed from the
+  folder's methods, or ⭐ dictated straight from how they already work when
+  there are none, day one included), and the door of any folder born along the
+  way. Runs when the owner calls this skill by name, asks for a method or a
+  playbook to be written, or when the session was told at the outset to write
+  a Method when the work closed. ⛔ Work-closing phrasing alone ("we are done",
+  "that went well", "wrap up") is not a request for this skill; session
+  closeout belongs to breakthrough-session-report. NOT for a pit that hurt
+  (that is a Lesson, written at session closeout), NOT for a call that still
+  stands (that is a decision), NOT for dead repeatable steps (that is
+  breakthrough-sop-builder), and ⛔ NOT the runner of a playbook's four beats:
+  those live in the door itself and run without any skill (doctrine section
+  9.3).
 ---
 
 # Breakthrough Method Builder

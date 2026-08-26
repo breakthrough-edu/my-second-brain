@@ -1,19 +1,17 @@
 ---
 name: breakthrough-session-report
 description: >
-  Close out a working session in the owner's second-brain vault: land what this
-  session actually produced, while whoever was in it still remembers. Writes any
-  Lesson the session earned, catches decisions that were made but never written,
-  proposes anything reusable, and leaves one session-report note in the vault's
-  `00_Inbox/`: a one-paragraph summary plus the list of outputs, a baton the
-  owner's next session reads and archives. MUST trigger when the
-  user says "wrap up", "close out", "we're done here", "end of session", "session
-  report", or ends a working session that produced something worth keeping. ⛔ NOT
-  the end of the day, which is the owner's own command-base skill: a day ending
-  is not a piece of work ending, and the two have separate words. NOT the weekly
-  maintenance ritual (that is my-second-brain's distill mode), and NOT the place
-  to write a Method (that is breakthrough-method-builder, which runs when a piece of WORK
-  closes, not when a session does).
+  Close out a working session in the owner's second-brain vault while whoever
+  was in it still remembers: the Lesson it earned, the decision made but never
+  written, anything reusable, and one baton note in `00_Inbox/` for the next
+  session to read and archive. Use when the user says "wrap up", "close out",
+  or otherwise ends a working session that produced something worth keeping.
+  ⛔ NOT the end of the day, which is the owner's own command-base skill
+  ("compile", "done for today"): a day ending is not a piece of work ending,
+  and the two have separate words. NOT the weekly maintenance ritual (that is
+  my-second-brain's distill mode), and NOT the place to write a Method (that
+  is breakthrough-method-builder, which runs when a piece of WORK closes, not
+  when a session does).
 ---
 
 # Breakthrough Session Report

@@ -1,18 +1,17 @@
 ---
 name: breakthrough-project-consultant
 description: >
-  Think a project through with an owner before they build it, then leave behind
-  only the working files that project actually earns. Reads their vault first
-  (business profile, lanes, live decisions, lessons and playbooks), asks at most
-  five questions about what it could not read, and proposes the smallest set of
-  files that fits, which is usually a bare brief and nothing else. MUST trigger
-  when the user says "help me plan X", "plan this project", "how should I attack
-  this", "kick off a project", "I'm stuck on this project", "this project is going
-  nowhere", "write me a handoff", "brain dump this project", or asks how to
-  structure, scope or restart a piece of work that will run longer than one
-  sitting. NOT for filing a note, NOT for writing an SOP (that is breakthrough-sop-builder),
-  NOT for the daily operating rhythm (that is the owner's command-base skill),
-  and NOT for writing up methodology (that is breakthrough-method-builder).
+  Think a project through with an owner before they build it, then leave
+  behind only the working files that project actually earns, usually a bare
+  brief and nothing else. Use when the user wants to plan, scope, or kick off
+  a piece of work that will outlive one sitting ("help me plan X", "kick off a
+  project"), when a project is stuck or going nowhere and needs an honest
+  restart, when they ask for a handoff or a brain dump of a project, or when a
+  project's brief flips to done or killed and its file set needs reconciling.
+  NOT for filing a note, NOT for writing an SOP (that is
+  breakthrough-sop-builder), NOT for the daily operating rhythm (that is the
+  owner's command-base skill), and NOT for writing up methodology (that is
+  breakthrough-method-builder).
 ---
 
 # Breakthrough Project Consultant

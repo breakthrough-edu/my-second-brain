@@ -1,23 +1,18 @@
 ---
 name: my-second-brain
 description: >
-  Build and run a complete second brain for a business owner: one vault, two
-  wings (a personal wing + a four-layer business wing), operated through
-  Claude Code with Obsidian as the viewing deck. Four modes: Setup (install
-  Obsidian, build the fully wired vault, generate your personal command-base
-  skill), Capture (guided move-in of one room at a time with an
-  observation-level insight at the end), Distill (weekly maintenance: one
-  doorbell, two passes, keeping the house from drifting and then distilling
-  what you learned), Create-My-Jarvis (interview that gives your AI a persona
-  and a profile of you). MUST trigger when the user says "set up
-  my second brain", "my second brain", "build my second brain", "second brain",
-  "business brain", "move my business in", "capture my business", "move in a
-  room", "capture mode", "distill", "tidy my vault", "weekly maintenance",
-  "maintain my brain", "create my jarvis", "give my AI a personality", "add the
-  safety lock", "set up session memory", "make my sessions searchable", "update
-  my maintenance doorbell", "rebuild my deck", "fix my deck", "update my deck", "add
-  my command deck", "my dashboard is empty", or asks to organize their business
-  knowledge into a vault.
+  Build and run a business owner's second brain: one vault, two wings
+  (personal + four-layer business), operated through Claude Code with Obsidian
+  as the viewing deck. Routes every entry to one of four modes: Setup,
+  Capture, Distill, Create-My-Jarvis. Use when the user wants a second brain
+  built or their business knowledge organized into a vault ("set up my second
+  brain"), wants to move their business in one room at a time ("capture",
+  "move in a room"), asks for the weekly maintenance ritual ("distill", "tidy
+  my vault", "weekly review"), wants their AI given a persona ("create my
+  jarvis"), or asks for a retrofit an older vault lacks: the safety lock,
+  session memory ("make my sessions searchable"), the maintenance doorbell
+  ("update my maintenance doorbell"), or the Command Deck ("rebuild my deck",
+  "fix my deck", "add my command deck", "my dashboard is empty").
 ---
 
 # My Second Brain

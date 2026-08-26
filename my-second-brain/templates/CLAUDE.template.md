@@ -16,6 +16,14 @@ This vault is {{YOUR_NAME}}'s second brain: one home, two wings. Personal life l
 - **`04_Methodology` is earned, never captured.** Nothing lands there without the owner's yes.
 - No em dashes, no double dashes (--), no spaced hyphens as separators; use standard punctuation only (comma, colon, period, parentheses); restructure the sentence if needed. Applies to anything written for the owner to read, including vault note bodies.
 
+## Shared language
+
+The words this business thinks in, so a session says "the {{BUSINESS_NAME}} way" in one term instead of a paragraph. A term listed here means exactly what its line says, in conversation and in every file this vault writes; name things (files, headings, projects) with these terms so the same word means the same thing everywhere. Starts empty on purpose.
+
+- *(none yet)*
+
+Growing it: when a session catches itself explaining the same concept in a sentence for the second time, or the owner uses a house word an outsider would misread, propose one line here (term, then meaning, ten words or fewer). Owner says yes, the line lands; this is a wording register, not law, so it needs no doctrine amendment.
+
 ## Reading and finding
 
 - Front door: `02_Command-Base/Home.md` (the full directory) · Business one-pager: `04_{{BUSINESS}}-Business-Wing/_{{BUSINESS}}-Guide.md`, whose `## Current state` is what a session reads to know where things stand · the law: `99_Meta/structure-doctrine.md`

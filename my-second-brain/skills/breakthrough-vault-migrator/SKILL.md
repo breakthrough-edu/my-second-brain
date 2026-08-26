@@ -2,18 +2,15 @@
 name: breakthrough-vault-migrator
 description: >
   Move an existing body of files into this vault without breaking the
-  relationships between the documents. Freezes what is being moved so the
-  boundary stops shifting, reads the pile for shape before it reads it for
-  content, proposes a mapping the owner rules on, then moves it in batches,
-  rewriting links as it goes and leaving a ledger of what was moved and what was
-  deliberately left behind. It is staged and it resumes: every run picks up from
-  99_Meta/migration-progress.md, so this can take weeks of short sittings. MUST
-  trigger on "migrate my old notes", "move my old vault in", "I have years of
-  files to bring over", "import my Notion export", "import my Evernote export",
-  "bring my Google Drive folder in", "my old second brain", "continue the
-  migration", "where were we with the migration", or an owner arriving with a
-  hard drive, an export, or a folder tree they want to live in this vault. NOT
-  for material that carries no links and no structure worth keeping and can be
+  relationships between the documents: freeze the boundary, get the owner's
+  ruling on a mapping, then move in batches, rewriting links as it goes, and
+  resume from 99_Meta/migration-progress.md across as many sittings as it
+  takes. Use when an owner arrives with an old vault, an export (Notion,
+  Evernote, Google Drive), or years of loose folders they want living in this
+  vault ("migrate my old notes", "move my old vault in"), when they resume one
+  in flight ("continue the migration", "where were we"), or when the material
+  already IS a working vault that setup deliberately left untouched. NOT for
+  material that carries no links and no structure worth keeping and can be
   mapped and moved in one sitting (that is Capture's bulk move-in). NOT for
   building the vault (setup runs first and this skill will not scaffold). NOT
   for transactional rows exports, which never enter a vault at all (doctrine

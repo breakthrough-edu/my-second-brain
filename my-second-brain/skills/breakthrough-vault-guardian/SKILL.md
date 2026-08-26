@@ -1,20 +1,18 @@
 ---
 name: breakthrough-vault-guardian
 description: >
-  Change the law of this vault (99_Meta/structure-doctrine.md) without breaking
-  the house that runs on it. Takes one intent (a second business wing, a family
-  of note the law has not got, a rule loosened or dropped), names every file
-  that has to move with it, says what the change costs and what keeps the
-  owner's goal without paying that cost, edits only on the owner's yes, then
-  proves the house still stands. MUST trigger on "change the doctrine", "amend
-  section 8", "add a new type of note", "there is no family for this", "I want
-  to add a second business", "open a new wing", "I don't want to fill in X every
-  time", "make this key optional", "loosen this rule", or "the guard blocked my
-  note". MUST also trigger the moment the frontmatter guard refuses a note ("if
-  no family fits, STOP"). NOT for filing a single note (doctrine section 0's
-  decision tree), NOT for the weekly sweep (maintenance), NOT for an SOP or a
-  project plan, and NEVER for the product's own template: only this vault's own
-  copy of the law.
+  Change the law of this vault (99_Meta/structure-doctrine.md) without
+  breaking the house that runs on it: one amendment, every file that moves
+  with it, the cost said out loud, edits only on the owner's yes, then proof
+  the guard still reads. Use for any of the three amendment shapes: a new wing
+  ("I want to add a second business"), a family or key the law has not got
+  ("there is no family for this", "add a new type of note"), or a rule
+  loosened or dropped ("make this key optional", "I don't want to fill in X
+  every time"). Also fires the moment the frontmatter guard refuses a note
+  ("the guard blocked my note"). NOT for filing a single note (doctrine
+  section 0's decision tree), NOT for the weekly sweep (maintenance), NOT for
+  an SOP or a project plan, and NEVER for the product's own template: only
+  this vault's own copy of the law.
 ---
 
 # Breakthrough Vault Guardian
