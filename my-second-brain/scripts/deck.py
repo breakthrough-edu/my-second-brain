@@ -43,7 +43,7 @@ SHARED READING LAYER, NOT A SECOND DIALECT
 
     ⛔ Consequence worth stating: every key a DARK CELL is about is an OPTIONAL
     key in doctrine section 8 (`due`, `started`, `stage`, `priority`,
-    `depends_on`, `hide_on_deck` on a Brief; `start`, `due`, `waiting_on` on a
+    `depends_on`, `hide_on_deck`, `milestone` on a Brief; `start`, `due`, `waiting_on` on a
     task). The deck also reads required keys to know what a note IS (`cb:`,
     `status:`, and on a decision `date:` and `lane:`), and a note missing one of
     those is the checker's business, not this file's.
@@ -420,6 +420,13 @@ def scan_vault(vault, shape):
             "renew_by": str(fm.get("renew_by", "")).strip() or None,
             "depends_on": [_link_target(x) for x in _listify(fm.get("depends_on"))],
             "hide_on_deck": _truthy(fm.get("hide_on_deck")),
+            # A declared override beside the derived shape rule. `milestone: true`
+            # makes the project a swimlane diamond and puts it in Countdown even
+            # when it also carries `started`; the template draws the diamond on
+            # `started` (falling back to `due`) and shows the started-due span in
+            # the pill. A project with `due` and no `started` is still a milestone
+            # on its own, with no flag, so this only adds a path, it removes none.
+            "milestone": _truthy(fm.get("milestone")),
             "tasks": tasks,
             "_path": os.path.relpath(brief, vault),
             "_key": _slug(os.path.basename(pdir)),
@@ -707,9 +714,13 @@ def _dark_cells(scan, shape):
 
     # `due` with no `started` is a MILESTONE (a diamond on the
     # swimlane, and the only thing Countdown holds). `started` with `due` is a
-    # runway (a bar). Both are complete shapes, so neither is dark. What IS dark
-    # is a project carrying neither: it is not a point and not a span, and the
-    # swimlane has to invent both edges to draw it at all.
+    # runway (a bar). `milestone: true` is the declared override: it forces the
+    # diamond (on `started`, falling back to `due`) even when a runway's two dates
+    # are present, so a fixed-date event can count down to its go-live day and
+    # still show its span in the pill. Those are complete shapes, so none is dark.
+    # What IS dark is a project carrying no date at all: it is not a point and not
+    # a span, and the swimlane has to invent both edges to draw it at all. A
+    # milestone flag with no date is dark for the same reason and named separately.
     for p in projects:
         if p.get("_broken"):
             # One cause, not eight symptoms. Every key on this project reads as
@@ -722,7 +733,15 @@ def _dark_cells(scan, shape):
                         "fix": "close the frontmatter with a --- line; the other cells will "
                                "report themselves once it parses"})
             continue
-        if not p["due"] and not p["started"]:
+        if p["milestone"] and not p["due"] and not p["started"]:
+            out.append({"cell": "The whole timeline", "subject": p["name"],
+                        "path": p["_path"],
+                        "why": "the Brief declares milestone: true but carries neither started nor "
+                               "due, so there is no date to place the diamond on. It falls out of the "
+                               "swimlane and Countdown entirely and stays on the kanban, the grid and "
+                               "the health ring",
+                        "fix": "started: YYYY-MM-DD (the diamond sits here) or, failing that, due:"})
+        elif not p["due"] and not p["started"]:
             out.append({"cell": "The whole timeline", "subject": p["name"],
                         "path": p["_path"],
                         "why": "the Brief carries neither started nor due, so this project is "
@@ -730,7 +749,8 @@ def _dark_cells(scan, shape):
                                "swimlane leaves it off entirely. It is still on the kanban, the "
                                "grid and the health ring",
                         "fix": "due: YYYY-MM-DD alone if it is a deadline, or started: plus due: "
-                               "if it is a stretch of work"})
+                               "if it is a stretch of work, or milestone: true to count down to a "
+                               "date it already carries"})
         if p["priority"] is None:
             out.append({"cell": "Top Priority", "subject": p["name"], "path": p["_path"],
                         "why": "no priority, so its open tasks can never reach the priority 1 and 2 list",
@@ -745,13 +765,14 @@ def _dark_cells(scan, shape):
                         "fix": "move renew_by onto the entity note that owns the expiring thing "
                                "(the licence, the lease, the policy) and leave the Brief to the "
                                "work: started, due, stage, priority"})
-        if p["due"] and not p["started"] and any(t["start"] or t["due"] for t in p["tasks"]):
+        if p["due"] and not p["started"] and not p["milestone"] and any(t["start"] or t["due"] for t in p["tasks"]):
             out.append({"cell": "Swimlane shape", "subject": p["name"], "path": p["_path"],
                         "why": "it reads as a milestone (due, no started) so the swimlane draws a "
                                "diamond, yet its tasks carry dates that stretch out beside it. If "
                                "it is really a stretch of work, it is drawn as a point",
                         "fix": "started: YYYY-MM-DD in the Brief turns it into a bar; leaving it "
-                               "out is legal and keeps the diamond"})
+                               "out is legal and keeps the diamond; milestone: true keeps the "
+                               "diamond on purpose and silences this note"})
         if not p["stage"]:
             out.append({"cell": "Kanban by stage", "subject": p["name"], "path": p["_path"],
                         "why": "no stage, so it lands in the No stage yet column",

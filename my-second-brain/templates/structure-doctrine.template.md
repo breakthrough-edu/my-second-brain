@@ -188,7 +188,7 @@ families:
                                           # folder under 04_Methodology/Playbooks/, holding one
                                           # kind of work. Every playbook folder has one.
   brief:      {required: [type, status, updated],
-               optional: [started, due, owner, brand, stage, depends_on, hide_on_deck, priority],
+               optional: [started, due, owner, brand, stage, depends_on, hide_on_deck, milestone, priority],
                status: [active, done, killed],
                stage: [pending, planning, pursuing, executing, closed]}
   menu:       {required: [type, updated]}
