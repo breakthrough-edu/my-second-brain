@@ -142,7 +142,7 @@ DEFAULTS = {
     # membership overlaps because the same folders are machinery in both senses.
     # ⛔ Keep the two lists apart.
     "scan_skip_dirs": ["98_Archive", "99_Meta/Skills", "99_Meta/Templates",
-                       "99_Meta/memory-archive"],
+                       "99_Meta/memory-archive", "99_Meta/auto-memory"],
     "template_dir": "99_Meta/Templates",
     # Freshness. Fields read from maintenance-state.md frontmatter, and the day
     # threshold past which each is called stale. If the file carries its own

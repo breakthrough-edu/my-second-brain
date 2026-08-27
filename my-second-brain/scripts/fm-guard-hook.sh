@@ -146,7 +146,7 @@ def in_vault(path):
 # decides whether section 8 judges a note inside it. The membership overlaps
 # because the same folders are machinery in both senses. ⛔ Keep the two apart.
 EXEMPT_DIRS = ("98_Archive", "99_Meta/Skills", "99_Meta/Templates",
-               "99_Meta/memory-archive")
+               "99_Meta/memory-archive", "99_Meta/auto-memory")
 
 def exempt(root, path):
     rel = os.path.relpath(os.path.realpath(os.path.abspath(path)), root)
