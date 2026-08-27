@@ -156,7 +156,7 @@
   .lane-h .ln{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
   .lane-h .lq{font-size:10px;color:var(--faint);line-height:1.45;margin-top:4px;padding-right:14px}
   .lane.is-empty .lane-h .ln{color:var(--muted)}
-  .lane-body{position:relative;flex:1 1 auto;min-height:56px}
+  .lane-body{position:relative;flex:1 1 auto;min-height:56px;transition:height .3s var(--ease)}
   .gl{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.04);pointer-events:none}
   .gl.mo{background:rgba(255,255,255,.08)}
   .todaybeam{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;z-index:5;pointer-events:none;border-radius:3px;
@@ -206,7 +206,7 @@
     background:rgba(127,215,196,.4);box-shadow:inset 0 0 0 1px rgba(127,215,196,.8)}
 
   .undated{margin:10px 0 0 var(--labw,176px);font-size:11px;color:var(--faint);line-height:1.6}
-  .conn{position:absolute;width:1px;z-index:2;background:linear-gradient(rgba(255,255,255,.28),rgba(255,255,255,.05));pointer-events:none}
+  .conn{position:absolute;width:1px;z-index:2;background:linear-gradient(rgba(255,255,255,.28),rgba(255,255,255,.05));pointer-events:none;transition:opacity .22s var(--ease)}
   /* Two kinds of line, two different facts: dep = a cross-project dependency, orthogonal track with an arrowhead; stream = ordering within one lane, a direct dashed line with no arrowhead */
   .edge{fill:none;stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round}
   .edge.dep{stroke:rgba(255,255,255,.3)}
@@ -215,7 +215,49 @@
   .plug{fill:rgba(255,255,255,.45)}
   .tcard{position:absolute;z-index:4;width:158px;border-radius:10px;cursor:pointer;padding:8px 11px;
     background:rgba(20,23,28,.5);backdrop-filter:blur(12px) saturate(1.5);-webkit-backdrop-filter:blur(12px) saturate(1.5);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(255,255,255,.07),0 10px 22px -15px rgba(0,0,0,.85)}
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(255,255,255,.07),0 10px 22px -15px rgba(0,0,0,.85);
+    transition:opacity .24s var(--ease),transform .24s var(--ease)}
+  /* Folded away by a click on the project pill. The card and its connector stay
+     in the DOM at their last position and just fade; reflowLanes stops reserving
+     their height so the lane frame animates shut around them. */
+  .tcard.folded{opacity:0;transform:translateY(-8px) scale(.97);pointer-events:none}
+  .conn.folded{opacity:0}
+  /* Fold caret on the pill: points down when tasks show, right when folded. */
+  .pbar .pcar{flex:0 0 auto;width:0;height:0;margin-left:3px;
+    border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--muted);
+    opacity:.75;transition:transform .22s var(--ease)}
+  .pbar.folded-p .pcar{transform:rotate(-90deg)}
+  /* --- Swimlane interactions: hover-flow, drag-to-reschedule, drag-to-link --- */
+  .pbar{touch-action:none}                     /* pointer drags shouldn't scroll the board */
+  .pbar.dragging{z-index:12;cursor:grabbing;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 0 0 1px rgba(255,146,72,.55),0 16px 34px -14px rgba(0,0,0,.9)}
+  .pbar.link-target{box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 0 0 1.5px rgba(127,215,196,.9),0 0 22px -4px rgba(90,200,175,.6)}
+  /* the green nub on a pill's leading edge: grab it and drag onto another pill to wire a dependency */
+  .pbar .linknub{position:absolute;top:50%;right:-7px;width:11px;height:11px;border-radius:50%;
+    transform:translateY(-50%) scale(.55);opacity:0;cursor:crosshair;z-index:8;
+    background:radial-gradient(circle at 50% 38%,rgba(158,238,214,1),rgba(90,200,175,.92));
+    box-shadow:0 0 0 2px rgba(20,23,28,.7),0 0 10px 1px rgba(90,200,175,.5);
+    transition:opacity .15s var(--ease),transform .15s var(--ease)}
+  .pbar:hover .linknub{opacity:1;transform:translateY(-50%) scale(1)}
+  .pbar.mile .linknub{right:auto;left:8px}
+  /* edge grips: drag the left edge to move only the start, the right edge to move only the due */
+  .pbar .rz{position:absolute;top:0;bottom:0;width:10px;z-index:7;cursor:ew-resize}
+  .pbar .rz-l{left:0}
+  .pbar .rz-r{right:0}
+  .pbar .rz::after{content:"";position:absolute;top:50%;left:50%;width:2px;height:15px;margin-left:-1px;
+    transform:translateY(-50%);border-radius:2px;background:rgba(255,255,255,.6);opacity:0;transition:opacity .15s var(--ease)}
+  .pbar:hover .rz::after{opacity:.6}
+  .pbar.resizing{z-index:12}
+  .edge.linking{stroke:rgba(127,215,196,.95);stroke-width:1.7;stroke-dasharray:4 5;fill:none;pointer-events:none}
+  /* hover a project and the dependency arrows touching it brighten and stream */
+  .edge.dep.flow{stroke:rgba(184,214,255,.98);stroke-width:2;stroke-dasharray:5 7;
+    animation:depflow .9s linear infinite;filter:drop-shadow(0 0 4px rgba(150,190,255,.65))}
+  .vein.flow{stroke:rgba(150,190,255,.22)}
+  @keyframes depflow{to{stroke-dashoffset:-24}}
+  /* live date readout that follows the cursor while rescheduling */
+  .dragtip{position:fixed;z-index:130;pointer-events:none;font-size:11px;font-weight:600;padding:4px 8px;border-radius:8px;
+    background:rgba(20,23,28,.96);color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 12px 24px -12px rgba(0,0,0,.9);transform:translate(-50%,-150%)}
   .tcard:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.13)}
   .tcard .tcl{font-size:11.5px;font-weight:500;line-height:1.35;color:var(--ink2)}
   .tcard .tcd{font-size:10px;color:var(--muted);margin-top:4px}
@@ -313,19 +355,38 @@
   .calhead div{padding:9px 0;text-align:center;font-size:9.5px;font-weight:700;letter-spacing:.09em;
     text-transform:uppercase;color:var(--muted)}
   .calgrid{display:grid;grid-template-columns:repeat(7,1fr)}
-  .cell{min-height:104px;padding:7px 8px 9px;border-top:1px solid var(--hair);border-left:1px solid var(--hair)}
+  /* min-width:0 is load-bearing: without it a grid item defaults to min-width:auto,
+     so a cell holding a nowrap event grows its 1fr column to the full text width and
+     collapses the others. With it the seven columns stay equal and long titles clip. */
+  .cell{min-height:104px;min-width:0;padding:7px 8px 9px;border-top:1px solid var(--hair);border-left:1px solid var(--hair)}
   .cell:nth-child(7n+1){border-left:none}
   .cell.out{opacity:.35}
   .cell.today{background:rgba(120,150,220,.10);box-shadow:inset 0 0 0 1px rgba(160,190,255,.25)}
   .cell .dnum{font-size:11px;font-weight:650;color:var(--ink2);font-variant-numeric:tabular-nums;margin-bottom:5px}
   .cell.today .dnum{color:#d6e4ff}
-  .ev{display:flex;align-items:baseline;gap:5px;font-size:10.5px;line-height:1.35;margin-bottom:4px;color:var(--ink2)}
-  .ev .en{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ev{display:flex;align-items:baseline;gap:5px;font-size:10.5px;line-height:1.35;margin-bottom:4px;color:var(--ink2);
+    cursor:pointer;border-radius:5px;padding:1px 3px;margin-left:-3px;transition:background .12s var(--ease)}
+  .ev:hover{background:rgba(255,255,255,.07)}
+  .ev .en{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
   .ev.proj{color:var(--accent-ink)}
   .ev.ren{color:#ffd9a8}
   .ev .sq{width:6px;height:6px;flex:0 0 auto;transform:translateY(-1px);border-radius:2px}
   .ev.proj .sq{background:var(--accent)}
   .ev.ren .sq{background:var(--st-wf);border-radius:50%}
+  /* click any calendar event to pop its full detail */
+  .calpop{position:fixed;z-index:140;width:252px;max-width:calc(100vw - 24px);border-radius:12px;padding:12px 14px;
+    background:rgba(20,23,28,.97);backdrop-filter:blur(18px) saturate(1.5);-webkit-backdrop-filter:blur(18px) saturate(1.5);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.13),0 30px 60px -24px rgba(0,0,0,.92);
+    font-size:11.5px;color:var(--ink2);animation:cpIn .14s var(--ease)}
+  @keyframes cpIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .calpop .cp-h{display:flex;align-items:baseline;gap:7px;font-size:12.5px;font-weight:650;color:var(--ink);line-height:1.35;margin-bottom:9px}
+  .calpop .cp-h .tdot,.calpop .cp-h .sq{flex:0 0 auto;transform:translateY(-1px)}
+  .calpop .cp-h .sq{width:7px;height:7px;border-radius:2px}
+  .calpop .cp-h .sq.proj-sq{background:var(--accent)}
+  .calpop .cp-h .sq.ren-sq{background:var(--st-wf);border-radius:50%}
+  .calpop .cp-row{line-height:1.75;color:var(--muted)}
+  .calpop .cp-row b{color:var(--ink2);font-weight:600}
+  .calpop .cp-path{margin-top:9px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1);color:var(--faint);font-size:10.5px;word-break:break-all}
 
   /* ===== The three cockpit sections ===== */
 
@@ -636,6 +697,7 @@ const S = { tab:"lane", showRail:true,
   showEmptyCols:true, kbGroup:"status",
   calLayers:{task:true, proj:true, ren:true}, weekStartMon:true, calMonth:"{{THIS_MONTH}}",
   gridCollapsed:false, gridCols:{start:true, priority:true},
+  laneFold:new Set(),   // project ids whose task cards are folded away on the swimlane
   openMenu:null };
 
 const $ = s => document.querySelector(s);
@@ -1052,32 +1114,42 @@ function renderLaneView(){
         const narrow = mile || bw < 168;
         const soon = p.due && dayDiff(TODAY, p.due) >= 0 && dayDiff(TODAY, p.due) <= 21;
         const nodate = p.tasks.filter(t => !t.due).length;
+        /* The dated tasks that become cards. Computed before the pill so the pill
+           knows whether it has anything to fold (only then does it get a caret and
+           react to a click), and reused by the layout loop below. */
+        const cardTasks = S.showTaskCards
+          ? p.tasks.filter(t => t.due && (S.showDone || t.status !== "done") && (!S.overdueOnly || isOver(t)))
+                   .sort((m,n) => m.due < n.due ? -1 : 1)
+          : [];
+        const foldable = cardTasks.length > 0;
+        const folded = foldable && S.laneFold.has(p.id);
         /* mile keeps the .pbar class on purpose: drawEdges finds dependency
            anchors by `.pbar[data-p]`, so a diamond stays wired to its arrows
            without drawEdges needing to know the shape exists. */
-        body += `<div class="pbar${mile?" mile":""}${soon?" near":""}${p.status==="done"?" done":""}${p.hide_on_deck?" hidden-proj":""}${narrow?" narrow":""}${clipL&&!mile?" clipL":""}${clipR&&!mile?" clipR":""}"
+        body += `<div class="pbar${mile?" mile":""}${soon?" near":""}${p.status==="done"?" done":""}${p.hide_on_deck?" hidden-proj":""}${narrow?" narrow":""}${clipL&&!mile?" clipL":""}${clipR&&!mile?" clipR":""}${folded?" folded-p":""}"
             data-p="${p.id}" style="left:${bx}px;width:${bw}px;top:${top}px">
             ${mile?`<span class="mk"></span>`
                  :`${clipL?"":`<span class="cap l"></span>`}${clipR?"":`<span class="cap r"></span>`}`}
             <span class="pw"><span class="pl">${esc(p.name)}</span><span class="pmeta">
               ${p.stage?`<span class="chip stage">${sgName(p.stage)}</span>`:""}
               ${S.showTaskCards&&nodate?`<span class="chip nodate">+${nodate} ${l.noTaskDate}</span>`:""}
+              ${foldable?`<span class="pcar"></span>`:""}
             </span></span>
             ${S.showDeps&&p.depends_on.length?`<span class="dep-i"></span>`:""}
             ${S.showDeps&&DATA().projects.some(q => q.depends_on.includes(p.id))?`<span class="dep-o"></span>`:""}
+            ${(!mile && p.started && p.due)?`<span class="rz rz-l" title="drag to change the start date"></span><span class="rz rz-r" title="drag to change the due date"></span>`:""}
+            <span class="linknub" title="drag onto another project to make that project depend on this one"></span>
           </div>`;
         let maxRow = -1;
-        if(S.showTaskCards){
-          const dated = p.tasks.filter(t => t.due && (S.showDone || t.status !== "done") && (!S.overdueOnly || isOver(t)))
-                               .sort((m,n) => m.due < n.due ? -1 : 1);
+        if(foldable){
           const rows = [];
-          dated.forEach(t => {
+          cardTasks.forEach(t => {
             const cx = x(t.due);
             let r = 0; while(rows[r] !== undefined && rows[r] > cx - 8) r++;
             rows[r] = cx + 158; maxRow = Math.max(maxRow, r);
             const ty = top + 46 + r*54, over = isOver(t);
-            body += `<div class="conn" style="left:${cx}px;top:${top+38}px;height:${ty-top-38}px"></div>
-              <div class="tcard${t.status==="done"?" fin":""}" style="left:${cx}px;top:${ty}px">
+            body += `<div class="conn" data-row="${r}" style="left:${cx}px;top:${top+38}px;height:${ty-top-38}px"></div>
+              <div class="tcard${t.status==="done"?" fin":""}" data-row="${r}" style="left:${cx}px;top:${ty}px">
                 <div class="tcl"><span class="tdot ${ST[t.status].c}"></span>${esc(t.title)}</div>
                 <div class="tcd${over?" over":""}">${fmt(t.due)}${over?" · "+l.overdue:""}</div>
                 <div class="tcx"><b>status</b> ${stName(t.status)}<br>
@@ -1117,9 +1189,246 @@ function renderLaneView(){
     const was = el.classList.contains("open");
     document.querySelectorAll(".tcard.open").forEach(o => o.classList.remove("open"));
     if(!was) el.classList.add("open");
+    // Opening a card unfolds its detail block, so it is taller now than when the
+    // rows were first laid out. Restack against the new height, or the expanded
+    // card spills past the lane frame exactly as it did before this whole fix.
+    reflowLanes(); drawEdges();
   });
-  requestAnimationFrame(drawEdges); setTimeout(drawEdges, 60); setTimeout(drawEdges, 320);
+  wireSwimlaneBars();
+  reflowLanes();
+  const paint = () => { reflowLanes(); drawEdges(); };
+  requestAnimationFrame(paint); setTimeout(paint, 60); setTimeout(paint, 320);
 }
+/* The swimlane packs task cards under each project bar, but a card's height is
+   whatever its text wraps to, which the string builder above cannot know: it
+   places every row at a fixed 54px pitch, right for a one-line card and too
+   tight for the three- and four-line ones that are common. So once the view is
+   in the DOM we measure each card for real, restack the rows to its true height,
+   and grow every lane-body to exactly fit its content. Without this the rows
+   overlapped each other and the last card was clipped by the band's rounded
+   overflow:hidden frame. drawEdges reads bar positions live, so moving the bars
+   here needs no change there; it just runs after this. */
+function reflowLanes(){
+  const CARD_TOP_GAP = 8, ROW_GAP = 8, PROJ_GAP = 14, BOTTOM_PAD = 6;
+  document.querySelectorAll("#viewhost .lane-body").forEach(lb => {
+    const groups = [];
+    let cur = null;
+    [...lb.children].forEach(el => {
+      if(el.classList.contains("pbar")){ cur = {bar:el, rows:new Map(), conns:[]}; groups.push(cur); }
+      else if(!cur) return;                 // gridlines / today beam / empty label: leave them
+      else if(el.classList.contains("tcard")){
+        const r = +el.dataset.row || 0;
+        if(!cur.rows.has(r)) cur.rows.set(r, []);
+        cur.rows.get(r).push(el);
+      }
+      else if(el.classList.contains("conn")) cur.conns.push(el);
+    });
+    if(!groups.length) return;              // empty lane keeps its inline 56px
+    let y = 12;
+    groups.forEach(g => {
+      const barTop = y;
+      g.bar.style.top = barTop + "px";
+      const barBottom = barTop + (g.bar.offsetHeight || 38);
+      const cards = [];
+      g.rows.forEach(a => a.forEach(c => cards.push(c)));
+      // Folded: fade the cards and their connectors, reserve none of their height,
+      // so the frame closes down to just the pill. The .folded class carries the
+      // fade; leaving the cards in place lets them fade back in on unfold.
+      if(g.bar.classList.contains("folded-p")){
+        cards.forEach(c => c.classList.add("folded"));
+        g.conns.forEach(cn => cn.classList.add("folded"));
+        y = barBottom + PROJ_GAP;
+        return;
+      }
+      cards.forEach(c => c.classList.remove("folded"));
+      g.conns.forEach(cn => cn.classList.remove("folded"));
+      const rowTop = {};
+      let cy = barBottom + CARD_TOP_GAP;
+      [...g.rows.keys()].sort((a, b) => a - b).forEach(r => {
+        rowTop[r] = cy;
+        let h = 0;
+        g.rows.get(r).forEach(c => { c.style.top = cy + "px"; h = Math.max(h, c.offsetHeight); });
+        cy += h + ROW_GAP;
+      });
+      g.conns.forEach(cn => {
+        const r = +cn.dataset.row || 0;
+        const to = rowTop[r] === undefined ? barBottom : rowTop[r];
+        cn.style.top = barBottom + "px";
+        cn.style.height = Math.max(0, to - barBottom) + "px";
+      });
+      y = (g.rows.size ? cy : barBottom) + PROJ_GAP;
+    });
+    lb.style.height = (y + BOTTOM_PAD) + "px";
+  });
+}
+/* ---- Swimlane pointer interactions --------------------------------------
+   Three behaviours share the project pill, told apart by how the pointer moves:
+     · a plain click              -> fold / unfold the task cards (as before)
+     · a horizontal drag on body  -> reschedule (shift started + due by whole days)
+     · a drag from the green nub   -> wire a new depends_on to the pill dropped on
+   hovering a pill streams the dependency arrows touching it. Every date and
+   dependency edit is staged through addPending, so the existing "N pending"
+   button copies them into the session; nothing here writes to the vault. */
+let LANE_HOVER = null, LANE_DRAG = false, CAL_EV = [];
+const shiftISO = (iso, n) => { const t = D(iso); t.setDate(t.getDate() + n); return ISO(t); };
+const nameOfId = id => { const p = DATA().projects.find(q => q.id === id); return p ? p.name : null; };
+/* the on-screen-px : content-px ratio, 1 in a real browser and <1 only inside a
+   scaled preview; dividing pointer deltas by it keeps day-snapping honest. */
+function contentScale(){ const el = $("#inner"); return el ? (el.getBoundingClientRect().width / el.offsetWidth) || 1 : 1; }
+
+function applyHoverFlow(){
+  const svg = $("#edges"); if(!svg) return;
+  svg.querySelectorAll(".flow").forEach(p => p.classList.remove("flow"));
+  if(!LANE_HOVER) return;
+  svg.querySelectorAll("[data-src]").forEach(p => {
+    if(p.dataset.src === LANE_HOVER || p.dataset.dst === LANE_HOVER) p.classList.add("flow");
+  });
+}
+
+function wireSwimlaneBars(){
+  $("#viewhost").querySelectorAll(".pbar[data-p]").forEach(el => {
+    const id = el.dataset.p;
+    el.addEventListener("mouseenter", () => { if(LANE_DRAG) return; LANE_HOVER = id; applyHoverFlow(); });
+    el.addEventListener("mouseleave", () => { if(LANE_HOVER === id){ LANE_HOVER = null; applyHoverFlow(); } });
+    const nub = el.querySelector(".linknub");
+    if(nub) nub.addEventListener("pointerdown", e => { e.preventDefault(); e.stopPropagation(); startLink(el, id, e); });
+    el.querySelectorAll(".rz").forEach(h => h.addEventListener("pointerdown", e => {
+      if(e.button !== 0) return;
+      e.preventDefault(); e.stopPropagation();
+      startResize(el, id, e, h.classList.contains("rz-l") ? "l" : "r");
+    }));
+    el.addEventListener("pointerdown", e => {
+      if(e.button !== 0 || e.target.closest(".linknub") || e.target.closest(".rz")) return;
+      startBodyDrag(el, id, e);
+    });
+  });
+}
+
+/* Body drag: no movement folds; movement past a few px reschedules by whole days. */
+function startBodyDrag(el, id, e0){
+  const p = DATA().projects.find(q => q.id === id);
+  if(!p) return;
+  e0.preventDefault();
+  const startX = e0.clientX, origLeft = parseFloat(el.style.left) || 0, mile = el.classList.contains("mile");
+  const scale = contentScale();
+  const tip = document.createElement("div"); tip.className = "dragtip";
+  let moved = false, days = 0;
+  const onMove = e => {
+    const dx = (e.clientX - startX) / scale;
+    if(!moved && Math.abs(dx) < 4) return;
+    if(!moved){ moved = true; LANE_DRAG = true; el.classList.add("dragging"); document.body.appendChild(tip); }
+    days = Math.round(dx / PXD);
+    el.style.left = Math.max(0, Math.min(bodyW, origLeft + days * PXD)) + "px";
+    const ns = p.started ? shiftISO(p.started, days) : null, nd = p.due ? shiftISO(p.due, days) : null;
+    tip.textContent = mile ? (nd ? fmt(nd) : "")
+      : [ns && fmt(ns), nd && fmt(nd)].filter(Boolean).join("  →  ") || (days>0?"+":"")+days+"d";
+    tip.style.left = e.clientX + "px"; tip.style.top = e.clientY + "px";
+  };
+  const onUp = () => {
+    document.removeEventListener("pointermove", onMove);
+    document.removeEventListener("pointerup", onUp);
+    tip.remove(); el.classList.remove("dragging"); LANE_DRAG = false;
+    if(!moved){                                   // a click, not a drag: fold toggle
+      if(el.querySelector(".pcar")){
+        if(S.laneFold.has(id)) S.laneFold.delete(id); else S.laneFold.add(id);
+        el.classList.toggle("folded-p");
+        reflowLanes(); drawEdges(); setTimeout(drawEdges, 320);
+      }
+      return;
+    }
+    if(!days){ renderLaneView(); return; }         // dragged but snapped back to origin
+    if(p.started){ const v = shiftISO(p.started, days); addPending(briefPath(p), "started", p.started, v); p.started = v; }
+    if(p.due){ const v = shiftISO(p.due, days); addPending(briefPath(p), "due", p.due, v); p.due = v; }
+    renderAll();
+  };
+  document.addEventListener("pointermove", onMove);
+  document.addEventListener("pointerup", onUp);
+}
+
+/* Edge resize: drag one end of the bar to move only that date, the other end
+   pinned. Geometry is recomputed with the same x()/46px-floor rule the renderer
+   uses, so the live preview lands exactly where renderAll will redraw it, and
+   the moving end is clamped so start can never cross past due. */
+function startResize(el, id, e0, edge){
+  const p = DATA().projects.find(q => q.id === id);
+  if(!p || !p.started || !p.due) return;
+  LANE_DRAG = true;
+  const startX = e0.clientX, scale = contentScale(), span = dayDiff(p.started, p.due);
+  const tip = document.createElement("div"); tip.className = "dragtip"; document.body.appendChild(tip);
+  el.classList.add("resizing");
+  const setGeom = (a, b) => {
+    const rawA = x(a), rawB = x(b), bx = Math.max(0, rawA), bw = Math.max(46, Math.min(bodyW, rawB) - bx);
+    el.style.left = bx + "px"; el.style.width = bw + "px";
+  };
+  let days = 0;
+  const onMove = e => {
+    const raw = Math.round(((e.clientX - startX) / scale) / PXD);
+    if(edge === "l"){                              // start end: may move right up to due, left freely
+      days = Math.min(raw, span);
+      const ns = shiftISO(p.started, days); setGeom(ns, p.due); tip.textContent = fmt(ns);
+    } else {                                        // due end: may move left down to start, right freely
+      days = Math.max(raw, -span);
+      const nd = shiftISO(p.due, days); setGeom(p.started, nd); tip.textContent = fmt(nd);
+    }
+    tip.style.left = e.clientX + "px"; tip.style.top = e.clientY + "px";
+  };
+  const onUp = () => {
+    document.removeEventListener("pointermove", onMove);
+    document.removeEventListener("pointerup", onUp);
+    tip.remove(); el.classList.remove("resizing"); LANE_DRAG = false;
+    if(!days){ renderLaneView(); return; }
+    if(edge === "l"){ const v = shiftISO(p.started, days); addPending(briefPath(p), "started", p.started, v); p.started = v; }
+    else { const v = shiftISO(p.due, days); addPending(briefPath(p), "due", p.due, v); p.due = v; }
+    renderAll();
+  };
+  document.addEventListener("pointermove", onMove);
+  document.addEventListener("pointerup", onUp);
+}
+
+/* Nub drag: rubber-band a ghost arrow to the pill dropped on, then stage that
+   pill's depends_on += this project (arrow points prerequisite -> dependent). */
+function startLink(el, id, e0){
+  const svg = $("#edges"), inner = $("#inner");
+  if(!svg || !inner) return;
+  LANE_DRAG = true; LANE_HOVER = null; applyHoverFlow();
+  const scale = contentScale();
+  const box = () => inner.getBoundingClientRect();
+  const r = el.getBoundingClientRect(), b0 = box(), mile = el.classList.contains("mile");
+  const ax = ((mile ? r.left : r.right) - b0.left) / scale, ay = (r.top + r.height/2 - b0.top) / scale;
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("class", "edge linking"); svg.appendChild(path);
+  let target = null;
+  const onMove = e => {
+    const b = box(), mx = (e.clientX - b.left) / scale, my = (e.clientY - b.top) / scale;
+    path.setAttribute("d", `M${ax},${ay} L${mx},${my}`);
+    const pill = (document.elementFromPoint(e.clientX, e.clientY) || {}).closest?.(".pbar[data-p]");
+    if(target && target !== pill) target.classList.remove("link-target");
+    target = (pill && pill.dataset.p !== id) ? pill : null;
+    if(target) target.classList.add("link-target");
+  };
+  const onUp = () => {
+    document.removeEventListener("pointermove", onMove);
+    document.removeEventListener("pointerup", onUp);
+    path.remove(); LANE_DRAG = false;
+    if(target){
+      target.classList.remove("link-target");
+      const tgt = DATA().projects.find(q => q.id === target.dataset.p);
+      const src = DATA().projects.find(q => q.id === id);
+      if(tgt && src && !(tgt.depends_on || []).includes(src.id)){
+        const before = (tgt.depends_on || []).map(nameOfId).filter(Boolean);
+        tgt.depends_on = (tgt.depends_on || []).concat(src.id);
+        addPending(briefPath(tgt), "depends_on",
+          before.length ? before.join(", ") : "(none)",
+          tgt.depends_on.map(nameOfId).filter(Boolean).join(", "));
+        renderAll(); return;
+      }
+    }
+    drawEdges();
+  };
+  document.addEventListener("pointermove", onMove);
+  document.addEventListener("pointerup", onUp);
+}
+
 function gridlines(){
   let g = "", cur = D(WIN_A); cur.setDate(1);
   while(cur <= D(WIN_B)){
@@ -1187,7 +1496,7 @@ function drawEdges(){
   const de = [];
   DATA().projects.forEach(p => (p.depends_on||[]).forEach(src => {
     const A = pos[src], B = pos[p.id];
-    if(A && B) de.push({ax:A.x0, ay:A.y, bx:B.x0, by:B.y});
+    if(A && B) de.push({ax:A.x0, ay:A.y, bx:B.x0, by:B.y, src, dst:p.id});
   }));
   const grp = {};
   de.forEach((e,i) => { const k = e.bx+"_"+e.by; (grp[k] = grp[k] || []).push(e); });
@@ -1200,11 +1509,12 @@ function drawEdges(){
 
   de.forEach(e => {
     const d = orthPath(e.ax, e.ay, e.cx, e.bx, e.by, RAIL_R);
-    veins += `<path class="vein" d="${d}"/>`;
-    rails += `<path class="edge dep" d="${d}" marker-end="url(#arw)"/>`;
+    veins += `<path class="vein" data-src="${e.src}" data-dst="${e.dst}" d="${d}"/>`;
+    rails += `<path class="edge dep" data-src="${e.src}" data-dst="${e.dst}" d="${d}" marker-end="url(#arw)"/>`;
     plugs += `<circle class="plug" cx="${e.ax}" cy="${e.ay}" r="1.7"/>`;
   });
   svg.innerHTML = defs + veins + rails + plugs;
+  applyHoverFlow();   // a redraw wipes the SVG, so re-light whatever is hovered
 }
 
 /* ======================= H · Kanban ======================= */
@@ -1338,14 +1648,21 @@ function renderCalView(){
   const first = new Date(Y, M-1, 1), start = new Date(first);
   const off = S.weekStartMon ? ((first.getDay()+6) % 7) : first.getDay();
   start.setDate(1 - off);
+  closeCalPop();
   const evByDay = {};
-  const push = (day, html) => (evByDay[day] ||= []).push(html);
+  CAL_EV = [];                    // rebuilt every render; the click handler reads it by index
+  /* Each event carries a data-ev index into CAL_EV so a click can pop its full
+     detail without re-deriving anything from the compact cell markup. */
+  const push = (day, cls, dot, name, detail) => {
+    const i = CAL_EV.length; CAL_EV.push(detail);
+    (evByDay[day] ||= []).push(`<div class="ev${cls}" data-ev="${i}">${dot}<span class="en">${esc(name)}</span></div>`);
+  };
   if(S.calLayers.task) visibleTasks().forEach(t => { if(t.due)
-    push(t.due, `<div class="ev"><span class="tdot ${ST[t.status].c}"></span><span class="en">${esc(t.title)}</span></div>`); });
+    push(t.due, "", `<span class="tdot ${ST[t.status].c}"></span>`, t.title, {type:"task", t}); });
   if(S.calLayers.proj) visibleProjects().forEach(p => { if(p.due)
-    push(p.due, `<div class="ev proj"><span class="sq"></span><span class="en">${esc(p.name)}</span></div>`); });
+    push(p.due, " proj", `<span class="sq"></span>`, p.name, {type:"proj", p}); });
   if(S.calLayers.ren) d.renewals.forEach(r =>
-    push(r.renew_by, `<div class="ev ren"><span class="sq"></span><span class="en">${esc(r.name)}</span></div>`));
+    push(r.renew_by, " ren", `<span class="sq"></span>`, r.name, {type:"ren", r}));
 
   let cells = "";
   for(let i = 0; i < 42; i++){
@@ -1364,6 +1681,56 @@ function renderCalView(){
     <div class="calwrap"><div class="calhead">${days.map(x=>`<div>${x}</div>`).join("")}</div>
     <div class="calgrid">${cells}</div></div>`;
   $("#viewhost").querySelectorAll(".calnav").forEach(n => n.onclick = () => { S.calMonth = n.dataset.m; renderCalView(); });
+  $("#viewhost").querySelectorAll(".ev[data-ev]").forEach(el => el.onclick = e => {
+    e.stopPropagation(); openCalPop(CAL_EV[+el.dataset.ev], el);
+  });
+}
+
+function closeCalPop(){ const p = $("#calpop"); if(p) p.remove(); }
+function calPopHtml(d){
+  const l = L();
+  if(d.type === "task"){
+    const t = d.t;
+    return `<div class="cp-h"><span class="tdot ${ST[t.status].c}"></span>${esc(t.title)}</div>
+      <div class="cp-row"><b>${l.colStatus}</b> ${stName(t.status)}</div>
+      <div class="cp-row"><b>${l.colStart}</b> ${t.start||l.none} &nbsp; <b>${l.colDue}</b> ${t.due||l.none}</div>
+      ${t.priority?`<div class="cp-row"><b>${l.colPriority}</b> ${t.priority}</div>`:""}
+      ${t.waiting_on?`<div class="cp-row"><b>${l.colWaitingOn}</b> ${esc(t.waiting_on)}</div>`:""}
+      <div class="cp-path">${esc(t.proj.name)}/Tasks/</div>`;
+  }
+  if(d.type === "proj"){
+    const p = d.p;
+    return `<div class="cp-h"><span class="sq proj-sq"></span>${esc(p.name)}</div>
+      <div class="cp-row"><b>${l.colStatus}</b> ${esc(p.status||"active")}${p.stage?` &nbsp; <b>stage</b> ${sgName(p.stage)}`:""}</div>
+      <div class="cp-row"><b>${l.colStart}</b> ${p.started||l.none} &nbsp; <b>${l.colDue}</b> ${p.due||l.none}</div>
+      ${p.brand?`<div class="cp-row"><b>brand</b> ${esc(p.brand)}</div>`:""}
+      <div class="cp-path">${esc(projPath(p))}</div>`;
+  }
+  const r = d.r;                                  // renewal
+  return `<div class="cp-h"><span class="sq ren-sq"></span>${esc(r.name)}</div>
+    <div class="cp-row"><b>${l.srcRen}</b> ${r.renew_by||l.none}</div>
+    ${r.room||r.wing?`<div class="cp-path">${esc([r.room, r.wing].filter(Boolean).join(" · "))}</div>`:""}`;
+}
+/* A calendar event popover, placed under the event and flipped above / nudged
+   in-bounds when it would leave the viewport. The next pointerdown anywhere else
+   (or Escape) closes it; clicking another event just replaces it. */
+function openCalPop(d, anchor){
+  closeCalPop();
+  const pop = document.createElement("div");
+  pop.className = "calpop"; pop.id = "calpop";
+  pop.innerHTML = calPopHtml(d);
+  document.body.appendChild(pop);
+  const r = anchor.getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
+  let left = Math.min(Math.max(12, r.left), window.innerWidth - 12 - pw);
+  let top = r.bottom + 6;
+  if(top + ph > window.innerHeight - 12) top = Math.max(12, r.top - 6 - ph);
+  pop.style.left = left + "px"; pop.style.top = top + "px";
+  pop.addEventListener("pointerdown", e => e.stopPropagation());
+  const onKey = e => { if(e.key === "Escape") closeCalPop(); };
+  setTimeout(() => {
+    document.addEventListener("pointerdown", closeCalPop, {once:true});
+    document.addEventListener("keydown", onKey, {once:true});
+  }, 0);
 }
 
 function renderView(){
@@ -1521,7 +1888,13 @@ $("#pendclear").onclick = () => { PENDING.length = 0; $("#pendov").classList.rem
 $("#pendov").onclick = e => { if(e.target.id === "pendov") $("#pendov").classList.remove("on"); };
 document.addEventListener("click", e => {
   if(!e.target.closest(".menuwrap") && S.openMenu){ S.openMenu = null; renderControls(); }
-  if(!e.target.closest(".tcard")) document.querySelectorAll(".tcard.open").forEach(o => o.classList.remove("open"));
+  if(!e.target.closest(".tcard")){
+    const opened = document.querySelectorAll(".tcard.open");
+    opened.forEach(o => o.classList.remove("open"));
+    // Closing from an outside click shrinks the cards back, so the lane frame
+    // that grew to hold them has to settle back down too.
+    if(opened.length && typeof reflowLanes === "function"){ reflowLanes(); drawEdges(); }
+  }
 });
 window.addEventListener("resize", drawEdges);
 window.addEventListener("load", () => setTimeout(drawEdges, 40));
