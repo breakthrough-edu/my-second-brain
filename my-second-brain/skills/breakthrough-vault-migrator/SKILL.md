@@ -131,6 +131,7 @@ Recognising it is your judgment; what happens next is not:
 1. **Walk the ledger with the owner**, and give the same weight to what was deliberately not moved as to what was. The `referred-out` and `left-behind` rows are the ones they will otherwise wonder about in a year.
 2. **Declare which copy is canonical**, in writing, in the tracker: from the cut date, the vault's copy is the only working original; staging and the originals are archives.
 3. **Full link sweep** across everything migrated.
+3b. **Old-room-name sweep, and it must come back empty.** ⛔ A migration is not complete while anything still points at where things used to be. Take every top-level room name of the OLD vault (and the old vault's literal folder name) and grep for them across: the new vault, the auto-memory folder, every installed skill under `~/.claude/skills/`, `~/.claude/CLAUDE.md` on every machine, and `~/Scripts` (or wherever resident services and helper scripts live). Exclude the archive room and dated records (daily notes, filing log, decision bodies, revision logs) and the count must be **zero**. Every remaining hit is one of two things: a live pointer, which you rewrite to the new location (or to the archived original's path with "not migrated" said out loud when the target was deliberately left behind), or a dated record, which you leave alone. **The Stage 2 mapping table is the checklist for this step**: a row is done when the file that cited the old path no longer cites it, not when the target has landed. ⚠️ Rank the hits by who reads them, not by count: anything loaded into every session (the machine-level instructions file, the memory index) and anything that runs unattended (a resident service, a script, a dashboard query, a copy-paste command template) is fixed by hand and tested before the prose is touched. ⚠️ And rename the originals' folder (never delete) **before** you rely on "stale pointers fail loudly": while the old tree is still at its old path, a stale pointer silently returns stale content, which is the only state in which a session does the wrong thing without noticing. Learned the hard way: one migration left ~130 live pointers across 74 files for six weeks because nothing forced this sweep, and a repoint checklist written on day one was never executed because "cutover done" was mistaken for "checklist done".
 4. **Staging is the owner's to dispose of.** Ask what they want to do with it and do what they say. ⛔ You never delete it, and you carry no recommendation on how long to keep it.
 5. Set `migration_complete: true`. The tracker stays where it is, permanently readable, exactly like the setup progress file it is modelled on.
 6. **Hand over to the ordinary rhythm**: new material now goes in through Capture and the weekly ritual, and the migration is over.
@@ -160,7 +161,7 @@ migration_complete: false
 - [ ] Stage 1 · survey (shape read, link census)
 - [ ] Stage 2 · mapping ruled by the owner
 - [ ] Stage 3 · batches (one `- [ ]` line appended per ruled batch)
-- [ ] Stage 4 · close (ledger review, canonical declared, staging disposal ruled)
+- [ ] Stage 4 · close (ledger review, canonical declared, old-room-name grep = 0 outside archive and dated records, staging disposal ruled)
 
 ## Ledger
 | Item / group | Disposition | Destination | Rule cited | Links | Date |
