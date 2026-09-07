@@ -40,10 +40,11 @@
 #   unparseable input by design - so the probe reports a dead guard on a healthy
 #   one. Measured, on zsh, on this product.
 #
-# Blocks recursive deletes that target your Obsidian vault or ~/.claude/skills,
-# including the symlink-passthrough case: My Second Brain installs skills (the
-# command-base skill) as ~/.claude/skills/<name> symlinks that point
-# INTO your vault, and a plain `rm -r ~/.claude/skills/<name>` follows the link
+# Blocks recursive deletes that target your Obsidian vault, ~/.claude/skills,
+# or ~/.codex/skills, including the symlink-passthrough case: My Second Brain
+# installs skills as symlinks that point
+# INTO your vault, and a plain `rm -r ~/.claude/skills/<name>` or
+# `rm -r ~/.codex/skills/<name>` follows the link
 # and destroys the real vault content behind it. This guard stops that.
 #
 # It is an accident net, NOT a security boundary. It only catches recursive
@@ -62,8 +63,8 @@
 INPUT="$(cat)"
 
 # The quoted value below is replaced at install time with your vault's absolute
-# path. Multiple vaults: colon-separated. ~/.claude/skills is always protected
-# and needs no injection.
+# path. Multiple vaults: colon-separated. Both skills roots are always protected
+# and need no injection.
 HOOK_STDIN="$INPUT" MSB_VAULT_PATHS="__MSB_VAULT_PATHS__" /usr/bin/env python3 <<'PYEOF'
 import sys, json, os, shlex, re
 
@@ -81,7 +82,7 @@ if not isinstance(cmd, str) or not cmd.strip():
 
 HOME = os.path.expanduser("~")
 
-# Protected roots: the injected vault path(s) plus ~/.claude/skills (always).
+# Protected roots: the injected vault path(s) plus both skills roots (always).
 # A leftover, un-injected placeholder is dropped so a botched install cannot
 # create a garbage protected root.
 # Sentinel built by concatenation so the full placeholder token never appears
@@ -96,7 +97,10 @@ for part in raw_vaults.split(":"):
         continue
     vault_roots.append(os.path.expanduser(os.path.expandvars(part)))
 
-PROTECTED = list(vault_roots) + [os.path.join(HOME, ".claude", "skills")]
+PROTECTED = list(vault_roots) + [
+    os.path.join(HOME, ".claude", "skills"),
+    os.path.join(HOME, ".codex", "skills"),
+]
 PROTECTED_REAL = []
 for r in PROTECTED:
     PROTECTED_REAL.append(os.path.normpath(r))
@@ -115,6 +119,9 @@ LITERALS += [
     os.path.join(HOME, ".claude", "skills"),
     "~/.claude/skills",
     "$HOME/.claude/skills",
+    os.path.join(HOME, ".codex", "skills"),
+    "~/.codex/skills",
+    "$HOME/.codex/skills",
 ]
 LITERALS = [x for x in dict.fromkeys(LITERALS) if x]
 
@@ -182,8 +189,8 @@ if not blocked:
 roots_display = ", ".join(vault_roots) if vault_roots else "your vault"
 sys.stderr.write(
     "BLOCKED by My Second Brain safety lock: this command runs a recursive delete "
-    "against your vault (%s) or ~/.claude/skills.\n\n"
-    "Those roots are protected because ~/.claude/skills holds symlinks INTO your "
+    "against your vault (%s), ~/.claude/skills, or ~/.codex/skills.\n\n"
+    "Those roots are protected because both skills folders hold symlinks INTO your "
     "vault, and 'rm -r' passes through the symlink and destroys real vault content.\n\n"
     "If you meant to remove a SYMLINK, use plain 'rm' WITHOUT -r (that deletes the link, "
     "not its target). To remove specific files, delete them by name or use your file "

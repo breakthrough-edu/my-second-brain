@@ -1,6 +1,6 @@
 #!/bin/bash
 # fm-guard-hook.sh  (My Second Brain frontmatter guard)
-# Claude Code PreToolUse hook (matchers: Write, Bash). READ-ONLY.
+# Claude Code and Codex PreToolUse hook (matchers: Write, apply_patch, Bash). READ-ONLY.
 #
 # MSB-GUARD: key=fm_guard_installed installs-as=my-second-brain-fm-guard.sh matchers=Write,Bash name=frontmatter-guard does=checks a new note's filename and frontmatter against the doctrine before it lands
 # MSB-PROBE: expect=block stdin={"tool_name":"Write","tool_input":{"file_path":"{{VAULT}}/00_Inbox/Guard-Probe.md","content":"---\ntype: msb-install-probe-not-a-real-family\nstatus: active\n---\n"}}
@@ -30,7 +30,7 @@
 #   moment a bad shape is cheap to stop.
 #
 # FOUR SURFACES, ONE GUARD
-#   Write creating a .md   filename gate + frontmatter gate; on a pass it injects
+#   Write or apply_patch   filename gate + frontmatter gate; on a pass it injects
 #                          the filing protocol so the session files by the law
 #                          rather than from memory.
 #   Bash `cat >` / `cp`    creating a .md is BLOCKED and pointed back at Write.
@@ -342,29 +342,29 @@ def schema_gate(root, path, content):
     return None, ("\n\n".join(notes) if notes else None)
 
 # ===========================================================================
-# Surface 1: Write
+# Surface 1: Write or Codex apply_patch
 # ===========================================================================
-if tool == "Write":
-    path = tin.get("file_path") or ""
+def check_new_markdown(path, content):
+    """Returns (block_reason_or_None, context_or_None) for a new Vault note."""
     if not path.endswith(".md"):
-        allow()
+        return None, None
     root = in_vault(path)
     if root is None:
-        allow()
+        return None, None
     if exempt(root, path):
-        allow()          # templates and archives are not live content
+        return None, None  # templates, archives, and skill packages are not live content
     if os.path.exists(path):
-        allow()          # an edit, not a birth; this guard watches births
+        return None, None  # an edit, not a birth; this guard watches births
 
     problems = filename_problems(root, path)
     if problems:
-        block("BLOCKED by the frontmatter guard: the filename breaks doctrine §5.\n"
-              + "\n".join("  - %s" % p for p in problems)
-              + "\n§5 is the law on names; rename and write again.")
+        return ("BLOCKED by the frontmatter guard: the filename breaks doctrine §5.\n"
+                + "\n".join("  - %s" % p for p in problems)
+                + "\n§5 is the law on names; rename and write again."), None
 
-    reason, note = schema_gate(root, path, tin.get("content") or "")
+    reason, note = schema_gate(root, path, content)
     if reason:
-        block(reason)
+        return reason, None
 
     parts = [PROTOCOL]
     bell = doorbell(root, path)
@@ -372,7 +372,53 @@ if tool == "Write":
         parts.append(bell)
     if note:
         parts.append(note)
-    allow_with("\n\n".join(parts))
+    return None, "\n\n".join(parts)
+
+def apply_patch_additions(command):
+    """Yield (path, content) for each file born through Codex apply_patch."""
+    path = None
+    lines = []
+    for line in command.splitlines():
+        if line.startswith("*** Add File: "):
+            if path is not None:
+                yield path, "\n".join(lines)
+            path = line[len("*** Add File: "):].strip()
+            lines = []
+        elif line.startswith("*** "):
+            if path is not None:
+                yield path, "\n".join(lines)
+                path = None
+                lines = []
+        elif path is not None and line.startswith("+"):
+            lines.append(line[1:])
+    if path is not None:
+        yield path, "\n".join(lines)
+
+if tool == "Write":
+    reason, context = check_new_markdown(
+        tin.get("file_path") or "", tin.get("content") or "")
+    if reason:
+        block(reason)
+    if context:
+        allow_with(context)
+    allow()
+
+if tool == "apply_patch":
+    command = tin.get("command") or ""
+    if not isinstance(command, str) or not command.strip():
+        allow()
+    cwd = data.get("cwd") or os.getcwd()
+    contexts = []
+    for raw_path, content in apply_patch_additions(command):
+        path = raw_path if os.path.isabs(raw_path) else os.path.join(cwd, raw_path)
+        reason, context = check_new_markdown(path, content)
+        if reason:
+            block(reason)
+        if context:
+            contexts.append(context)
+    if contexts:
+        allow_with("\n\n".join(contexts))
+    allow()
 
 # ===========================================================================
 # Surface 2-4: Bash
