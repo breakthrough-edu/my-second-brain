@@ -165,7 +165,7 @@ These two rooms are unlike the rest. They scaffold pre-populated with empty stub
 - "To confirm" density: how many license dates the owner could not name is itself the map of exposure.
 - Trademark gap for a brand the owner says differentiates them.
 
-## Equipment (toggle: machines)
+## Equipment (born on proposal: machines)
 
 **Door sign:** your machines, one per note: manual pointer, service history, inspection certs.
 **Filing test:** the machine as a thing lives here; how to operate or maintain it lives in `03_SOP/`; keeping it serviced week to week is `02_Work/Run/`.
@@ -182,7 +182,7 @@ These two rooms are unlike the rest. They scaffold pre-populated with empty stub
 - Tribal operation: only one person can run or fix the critical machine.
 - The workaround tax: the half-dead machine everyone quietly routes around, never costed.
 
-## Outlets (toggle: physical locations)
+## Outlets (born on proposal: physical locations)
 
 **Door sign:** one outlet, one note: lease, licenses, utilities, quirks.
 **Filing test:** facts about the place live here; how to open and close it daily lives in `03_SOP/`; company-level (non-outlet) documents live in `Company-Docs/`; the landlord lives in `Vendors/`.

@@ -7,6 +7,7 @@ Everything files by `99_Meta/structure-doctrine.md`. Every filing appends to `99
 ## Entry
 
 1. Read `99_Meta/capture-progress.md` and `99_Meta/bootstrap-progress.md`.
+   - ⚠️ **`setup_complete: false` means capture is not open yet.** Setup runs as three stations in order, and the room moves in only after the last one. Say the one line SKILL.md rule 2 gives for that state ("Setup is at Station N. Station N+1 comes first; say 'continue setup' when you want it.", the station number read off `setup_station:`) and stop. ⛔ No pitch, and no list of what the next station holds. ⚠️ **This line is a fallback, not the protection.** A file dragged into the folder, a note written by another skill, or an AI told to write there never passes through capture at all, so nothing here can stand between a half-set-up vault and a bad write. That is why the guards install at Station 3 of a sequence that cannot be skipped, and why this gate is one line rather than a design.
 2. Staleness check per SKILL.md: compare `last_tidy` / `last_distill` in `99_Meta/maintenance-state.md` against `cadence_days` from the same file (never a hardcoded 7; the owner can change the rhythm). Offer once, never nag.
 3. Route:
    - `profile_captured: false` → run **Stage 1, Business Profile** (everyone's first move-in).

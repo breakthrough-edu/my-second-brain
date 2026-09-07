@@ -22,7 +22,7 @@ Update anytime with `npx skills update my-second-brain` (your vault is never tou
 
 ## Four modes, one skill
 
-- **Setup** (10 min): builds the fully wired vault and generates your personal command-base skill, named after your business.
+- **Setup** (three stations, in order: the foundation, the dashboard, the rest): builds the fully wired vault, generates your personal command-base skill named after your business, and ends each station with something on your machine to look at.
 - **Capture** (15 to 20 min for a first room, 10 for a regular one): guided move-in, one room at a time. Every session ends with one observation you had not noticed plus two good questions.
 - **Distill** (weekly, two passes behind one doorbell): first the anti-drift pass, which keeps the house from rotting, then distillation proposals for your methodology layer. You rule yes or no.
 - **Create-My-Jarvis** (a light tier in one 45 to 60 min sitting, or a deep tier across three separate conversations): interviews that give your AI a real character and a real understanding of who you are.

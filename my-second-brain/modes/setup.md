@@ -1,32 +1,18 @@
 # Setup Mode: from bare machine to wired second brain
 
-Fast by design: a handful of decisions from the user, then one scaffold burst. Target: under 10 minutes on a normal connection, most of it Obsidian downloading. Keep momentum; no lectures between steps. Record every step's state in `99_Meta/bootstrap-progress.md` as you go (create it first inside the vault once the vault location exists), so an interrupted setup resumes cleanly: on entry, if `bootstrap-progress.md` exists with `setup_complete: false`, resume from the first unchecked step instead of restarting. ⛔ **Only a `- [ ]` line in that file's body is a step.** Its body also carries the wiring check's results, one line per check, and those are findings rather than work left to do.
+Setup runs as **three stations, in order**: the foundation, the dashboard, the rest. Each station ends with a close that puts something on the machine in front of the owner, and asks one question: continue now? Keep momentum; no lectures between steps. Record every step's state in `99_Meta/bootstrap-progress.md` as you go (create it first inside the vault once the vault location exists), so an interrupted setup resumes cleanly: on entry, if `bootstrap-progress.md` exists with `setup_complete: false`, resume from the first unchecked step instead of restarting. ⛔ **Only a `- [ ]` line in that file's body is a step.** Its body also carries the wiring check's results, one line per check, and those are findings rather than work left to do. Between stations that first unchecked line is simply the next station's first step, so "continue setup" needs no special handling: it is a resume. ⚠️ **Whether this mode is entered at all is the router's call and not this file's** (`SKILL.md` rule 2): between stations, setup opens only when the owner asks for it.
 
-## Step 1: Confirm
+**A note for whoever edits this file, not for the owner.** A whole room of owners installs at once, and the failure mode is not total time (the stations save almost none of it) but a straight line with no visible end, where any one stuck machine stops the whole room. Three stations turn the line into three legs, each ending with something on the machine the owner can look at. ⭐ **The stations are mandatory and sequential**: Station 1, then 2, then 3, with no option to stop and start using the vault in between. The end of a station is a breather, not a parking spot. ⛔ **Do not renumber any step.** Stations are a grouping layer above the steps and the step labels ride along unchanged, because files all over this product point at them by label. ⛔ **Nothing in this product ever says "run the rest at home"**, or "later", or any equivalent. ⚠️ **Total time is not shorter.** What is shorter is each leg, and the one real saving is the Obsidian download overlapping the scaffold. ⭐ The one thing that would make setup materially faster is the scaffold burst itself, and behaviour rule 8 forbids handing it to a subagent, so that is a separate piece of work rather than something to try here.
+
+## Station 1: The foundation
+
+Ends with the vault on disk, the owner's own command base installed on this machine, and their first project inside it.
+
+### Step 1: Confirm
 
 One opening question (keep it to a line): confirm they want to set up their second brain here and now.
 
-## Step 2: Obsidian (viewing deck)
-
-Check if Obsidian is installed. If the user simply says it is already installed, take their word and skip the checks:
-
-- macOS: `[ -d "/Applications/Obsidian.app" ]` (also try `~/Applications`)
-- Windows: `winget list Obsidian.Obsidian` or check `%LOCALAPPDATA%\Programs\Obsidian`
-- Linux: `which obsidian`, flatpak list, or ask
-
-If missing, offer to install it now (recommended; every step of setup works without it, but reading and browsing the vault live there):
-
-- macOS with Homebrew: `brew install --cask obsidian`
-- macOS without Homebrew: download the official DMG with curl from `https://obsidian.md/download`, mount with `hdiutil attach`, copy the .app to `/Applications`, detach. If any step fails, give the download link and move on; do not stall setup.
-- Windows: `winget install Obsidian.Obsidian`
-- Linux: point to the AppImage / flatpak on `https://obsidian.md/download`
-- Any failure: link `https://obsidian.md/download`, tell them to install it later, continue setup. Nothing downstream hard-depends on it.
-
-Nothing about the dashboard depends on Obsidian: it is a generated HTML file that opens in a browser (step 6.95). Obsidian is the reading and graph surface, nothing more.
-
-⛔ **This is the only step that touches Obsidian, and it touches it once.** Setup does not register the vault with Obsidian, does not launch the app, does not bring it to the front, does not open a graph view, and does not teach a keystroke. ⛔ **And it installs no plugin, community or otherwise:** the official URI scheme has no action for the graph, and no third-party plugin gets installed for one keystroke on one night. The close says where the vault is, once (step 8); opening it is the owner's, whenever they like. ⚠️ **This paragraph exists because all of that used to be here and was cut on purpose** (2026-08-23), so a session reading these steps does not helpfully put it back.
-
-## Step 3: Vault location
+### Step 3: Vault location
 
 Ask: existing Obsidian vault, or new one?
 
@@ -34,18 +20,42 @@ Ask: existing Obsidian vault, or new one?
 - **Existing vault:** get the path. The scaffold is idempotent (`mkdir -p`, never overwrite an existing file), so a vault with PARA folders already in place is fine; we add what is missing.
 - **Existing vault with a structure of its own** (signature: a PARA layout, `06_MOCs/`, an existing command base, anything the owner clearly built and uses): do NOT migrate, rename, or rebuild what they have. What works keeps working. Add only what is missing and clearly ours: the business wing (`04_<Business>-Business-Wing/`), `99_Meta` doctrine plus state files, and `02_Command-Base/` if nothing plays that role yet. Tell them plainly what you are adding and what you are leaving untouched, and be honest about the one real consequence: the doctrine describes a personal wing at `03_Personal-Wing/` that their vault does not have, so on their side the doctrine governs the business wing and the shared layers, and their own personal structure stands. ⛔ Never quietly restructure someone's existing personal folders to match the law; propose it as its own piece of work, another day, or leave it alone. ⭐ **That piece of work now has a tool**, `breakthrough-vault-migrator`, which ships beside this skill and installs in step 6.6: it carries an existing structure into the law's structure in batches, over as many short sittings as it takes, rewriting the links as it goes. ⛔ It is still not a thing that happens tonight and it is still not a thing that happens without the owner asking: name it here as what they can say when they want it, then finish setup.
 
-## Step 4: Name, business + toggles (the only interview in setup)
+### Step 4: Name and business (the only interview in setup)
 
-Four quick things, one message each or one compact message, their call:
+Two quick things, one message each or one compact message, their call:
 
 1. **What to call them.** One line: "And what should I call you?" ⛔ **Ask it, never infer it.** This answer becomes `{{YOUR_NAME}}`, which the generated command-base skill uses throughout and the vault's `CLAUDE.md` puts at the top, so an install that skips the question either invents a name for the owner or addresses them by their business name forever. The vault folder from step 3 is not this answer: it may well be the business's name, and it is a folder name either way.
 2. Business name (and its folder-safe English form, e.g. `Aroma Coffee & Co.` -> `Aroma-Coffee`; propose, they confirm). Derive the domain tag from it (`{{BUSINESS_TAG}}`, kebab-case) and confirm that too, in the same breath.
-3. Toggle: physical outlets? (yes -> `Outlets/` room)
-4. Toggle: machines or equipment? (yes -> `Equipment/` room)
 
-⛔ **Do not ask about the personal wing.** It and its six life rooms are always created; the doctrine states its contents flatly, so a vault missing them does not match its own law. There is no third toggle either.
+⛔ **Do not ask about the personal wing.** It and its six life rooms are always created; the doctrine states its contents flatly, so a vault missing them does not match its own law.
 
-## Step 5: The scaffold burst
+⛔ **Two questions, and there is no third.** The preset toggles this step used to carry (physical outlets, machines or equipment) are gone, and `Outlets/` and `Equipment/` are not scaffolded at setup at all. They are born the day capture meets them, through the missing-room ladder capture mode already carries (its level ②, where a room that exists only when the business makes it real is proposed and opened rather than invented). ⭐ The reason, briefly, because putting them back will be tempting: two yes/no questions asked before anything has been moved in were two questions setup did not need, and a room costs nothing to open later. ⛔ **Do not add a toggle back.**
+
+### Step 2: Obsidian (viewing deck)
+
+⭐ **Kick the install off and carry on; do not wait for it.** This step starts a download and then leaves, so the download runs while the scaffold does.
+
+Check if Obsidian is installed. If the user simply says it is already installed, take their word and skip the checks:
+
+- macOS: `[ -d "/Applications/Obsidian.app" ]` (also try `~/Applications`)
+- Windows: `winget list Obsidian.Obsidian` or check `%LOCALAPPDATA%\Programs\Obsidian`
+- Linux: `which obsidian`, flatpak list, or ask
+
+If missing, offer to install it now (recommended; every step of setup works without it, but reading and browsing the vault live there). On a yes, start it in the background and move straight on:
+
+- macOS with Homebrew: start `brew install --cask obsidian` in the background.
+- macOS without Homebrew: start the official DMG download from `https://obsidian.md/download` with curl in the background, and when it lands mount it with `hdiutil attach`, copy the .app to `/Applications`, detach. If any step fails, give the download link and move on; do not stall setup.
+- Windows: start `winget install Obsidian.Obsidian` in the background.
+- Linux: point to the AppImage / flatpak on `https://obsidian.md/download`
+- Any failure: link `https://obsidian.md/download` once and continue setup. Nothing downstream hard-depends on it; the come-back before Step 7.9 A looks once more, and Step 8 A carries the link if the app is still not there.
+
+**Then go straight to Step 5.** The download overlaps the scaffold, and that overlap is the one real time saving the stations have. ⛔ **Come back exactly once, before Step 7.9 A**, and confirm the app is present with the detection commands above. If it is not there, give the download link once and carry on: Step 8 A then names the vault path and the link in the slot where it would have said "open Obsidian", in one sentence, without apology.
+
+Nothing about the dashboard depends on Obsidian: it is a generated HTML file that opens in a browser (step 6.95). Obsidian is the reading and graph surface, nothing more.
+
+⛔ **This is the only step that touches Obsidian, and it touches it once.** Setup does not register the vault with Obsidian, does not launch the app, does not bring it to the front, does not open a graph view, and does not teach a keystroke. ⛔ **And it installs no plugin, community or otherwise:** the official URI scheme has no action for the graph, and no third-party plugin gets installed for one keystroke on one night. The close says where the vault is, once (step 8 A); opening it is the owner's. ⚠️ **This paragraph exists because all of that used to be here and was cut on purpose** (2026-08-23), so a session reading these steps does not helpfully put it back. ⚠️ **Amended 2026-09-07, and the amendment is written into this paragraph and dated rather than made silently, precisely because the ⚠️ above tells a later session to cut anything that looks like Obsidian handling.** From that date the Station 1 close asks the owner to open the vault in Obsidian now, as that station's breather, because a station needs something visible at its end, and a folder in Finder is a list while a vault in Obsidian is a picture. Everything the 2026-08-23 cut removed stays removed: the product still does not register the vault, does not launch the app, does not front it, does not open a graph view, does not install a plugin, and does not teach a keystroke. The one sentence that changed is the close's, from "whenever they like" to "open it and look now". ⛔ Do not cut that sentence back, and ⛔ do not grow it into the product driving the app.
+
+### Step 5: The scaffold burst
 
 ⛔ **This session builds it. Do not hand this step to a subagent** (behaviour rule 8). The burst copies three long files whole, and a copy made under context pressure comes back as a summary; a session that made that copy itself can at least see what it did, while a session reading a report cannot. ⛔ The same holds for every other step here, and step 6.8 says why it matters most there.
 
@@ -53,9 +63,9 @@ Execute [../references/scaffold-spec.md](../references/scaffold-spec.md) in one 
 
 Two layers ship deliberately bare and it is worth not "fixing" them mid-burst: `03_SOP/` holds nothing but its menu, and `04_Methodology/` holds two empty folders and zero `.md` files, doors included.
 
-Report one line: "Scaffolded N folders, M files. Home lists all of it." ⚠️ **The wiring check does not run here.** It is step 7.9, because several of its checks test things that do not exist yet at this point (the vault `CLAUDE.md`, the guards, the starter project, the dashboard). ⛔ **Never write a count of those checks, here or anywhere**, for the reason step 6.8 gives about the guard set; and ⛔ never report a partial run of them as a score, because a "most of them pass so far" carried forward is how a real install arrived at a total nobody had measured.
+Report one line: "Scaffolded N folders, M files. Home lists all of it." ⚠️ **The wiring check does not run here.** It is step 7.9 A, at the end of this station, because several of its checks test things that do not exist yet at this point (the vault `CLAUDE.md`, the starter project). ⛔ **Never write a count of those checks, here or anywhere**, for the reason step 6.8 gives about the guard set; and ⛔ never report a partial run of them as a score, because a "most of them pass so far" carried forward is how a real install arrived at a total nobody had measured.
 
-## Step 5.5: Vault CLAUDE.md (the always-on context layer)
+### Step 5.5: Vault CLAUDE.md (the always-on context layer)
 
 Skills wake on trigger words; `CLAUDE.md` at the vault root loads into EVERY Claude Code session started there, unconditionally. Without it, a session opened tomorrow with a casual first message has no idea this is a structured vault, and the constitution is just a file lying in `99_Meta`. This step is what makes the rules self-announcing.
 
@@ -64,7 +74,7 @@ Skills wake on trigger words; `CLAUDE.md` at the vault root loads into EVERY Cla
 
 Record the outcome in `bootstrap-progress.md` (`claude_md: written | appended | left-to-user`).
 
-## Step 6: Generate their command-base skill
+### Step 6: Generate their command-base skill
 
 From [../templates/command-base-SKILL.template.md](../templates/command-base-SKILL.template.md), replace `{{YOUR_NAME}}`, `{{SLUG}}` (their name or business, kebab-case), `{{VAULT_PATH}}`, `{{BUSINESS}}` (folder name), `{{BUSINESS_NAME}}`, `{{BUSINESS_TAG}}`, `{{COMPANION_SOUL_NAME}}` (`<slug>-companion-soul`; the skill handles its absence until Create-My-Jarvis runs). Zero interview; every value already exists from steps 1 to 4.
 
@@ -79,9 +89,11 @@ Write it to `<vault>/99_Meta/Skills/<slug>-command-base/SKILL.md`, then install:
 
 **Record which one happened.** Set `command_base_install: symlink | junction | copy` in `bootstrap-progress.md`. This is not bookkeeping: it tells a later session whether editing the vault copy is enough or whether a re-copy has to follow. It is a hint, not proof (the owner may have re-installed by hand since), which is why `SKILL.md`'s retrofit path reads the installed file back instead of trusting the flag. Leaving the flag out costs that session its starting guess.
 
-One line on what they just got: "From now on, in any session, say 'morning' or 'log a decision' and this skill runs your day on top of the vault."
+One line on what they just got: "From now on, in any session, say 'morning' or 'log a decision' and this skill runs your day on top of the vault" (from the next session on).
 
-## Step 6.6: Install the companion skills that ride in this payload
+⚠️ **That parenthetical is a measurement, not a hedge.** A skill linked into `~/.claude/skills/` while a session is running is not loaded by that session: measured on 2026-09-07, the Skill tool answered "Unknown skill" to a skill created mid-session, and the harness listed it only a few turns later, on no schedule anyone can rely on. ⛔ **This session must not act out the skill it just wrote.** A "morning" typed now would get an improvisation that reads exactly like the real thing, which is how an owner learns a behaviour their installed skill may not have. It is also why no station's breather asks the owner to type "morning".
+
+### Step 6.6: Install the companion skills that ride in this payload
 
 ⛔ **Read the set off the payload, never off this list:** `ls <payload>/skills/` is the registry, and the descriptions below are here so the owner can be told what each one is, not so the count can be quoted. They are **not** generated and **not** personalised: there is nothing to interview, nothing to fill in, and no `bootstrap-progress` question to ask first.
 
@@ -100,24 +112,106 @@ One line on what they just got: "From now on, in any session, say 'morning' or '
 
 Record `companion_skills_installed:` in `bootstrap-progress.md` (`linked` / `copied` / `partial` / `failed`, and name any that were left alone because something was already there).
 
-One line on what they just got, no more, and ⛔ without a count: "A few more skills came with this one. Say 'help me plan this project' when a piece of work is big enough to need thinking through, 'wrap up' when a working session ends and what it taught should be written down, `breakthrough-method-builder` by name when a whole job closes and how you did it is worth keeping, or the moment you want a way of working written down as a playbook, which you can ask for on day one, 'change the doctrine' the day your vault's own rules need to change, and 'move my old notes in' whenever you are ready to bring years of existing files across."
+⛔ **Install them, and say nothing about them here.** The one line that introduces this set to the owner is said at Station 3, beside Step 6.7, where the tools this vault names get named; tonight's close (Step 8 A) covers them with "a few tools that came in with it" and no more.
 
 ⚠️ **The test that decides whether a skill installs here or only gets named in 6.7, for whoever edits this list next.** It is not preference and not popularity: **ask what the doctrine permits the owner to do by hand.** §1 explicitly permits hand-writing an SOP, so an owner without that skill can still do the work and it is honest to leave it out. §9.1 makes a playbook folder's door mandatory from the day the folder exists and `breakthrough-method-builder` is the only thing in the box that writes one, so an owner without that skill gets a folder that breaks its own constitution the first time a method is written, and nothing else would ever tell them. ⛔ **Never move a skill between the two steps without running that test first.**
 
 ⚠️ **One worked example, because the test's answer was overridden once and the next editor to run it honestly would otherwise move the skill.** `breakthrough-vault-migrator` fails the test: the doctrine permits an owner to move their own files by hand, no rule names the skill, and nothing it writes is mandatory from the day something exists. On the test alone it belongs in 6.7 beside `breakthrough-sop-builder`. **It is installed here anyway, and the reason is mechanical rather than doctrinal:** it was ruled to ship with the payload, which puts it under `skills/`, and `ls <payload>/skills/` is this step's registry. Keeping it out of 6.6 while it sits in `skills/` would take an exclusion list, and an exclusion list is a second registry that drifts from the first. ⭐ **So the test decides the line for a tool that could be published separately; it does not decide it for a tool already riding the payload.** ⛔ Do not "correct" this by moving the skill to 6.7: that would leave it installed by 6.6 and described in 6.7 at the same time.
 
-## Step 6.7: Name the tools this vault points at but does not contain (one line each, no install)
+### Step 6.95 A: The starter project
 
-Some pieces of work have their own tool, published separately and installed by the owner when they want it. Say each one once, in one line, and only so nothing later reads as if it were already on the machine:
+Two halves of one step, in this order. The order is the whole point: the deck is built to read the vault, so the vault has to have something in it first. This half is Station 1's, and `Step 6.95 B` is what Station 2 opens with.
 
-- **Writing an SOP** runs on the `breakthrough-sop-builder` skill. `03_SOP/` ships empty by design and hand-writing an SOP is perfectly legal (doctrine §1); the skill is the comfortable path, not the only legal writer.
-- **Filling the brand pillars** runs on the `breakthrough-brand-strategy` skill. The pillar stubs the scaffold just wrote each close with "run the brand intake", and this is what answers to that line, so an owner who is not told the name reads an instruction with nothing behind it. Hand-writing a pillar is legal too, and the skill reads this vault's own law live rather than carrying a copy of it.
+**A. Create the starter project, then name it in Home.** Full shape in [../references/scaffold-spec.md](../references/scaffold-spec.md) (the starter-project section): one project folder in `03_Personal-Wing/Personal-Projects/`, its Brief with **all four deck keys filled** (`started`, `due`, `stage`, `priority`), and three tasks in its `Tasks/` under the three file names that section gives literally. ⭐ Say what it is in one line and no more: "The three things you still have to do after tonight are already in there as tasks. That is your first project, and it is real." ⛔ Do not create a business project, do not invent work the owner has not mentioned, and ⛔ do not fill the four keys with placeholders: they are what the deck's Next Action, Countdown and swimlane bar are derived from, and a Brief the product wrote itself with them blank teaches that frontmatter is decoration.
 
-⛔ Do not install them here, and do not present them as missing pieces. Nothing in this vault breaks while they are absent. **The test for whether a skill belongs in this step rather than the one above is written at the end of 6.6; apply it before moving anything here.**
+⛔ **Then add one line to `02_Command-Base/Home.md`, before moving on**, under the `## 03_Personal-Wing` heading:
 
-⚠️ **What this step is scoped to, because widening it will be tempting and nobody would notice it had happened.** A tool earns a line here only when something this setup wrote into the vault sends the owner to it: `03_SOP/` shipping empty under a doctrine clause that names the skill, and the stubs' own closing line for the other. ⛔ **The authors publish other skills, and none of them belong in this step**: they do work this vault does not do, no file setup wrote points at them, and appending them would quietly turn "the door signs you are obliged to answer" into a catalogue of everything for sale. They are on the repo front page, where anyone looking for them is already standing.
+```markdown
+- `Personal-Projects/Second-Brain-Rollout/`: the starter project ([[_Second-Brain-Rollout-Brief|brief]])
+```
 
-## Step 6.8: The standard guards (one explanation, one install, one uninstall)
+⚠️ **This is not bookkeeping and it is not optional.** `Home.md` was written back at step 5, from the tree that existed then, and this folder did not. Home calls itself the only directory this vault has, so the moment the owner's first real project is missing from it, that sentence is false, in the first hour, on a correct install. The wiring check `home-is-true` fails on exactly this and has done so on a real end-to-end run. ⭐ Its `Tasks/` folder is deliberately **not** listed: what is inside a project is the project's business and its Brief is the address (doctrine §3). Every folder made after tonight carries the same duty, which is why the frontmatter guard injects it on every `mkdir`; the difference here is that this one is made by the product itself, so the product does it rather than reminding anyone.
+
+### Step 7.9 A: Wiring check, Station 1
+
+⚠️ **First, the one Obsidian come-back Step 2 sends here**, and only if an install was started there: confirm the app is present with Step 2's detection commands. If it is not, give `https://obsidian.md/download` once and carry on. Nothing below depends on it.
+
+⭐ **A check runs at the close of the station that built what it tests, and never again.** By Station 3 the vault may already be in use, and some of these checks fail on a vault that is being used correctly, so they are named here rather than left to be re-derived: `sop-ships-empty` (a lived-in vault with a written SOP fails it correctly), `methodology-ships-empty` (same: a Lesson written at a closeout is the vault working), `brand-stubs-in-place` (a filled pillar flips `status:` off `empty` and this check would report it), and `frontmatter-is-legal` (it reads "every generated `.md`", which is a sentence about the scaffold rather than about the owner's notes; the frontmatter guard and the weekly inspector own legality after that). ⛔ **So no station re-runs an earlier station's checks.** The `## Wiring check` heading in `bootstrap-progress.md` collects the lines from all three stations as they run.
+
+Run the checks the spec's list labels **Station 1**, by name, at the end of [../references/scaffold-spec.md](../references/scaffold-spec.md). ⛔ **Refer to each by its name, never by its number, and never by a count of them**, for the reason written at the top of that list. `progress-keys-match-spec` runs at every station's close, this one included, and its pending logic already handles a key whose step is still unticked. `report-then-hand-over` stays last: it counts the folders and files created inside the vault and writes both numbers into its own line, and those two numbers are what Step 8 A speaks.
+
+⛔⛔ **Every check writes its own line into `99_Meta/bootstrap-progress.md` as it finishes**, under a `## Wiring check` heading: its name, its verdict, and **the value it judged on**. The shape and the reason are in that section of the spec. ⛔ **A verdict with no value beside it is not a finished check**, and ⛔ **nothing anywhere reports a total**, in the file or out loud. ⭐ The reason is the failure this whole step exists to catch: a score is a claim, and the file is the only thing anyone can check it against tomorrow.
+
+Report failures plainly and fix what is mechanically fixable (a missing `Home.md` line, a leftover `{{` placeholder). ⛔ Do not hide a failure to keep the ending clean: the close below is where the owner starts trusting this thing, and a clean-sounding ending on top of broken wiring is how a vault gets abandoned in month three.
+
+**The three disciplines every close obeys, Step 8 A, Step 8 B and Step 8 C alike.** They are written out here because these are the paragraphs a later editor will most easily break.
+
+1. ⛔ **A close never says "later", "at home", "when you have time", "next time", or any phrase that points past now.** The only question is "Continue now?". This is also the product's defence of behaviour rule 3: a hook nearly always grows on the far side of the word "later", so a close that never says it has nowhere for one to grow.
+2. **Every sentence in a close names one of three things:** a file that is on the disk, an action this machine can do right now, or the next station's name and what it builds. The next station is named once, as a noun, and never recommended. ⛔ No "you will want", no "the good part is coming", no "most people".
+3. ⛔ **Every number in a close is one a wiring check counted a moment ago** (setup's own iron rule, restated here because the close is where it gets broken).
+
+⛔ **Step 8 A and Step 8 B never offer the first capture and never mention capture mode.** That offer belongs to Step 8 C alone, and it is the last thing setup says.
+
+**When the owner answers no at Step 8 A or Step 8 B:** say exactly one line, "Noted. You are at Station N.", and stop. `setup_station: N` is already on disk, and the next station opens when the owner says "continue setup" and at no other moment. ⛔ **Nothing else is said**: the product does not manage the room, whoever is running the room does.
+
+### Step 8 A: Station 1 close
+
+Write `setup_station: 1` into `bootstrap-progress.md`, then speak the close, then ask the one question.
+
+The shape is the same at all three closes: the station is done and what it was · what the owner now holds · go and look · what the next station builds, named once as a noun · "Continue now?". The skill speaks the owner's language and the shape does not change; the station names are written `Station 1` / `Station 2` / `Station 3` literally. The English below is the reference text: keep the shape, substitute the values.
+
+> **Station 1 is done: the foundation.**
+> You now have: a second brain at `<vault path>`, `<N>` folders and `<M>` files, every one of them listed in Home. A set of rules that is yours, at `99_Meta/structure-doctrine.md`. A command base of your own, already installed on this machine. A few tools that came in with it. And your first project, with `<T>` tasks already inside it.
+> Open Obsidian and look at this vault. That is what you just built.
+> Station 2 builds your dashboard. Continue now?
+
+`<N>` and `<M>` are the two numbers `report-then-hand-over` wrote a moment ago at Step 7.9 A. ⛔ Report the numbers that check actually counted, not a fresh estimate; a count improvised at the close has already been measured going wrong on a real install. `<T>` is a count of the files in the starter project's `Tasks/` folder, taken now.
+
+**Where the vault is gets said once**, as the absolute path in that first line, and the owner is asked to open it there and look. ⛔ **Do not open it for them, do not register it, do not name a keystroke.** Setup touched Obsidian once, at step 2, and that was the whole of it. A setup that ends by driving another application is a setup that can get stuck on its own last step.
+
+**If Obsidian is not on the machine** (Step 2's come-back found nothing), the third line becomes: "The vault is at `<vault path>`. Obsidian is at `https://obsidian.md/download`; open the vault there and look." One sentence, and ⛔ no apology.
+
+## Station 2: The dashboard
+
+One job, and it ends on the only picture this product has. ⛔ **Station 2 is not merged into Station 1** even though it holds that one job: the dashboard has to be a station's end rather than a step in the middle of one.
+
+**At the station's entry, probe `python3`**, which is the probe Step 6.95 B carries as its first item, run here so a missing interpreter is known before the station starts rather than halfway through it. It is present on macOS and most Linux; on Windows it is often absent. If it is missing, the second item of Step 6.95 B is what happens next.
+
+### Step 6.95 B: The first dashboard build
+
+**B. Build the dashboard once.** The engine and its display template ship in this skill's payload at `scripts/deck.py` and `scripts/deck-template.html`; resolve the running skill's folder the same way step 6.6 does. ⛔ Neither is ever copied into the vault: the generator is the part that grows patches, and a copy in the vault is a snapshot of tonight that no update can reach.
+
+1. **Probe `python3`.** Present on macOS and most Linux; on Windows it is often absent.
+2. **If it is missing, explain before you touch anything.** Say what is missing, what it is for (the dashboard, and the same interpreter the weekly checker and session search already need), and where to get it. ⛔ **Never install it, or change the owner's PATH or system settings, without their explicit yes.** If they decline or cannot right now: record `deck: skipped-no-python` in `bootstrap-progress.md`, say in one line that the dashboard is pending and that "fix my deck" builds it the moment Python is there, and move on. Nothing else in setup depends on it. The fallback for those days is `Home.md` and the starter project's Brief, both plain markdown.
+3. **Run it once:** `python3 "<payload>/scripts/deck.py" build "<vault-path>"`. Record `deck: built`, and record what the run actually produced in `deck_build_result:`, an inline mapping carrying the process exit code and the counts the run printed (`{exit: 0, briefs: 1, tasks: 3}`). ⭐ **That key is the whole evidence for the first item of `deck-is-alive`**, which is why it is written here, by the step that ran the build, rather than recalled later: the spec forbids a second rebuild to prove it, and setup can resume in a new session where the run is not in living memory. A build that fails records its real exit code, not an absent key.
+4. **Report one line, the one it printed**, e.g. "Command Deck rebuilt: 1 projects, 3 tasks, N notes scanned." ⛔ Do not paste the path and do not open it yet; the deck is handed over at this station's close (Step 8 B).
+
+⚠️ If the build exits non-zero, say so plainly, record `deck: skipped-no-python` only when Python was the actual reason, and carry on. A failed dashboard must never end a setup that otherwise worked.
+
+### Step 7.9 B: Wiring check, Station 2
+
+Run the checks the spec's list labels **Station 2**, by name: `deck-is-alive`, which reads what step 6.95 B recorded in `deck_build_result:`, including the skipped-as-passed case when there is no `python3`, and `progress-keys-match-spec`, which runs at every station's close. ⛔ **Refer to each by its name, never by its number, and never by a count of them.** ⛔ **Do not re-run Station 1's checks**, for the reason written at Step 7.9 A, and ⛔ do not re-count folders and files: this station's close speaks the value its own check wrote.
+
+Every check writes its own line into `99_Meta/bootstrap-progress.md` as it finishes, under the same `## Wiring check` heading Station 1 opened, in the shape Step 7.9 A gives: its name, its verdict, and the value it judged on. Report failures plainly, on the same terms.
+
+### Step 8 B: Station 2 close
+
+Write `setup_station: 2` into `bootstrap-progress.md`, then the close. Same shape, same three disciplines, reference text below.
+
+> **Station 2 is done: the dashboard.**
+> `02_Command-Base/Command-Deck.html` is built, and on it are your project and its `<T>` tasks.
+> Open it and bookmark it. It is rebuilt every time you start work, so it is always as fresh as the last time you worked, and "rebuild my deck" refreshes it on the spot.
+> Station 3 installs the guards that watch this vault and connects the rest of the tools. Continue now?
+
+Open `02_Command-Base/Command-Deck.html` in their browser as that line is said. `<T>` is the task count `deck_build_result:` recorded at Step 6.95 B; ⛔ not a fresh count taken here.
+
+**If step 6.95 B recorded `deck: skipped-no-python`**, the second and third lines become one line instead: "The dashboard is waiting on Python; 'fix my deck' builds it the moment Python is there." Nothing else about the close changes, and ⛔ nothing is apologised for.
+
+## Station 3: The rest
+
+⭐ **The guards install here because the stations are mandatory and sequential, so every vault arrives here.** ⛔ Not because anything earlier catches what the guards catch, and ⛔ do not write a rationale that leans on a gate in capture mode.
+
+### Step 6.8: The standard guards (one explanation, one install, one uninstall)
 
 ⭐ **The guards are a set, and this step installs the set.** **Which guards are in the set is read off this payload, never off a number written here:** every `scripts/*-hook.sh` file is one guard, each has its own subsection below, and adding a guard means adding a script and a subsection, not editing a count. ⛔ **Never write "all four" or any other number into this step, into the wiring check, or into what you say to the owner.** The set has already changed size once, and every sentence that carried a count became a lie the day it did.
 
@@ -170,11 +264,26 @@ On yes, per guard in the set, then once for the settings file:
 
 ⛔⛔ **This session installs the guards and watches the probes itself. Do not hand this step to a subagent** (behaviour rule 8). ⭐ **This is the step where that matters most:** `installed` is a claim about behaviour, and the only thing that can honestly make it is whoever saw the exit code. A session that says "verified live" on a report it was handed has verified nothing, and the sentence reads identically either way.
 
-**Record one key per guard** in `bootstrap-progress.md`, using **the key that guard's own `MSB-GUARD:` line declares** (`key=`), each set to `installed` / `installed-not-enforcing` / `declined` / `skipped-platform`. ⭐ **Write the probe result beside the keys, in the body, as it happens**, one line per guard in the guard's own words: which probe, what it demanded, what it exited (`rm-guard expect=block actual_exit=2`). ⛔ **That line is written here, by the step that ran the probe, and never reconstructed at step 7.9**, which reads files and settings and has no exit code of its own to report; setup can also resume in a new session, and an exit code that only ever lived in a sentence is gone by then. ⭐ **One key per guard rather than one key for the set**, because that is what lets the wiring check count what this step actually did without a number written anywhere, and what lets a later guard join by adding a key instead of by changing a schema.
+**Record one key per guard** in `bootstrap-progress.md`, using **the key that guard's own `MSB-GUARD:` line declares** (`key=`), each set to `installed` / `installed-not-enforcing` / `declined` / `skipped-platform`. ⭐ **Write the probe result beside the keys, in the body, as it happens**, one line per guard in the guard's own words: which probe, what it demanded, what it exited (`rm-guard expect=block actual_exit=2`). ⛔ **That line is written here, by the step that ran the probe, and never reconstructed at step 7.9 C**, which reads files and settings and has no exit code of its own to report; setup can also resume in a new session, and an exit code that only ever lived in a sentence is gone by then. ⭐ **One key per guard rather than one key for the set**, because that is what lets the wiring check count what this step actually did without a number written anywhere, and what lets a later guard join by adding a key instead of by changing a schema.
 
 ⛔ **`installed` means step 4 passed.** A guard whose file is in place and registered but whose probe did not behave gets **`installed-not-enforcing`**, plus one line to the owner in plain words saying which guard, what it is not doing, and what would fix it (for the frontmatter guard that is almost always the PyYAML install above). ⛔ Never write `installed` on an unrun or failed probe, and ⛔ never quietly downgrade the probe to "the file looks right". **A guard recorded as installed while enforcing nothing is worse than no guard**, because the owner stops watching for the thing it was supposed to catch. The wiring check `guards-registered` reads these keys, so this value is what makes the failure visible at the end of setup instead of six weeks later.
 
-## Step 6.9: Session memory (optional, recommended, validated on macOS)
+### Step 6.7: Name the tools this vault points at but does not contain (one line each, no install)
+
+**First, the one line about the skills Station 1 installed silently, no more than this line, and ⛔ without a count:** "A few more skills came with this one. Say 'help me plan this project' when a piece of work is big enough to need thinking through, 'wrap up' when a working session ends and what it taught should be written down, `breakthrough-method-builder` by name when a whole job closes and how you did it is worth keeping, or the moment you want a way of working written down as a playbook, which you can ask for on day one, 'change the doctrine' the day your vault's own rules need to change, and 'move my old notes in' whenever you are ready to bring years of existing files across."
+
+⭐ **This is where that line lives, and Step 6.6 installs those skills without saying anything about them.** This step is its natural home: 6.7 names tools, and this names the ones already on the machine.
+
+Some pieces of work have their own tool, published separately and installed by the owner when they want it. Say each one once, in one line, and only so nothing later reads as if it were already on the machine:
+
+- **Writing an SOP** runs on the `breakthrough-sop-builder` skill. `03_SOP/` ships empty by design and hand-writing an SOP is perfectly legal (doctrine §1); the skill is the comfortable path, not the only legal writer.
+- **Filling the brand pillars** runs on the `breakthrough-brand-strategy` skill. The pillar stubs the scaffold just wrote each close with "run the brand intake", and this is what answers to that line, so an owner who is not told the name reads an instruction with nothing behind it. Hand-writing a pillar is legal too, and the skill reads this vault's own law live rather than carrying a copy of it.
+
+⛔ Do not install them here, and do not present them as missing pieces. Nothing in this vault breaks while they are absent. **The test for whether a skill belongs in this step rather than the one that installs them is written at the end of 6.6; apply it before moving anything here.**
+
+⚠️ **What this step is scoped to, because widening it will be tempting and nobody would notice it had happened.** A tool earns a line here only when something this setup wrote into the vault sends the owner to it: `03_SOP/` shipping empty under a doctrine clause that names the skill, and the stubs' own closing line for the other. ⛔ **The authors publish other skills, and none of them belong in this step**: they do work this vault does not do, no file setup wrote points at them, and appending them would quietly turn "the door signs you are obliged to answer" into a catalogue of everything for sale. They are on the repo front page, where anyone looking for them is already standing.
+
+### Step 6.9: Session memory (optional, recommended, validated on macOS)
 
 This step turns on **session memory**: every Claude Code conversation on this machine becomes searchable, so future sessions can answer "how did we fix that last time?" and "why did we choose A over B?" instead of re-solving solved problems.
 
@@ -200,34 +309,11 @@ Record `session_memory_installed:` in `bootstrap-progress.md` (`installed` / `de
 
 ⭐ **What the tool is now, said plainly to the owner in one line, because the difference is the whole point:** it is a filing cabinet, not a colleague who reads it over the weekend. It answers "how did we solve that before" **when somebody asks**, and it never speaks first. What is worth keeping out of a session is decided at that session's own closeout, while whoever was in it still remembers.
 
-## Step 6.95: The starter project, then the first dashboard build
-
-Two halves of one step, in this order. The order is the whole point: the deck is built to read the vault, so the vault has to have something in it first.
-
-**A. Create the starter project, then name it in Home.** Full shape in [../references/scaffold-spec.md](../references/scaffold-spec.md) (the starter-project section): one project folder in `03_Personal-Wing/Personal-Projects/`, its Brief with **all four deck keys filled** (`started`, `due`, `stage`, `priority`), and three tasks in its `Tasks/` under the three file names that section gives literally. ⭐ Say what it is in one line and no more: "The three things you still have to do after tonight are already in there as tasks. That is your first project, and it is real." ⛔ Do not create a business project, do not invent work the owner has not mentioned, and ⛔ do not fill the four keys with placeholders: they are what the deck's Next Action, Countdown and swimlane bar are derived from, and a Brief the product wrote itself with them blank teaches that frontmatter is decoration.
-
-⛔ **Then add one line to `02_Command-Base/Home.md`, before moving on**, under the `## 03_Personal-Wing` heading:
-
-```markdown
-- `Personal-Projects/Second-Brain-Rollout/`: the starter project ([[_Second-Brain-Rollout-Brief|brief]])
-```
-
-⚠️ **This is not bookkeeping and it is not optional.** `Home.md` was written back at step 5, from the tree that existed then, and this folder did not. Home calls itself the only directory this vault has, so the moment the owner's first real project is missing from it, that sentence is false, in the first hour, on a correct install. The wiring check `home-is-true` fails on exactly this and has done so on a real end-to-end run. ⭐ Its `Tasks/` folder is deliberately **not** listed: what is inside a project is the project's business and its Brief is the address (doctrine §3). Every folder made after tonight carries the same duty, which is why the frontmatter guard injects it on every `mkdir`; the difference here is that this one is made by the product itself, so the product does it rather than reminding anyone.
-
-**B. Build the dashboard once.** The engine and its display template ship in this skill's payload at `scripts/deck.py` and `scripts/deck-template.html`; resolve the running skill's folder the same way step 6.6 does. ⛔ Neither is ever copied into the vault: the generator is the part that grows patches, and a copy in the vault is a snapshot of tonight that no update can reach.
-
-1. **Probe `python3`.** Present on macOS and most Linux; on Windows it is often absent.
-2. **If it is missing, explain before you touch anything.** Say what is missing, what it is for (the dashboard, and the same interpreter the weekly checker and session search already need), and where to get it. ⛔ **Never install it, or change the owner's PATH or system settings, without their explicit yes.** If they decline or cannot right now: record `deck: skipped-no-python` in `bootstrap-progress.md`, say in one line that the dashboard is pending and that "fix my deck" builds it the moment Python is there, and move on. Nothing else in setup depends on it. The fallback for those days is `Home.md` and the starter project's Brief, both plain markdown.
-3. **Run it once:** `python3 "<payload>/scripts/deck.py" build "<vault-path>"`. Record `deck: built`, and record what the run actually produced in `deck_build_result:`, an inline mapping carrying the process exit code and the counts the run printed (`{exit: 0, briefs: 1, tasks: 3}`). ⭐ **That key is the whole evidence for the first item of `deck-is-alive`**, which is why it is written here, by the step that ran the build, rather than recalled later: the spec forbids a second rebuild to prove it, and setup can resume in a new session where the run is not in living memory. A build that fails records its real exit code, not an absent key.
-4. **Report one line, the one it printed**, e.g. "Command Deck rebuilt: 1 projects, 3 tasks, N notes scanned." ⛔ Do not paste the path and do not open it yet; the deck is handed over at the close (step 8).
-
-⚠️ If the build exits non-zero, say so plainly, record `deck: skipped-no-python` only when Python was the actual reason, and carry on. A failed dashboard must never end a setup that otherwise worked.
-
-## Step 7: Official Obsidian skills (optional, recommended)
+### Step 7: Official Obsidian skills (optional, recommended)
 
 Offer once: the Obsidian team publishes official skills (Bases syntax, Obsidian-flavored markdown, web clipping) that make the AI sharper inside Obsidian. Install with `npx skills add -g kepano/obsidian-skills`. Recommended yes; a no costs nothing tonight. Record the answer in `bootstrap-progress.md` (`obsidian_skills_offered:`).
 
-## Step 7.5: Connect a calendar (optional, recommended)
+### Step 7.5: Connect a calendar (optional, recommended)
 
 Offer once: connect a calendar so the morning brief can see today's actual schedule, not just the task list. Read-only, folded into the brief, never stored in the vault. Recommend-leaning, because a morning brief that ignores the day's meetings is half-blind, but a skip costs nothing and is reversible any time.
 
@@ -239,24 +325,22 @@ Three choices. Do the lightweight part inline, do not stall setup on OAuth or an
 
 Always record the outcome in `bootstrap-progress.md` (`calendar_offered: true` + `calendar_provider:`). Offer once, never nag; the command-base skill reads the flag every morning and stays silent when it is `none`.
 
-## Step 7.9: Wiring check
+### Step 7.9 C: Wiring check, Station 3
 
-Run the wiring check at the end of [../references/scaffold-spec.md](../references/scaffold-spec.md), every check on that list, by name. ⛔ **Refer to each by its name, never by its number, and never by a count of them**, for the reason written at the top of that list. Two of them read state rather than the filesystem: `guards-registered` reads what step 6.8 recorded, one key per guard, and confirms each one it says it installed is actually registered (a declined or platform-skipped guard passes; session memory is not a guard and is not counted). `deck-is-alive` reads what step 6.95 recorded in `deck_build_result:`, including the skipped-as-passed case when there is no `python3`.
+Run the checks the spec's list labels **Station 3**, by name: `guards-registered`, which reads what step 6.8 recorded, one key per guard, and confirms each one it says it installed is actually registered (a declined or platform-skipped guard passes; session memory is not a guard and is not counted), and `progress-keys-match-spec`, which runs at every station's close. ⛔ **Refer to each by its name, never by its number, and never by a count of them**, for the reason written at the top of that list. ⛔ **Do not re-run the checks of Station 1 or Station 2**, for the reason written at Step 7.9 A: the vault may be in use by now. ⛔ And do not re-count folders and files, because this station's close speaks the keys its own steps wrote.
 
-⛔⛔ **Every check writes its own line into `99_Meta/bootstrap-progress.md` as it finishes**, under a `## Wiring check` heading: its name, its verdict, and **the value it judged on**. The shape and the reason are in that section of the spec. ⛔ **A verdict with no value beside it is not a finished check**, and ⛔ **nothing anywhere reports a total**, in the file or out loud. ⭐ The reason is the failure this whole step exists to catch: a score is a claim, and the file is the only thing anyone can check it against tomorrow.
+Every check writes its own line into `99_Meta/bootstrap-progress.md` as it finishes, under the same `## Wiring check` heading, in the shape Step 7.9 A gives: its name, its verdict, and the value it judged on. Report failures plainly and fix what is mechanically fixable. ⛔ Do not hide a failure to keep the ending clean.
 
-Report failures plainly and fix what is mechanically fixable (a missing `Home.md` line, a leftover `{{` placeholder). ⛔ Do not hide a failure to keep the ending clean: the handover below is where the owner starts trusting this thing, and a clean-sounding ending on top of broken wiring is how a vault gets abandoned in month three.
+### Step 8 C: The handover (Station 3 close)
 
-## Step 8: The handover
+Write `setup_station: 3` and set `setup_complete: true` in `bootstrap-progress.md`, then hand over. Same shape, same three disciplines, reference text below.
 
-Close setup by handing over what was built, in this order:
+> **Station 3 is done. Setup ends here.**
+> Installed just now: `<the items whose keys say installed, in plain words: the guards that watch this vault · session memory · the Obsidian skills · your calendar>`.
+> What comes next is not setup. It is use: the first ten minutes of capture mode is your Business Profile. Move the first thing in now?
 
-1. **Report what was created:** the folder and file counts the last wiring check just wrote down. ⛔ Report the numbers that check actually counted, not a fresh estimate; a count improvised at the close has already been measured going wrong on a real install.
-2. **The dashboard, which is the thing they will open tomorrow:** open `02_Command-Base/Command-Deck.html` in their browser and tell them to bookmark it. One line on how it stays true: it is rebuilt at the start of every session, so it is always as fresh as the last time they worked, and saying "rebuild my deck" refreshes it on the spot. (Skip this if step 6.95 recorded `deck: skipped-no-python`; say the dashboard is waiting on Python instead.)
-3. **Say where the vault is, once:** the absolute path, and that Obsidian opens it whenever they want it. ⛔ **Do not open it for them, do not register it, do not name a keystroke.** Setup touched Obsidian once, at step 2, and that was the whole of it. A setup that ends by driving another application is a setup that can get stuck on its own last step.
+The second line names only what the keys in `bootstrap-progress.md` record as installed or connected. ⛔ An item that was declined, or skipped on this platform, is not named and not apologised for.
 
-Then say what they have, straight, something like: "That is your second brain, half built. The structure is done; the memories are not moved in yet. That is what capture mode is for, and the first ten minutes of it is your Business Profile. Want to move the first thing in now?"
+If they say yes, load capture mode and go.
 
-Set `setup_complete: true` in `bootstrap-progress.md`. If they say yes, load capture mode and go.
-
-⛔ **Nothing else gets offered at the close.** Setup ends on the deck and the first capture. Anything that adds structure to a vault with nothing in it yet is stacking empty rooms, and every capability in this system is earned by activity rather than granted at install.
+⛔ **Nothing else gets offered at the close.** Setup ends on the first capture. Anything that adds structure to a vault with nothing in it yet is stacking empty rooms, and every capability in this system is earned by activity rather than granted at install.

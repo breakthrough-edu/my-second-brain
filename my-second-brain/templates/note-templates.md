@@ -339,8 +339,8 @@ tags: []
 -
 
 <!--
-One machine, one note, in 01_Assets/Equipment/ (the room exists only if the equipment toggle
-  was on at setup, or it was proposed and approved later).
+One machine, one note, in 01_Assets/Equipment/ (the room is not scaffolded; it is born
+  when it is proposed and approved during capture).
 renew_by carries whichever date actually needs acting on: warranty end, inspection due, or
   certification expiry. It replaced the old warranty_until key, because one expiry key across
   the whole vault is what makes a single renewal radar possible.
@@ -369,7 +369,7 @@ tags: []
 ## Notes
 
 <!--
-One location, one note, in 01_Assets/Outlets/ (toggle room, same as Equipment).
+One location, one note, in 01_Assets/Outlets/ (born on proposal, same as Equipment).
 renew_by carries the lease end, or the earliest licence expiry if that lands first. It
   replaced the old lease_until key: one expiry key, whole vault.
 The landlord is a Vendor. The premises is this note.
