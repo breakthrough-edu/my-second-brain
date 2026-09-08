@@ -38,9 +38,9 @@ For the same reason, the weekly rhythm's doorbell lives in the command-base skil
 
 ## The idea underneath
 
-AI execution is cheap now. What is scarce is your data having a home.
+AI execution is cheap now. What is scarce is your judgment having a home.
 
-When your business lives in one structured vault, any AI can give you real answers about your own operation. When it lives in chat threads, receipts, and one employee's head, no model, however smart, can help you.
+When your business lives in one structured vault, any AI can give you real answers about your own operation. While the part that decides things lives in chat threads and one person's head, no model, however smart, can help you.
 
 So this skill does not try to be the smartest assistant. It builds the thing underneath the assistant: a knowledge base in plain markdown files, structured by written law, owned by you. Models keep changing; your knowledge base stays yours. Your judgment and your operation are never locked into any single AI vendor, because the data layer is just files on your disk.
 

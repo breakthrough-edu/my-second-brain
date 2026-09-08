@@ -2,7 +2,7 @@
 
 A Claude Code skill that builds and runs a complete second brain for a business owner: one vault, two wings (your life in a personal wing, your business in a four-layer knowledge map), operated in plain conversation with Obsidian as the viewing deck.
 
-The idea underneath: **AI execution is cheap now; what is scarce is your data having a home.** Models keep changing; your knowledge base, plain markdown files on your own disk, stays yours.
+The idea underneath: **AI execution is cheap now; what is scarce is your judgment having a home.** Models keep changing; your knowledge base, plain markdown files on your own disk, stays yours.
 
 The full product story (philosophy, design decisions, day-to-day life with it) lives on the repo front page: [github.com/breakthrough-edu/my-second-brain](https://github.com/breakthrough-edu/my-second-brain).
 
