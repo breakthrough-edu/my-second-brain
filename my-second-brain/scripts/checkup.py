@@ -89,6 +89,10 @@ DEFAULTS = {
     # dot-prefixed name outright, so the tool/OS clutter this used to list
     # (.git, .obsidian, .DS_Store and friends) was never once reached from here.
     "ignore": [],
+    # Directory names that mean "a package manager put a dependency tree here".
+    # A vault is a folder of prose; one of these inside it is always an accident,
+    # and always an expensive one (see check_dependency_trees for why).
+    "dependency_dirs": ["node_modules", "vendor", "site-packages", ".venv", "venv"],
     # The system control area and the files the scaffold guarantees live in it.
     # This is the WHOLE list that references/scaffold-spec.md's tree writes, not
     # a sample of it. A sample was the earlier shape, and it meant a vault could
@@ -413,6 +417,84 @@ def check_rooms(vault, cfg):
             "unexpected top-level %s outside the numbered-room structure: %s" % (kind, name),
             name))
     return findings, None
+
+
+def _link_finding(full, rel, vault_abs):
+    """Judge one symlink by where it lands, not by what it is called."""
+    try:
+        target = os.path.realpath(full)
+    except OSError:
+        target = None
+    inside = target is not None and (
+        target == vault_abs or target.startswith(vault_abs + os.sep))
+    if inside:
+        return Finding(
+            INFO, "dependency-trees",
+            "symlink that points back inside the vault: %s. Sync is unaffected, "
+            "but whatever it points at now appears twice in every index and "
+            "search result." % rel,
+            rel)
+    return Finding(
+        WARN, "dependency-trees",
+        "symlink pointing OUT of the vault: %s -> %s. Obsidian follows symlinks "
+        "when it indexes, so the entire target tree is treated as vault content "
+        "and uploaded on the next sync. The vault on disk stays small while sync "
+        "inflates, which is why this is usually found late and by accident. "
+        "Bridge external things from a folder ABOVE the vault instead. "
+        "⛔ To remove one, use plain 'rm', never 'rm -r': the recursive form "
+        "passes through the link and deletes what it points at."
+        % (rel, target or "(unresolvable)"),
+        rel)
+
+
+def check_dependency_trees(vault, cfg):
+    """Symlinks that leave the vault, and dependency trees that landed inside it.
+
+    Both are the same silent failure wearing two faces. Obsidian indexes what it
+    can reach: it follows symlinks, and a real `node_modules/` needs no link at
+    all. Either one can turn a 260 MB vault into a multi-gigabyte sync, and
+    because the folder on disk still looks small, the numbers never line up and
+    the cause is usually blamed on something else first.
+
+    ⚠️ os.walk does not follow symlinked directories, so this reports them
+    rather than descending into them, and it never walks a dependency tree it
+    has already flagged: those are exactly the trees with 15,000 files in them.
+    """
+    findings = []
+    dep_names = set(cfg.get("dependency_dirs", DEFAULTS["dependency_dirs"]))
+    vault_abs = os.path.realpath(vault)
+    scanned = 0
+    for root, dirs, files in os.walk(vault):
+        dirs[:] = [d for d in dirs if not d.startswith(".")]
+        keep = []
+        for name in dirs:
+            full = os.path.join(root, name)
+            rel = os.path.relpath(full, vault)
+            scanned += 1
+            if os.path.islink(full):
+                findings.append(_link_finding(full, rel, vault_abs))
+                continue
+            if name in dep_names:
+                findings.append(Finding(
+                    WARN, "dependency-trees",
+                    "dependency tree inside the vault: %s. Obsidian indexes it as "
+                    "vault content, so every file in it uploads on the next sync "
+                    "(a node_modules can be hundreds of megabytes across tens of "
+                    "thousands of files). Nothing here needs it: install "
+                    "dependencies OUTSIDE the vault and let the runtime resolve "
+                    "upward to them." % rel,
+                    rel))
+                continue
+            keep.append(name)
+        dirs[:] = keep
+        for name in files:
+            full = os.path.join(root, name)
+            if os.path.islink(full):
+                scanned += 1
+                findings.append(_link_finding(
+                    full, os.path.relpath(full, vault), vault_abs))
+    return findings, "scanned %d non-dot entr%s for links and dependency trees" % (
+        scanned, "y" if scanned == 1 else "ies")
 
 
 def check_required_meta(vault, cfg):
@@ -788,6 +870,7 @@ CHECK_CLASSES = [
     ]),
     ("Out-of-bounds writes", [
         ("Top-level rooms", check_rooms),
+        ("Links and dependency trees", check_dependency_trees),
         ("Record (cb:) schema", check_record_schema),
         ("Type-mounted families", check_type_families),
         ("Tag vocabulary", check_tags),
