@@ -342,6 +342,10 @@ def _find_brief(project_dir):
     return None
 
 
+# The statuses the template can draw (its ST table); `cancelled` is legal too but never drawn.
+TASK_STATUSES = ("not-started", "in-progress", "waiting", "blocked", "done")
+
+
 def _read_tasks(scan, project_dir, vault):
     tasks = []
     tdir = os.path.join(project_dir, "Tasks")
@@ -360,10 +364,20 @@ def _read_tasks(scan, project_dir, vault):
         fm = parse_frontmatter(text or "")
         if str(fm.get("cb", "")).strip() != "task":
             continue
+        status = str(fm.get("status", "")).strip() or "not-started"
+        # cancelled is closed and was never work: off every board, like a killed Brief.
+        if status == "cancelled":
+            continue
+        # An off-list status used to crash every view the template draws it in
+        # (ST[status] is undefined), so it is reported here instead of drawn.
+        if status not in TASK_STATUSES:
+            scan.unreadable.append((rel, "status: %s is not on the task list (%s)"
+                                    % (status, ", ".join(TASK_STATUSES + ("cancelled",)))))
+            continue
         tasks.append({
             "id": "t-" + _slug(rel),
             "title": _title_from(text, _first_body_line(text, _pretty(name[:-3]))),
-            "status": str(fm.get("status", "")).strip() or "not-started",
+            "status": status,
             "start": str(fm.get("start", "")).strip() or None,
             "due": str(fm.get("due", "")).strip() or None,
             "waiting_on": str(fm.get("waiting_on", "")).strip() or None,
