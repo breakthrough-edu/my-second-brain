@@ -27,14 +27,27 @@ WHEN TO RUN IT
     After any edit to the five files listed in TARGETS, before calling the
     edit done.
 
-    $ python3 dev/report-back-accept.py            # diff against origin/main
-    $ python3 dev/report-back-accept.py --base v4.1.0
+    $ python3 dev/report-back-accept.py                      # standing checks
+    $ python3 dev/report-back-accept.py --base origin/main   # plus branch checks
 
-WHY THE RED-LINE CHECK READS ADDED LINES, NOT WHOLE FILES
-    The files already carry YAML fences, table rules and one quoted list line
-    that would trip a whole-file scan forever. A check that is red on day one
-    for reasons nobody will fix is a check people stop reading. Added lines
-    are the only lines this change is answerable for.
+TWO MODES, AND WHY THE SECOND ONE IS OPT-IN
+    The standing checks read the shipped text as it is: the sections are in
+    place, the four results are the four results, and the sections this
+    harness owns keep the red lines. They stay true after a merge, on any
+    branch.
+
+    The branch checks compare against a base ref: red lines on every ADDED
+    line, the frozen files untouched, nothing outside the expected files
+    changed. They are answerable only while a branch is being reviewed. Run
+    by default they would go red on the first later branch that legitimately
+    edits a template, for a reason that has nothing to do with this text, and
+    a check that is red for reasons nobody will fix is a check people stop
+    running. So they run only when a base is named.
+
+WHY THE STANDING RED-LINE CHECK READS SECTIONS, NOT WHOLE FILES
+    The files carry YAML fences, table rules and one quoted list line that
+    would trip a whole-file scan forever. The sections this harness locates
+    are the only text it is answerable for.
 """
 
 import argparse
@@ -337,29 +350,82 @@ def check_maintenance():
 # --------------------------------------------------------- 5 · red lines
 
 
-def check_red_lines(base):
+def judge_line(rel, line):
+    """True when the line keeps every red line; records a failure otherwise."""
+    clean = True
+    where = f"{rel}: {line.strip()[:90]}"
+    if chr(0x2014) in line or chr(0x2013) in line:  # em dash, en dash
+        fail("no em or en dash", where)
+        clean = False
+    if "--" in line and not re.fullmatch(r"\s*\|?[-:| ]+\|?\s*", line):
+        fail("no double hyphen", where)
+        clean = False
+    if re.search(r"\S - \S", line):
+        fail("no spaced hyphen", where)
+        clean = False
+    for pat in NAME_PATTERNS:
+        if re.search(pat, line):
+            fail("no names, no private paths", f"{pat} in {where}")
+            clean = False
+    if re.search(r"\[\[\d{4}-\d{2}-\d{2}-", line):
+        fail("no link into a private vault", where)
+        clean = False
+    return clean
+
+
+def owned_text():
+    """The sections this harness is answerable for, as (file, text) pairs.
+    A section that has gone missing is reported by its own check, not here."""
+    out = []
+    handoff = section(read(CONSULTANT), "## The handoff entry")
+    if handoff:
+        out.append((CONSULTANT, handoff))
+    report = read(REPORT)
+    baton = section(report, "## The baton") or ""
+    m = re.search(r"^#{3,4} Deliver the baton.*$", baton, re.M)
+    if m:
+        out.append((REPORT, baton[m.start():]))
+    close = section(report, "## Close")
+    if close:
+        out.append((REPORT, close))
+    pointer = [
+        l
+        for l in read(METHOD).splitlines()
+        if "Claude's own memory" in l or "99_Meta/memory.md" in l
+    ]
+    out.append((METHOD, "\n".join(pointer)))
+    maint = read(MAINT)
+    start = maint.find("1b. **")
+    end = maint.find("**Machine-layer self-check**")
+    if start != -1 and end > start:
+        out.append((MAINT, maint[start:end]))
+    guide = [
+        l
+        for l in read(GUIDE).splitlines()
+        if "session report" in l and "00_Inbox/" in l
+    ]
+    out.append((GUIDE, "\n".join(guide)))
+    return out
+
+
+def check_red_lines_standing():
+    clean = True
+    count = 0
+    for rel, text in owned_text():
+        for line in text.splitlines():
+            count += 1
+            clean = judge_line(rel, line) and clean
+    if clean:
+        ok("red lines on the owned sections", f"{count} lines")
+
+
+def check_red_lines_added(base):
     clean = True
     for rel in TARGETS + ["README.md"]:
         for line in added_lines(base, rel):
-            where = f"{rel}: {line.strip()[:90]}"
-            if "—" in line or "–" in line:
-                fail("no em or en dash", where)
-                clean = False
-            if "--" in line and not re.fullmatch(r"\s*\|?[-:| ]+\|?\s*", line):
-                fail("no double hyphen", where)
-                clean = False
-            if re.search(r"\S - \S", line):
-                fail("no spaced hyphen", where)
-                clean = False
-            for pat in NAME_PATTERNS:
-                if re.search(pat, line):
-                    fail("no names, no private paths", f"{pat} in {where}")
-                    clean = False
-            if re.search(r"\[\[\d{4}-\d{2}-\d{2}-", line):
-                fail("no link into a private vault", where)
-                clean = False
+            clean = judge_line(rel, line) and clean
     if clean:
-        ok("red lines on added lines", "dashes, double hyphens, spaced hyphens, names, private links")
+        ok("red lines on added lines", f"against {base}")
 
 
 # ------------------------------------------------------------ 6 · scope
@@ -388,21 +454,28 @@ def check_scope(base):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--base", default="origin/main")
+    parser.add_argument(
+        "--base",
+        default=None,
+        help="a ref to compare against; adds the branch checks (added lines, frozen files, scope)",
+    )
     args = parser.parse_args()
 
-    code, _, err = git("rev-parse", "--verify", args.base)
-    if code != 0:
-        print(f"cannot resolve base ref {args.base}: {err.strip()}")
-        return 2
+    if args.base:
+        code, _, err = git("rev-parse", "--verify", args.base)
+        if code != 0:
+            print(f"cannot resolve base ref {args.base}: {err.strip()}")
+            return 2
 
     check_handoff_block()
     check_deliver()
     check_guide()
     check_pointer_home()
     check_maintenance()
-    check_red_lines(args.base)
-    check_scope(args.base)
+    check_red_lines_standing()
+    if args.base:
+        check_red_lines_added(args.base)
+        check_scope(args.base)
 
     for name, detail in passes:
         print(f"  ok    {name}" + (f"  ({detail})" if detail else ""))
@@ -412,7 +485,8 @@ def main():
             print(f"  FAIL  {name}: {detail}")
         return 1
     print("\nFAILURES: none")
-    print("PASS, the text is in place and clean. Whether it works is the clean session's question.")
+    mode = f"standing and branch checks against {args.base}" if args.base else "standing checks"
+    print(f"PASS ({mode}): the text is in place and clean. Whether it works is the clean session's question.")
     return 0
 
 
