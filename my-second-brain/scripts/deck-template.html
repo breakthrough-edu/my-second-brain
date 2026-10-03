@@ -637,6 +637,7 @@ const DICT = {
   staleNudge:"say \"rebuild my deck\" to refresh",
   cBriefs:"projects", cTasks:"tasks", cScanned:"notes scanned",
   cUnreadable:"unreadable, say \"fix my deck\"",
+  cOffList:"left off for their status, say \"fix my deck\"",
   genat:"generated", gates:"Countdown",
   tabLane:"Swimlanes", tabKanban:"Kanban", tabGrid:"Grid", tabCal:"Calendar",
   filter:"Filter", display:"Display", layers:"Layers", lanesBtn:"Lanes", reset:"Reset",
@@ -1878,12 +1879,15 @@ function renderAll(){
      here at every default, and a task note whose frontmatter never closes does
      not reach the page at all: without this count the second kind of file is
      invisible from the page itself, which is the one failure an owner could
-     never spot by reading it. The build prints the same numbers once, into a
+     never spot by reading it. A task the scan read fine and left off for a
+     status the vault's section 8 does not allow is counted apart: that file is
+     not broken, its value is. The build prints the same numbers once, into a
      terminal that scrolls away; the page keeps them. */
   const m = DATA().meta;
   $("#counts").innerHTML =
     `${m.briefs} ${l.cBriefs} · ${m.tasks} ${l.cTasks} · ${m.scanned} ${l.cScanned}`
-    + (m.unreadable ? `<span class="warn">${m.unreadable} ${l.cUnreadable}</span>` : "");
+    + (m.unreadable ? `<span class="warn">${m.unreadable} ${l.cUnreadable}</span>` : "")
+    + (m.offList ? `<span class="warn">${m.offList} ${l.cOffList}</span>` : "");
   document.querySelector(".split").classList.toggle("norail", !S.showRail);
   $("#railbtn").innerHTML = `<span class="gl2"><i></i><i></i></span>${l.sidebar}`;
   $("#railbtn").dataset.on = S.showRail ? 1 : 0;

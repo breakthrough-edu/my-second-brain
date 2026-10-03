@@ -65,6 +65,13 @@ PYTHON ONLY, NO THIRD-PARTY IMPORTS
     the schema reader this file does not need PyYAML: it reads a handful of
     scalar frontmatter keys, and `checkup.parse_frontmatter` already covers
     exactly that surface.
+
+    ⭐ One question is still put to the schema reader, and only when it can
+    answer: which task statuses this vault's own section 8 lists. The deck knows
+    which statuses it can DRAW; whether a status it cannot draw is legal is the
+    vault's ruling, and no list of legal values is kept in this file. With no
+    PyYAML, or a section 8 that will not parse, the deck still builds, judges a
+    status against the ones it can draw, and `doctor` says the law went unread.
 """
 
 import argparse
@@ -87,6 +94,13 @@ except ImportError as exc:  # pragma: no cover - packaging accident, not a vault
         "is the bug, not the vault.\n" % exc
     )
     sys.exit(2)
+
+
+# The section 8 reader. Optional here, unlike in checkup.py: see the docstring.
+try:
+    import doctrine_schema
+except ImportError:  # the payload was split up; the deck still builds without it
+    doctrine_schema = None
 
 
 TEMPLATE_NAME = "deck-template.html"
@@ -299,7 +313,11 @@ class Scan(object):
         self.renewals = []
         self.pulse = {"touched": 0, "days": [], "top": [], "silent": []}
         self.scanned = 0
-        self.unreadable = []      # (relpath, why)
+        self.unreadable = []      # (relpath, why): frontmatter that will not parse
+        self.off_list = []        # (relpath, why): a task status section 8 does not allow
+        self.undrawn = {}         # status -> count: allowed by section 8, no column here
+        self.task_law = None      # section 8's task status list, or None (see below)
+        self.task_law_unread = None   # why section 8 could not be asked, or None
         self.notes = []           # doctor observations, (kind, subject, detail)
 
 
@@ -342,8 +360,35 @@ def _find_brief(project_dir):
     return None
 
 
-# The statuses the template can draw (its ST table); `cancelled` is legal too but never drawn.
+# The statuses the template can draw (its ST table). ⛔ This is NOT the list of
+# legal statuses: that list is section 8 of the vault's own doctrine, read live
+# by `_read_task_law`, and a vault may list a value the deck has no column for.
 TASK_STATUSES = ("not-started", "in-progress", "waiting", "blocked", "done")
+TASK_MARKER = "cb: task"
+
+
+def _read_task_law(scan, vault):
+    """Ask the vault's own section 8 which task statuses it lists.
+
+    Leaves `scan.task_law` as that closed list, or None when section 8 was read
+    and closes no list on a task's status (every value is then the owner's to
+    use). When the law cannot be read at all, `scan.task_law_unread` says why
+    and the deck falls back to the statuses it can draw. Never fatal.
+    """
+    if doctrine_schema is None:
+        scan.task_law_unread = "the section 8 reader (doctrine_schema.py) is not beside deck.py"
+        return
+    try:
+        schema = doctrine_schema.load_schema(vault, meta_dir=META_DIR)
+    except doctrine_schema.SchemaUnavailable:
+        scan.task_law_unread = "PyYAML is not installed for this python3"
+        return
+    except doctrine_schema.SchemaError as exc:
+        scan.task_law_unread = str(exc)
+        return
+    spec = schema.by_marker.get(TASK_MARKER)
+    listed = spec.enums.get("status") if spec is not None else None
+    scan.task_law = tuple(str(v) for v in listed) if listed else None
 
 
 def _read_tasks(scan, project_dir, vault):
@@ -365,14 +410,21 @@ def _read_tasks(scan, project_dir, vault):
         if str(fm.get("cb", "")).strip() != "task":
             continue
         status = str(fm.get("status", "")).strip() or "not-started"
-        # cancelled is closed and was never work: off every board, like a killed Brief.
-        if status == "cancelled":
-            continue
-        # An off-list status used to crash every view the template draws it in
-        # (ST[status] is undefined), so it is reported here instead of drawn.
+        # A status with no column used to crash every view the template draws it
+        # in (ST[status] is undefined), so it never reaches the page. Whether it
+        # is also a mistake is section 8's ruling, not this file's: a value the
+        # vault's law lists stays off the board quietly, and only a value the
+        # law does not list is reported.
         if status not in TASK_STATUSES:
-            scan.unreadable.append((rel, "status: %s is not on the task list (%s)"
-                                    % (status, ", ".join(TASK_STATUSES + ("cancelled",)))))
+            if scan.task_law_unread:
+                scan.off_list.append((rel, "status: %s has no column on the deck (%s), and "
+                                           "section 8 could not be read to say whether this "
+                                           "vault lists it" % (status, ", ".join(TASK_STATUSES))))
+            elif scan.task_law is None or status in scan.task_law:
+                scan.undrawn[status] = scan.undrawn.get(status, 0) + 1
+            else:
+                scan.off_list.append((rel, "status: %s is not on the task list section 8 "
+                                           "declares (%s)" % (status, ", ".join(scan.task_law))))
             continue
         tasks.append({
             "id": "t-" + _slug(rel),
@@ -389,6 +441,7 @@ def _read_tasks(scan, project_dir, vault):
 
 def scan_vault(vault, shape):
     scan = Scan()
+    _read_task_law(scan, vault)
 
     # ---- projects -------------------------------------------------------
     for kind, lane, pdir in _project_dirs(vault, shape):
@@ -621,6 +674,7 @@ def build_payload(shape, scan, now):
             "briefs": len(scan.projects),
             "tasks": sum(len(p["tasks"]) for p in scan.projects),
             "unreadable": len(scan.unreadable),
+            "offList": len(scan.off_list),
         },
         "projects": _strip_private(scan.projects),
         "decisions": _strip_private(scan.decisions),
@@ -696,17 +750,27 @@ def cmd_build(vault, args):
         print(json.dumps({"deck": DECK_RELPATH, "generated": data["meta"]["generated"],
                           "scanned": scan.scanned, "briefs": data["meta"]["briefs"],
                           "tasks": data["meta"]["tasks"],
-                          "unreadable": len(scan.unreadable)}, ensure_ascii=False))
+                          "unreadable": len(scan.unreadable),
+                          "off_list": len(scan.off_list)}, ensure_ascii=False))
         return 0
 
     line = "Command Deck rebuilt: %d projects, %d tasks, %d notes scanned." % (
         data["meta"]["briefs"], data["meta"]["tasks"], scan.scanned)
+    # Two different failures, counted apart: a file the deck could not read, and
+    # a task it read fine whose status the vault's law does not list.
     if scan.unreadable:
+        line += " %d file(s) the deck could not read." % len(scan.unreadable)
+    if scan.off_list:
+        line += " %d task(s) left off the board for a status %s." % (
+            len(scan.off_list),
+            "the deck has no column for (section 8 went unread)" if scan.task_law_unread
+            else "section 8 does not list")
+    if scan.unreadable or scan.off_list:
         # ⛔ Printed so it can be typed back verbatim: the interpreter, the
         # script's real path and the vault, and no backticks (a shell would run
         # what is between them). The file carries no execute bit on purpose.
-        line += " %d file(s) the deck could not read. To see them, run: python3 \"%s\" doctor \"%s\"" % (
-            len(scan.unreadable), os.path.abspath(__file__), vault)
+        line += " To see them, run: python3 \"%s\" doctor \"%s\"" % (
+            os.path.abspath(__file__), vault)
     print(line)
     return 0
 
@@ -893,6 +957,9 @@ def cmd_doctor(vault, args):
         print(json.dumps({
             "blockers": blockers,
             "unreadable": [{"path": p, "why": w} for p, w in scan.unreadable],
+            "off_list": [{"path": p, "why": w} for p, w in scan.off_list],
+            "undrawn": scan.undrawn,
+            "task_law_unread": scan.task_law_unread,
             "dark": dark,
             "deck_exists": os.path.isfile(deck_path),
             "deck_stamp": stamp,
@@ -927,6 +994,25 @@ def cmd_doctor(vault, args):
     for kind, subject, detail in scan.notes:
         if kind == "no-brief":
             print("   - %s  (%s)" % (subject, detail))
+    if scan.off_list:
+        print("   %d task(s) the deck read and left off every board, because the status is"
+              % len(scan.off_list))
+        if scan.task_law_unread:
+            print("   not one the deck has a column for. The file is fine; the value is the question,")
+            print("   and section 8 is what answers it once it can be read (see the last lines here):")
+        else:
+            print("   not one section 8 lists. The file is fine; the value is the question. Either")
+            print("   change it to a listed one, or add it to section 8 (an amendment to the law):")
+        for path, why in scan.off_list:
+            print("   - %s  (%s)" % (path, why))
+    if scan.undrawn:
+        print("   %d task(s) carry a status section 8 allows and the deck has no column for"
+              % sum(scan.undrawn.values()))
+        print("   (%s). They stay off every board. Nothing to fix." % ", ".join(
+            "%s: %d" % (k, scan.undrawn[k]) for k in sorted(scan.undrawn)))
+    if scan.task_law_unread:
+        print("   Section 8 was not read for task statuses (%s)," % scan.task_law_unread)
+        print("   so each status was judged against the ones the deck can draw.")
     print("")
 
     print("3 · Dark cells")
