@@ -40,7 +40,7 @@
 - **Command Base 是主 session, 只领活、派活、收活, 不在里面做重活。** 重活永远同一句: 「准备一个 handoff, 我去新的 session」。
 - **Handoff 写完直接开 task chip** (Claude Desktop 有这个: handoff 写好, 点一下新 session 就带着它起来), 不用先开 session 再手贴。
 - **新 session 第一句就是一行 handoff 路径**, 其他什么都不讲。进场包要自己讲完该讲的; 你在新 session 开场补充的每一句, 都是 handoff 漏掉的一句。
-- **做完回主 session 的方式是贴 baton 路径**: 新 session 收尾会在 `00_Inbox/` 留一份 session report, 你把它的路径贴回 Command Base, 它读完就归档。⛔ 读过才准归档, 没读过不准动。
+- **做完回主 session, 做工的 session 能发就自己发**: 新 session 收尾会在 `00_Inbox/` 留一份 session report, 然后照 handoff 里写的回邮地址, 把那份档的路径发回 Command Base, 再告诉你结果是哪一个 (delivered · queued · held · not sent)。只有 held 或 not sent, 或者你用的环境根本没有发讯息的工具, 才轮到你把路径贴回去。讯息只是省你一次复制贴上, 那份档才是记录, Command Base 读完就归档。⛔ 读过才准归档, 没读过不准动。
 - **同一时间只有一个 session 在改 vault 正本; 其他 session 做产出, 做完由主 session 收进来一起 commit。** 并行的 git 机制 (worktree、branch) 不在这份里, 那是另一层的事, 先不碰。
 - **主 session 要 ready 别的 session 在动东西。** 看到档案变了, 先当成是另一个 session 改的, 先看 diff 再动, 不要等人报, 因为人不会主动说。人报了的也要核: 「那张 task 我在另一个 session 做完了, 你帮我检查一下」。
 - **产出独立、可以并行的活丢给 background agent** (写一篇文案、消化两份文档、出一版方案); 主 session 独占 git 跟 vault 的写入。

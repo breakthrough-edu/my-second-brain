@@ -102,6 +102,36 @@ Then append one line to `99_Meta/filing-log.md`: date, what, where, and the rule
 
 **Nothing to hand over is a real outcome.** A session that produced no outputs and landed no notes gets no file: an empty baton is clutter in the one folder the owner is asked to keep clear, and an Inbox that collects them teaches every future reader to skip the one that matters.
 
+### Deliver the baton
+
+**The note above IS the baton. This step only tells the session that asked for the work where to find it.** ⛔ It never replaces the note: the note is written first, exactly as above, every time, because the note is the record and the message is only a pointer to it. No note, because there was nothing to hand over, means nothing to send.
+
+**Send only when both of these hold:**
+
+1. The handoff this session worked from carries a `Report back to` block with an address in it, and not the line saying that session cannot receive messages. A handoff pasted into this session's opening message counts the same as one read from a file: what matters is the block, not where it was read.
+2. This session has a tool that sends a message to another session (`SendMessage` is the usual one in Claude Code; the desktop app can also offer its own session tool).
+
+Either one missing: send nothing, and the result is `not sent`. ⭐ That is a normal outcome, not a failure. ⛔ Do not go looking for a way around a missing tool, whether a script, a socket, another skill, or a file dropped somewhere else: a workaround delivers to a place nobody is watching, and the fallback it is trying to beat costs the owner one paste.
+
+**The message is two things and nothing else.** Line one is the report's path, alone on the line: the receiving owner sees only the first line of a message as a preview, so the path is the one thing that has to be there. Under it, the report's one paragraph as written, ⛔ not re-summarised: a second summary is a second version, and two versions drift. ⛔ No instruction and no request to the other session: the receiving session treats a message from another session as information, never as its owner's instruction, and the baton's own disposal line already tells the reader what to do. ⛔ No file contents: the outputs live in the note, by address.
+
+**Address it with the address from the block, in the form the block gives.** ⛔ Never by title: a title is for people and it gets renamed, which is why the block carries an address beside it.
+
+**Send once.** ⛔ No retry loop, and no second message asking whether the first arrived: the result below is the answer, and a second message is noise in a session that is in the middle of its own work.
+
+**Then name the result, as exactly one of four, read off what the tool returned:**
+
+- `delivered`: the tool said the message reached that session. ⚠️ It arrived; that is not the same as somebody having read it.
+- `queued`: the tool said it is waiting behind that session's current work.
+- `held`: the tool, or a notice that came back, said the receiving session is holding it for its owner's approval. That can happen when the two sessions run in different permission modes. ⚠️ A held message can end unread: one that nobody approves expires (five minutes by default), and not every app can show the approval prompt (the desktop app and the VS Code extension cannot). Say that to the owner in the same breath as the result.
+- `not sent`: everything else. No address, no tool, the tool refused, errored, could not find that session, or returned something that cannot be read as one of the three above.
+
+⛔ **Anything you cannot place is `not sent`. Never round up to `delivered`.** The owner acts on this word: the cautious one costs them a paste, and the hopeful one leaves a report unread with nobody knowing.
+
+**On `held` or `not sent`, the fallback is what it always was: the owner pastes the path into the session that asked.** Say the path either way.
+
+⚠️ **The honest limits.** A session on another machine is reachable only through an extra connection the owner may not have on. A closed or archived session, and an unattended scheduled run, may never get the message. A Windows session and a WSL session on the same computer cannot reach each other. On native Windows the documentation says session messaging is available from a recent Claude Code version, and this step has not been run there. In every one of these the result is whatever the tool says, and the note in the Inbox is what carries the work.
+
 ## Memory, and the one line that is not optional
 
 Append the session's own log line to `99_Meta/memory.md`, as the vault's memory template says.
@@ -113,5 +143,7 @@ Append the session's own log line to `99_Meta/memory.md`, as the vault's memory 
 ## Close
 
 One paragraph, spoken, plain: what landed, where (the report's path included), and what was deliberately not written. ⛔ Still no summary of the session for the person in the room; they were there. The summary exists, in the report, written for the one reader who was not: the next session. The spoken close hands over addresses, not a recap.
+
+**Next to the report's path, say the delivery result, in its own word and nothing around it: `delivered`, `queued`, `held`, or `not sent`.** ⭐ The path is spoken whatever the result: on `held` or `not sent` it is what the owner pastes into the session that asked, and on `delivered` or `queued` it is still how they find the note if the message is never read. ⛔ Do not soften the word into a phrase like "passed it along": that is none of the four, and the owner cannot tell from it whether to paste. No report means no result to name.
 
 ⭐ **An empty closeout is a real outcome and says so plainly:** "Nothing to land, this one was execution." An execution session still leaves the baton when it built something; what it never leaves is a Lesson written to feel productive. A session that produces a keeper for the judgment layer roughly one time in three is a healthy ratio; anything higher usually means the bar has slipped, ⛔ and the report never counts toward that ratio: it is the record OF the session, not something the session earned.
