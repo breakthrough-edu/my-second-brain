@@ -183,12 +183,13 @@ def check_handoff_block():
         "address": r"address",
         "title": r"title",
         "machine": r"machine",
+        "permissions": r"\*\*Permissions:\*\*",
     }
     missing = [k for k, pat in wanted.items() if not re.search(pat, body, re.I)]
     if missing:
         fail("report-back block fields", f"not named in the handoff section: {missing}")
     else:
-        ok("report-back block fields", "environment, address, title, machine all named")
+        ok("report-back block fields", "environment, address, title, machine, permissions all named")
 
     if not re.search(r"cannot receive messages", body, re.I):
         fail(
