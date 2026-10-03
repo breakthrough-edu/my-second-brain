@@ -65,7 +65,12 @@ FROZEN = [
 ]
 
 # Maintainer files allowed to change beside the five targets.
-ALLOWED_EXTRA = ["dev/report-back-accept.py", "README.md"]
+ALLOWED_EXTRA = [
+    "dev/report-back-accept.py",
+    "README.md",
+    # Re-anchored in the same round: one citation had slid when deck.py changed.
+    "my-second-brain/skills/breakthrough-vault-guardian/references/what-each-rule-guards.md",
+]
 
 RESULT_WORDS = ["delivered", "queued", "held", "not sent"]
 
