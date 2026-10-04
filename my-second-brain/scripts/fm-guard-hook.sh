@@ -468,6 +468,7 @@ PUNCT = "();<>|&\n"
 WRAPPERS = {"sudo", "command", "nohup", "exec", "time", "builtin", "env"}
 SHELLS = {"bash", "sh", "zsh", "dash"}
 ASSIGN_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*)=(.*)$", re.S)
+MODE_RE = re.compile(r"^[ugoa]*[-+=][rwxXst]*(,[ugoa]*[-+=][rwxXst]*)*$")
 HEREDOC_RE = re.compile(r"<<(-?)\s*(?:'([^']*)'|\"([^\"]*)\"|\\?([A-Za-z0-9_]+))")
 
 def strip_heredoc_bodies(cmd):
@@ -554,9 +555,11 @@ def analyse(cmd, cwd, env, depth=0, acc=None):
       resolved (cp/install/mv only).
     acc["unresolved"]: target words still holding `$`, a backtick or a glob.
     acc["moved"]: every resolved positional of every `mv` (surface 3).
+    acc["made"]: every resolved operand of every `mkdir` (surface 4).
     acc["parse_failed"]: True when some level could not be tokenized."""
     if acc is None:
-        acc = {"targets": [], "unresolved": [], "moved": [], "parse_failed": False}
+        acc = {"targets": [], "unresolved": [], "moved": [], "made": [],
+               "parse_failed": False}
     if depth > 3:
         return acc
     try:
@@ -664,7 +667,23 @@ def analyse(cmd, cwd, env, depth=0, acc=None):
                             (os.path.join(d, os.path.basename(s)), head, (s,)))
             else:
                 add(dest, head, rs)
-        elif head in SHELLS:                                   # bash -c '...'
+        elif head == "mkdir":
+            k, opts = 0, True
+            while k < len(args):
+                a = args[k]; k += 1
+                if opts and a == "--":
+                    opts = False; continue
+                if opts and a.startswith("-"):
+                    # `-m MODE`: an octal mode is already gone (the fd-digit
+                    # filter above), so only a symbolic one is left to skip.
+                    if ((a == "--mode" or (not a.startswith("--") and a.endswith("m")))
+                            and k < len(args) and MODE_RE.match(args[k])):
+                        k += 1
+                    continue
+                r = resolve(a)
+                if r is not None:
+                    acc["made"].append(r)
+        elif head in SHELLS:                                  # bash -c '...'
             for k, a in enumerate(args):
                 if (a.startswith("-") and not a.startswith("--")
                         and "c" in a[1:] and k + 1 < len(args)):
@@ -727,28 +746,32 @@ if any(p.endswith(".md") and in_vault(p) for p in shell["moved"]):
         "same update the mkdir rule below asks for.")
 
 # Surface 4: mkdir. Allowed, with the directory duty attached.
-if re.search(r"(^|[;&|])\s*mkdir\b", cmd):
-    made = []
-    try:
-        tokens = shlex.split(cmd, posix=True)
-    except ValueError:
-        tokens = re.findall(r"[^\s;|&<>]+", cmd)
-    for t in tokens:
-        if t.startswith("-"):
-            continue
-        if in_vault(t) and not t.endswith(".md"):
-            made.append(t)
-    if made:
-        notes.append(
-            "New folder(s) allowed: %s. Two duties follow.\n"
-            "  1. Update 02_Command-Base/Home.md's directory. Home is the only "
-            "directory this vault has, so a folder missing from it is a folder "
-            "nobody finds.\n"
-            "  2. An empty room gets no door. Do not write a `_<Name>-Guide.md` "
-            "now just because the folder exists; the guard will say when the "
-            "folder has earned one (two notes and no door). A welcome sign on an "
-            "empty room is a promise the room has not kept."
-            % ", ".join(os.path.basename(m.rstrip("/")) for m in made))
+# ⛔ Only the operands of a real `mkdir`, as the analyser resolved them (payload
+# cwd, `cd`, `$VAR`). The old rule matched the word anywhere, a grep pattern
+# included, then ran every token of the WHOLE command through in_vault(), which
+# resolves a bare word against this process's own cwd: inside a vault session
+# `&&`, `cd` and each word of a heredoc body all came back as "new folders".
+# A folder that already exists (`mkdir -p` on a standing room) is not new, and
+# a folder outside the vault is not this guard's business; both stay silent.
+made = []
+for p in shell["made"]:
+    root = in_vault(p)
+    if root is None or os.path.isdir(p):
+        continue
+    rel = os.path.relpath(os.path.realpath(p), root)
+    if rel != "." and rel not in made:
+        made.append(rel)
+if made:
+    notes.append(
+        "New folder(s) allowed: %s. Two duties follow.\n"
+        "  1. Update 02_Command-Base/Home.md's directory. Home is the only "
+        "directory this vault has, so a folder missing from it is a folder "
+        "nobody finds.\n"
+        "  2. An empty room gets no door. Do not write a `_<Name>-Guide.md` "
+        "now just because the folder exists; the guard will say when the "
+        "folder has earned one (two notes and no door). A welcome sign on an "
+        "empty room is a promise the room has not kept."
+        % ", ".join(made))
 
 if notes:
     allow_with("\n\n".join(notes))
