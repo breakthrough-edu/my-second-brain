@@ -62,7 +62,7 @@ Run these in parallel, then respond:
 | "morning" / a day-opening ask ("what's on my plate") | Run `## Session start` in full, then the morning brief: today's schedule (if a calendar is connected), today's tasks, red flags, waiting-fors, renewals coming up, maintenance doorbell if due |
 | "connect my calendar" / "hook up my calendar" | Walk the calendar-connect flow (Google one-click connector, or Lark CLI), then record `calendar_provider:` in `99_Meta/bootstrap-progress.md`. Same read-only, fail-soft posture as session start |
 | Short diary-style capture | Append one dated raw line to `99_Meta/capture-buffer.md` the moment it arrives (the durable copy), hold in session, acknowledge with something specific, compile at end of day |
-| "compile" / "done for today" / "let's end the day" | Write today's daily note in `01_Daily/` from the session's captures plus today's `capture-buffer.md` lines, keeping each line's anchor link intact; then clear today's lines from the buffer |
+| "compile" / "done for today" / "let's end the day" | Run `## End-of-day reconcile` (further down) first. Then write today's daily note in `01_Daily/` from the session's captures plus today's `capture-buffer.md` lines, keeping each line's anchor link intact; then clear today's lines from the buffer |
 | "we decided X" / "log a decision" | Write a `cb: decision` note in `02_Command-Base/Decisions/`, with **every key doctrine §8 requires for a decision, read from §8 at the time of writing** (⛔ never from a list quoted here: any list quoted in this row reads like the whole set, which is how a decision lands short a required key). If it changes a stored value like a price, update that note in the same breath. ⛔ **Before the note lands, check the active set** (`02_Command-Base/Decisions/` filtered to `status: active` and the same `lane:`): if this contradicts one that still stands, ask {{YOUR_NAME}} the one question, **change the rule, or break it once?** On "change the rule" the new note carries `supersedes:` and the old one flips to `status: superseded`; on "break it once" nothing is filed as a rule at all. ⭐ **The guardrail's whole value is the word BEFORE** (doctrine §7): run it after the fact and two contradicting rules are both standing until a human trips over them |
 | "follow up with X" / "waiting for Y" | Write or patch a `cb: task` in its project's `Tasks/` folder (status `waiting`, `waiting_on` filled). No project fits? Propose opening one first |
 | "deck" / "rebuild my deck" / "fix my deck" / "update my deck" / "why isn't X on my deck" | One entry, not four. Rebuild first and report the one line it prints. If it errored, or if {{YOUR_NAME}} is asking why something is missing, run the same script's `doctor` next, turn its case notes into proposals one at a time, and rebuild on the spot after a fix so the panel lights up while they are watching. The engine lives in the `my-second-brain` payload; this row is the door |
@@ -92,6 +92,45 @@ Boot windows: This Week (`cb: task`, status not `done`) · Today (due <= today) 
 **Writing a record:** start from the matching `99_Meta/Templates/` file; fill every required key for that family in doctrine §8; enums exact and on-list; dates unquoted `YYYY-MM-DD`. Re-read after write to confirm the shape. §8 is the only place these shapes are written, so read it rather than trusting memory. Off-list values get flagged, never silently written. New enum values and tags go through propose, approve, update `99_Meta/tagging-vocabulary.md` first.
 
 **Domain rule for decisions:** `domain:` answers **who this decision binds**, not who it is for. A pricing decision binds the business (`domain: {{BUSINESS_TAG}}`); a "no work Sundays" decision binds {{YOUR_NAME}} (`domain: personal`) even though the business feels it. `lane:` is a different question: it is the lane of the work the decision governs.
+
+## End-of-day reconcile
+
+<!-- eod-rev: 1 -->
+⚠️ Same rules as the two markers above: the marker and its number belong to the `my-second-brain` skill, which reads it to tell which version of this section this machine actually loads. Leave both alone.
+
+**This runs inside every compile, before the daily note is written, for the date being compiled** (a backfilled yesterday included).
+
+⭐ **Why it exists:** work gets finished in one place and its record lives in another. A working session ships the thing and says so in its report, {{YOUR_NAME}} reads the report here, and the task still says `in-progress` a week later, because nobody was holding the task file at the moment it stopped being true. The end of the day is the one moment that comes round every day with the whole day in view, so this is where the gap gets closed. ⚠️ It is the net, not the road: a session that finishes a task is supposed to close it at its own closeout, and this pass catches what slipped past.
+
+**1 · Gather what the day says got finished.** Three sources, that date only:
+
+- **The captures:** this session's, plus that date's lines in `99_Meta/capture-buffer.md`. Each one already links the brief or guide it belongs to.
+- **The session reports:** every note named `YYYY-MM-DD-<slug>-session-report.md` carrying that date, in `00_Inbox/` **and** in `98_Archive/`. A report that was read and archived still counts: archiving it changed no record.
+- **This session:** what {{YOUR_NAME}} said was done here, and what this session itself did.
+
+⛔ Nothing else. Do not search past conversations for more (session history, where it is installed, answers when asked and never speaks first), and do not open another day's reports.
+
+⚠️ **Reading a report here does not use it up.** A report still sitting in `00_Inbox/` is a baton for the next session on that work, and its line about being archived once read is addressed to that session. ⛔ Leave it where it is, and do not offer to move it.
+
+**2 · Draw the circle.** Only the projects that evidence touches: follow each link, and each record a report names, to its project folder. Inside the circle read every `cb: task` in that project's `Tasks/` that is still open (its status is not `done`, nor any other closed status the vault's own doctrine §8 list carries), and the project brief's `## Next step`, together with `## Current state` when the brief has one. ⛔ Not the whole vault. A record nobody touched today that has gone stale is the weekly pass's to find, and an end of day that sweeps everything is an end of day that gets skipped.
+
+**3 · Name what does not match.** Three kinds, and only these three:
+
+- **Finished, still open.** The day's evidence says the work of a task is done, and the task says otherwise.
+- **Waiting, and it arrived.** A task at `waiting` whose `waiting_on` names something the day's evidence shows came in.
+- **A brief still describing yesterday.** `## Next step` or `## Current state` names as coming something the day's evidence says already happened.
+
+One line for each: the record, linked; what it says now; the sentence from the day that contradicts it, and where that sentence lives; the change proposed.
+
+⚠️ **Finished has to have been said, not guessed.** A report saying the page went live closes the task about putting the page live. It does not close the task beside it because the two sound alike. ⛔ And part done is not done: when the evidence finishes some of a task and the task's own body still lists work the evidence never mentions, say which part closed, say what is left, and propose that it stays open with its body brought up to date.
+
+**4 · {{YOUR_NAME}}'s yes, then the write.** Show the whole list once; the answer can come line by line or as one word for all of it. On a yes: patch `status:` (the value read from doctrine §8 at the time), empty `waiting_on` when what it named has arrived, and add one dated line to the task's body saying what closed it and where that is recorded. A brief gets its lines rewritten and its `updated:` moved. ⛔ Nothing changes without the yes: a task closed by mistake vanishes from every morning brief, which costs more than one left open a day too long. On a no, leave it and do not raise it again; tomorrow's pass reads tomorrow's evidence, so a declined line does not come back on its own.
+
+**5 · Nothing to reconcile is the usual answer.** Say so in one line and go straight to the note. ⛔ Do not go looking further afield to have something to report.
+
+**6 · The daily note carries one line for what this pass closed**, each record linked, so the journal shows the day the record caught up. No line when nothing was closed.
+
+Fail-soft, like every doorbell here: if a source cannot be read, name it in one line, reconcile from what could be read, and write the note regardless. ⛔ This pass must never cost a day its note.
 
 ## Core rules
 

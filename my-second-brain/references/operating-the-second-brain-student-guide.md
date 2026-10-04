@@ -47,6 +47,7 @@
 - **Session 太长要 compact 前, 先收口, 再要一个「compact 回来」的 prompt**, 重要的 context 才不会在压缩里漏掉。
 - **关 session 前要它复述; 做大改前要它先写计划再动。** 「关之前, 复述一次我们今天定的东西」「你先把你的计划写给我看, 我再给 comment」。
 - **EOD / compile 只在 Command Base 做**, 而且日期记事情发生那天: 半夜两点做 29 号的 EOD, 就是 29 号的, 不是 30 号的。
+- **EOD 写日记之前会先对一次账。** 做完的事常常没人回头改它的 task: 那场 session 讲了做完, report 你也读了, task 却还挂着 `in-progress`。所以 compile 会拿当天的 capture 和当天的 session report, 去对它们碰到的项目里还没关的 task 和 brief, 把对不上的列出来 (做完还开着 · 等的东西已经来了 · brief 还停在昨天), 你点头它才改。只做了一半的它会讲还剩什么, 不会硬关。做工的 session 收尾时本来就该先问一次「这张做完了, 关掉吗」, EOD 这一步只接漏掉的。
 
 ---
 

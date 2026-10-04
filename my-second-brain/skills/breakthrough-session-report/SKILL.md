@@ -3,8 +3,8 @@ name: breakthrough-session-report
 description: >
   Close out a working session in the owner's second-brain vault while whoever
   was in it still remembers: the Lesson it earned, the decision made but never
-  written, anything reusable, and one baton note in `00_Inbox/` for the next
-  session to read and archive. Use when the user says "wrap up", "close out",
+  written, the task it finished but never closed, anything reusable, and one
+  baton note in `00_Inbox/` for the next session to read and archive. Use when the user says "wrap up", "close out",
   or otherwise ends a working session that produced something worth keeping.
   ⛔ NOT the end of the day, which is the owner's own command-base skill
   ("compile", "done for today"): a day ending is not a piece of work ending,
@@ -76,6 +76,24 @@ Scan the session for calls that will still stand tomorrow ("we're not doing X an
 
 ⭐ **The guardrail is not skipped for being late.** This path is the fallback for a decision the main path missed; a fallback that lands unchecked writes exactly the contradictions the guardrail exists to catch, and it does it on the notes nobody was watching.
 
+## The second backstop: work that got finished and its record never heard
+
+⭐ **This runs every time too, right after the decisions scan and before the report is written**, because it is the other thing nobody does in the moment. A session finishes a task, says so, writes a clear report about it, and the task goes on saying `in-progress`: the report is read once and archived, and the task is what every morning brief and the dashboard read from then on.
+
+Look at what this session actually finished, and find the records that work belongs to: the `cb: task` notes it worked from or completed (the handoff or the opening message usually names them; failing that, the `Tasks/` folder of the project it served), and that project's brief. For each one that no longer matches what happened, name it and ask, one line each: "this one is done, close it?"
+
+On a yes, patch `status:` (the value read from §8 at the time), empty `waiting_on` when what it named has arrived, and add one dated line to the task's body saying what closed it. When the brief's `## Next step`, or its `## Current state` if it has one, now describes the past, propose the new lines and write them on a yes, moving `updated:` with them.
+
+⛔ **Part done is not done.** When work remains, say what is left, leave the task open, and bring its body up to date instead: that is still a patch worth making, and it is the honest one.
+
+⛔ **Only the records this session worked on.** This is not a sweep of the project, and not a review of the owner's task list.
+
+⛔ **No task exists for what got finished: do not create one in order to close it.** The report's outputs carry the work; a task born already done is a row nobody needed.
+
+⚠️ **A session that cannot write to the vault** (read-only, or working somewhere else entirely) names the record and the change in the report's paragraph instead, in plain words: which task is done and what its file still says. That sentence is what the owner's end of day picks up.
+
+⭐ **This step is the road, and the owner's end of day is only the net.** The owner's command-base runs a reconcile before it compiles the daily note, reading the day's session reports for exactly this. A report that says the work is done and shows the task already closed gives that pass nothing to do, which is the outcome to aim for.
+
 ## The baton: one report note, parked in the Inbox
 
 ⭐ **A closeout that had anything in it leaves ONE markdown note in `00_Inbox/`.** Every time, whatever the session served, whether it served one project or five. ⛔ Do not file it into a project folder, a room, or anywhere else, and ⛔ do not invent a folder for it. `00_Inbox/` is this vault's unfiled holding area, shared by the whole vault, and this note is unfiled on purpose (§1).
@@ -92,7 +110,7 @@ Scan the session for calls that will still stand tomorrow ("we're not doing X an
    > To the session reading this: **archive this report after you are done reading it.** Move the file to `98_Archive/`, filename unchanged, in the same breath as reading it. This is a baton from the last working session on this work, ⛔ not a task list, and everything permanent it names already lives at its own address.
 
 3. **One paragraph**: what the session set out to do, what it produced and decided, where it stopped (the loose end the next session picks up first), and anything weighed and deliberately not filed (the near miss judged not a Lesson, the call the owner chose not to make a rule). Plain sentences. ⛔ Not a play-by-play: the next session needs what came OUT of this one, not what it was like to be in it.
-4. **The outputs, as a list**, one line per artifact, each by its address: notes this closeout landed (the Lesson, the decision) as wikilinks, files created or changed as paths, anything shipped outside the vault (a page live, a deck sent) named plainly. ⛔ List an output once, by address; do not restate its contents.
+4. **The outputs, as a list**, one line per artifact, each by its address: notes this closeout landed (the Lesson, the decision) as wikilinks, records it patched (a task closed, a brief brought up to date) as wikilinks with the new status beside each, files created or changed as paths, anything shipped outside the vault (a page live, a deck sent) named plainly. ⛔ List an output once, by address; do not restate its contents.
 
 ⛔ **No frontmatter. None. That is the design, not an omission to repair.** §8 declares no family for this note and §0 item 3 forbids forcing one, and §8's own control-family comment says why that is the right end of it: a `type:` marks a document a person reads and keeps, and a read-then-archive baton is the other kind. The Inbox is where the doctrine already parks material that carries no family (the SOP working folder lives there for the same reason, §1). The frontmatter guard will note the missing frontmatter as the note lands: that nudge is expected, and this paragraph is the answer to it. ⛔ Do not silence it by inventing a `type:`, which turns an expected nudge into a hard block.
 

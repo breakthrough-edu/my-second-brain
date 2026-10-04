@@ -32,7 +32,7 @@ Already running it? Updating to the latest version is one line, and it never tou
 npx skills update my-second-brain
 ```
 
-One thing the update command cannot do: the machine guards and session memory are offered during Setup, so a vault built before they shipped will not have them. Say **"add the safety lock"** or **"set up session memory"** in any session and the skill retrofits the one you asked for onto your existing vault.
+One thing the update command cannot do: the machine guards and session memory are offered during Setup, so a vault built before they shipped will not have them. Say **"add the safety lock"** or **"set up session memory"** in any session and the skill retrofits the one you asked for onto your existing vault. The same holds for the command-base skill Setup generated for you, which the update command never touches: say **"upgrade my end of day"** and the end-of-day reconcile is added to it, leaving everything you wrote there in place.
 
 For the same reason, the weekly rhythm's doorbell lives in the command-base skill Setup generated for you, and an update never touches generated skills. A vault built before the rhythm changed keeps the doorbell it was born with; say **"update my maintenance doorbell"** and the skill brings the current one over, verifying through the installed path before it reports anything.
 
@@ -106,7 +106,7 @@ After Setup, your daily driver is the command-base skill it generated for you. A
 | "follow up with the printer on Friday" | A waiting-for task that will resurface on its own |
 | "how do we onboard a new hire again?" | Answered FROM your own SOP note, and if the answer reveals the SOP is stale, it gets updated in the same move |
 | "how did we fix this last time?" | Answered from your searchable session history, if session memory is installed, instead of re-deriving a solved problem |
-| "compile" (end of day) | The day's captures become one dated daily note. There is one journal, shared by both wings |
+| "compile" (end of day) | First a reconcile: the day's captures and session reports are checked against the tasks and briefs they touch, and anything finished but still marked open is listed for your yes. Then the day's captures become one dated daily note. There is one journal, shared by both wings |
 | "distill" (weekly, 10 min) | Anti-drift pass (hygiene scan, weekly rollup), then distillation proposals for your methodology layer. You rule yes or no |
 
 The handbook stays alive because answering and updating are the same motion. The vault stays trustworthy because every filing decision follows written law.
@@ -139,7 +139,7 @@ Most AI setups have amnesia: every conversation starts from zero, and the fix yo
 </p>
 
 - **Every conversation becomes searchable.** Session memory (optional, offered at setup, validated on macOS) is a small local tool that indexes Claude Code's own transcripts into a full-text search database, so "how did we solve that before?" gets answered from history. It reads only the transcripts, read-only; it writes only its own database in `~/.my-second-brain/`; it is purely local, with no network code and no background process. It is a filing cabinet, not a colleague who reads it over the weekend: it answers when somebody asks, and it never speaks first.
-- **What a session taught is written down at its closeout.** Say "wrap up" and the `breakthrough-session-report` skill lands what the session actually produced, while whoever was in it still remembers: the lesson a pit earned, the decision that was made but never written, the claim about you that is still a hypothesis rather than memory, and a one-paragraph baton your next session reads. Nothing reaches your methodology layer until you have seen the exact words.
+- **What a session taught is written down at its closeout.** Say "wrap up" and the `breakthrough-session-report` skill lands what the session actually produced, while whoever was in it still remembers: the lesson a pit earned, the decision that was made but never written, the task that got finished but never closed, the claim about you that is still a hypothesis rather than memory, and a one-paragraph baton your next session reads. Nothing reaches your methodology layer until you have seen the exact words.
 
 Same law as everywhere else in this system: the AI proposes, you rule. A memory that only ever grows goes stale, so the weekly distill audits what closeouts left behind and proposes what to promote, what to merge, and what to retire. That is what "grows its own memory" means here, and it is the part a notes app cannot copy, because the raw material is your working history with the AI itself.
 
