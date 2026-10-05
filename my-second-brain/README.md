@@ -18,7 +18,7 @@ Then open Claude Code and say:
 
 > set up my second brain
 
-Update anytime with `npx skills update my-second-brain` (your vault is never touched, only the skill files). ⚠️ The skill does not work out which generation of the product built your vault, and it never reshapes an older one on that basis: nothing structural is created or moved without your yes, whatever shape your vault is in. See "Updating" on the repo front page.
+Update anytime with `npx skills update -g my-second-brain` (your vault is never touched, only the skill files). ⚠️ The skill does not work out which generation of the product built your vault, and it never reshapes an older one on that basis: nothing structural is created or moved without your yes, whatever shape your vault is in. See "Updating" on the repo front page.
 
 ## Four modes, one skill
 

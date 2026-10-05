@@ -24,13 +24,19 @@ Then open Claude Code and say:
 
 Two stations in, you are looking at the dashboard of your half-built brain; the third puts the machine guards on. Every station ends with something to look at.
 
-Already running it? Updating to the latest version is one line, and it never touches your vault, only the skill files.
+Already running it? See [Updating](#updating), right below.
+
+## Updating
+
+Updating to the latest version is one line, and it never touches your vault, only the skill files.
 
 ⚠️ **Read this before you update, if your vault was built before August 2026.** The vault's shape changed in that release: the business wing moved and gained an activity layer, folder doors changed name, and one frontmatter field was renamed. Because an update never touches your vault, **an older vault and a newer skill no longer describe the same house**, and the skill now notices instead of proceeding as though they matched. What that means in practice: it will tell you, in specifics, which parts differ; reading, answering, searching and the morning brief go on working; **and it will decline to move your files or open new rooms until you say what you want** (Capture and the tidy scan are the two that stop). Nothing is changed or deleted, and no migration runs behind your back. **There is no tool that upgrades an older vault to the new shape**: re-addressing a house full of real content, where rooms moved, doors were renamed and a frontmatter field changed name, is its own piece of work and it is not written. ⚠️ **Do not read that as the box being empty, and do not read the box as covering this.** `breakthrough-vault-migrator` does ship, and it does a different job: it brings material from somewhere else **into** a vault (another system, an export, years of loose folders), and it has no opinion about a vault this product itself built under an earlier version. If your vault is fine as it is, staying on your current version is a legitimate choice.
 
 ```bash
-npx skills update my-second-brain
+npx skills update -g my-second-brain
 ```
+
+The `-g` matches the install: it points the update at the user-level copy, the one the skill actually runs from.
 
 One thing the update command cannot do: the machine guards and session memory are offered during Setup, so a vault built before they shipped will not have them. Say **"add the safety lock"** or **"set up session memory"** in any session and the skill retrofits the one you asked for onto your existing vault. The same holds for the command-base skill Setup generated for you, which the update command never touches: say **"upgrade my end of day"** and the end-of-day reconcile is added to it, leaving everything you wrote there in place.
 
