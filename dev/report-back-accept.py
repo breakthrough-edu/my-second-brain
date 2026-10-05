@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-report-back-accept.py - acceptance harness for two pieces of written behaviour:
+report-back-accept.py - acceptance harness for three pieces of written behaviour:
 the report-back loop (a handoff carries a return address, the closing session
-sends the report's path back) and the playbook memory-pointer check in the
-weekly maintenance pass.
+sends the report's path back), the chip (a handoff queued as the next
+session's opening message still carries that address), and the playbook
+memory-pointer check in the weekly maintenance pass.
 
 WHAT THIS IS
     The half of the acceptance a machine can judge. It reads the shipped text
@@ -206,6 +207,99 @@ def check_handoff_block():
         )
     else:
         ok("no-project handoff", "`00_Inbox/` named inside the handoff section")
+
+
+# ---------------------------------------------------------- 1b · the chip
+
+
+def check_chip():
+    """A handoff queued as a chip goes through the handoff entry, and the
+    session that picks it up meets the block before the work."""
+    text = read(CONSULTANT)
+    front = text.split("---")[1] if text.startswith("---") else ""
+    for phrase in ("write a handoff", "写一个 handoff", "open a chip", "开一个 chip"):
+        if phrase not in front:
+            fail("description names the ask", f"`{phrase}` is not in the description")
+    if all(p in front for p in ("write a handoff", "写一个 handoff", "open a chip", "开一个 chip")):
+        ok("description names the ask", "handoff and chip, in both languages")
+    flat = " ".join(line.strip() for line in front.splitlines())
+    if "brain dump of a project" in flat:
+        fail("description scope", "the old sentence tying a handoff to a project is back")
+    elif "whether or not the work has a project" not in flat:
+        fail("description scope", "the description no longer says a handoff needs no project")
+    elif "the command-base one included" not in flat:
+        fail("description scope", "the description no longer says the daily session counts")
+    else:
+        ok("description scope", "says outright: any session, with or without a project")
+    m = re.search(r"description: >\s*(.*?)\s*$", flat)
+    length = len(m.group(1)) if m else 0
+    if not 0 < length <= 1024:
+        fail("description length", f"{length} characters, the limit is 1024")
+    else:
+        ok("description length", f"{length} of 1024 characters")
+
+    body = section(text, "## The handoff entry")
+    if body is None:
+        return
+    chip = next((b for b in re.split(r"\n(?=- \*\*)", body) if "as a chip" in b), None)
+    if chip is None:
+        fail("chip bullet", "the handoff section has no bullet for a handoff queued as a chip")
+        return
+    ok("chip bullet", "sits inside the handoff section")
+    wanted = {
+        "chip is defined": r"a card holding the next session's opening message",
+        "sentence: block before the work": r"meets the `Report back to` block before it meets the work",
+        "sentence: one-shot card opens with the block": r"opens with the `Report back to` block",
+        "sentence: one-shot makes no file": r"no file is made",
+        "sentence: file case is one line": r"one line and no more",
+        "sentence: no second copy in the card": r"Do not repeat the handoff in the card",
+        "sentence: the click is the owner's": r"click stays the owner's",
+        "sentence: never unattended": r"never start a session nobody is watching",
+        "sentence: never unasked": r"never move work the owner gave this session onto a card they did not ask for",
+        "sentence: the opening is only for things noticed in passing": r"something it noticed in passing",
+        "sentence: an offered card carries the block too": r"opens with the block too",
+        "sentence: judge the piece, not the project": r"judge the piece being handed over",
+        "sentence: the project question stays off the card": r"not to a card",
+        "sentence: no card is ordinary": r"Nobody asked for a card, or there is no way to queue one",
+    }
+    for name, pat in wanted.items():
+        if re.search(pat, chip):
+            ok(name)
+        else:
+            fail(name, "the chip bullet no longer says it")
+    if "The owner opens it." in body:
+        fail("old owner-only sentence", "the sentence saying only the owner opens the next session is back")
+    elif "is the next bullet" not in body:
+        fail("old owner-only sentence", "the block paragraph no longer hands off to the chip bullet")
+    else:
+        ok("old owner-only sentence", "gone, and the block paragraph points at the chip bullet")
+    if "This entry does not pick its session" not in body:
+        fail("entry serves any session", "the handoff section no longer says the daily session counts")
+    else:
+        ok("entry serves any session", "the sentence saying the entry does not pick its session is there")
+    if "comes through here" not in body or "not the Braindump file" not in body:
+        fail("brain dump for a successor", "the handoff section no longer says which door it takes")
+    else:
+        ok("brain dump for a successor", "named as a handoff, and told apart from the Braindump file")
+    # Sentences that would undo the rule if somebody added them.
+    undo = [
+        r"start the session yourself",
+        r"Only the owner ever prepares",
+        r"a file is made as well",
+    ]
+    hit = [u for u in undo if re.search(u, body)]
+    if hit:
+        fail("nothing undoes the rule", f"found: {hit}")
+    else:
+        ok("nothing undoes the rule", "⚠️ three known phrasings only; this is not a proof")
+
+    guide = read(GUIDE)
+    need = ["开一个 chip", "按下去的永远是你", "卡本身就是 handoff", "卡上只有一行", "不必开档"]
+    gone = [n for n in need if n not in guide]
+    if gone or "除非主 session" in guide:
+        fail("guide carries both shapes and the click", f"missing or undone: {gone}")
+    else:
+        ok("guide carries both shapes and the click")
 
 
 # ------------------------------------------------------------- 2 · deliver
@@ -469,6 +563,8 @@ def main():
             return 2
 
     check_handoff_block()
+
+    check_chip()
     check_deliver()
     check_guide()
     check_pointer_home()
