@@ -126,7 +126,7 @@ When the brief's `status:` flips to `done` or `killed`, reconcile **once**:
 2. **Clear out the dead ones.** A file that was never read after the week it was written archives with the project; it does not graduate.
 3. **The gap between proposal and reality is the lesson.** If the advice was wrong in a way that will repeat, propose a Lesson for `04_Methodology/Lessons/` (owner's yes required, always).
 
-⚠️ **This is not the vault's general project close-out**, and the two must not race each other. The general one asks what was learned on any project; **this one only asks whether this skill's own advice was any good**, and it only makes sense on projects that used this skill. When both apply, the general close-out runs and this reconciliation is one extra section inside it.
+⚠️ **This is not how a project gets closed, and it closes nothing.** What a project's tasks leave behind is moved to its asset room at the closeout of the session that finished each task (`breakthrough-session-report`), and whether the project is finished is the owner's call, asked by their command-base at the end of a day. **This step only asks whether this skill's own advice was any good**, and it only makes sense on projects that used this skill. It runs after the brief has flipped, and it changes neither of those.
 
 ## The handoff entry, which skips the consult
 

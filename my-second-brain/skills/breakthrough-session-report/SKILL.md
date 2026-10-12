@@ -3,15 +3,16 @@ name: breakthrough-session-report
 description: >
   Close out a working session in the owner's second-brain vault while whoever
   was in it still remembers: the Lesson it earned, the decision made but never
-  written, the task it finished but never closed, anything reusable, and one
+  written, the task it finished but never closed, what that task left that an
+  asset room should hold, anything reusable, and one
   baton note in `00_Inbox/` for the next session to read and archive. Use when the user says "wrap up", "close out",
   or otherwise ends a working session that produced something worth keeping.
   ⛔ NOT the end of the day, which is the owner's own command-base skill
   ("compile", "done for today"): a day ending is not a piece of work ending,
   and the two have separate words. NOT the weekly maintenance ritual (that is
-  my-second-brain's distill mode), and NOT the place to write a Method (that
-  is breakthrough-method-builder, which runs when a piece of WORK closes, not
-  when a session does).
+  my-second-brain's distill mode), and NOT the writer of a Method: that is
+  breakthrough-method-builder, which this skill offers at the closeout and
+  calls on the owner's yes.
 ---
 
 # Breakthrough Session Report
@@ -28,6 +29,7 @@ This runs at the end of a working session, and the whole design is one rule: **d
 2. `99_Meta/structure-doctrine.md` §7 for what each kind of record is, and for the decision guardrail.
 3. `99_Meta/structure-doctrine.md` §1 (the `00_Inbox/` line) and §5 (dated-record names), which govern the report note this closeout leaves behind.
 4. `02_Command-Base/Decisions/` filtered to `status: active`, for the guardrail below.
+5. `99_Meta/structure-doctrine.md` §0, §1 and §2, when a finished task left something behind: the third backstop below reads them, from the vault, before it proposes a home.
 
 ## Three questions, asked out loud, in this order
 
@@ -45,14 +47,18 @@ A pit: something that actually hurt. On a yes, write **one Lesson** into `04_Met
 
 ### 2 · "What kept coming up that you had to judge?"
 
-⭐ **This question belongs to `breakthrough-method-builder`, and this skill's job is to notice and hand over, not to answer it.** If the session closed a piece of WORK (a case, a project, a job), say so in one line and hand the action back: "that is a method, and `breakthrough-method-builder` writes it properly. Say `breakthrough-method-builder` whenever you want it written, now or months from now." ⛔ Do not write a Method from here. ⛔ Do not press if they say later; the offer is the whole contribution.
+⭐ **This question belongs to `breakthrough-method-builder`, and this skill's job is to notice and offer, not to answer it.** If the session closed a piece of WORK (a case, a project, a job), say so in one line and offer: "that is a method. Want it written now? I will call `breakthrough-method-builder` as soon as this closeout is done." ⛔ Do not dig into the answer here: the method interview asks it properly, and an answer collected twice comes out as two versions.
+
+On a yes, ⭐ **you call `breakthrough-method-builder` yourself, in this session, after the spoken close at the bottom of this file.** ⛔ Not before the report is written. The order is the point: the closeout stays two minutes, and the baton is already in the Inbox when the interview starts, so a session that runs out halfway through a method has still handed over. When the Method lands, add its address as one more line to the report's outputs, in the file: the Method is this session's output, and the report is this session's record.
+
+On "later", that is a complete answer. Say it in the report's paragraph as something weighed and not written, and ⛔ do not press: the owner can ask for that method any day, in any session. ⛔ Whatever the answer, no Method is written from here.
 
 ### 3 · "Did we produce anything you will reach for again?"
 
 ⭐ **Four destinations and they are genuinely different things**, so name which one and let the owner pick:
 
 - **A way of doing something** → a Method (see question 2, `breakthrough-method-builder` writes it).
-- **A thing you now own** (a template, a script, a calculator, an asset) → it belongs in a real room in the vault, filed by doctrine §0, not described in a note about it.
+- **A thing you now own** (a template, a script, a calculator, an asset) → it belongs in a real room in the vault, filed by doctrine §0, not described in a note about it. ⭐ It lands the way the third backstop below lands one: the room worked out from the vault's own doctrine, and a note that already owns the subject updated before a new one is made.
 - **Material worth keeping to read again** (a reference, a source, someone else's document) → `02_Command-Base/Resources/`. ⭐ That is the owner's library, kept by the owner; ⛔ nothing reads it on a schedule.
 - **Something made by following a playbook** (a post, a proposal, a pitch, a quote) → **one row on that playbook folder's door**, in `04_Methodology/Playbooks/<the-work>/_<Name>-Guide.md`, under `## Recent runs`. ⭐ **The first column is the address**: a wikilink or path when the thing lives in the vault, a URL or a plain-words location when it does not. Then what the owner expects and when that counts, if they have an expectation. ⭐ **The owner is asked only "what do you expect", and the row lands with their yes** like anything else in that layer.
 
@@ -94,6 +100,48 @@ On a yes, patch `status:` (the value read from §8 at the time), empty `waiting_
 
 ⭐ **This step is the road, and the owner's end of day is only the net.** The owner's command-base runs a reconcile before it compiles the daily note, reading the day's session reports for exactly this. A report that says the work is done and shows the task already closed gives that pass nothing to do, which is the outcome to aim for.
 
+## The third backstop: what a finished task left that an asset room should hold
+
+⭐ **This runs right after the step above, on the same tasks: the ones this session finished**, whether that step closed them or they were closed as the work went. A finished task usually leaves something behind, and it stays in the project folder, where nobody looks once the project goes quiet. What the business will reach for again belongs in `01_Assets/` (or the matching Personal-Wing room), and the moment to put it there is now, while the session that made it still knows what it is.
+
+**For each finished task, name what it left. Two kinds count, and only these two:**
+
+- **A thing that will be used again after this project is over**, by the owner or by anyone working for them: the post that worked, a price list, a signed agreement, a photo set, a system that now exists.
+- **A fact an existing note is now wrong about**: a price that changed, a supplier's new terms, who holds a login.
+
+⛔ A draft, a transcript, a working file is project material and stays with the project (§1). That is the usual case, and it needs no question.
+
+⚠️ **Reusable is not one home, so sort before you propose.** A reusable WAY of doing something is a Method, offered at question 2. Dead steps anyone could follow are an SOP. Someone else's material kept to read again goes to `02_Command-Base/Resources/`. What is left is a thing the business owns, or a fact about it, and that is what this step files.
+
+**Then work out where it lives, before you say a word about it.** ⛔ Do not ask the owner where it should go: read, decide, and propose.
+
+1. **The vault's own `99_Meta/structure-doctrine.md`**: §0 for the route (the family, then its home), §1 for the rooms this vault actually has, §2 for the precedent table and its test sentence, "when something goes wrong, where would the owner look for this?". ⛔ Read at the time, from the vault: the rooms and the precedents are the owner's, and they change.
+2. **That room's `_*-Guide.md`**, which is its manual (§3), and the names of the notes already in the room.
+3. ⭐ **The note that already owns this subject, before any thought of a new one.** These rooms keep one note per client, per offer, per supplier, per system. A second note about the same one is the failure to avoid, and it is a silent one, because both notes are legal.
+
+**Then one line per item: what it is, your recommendation, and the reason. The owner rules.** Three verdicts are possible:
+
+- **Update a note that exists.** Name the note and what changes in it. This is the answer for every fact, and for a newer version of something the room already holds.
+- **A new note in a room that exists.** Name the room and the note.
+- **Stays with the project.** Say so in a word; it needs no yes.
+
+**On a yes, the landing:**
+
+- **An update rewrites the lines where that subject already sits.** ⛔ Never a second section beside the old one: the entity note holds the current truth (§0), and a note carrying two answers is worse than a note carrying a stale one. Move `updated:` when that note's family carries it (§8).
+- **A new note is written from that room's template** in `99_Meta/Templates/`, with every key §8 requires, read at the time. The thing itself is pointed at from the note, or moved into the folder beside the note when it is a file that should travel with it (§2, the row for non-markdown files). ⛔ Never a bare file dropped into a room: a room is found through its notes.
+- **A file that moves takes its inbound links with it** (§3).
+- **One line per filing** in `99_Meta/filing-log.md`, and each item goes into the report's outputs at its new address.
+
+⛔ **Never a new room, a new family or a new key from here.** What no room absorbs stays with the project, and the report's paragraph says so. A new room is proposed only when things keep accumulating with nowhere to go (§1), and one item at one closeout is not that.
+
+⛔ **Only what the tasks this session finished left behind.** Not the project's older outputs, and not a tour of the folder. Finished work that never had a task is question 3's to catch, and anything question 3 already placed in this closeout is not raised again.
+
+⭐ **"Nothing to move" is the usual answer.** Say it in one line and go on. ⛔ Do not promote a working file to make the closeout look productive.
+
+⛔ **Whether the project itself is finished is not asked here.** A task ending is not a project ending. That call is the owner's, and their command-base asks it at the end of a day, with the whole project in view.
+
+⚠️ **A session that cannot write to the vault** names each item, its room and the verdict in the report's paragraph, in plain words, the way the step above does.
+
 ## The baton: one report note, parked in the Inbox
 
 ⭐ **A closeout that had anything in it leaves ONE markdown note in `00_Inbox/`.** Every time, whatever the session served, whether it served one project or five. ⛔ Do not file it into a project folder, a room, or anywhere else, and ⛔ do not invent a folder for it. `00_Inbox/` is this vault's unfiled holding area, shared by the whole vault, and this note is unfiled on purpose (§1).
@@ -110,7 +158,7 @@ On a yes, patch `status:` (the value read from §8 at the time), empty `waiting_
    > To the session reading this: **archive this report after you are done reading it.** Move the file to `98_Archive/`, filename unchanged, in the same breath as reading it. This is a baton from the last working session on this work, ⛔ not a task list, and everything permanent it names already lives at its own address.
 
 3. **One paragraph**: what the session set out to do, what it produced and decided, where it stopped (the loose end the next session picks up first), and anything weighed and deliberately not filed (the near miss judged not a Lesson, the call the owner chose not to make a rule). Plain sentences. ⛔ Not a play-by-play: the next session needs what came OUT of this one, not what it was like to be in it.
-4. **The outputs, as a list**, one line per artifact, each by its address: notes this closeout landed (the Lesson, the decision) as wikilinks, records it patched (a task closed, a brief brought up to date) as wikilinks with the new status beside each, files created or changed as paths, anything shipped outside the vault (a page live, a deck sent) named plainly. ⛔ List an output once, by address; do not restate its contents.
+4. **The outputs, as a list**, one line per artifact, each by its address: notes this closeout landed (the Lesson, the decision) as wikilinks, records it patched (a task closed, a brief brought up to date) as wikilinks with the new status beside each, asset notes it wrote or updated as wikilinks, saying which of the two beside each, files created or changed as paths, anything shipped outside the vault (a page live, a deck sent) named plainly. ⛔ List an output once, by address; do not restate its contents.
 
 ⛔ **No frontmatter. None. That is the design, not an omission to repair.** §8 declares no family for this note and §0 item 3 forbids forcing one, and §8's own control-family comment says why that is the right end of it: a `type:` marks a document a person reads and keeps, and a read-then-archive baton is the other kind. The Inbox is where the doctrine already parks material that carries no family (the SOP working folder lives there for the same reason, §1). The frontmatter guard will note the missing frontmatter as the note lands: that nudge is expected, and this paragraph is the answer to it. ⛔ Do not silence it by inventing a `type:`, which turns an expected nudge into a hard block.
 
@@ -167,3 +215,5 @@ One paragraph, spoken, plain: what landed, where (the report's path included), a
 **Next to the report's path, say the delivery result, in its own word and nothing around it: `delivered`, `queued`, `held`, or `not sent`.** ⭐ The path is spoken whatever the result: on `held` or `not sent` it is what the owner pastes into the session that asked, and on `delivered` or `queued` the owner glances at the other session and pastes the path if the message is not there. ⛔ Do not soften the word into a phrase like "passed it along": that is none of the four, and the owner cannot tell from it whether to paste. No report means no result to name.
 
 ⭐ **An empty closeout is a real outcome and says so plainly:** "Nothing to land, this one was execution." An execution session still leaves the baton when it built something; what it never leaves is a Lesson written to feel productive. A session that produces a keeper for the judgment layer roughly one time in three is a healthy ratio; anything higher usually means the bar has slipped, ⛔ and the report never counts toward that ratio: it is the record OF the session, not something the session earned.
+
+⭐ **A yes at question 2 starts here, and not a line earlier.** With the close spoken and the report in the Inbox, call `breakthrough-method-builder`, and when its Method lands, add that one line to the report's outputs.

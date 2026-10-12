@@ -6,7 +6,8 @@ description: >
   folder's methods, or ⭐ dictated straight from how they already work when
   there are none, day one included), and the door of any folder born along the
   way. Runs when the owner calls this skill by name, asks for a method or a
-  playbook to be written, or when the session was told at the outset to write
+  playbook to be written (a yes to a closeout's offer counts), or when the
+  session was told at the outset to write
   a Method when the work closed. ⛔ Work-closing phrasing alone ("we are done",
   "that went well", "wrap up") is not a request for this skill; session
   closeout belongs to breakthrough-session-report. NOT for a pit that hurt

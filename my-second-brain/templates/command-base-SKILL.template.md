@@ -95,7 +95,7 @@ Boot windows: This Week (`cb: task`, status not `done`) · Today (due <= today) 
 
 ## End-of-day reconcile
 
-<!-- eod-rev: 1 -->
+<!-- eod-rev: 2 -->
 ⚠️ Same rules as the two markers above: the marker and its number belong to the `my-second-brain` skill, which reads it to tell which version of this section this machine actually loads. Leave both alone.
 
 **This runs inside every compile, before the daily note is written, for the date being compiled** (a backfilled yesterday included).
@@ -114,17 +114,18 @@ Boot windows: This Week (`cb: task`, status not `done`) · Today (due <= today) 
 
 **2 · Draw the circle.** Only the projects that evidence touches: follow each link, and each record a report names, to its project folder. Inside the circle read every `cb: task` in that project's `Tasks/` that is still open (its status is not `done`, nor any other closed status the vault's own doctrine §8 list carries), and the project brief's `## Next step`, together with `## Current state` when the brief has one. ⛔ Not the whole vault. A record nobody touched today that has gone stale is the weekly pass's to find, and an end of day that sweeps everything is an end of day that gets skipped.
 
-**3 · Name what does not match.** Three kinds, and only these three:
+**3 · Name what does not match.** Four kinds, and only these four:
 
 - **Finished, still open.** The day's evidence says the work of a task is done, and the task says otherwise.
 - **Waiting, and it arrived.** A task at `waiting` whose `waiting_on` names something the day's evidence shows came in.
 - **A brief still describing yesterday.** `## Next step` or `## Current state` names as coming something the day's evidence says already happened.
+- **A project with nothing left open.** Every task in a circled project's `Tasks/` is closed, counting the ones this pass is about to close, and its brief's `## Next step`, read as it will stand once the lines above are accepted, names nothing still to come. That one is a question rather than a mismatch, and it is asked last, after the lines above have their answers: "is this project finished?" ⛔ One open task, or one thing still to come in `## Next step`, and it is not asked.
 
 One line for each: the record, linked; what it says now; the sentence from the day that contradicts it, and where that sentence lives; the change proposed.
 
 ⚠️ **Finished has to have been said, not guessed.** A report saying the page went live closes the task about putting the page live. It does not close the task beside it because the two sound alike. ⛔ And part done is not done: when the evidence finishes some of a task and the task's own body still lists work the evidence never mentions, say which part closed, say what is left, and propose that it stays open with its body brought up to date.
 
-**4 · {{YOUR_NAME}}'s yes, then the write.** Show the whole list once; the answer can come line by line or as one word for all of it. On a yes: patch `status:` (the value read from doctrine §8 at the time), empty `waiting_on` when what it named has arrived, and add one dated line to the task's body saying what closed it and where that is recorded. A brief gets its lines rewritten and its `updated:` moved. ⛔ Nothing changes without the yes: a task closed by mistake vanishes from every morning brief, which costs more than one left open a day too long. On a no, leave it and do not raise it again; tomorrow's pass reads tomorrow's evidence, so a declined line does not come back on its own.
+**4 · {{YOUR_NAME}}'s yes, then the write.** Show the whole list once; the answer can come line by line or as one word for all of it. On a yes: patch `status:` (the value read from doctrine §8 at the time), empty `waiting_on` when what it named has arrived, and add one dated line to the task's body saying what closed it and where that is recorded. A brief gets its lines rewritten and its `updated:` moved. A project {{YOUR_NAME}} says is finished gets its brief's `status:` patched (the value read from doctrine §8 at the time, which has its own value for a project that was dropped rather than completed), its `updated:` moved, and one dated line in its body. ⛔ That is the whole of it: the folder is not moved, nothing is archived, and nothing in it is gone through again. On "not yet", ask what is next and write the answer into `## Next step`, which is also what keeps the question from coming back tomorrow. ⛔ Nothing changes without the yes: a task closed by mistake vanishes from every morning brief, which costs more than one left open a day too long. On a no, leave it and do not raise it again; tomorrow's pass reads tomorrow's evidence, so a declined line does not come back on its own.
 
 **5 · Nothing to reconcile is the usual answer.** Say so in one line and go straight to the note. ⛔ Do not go looking further afield to have something to report.
 

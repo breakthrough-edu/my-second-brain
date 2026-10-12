@@ -7,7 +7,7 @@ that patches the records a session finished (the road).
 
 WHAT THIS IS
     The half of the acceptance a machine can judge. It reads the shipped text
-    and answers five questions:
+    and answers seven questions:
 
       1. Is the reconcile section in the command-base template, directly above
          the core rules, carrying exactly one version marker, and does the
@@ -21,6 +21,14 @@ WHAT THIS IS
          this existed, keyed on the same marker, and does it protect what the
          owner wrote into the compile row?
       5. Do the sections this harness owns keep the product's red lines?
+      6. Does the session report skill carry the third backstop (what a
+         finished task left that an asset room should hold), after the closing
+         step and before the baton, reading the vault's own law before it
+         proposes, with its three verdicts and its refusals? And does the
+         reconcile ask whether a project with nothing left open is finished,
+         and do nothing more than mark the brief?
+      7. Does the closeout offer a method and call the method builder itself
+         after the close, and do the two skills that mention it agree?
 
 WHAT THIS IS NOT
     ⛔ It does not judge whether the words work. Whether a session that has
@@ -55,18 +63,26 @@ TEMPLATE = "my-second-brain/templates/command-base-SKILL.template.md"
 REPORT = "my-second-brain/skills/breakthrough-session-report/SKILL.md"
 ROUTER = "my-second-brain/SKILL.md"
 GUIDE = "my-second-brain/references/operating-the-second-brain-student-guide.md"
+METHOD = "my-second-brain/skills/breakthrough-method-builder/SKILL.md"
+CONSULT = "my-second-brain/skills/breakthrough-project-consultant/SKILL.md"
+SETUP = "my-second-brain/modes/setup.md"
 
-TARGETS = [TEMPLATE, REPORT, ROUTER, GUIDE]
+TARGETS = [TEMPLATE, REPORT, ROUTER, GUIDE, METHOD, CONSULT, SETUP]
 
 # Maintainer files allowed to change beside the targets.
 ALLOWED_EXTRA = [
     "dev/eod-reconcile-accept.py",
     "dev/eod-reconcile-fixture.py",
+    "dev/asset-closeout-judge.py",
     "README.md",
 ]
 
 SECTION_HEADING = "## End-of-day reconcile"
 BACKSTOP_HEADING = "## The second backstop"
+THIRD_HEADING = "## The third backstop"
+
+# The harness that loads a skill reads at most this much of its description.
+DESCRIPTION_LIMIT = 1024
 
 # Names that must never appear in shipped text. Case-sensitive and bounded on
 # purpose: an unbounded match on a short name fires on ordinary English.
@@ -256,6 +272,29 @@ def check_template_content(body):
         ],
     )
     need(
+        "a project with nothing left open is asked about",
+        body,
+        [
+            ("the fourth kind", r"\*\*A project with nothing left open\.\*\*"),
+            ("four kinds", r"Four kinds, and only these four"),
+            ("the question", r"is this project finished\?"),
+            ("asked last", r"asked last"),
+            ("not asked while anything is open", r"it is not asked"),
+            ("status from §8", r"`status:` patched \(the value read from doctrine §8"),
+        ],
+    )
+    need(
+        "and the answer does nothing more than mark the brief",
+        body,
+        [
+            ("the whole of it", r"That is the\s+whole of it"),
+            ("the folder stays", r"the folder is not moved"),
+            ("nothing archived", r"nothing is archived"),
+            ("not gone through again", r"gone through again"),
+            ("a not yet writes the next step", r"write the answer into `## Next step`"),
+        ],
+    )
+    need(
         "the owner's yes",
         body,
         [
@@ -314,13 +353,13 @@ def check_report():
     at = next(i for i, h in enumerate(h2) if h.startswith(BACKSTOP_HEADING))
     before = h2[at - 1] if at else "(top of file)"
     after = h2[at + 1] if at + 1 < len(h2) else "(end of file)"
-    if not before.startswith("## The backstop") or not after.startswith("## The baton"):
+    if not before.startswith("## The backstop") or not after.startswith(THIRD_HEADING):
         fail(
             "closing step order",
-            f"it sits between `{before}` and `{after}`; it belongs after the decisions backstop and before the baton",
+            f"it sits between `{before}` and `{after}`; it belongs after the decisions backstop and before the third backstop",
         )
     else:
-        ok("closing step order", "after the decisions backstop, before the baton")
+        ok("closing step order", "after the decisions backstop, before the third backstop")
 
     need(
         "closing step asks, then writes",
@@ -361,6 +400,195 @@ def check_report():
     else:
         ok("description", "names the task finished but never closed")
     return body
+
+
+# ------------------------------------------------- 6 · the third backstop
+
+
+def description(rel):
+    text = read(rel)
+    front = text.split("---", 2)[1] if text.startswith("---") else ""
+    m = re.search(r"description: >\n(.*)", front, re.S)
+    return " ".join((m.group(1) if m else front).split())
+
+
+def check_third():
+    text = read(REPORT)
+    body = section(text, THIRD_HEADING)
+    if body is None:
+        fail("third backstop", f"`{THIRD_HEADING}` is not in the session report skill")
+        return None
+    ok("third backstop", "present in the session report skill")
+
+    h2 = [h.strip() for h in headings(text)]
+    at = next(i for i, h in enumerate(h2) if h.startswith(THIRD_HEADING))
+    before = h2[at - 1] if at else "(top of file)"
+    after = h2[at + 1] if at + 1 < len(h2) else "(end of file)"
+    if not before.startswith(BACKSTOP_HEADING) or not after.startswith("## The baton"):
+        fail(
+            "third backstop order",
+            f"it sits between `{before}` and `{after}`; it belongs after the closing step and before the baton",
+        )
+    else:
+        ok("third backstop order", "after the closing step, before the baton")
+
+    need(
+        "third backstop is tied to the tasks this session finished",
+        body,
+        [
+            ("the same tasks", r"on the same tasks"),
+            ("two kinds", r"Two kinds count, and only these two"),
+            ("a thing used again", r"used again after this project is over"),
+            ("a fact a note is wrong about", r"A fact an existing note is now wrong about"),
+            ("working material stays", r"stays with the project \(§1\)"),
+        ],
+    )
+    need(
+        "third backstop sorts reusable before it files",
+        body,
+        [
+            ("a way is a method", r"is a Method"),
+            ("dead steps are an SOP", r"are an SOP"),
+            ("reading material", r"`02_Command-Base/Resources/`"),
+        ],
+    )
+    need(
+        "third backstop reads the vault's law before it proposes",
+        body,
+        [
+            ("does not ask where", r"Do not ask the owner where it should go"),
+            ("the vault's own doctrine", r"vault's own `99_Meta/structure-doctrine\.md`"),
+            ("§0", r"§0 for the route"),
+            ("§1", r"§1 for the rooms"),
+            ("§2", r"§2 for the precedent table"),
+            ("read at the time", r"Read at the time, from the vault"),
+            ("the room's guide", r"`_\*-Guide\.md`"),
+            ("the notes already there", r"notes already in the room"),
+            ("existing note first", r"before any thought of a new one"),
+        ],
+    )
+    need(
+        "third backstop has three verdicts and the owner rules",
+        body,
+        [
+            ("recommendation and reason", r"your recommendation, and the reason"),
+            ("the owner rules", r"The owner rules"),
+            ("update", r"\*\*Update a note that exists\.\*\*"),
+            ("new note", r"\*\*A new note in a room that exists\.\*\*"),
+            ("stays", r"\*\*Stays with the project\.\*\*"),
+        ],
+    )
+    need(
+        "third backstop lands by the law",
+        body,
+        [
+            ("on a yes", r"On a yes"),
+            ("no second section", r"Never a second section beside the old one"),
+            ("template", r"`99_Meta/Templates/`"),
+            ("keys from §8", r"every key §8 requires"),
+            ("no bare file", r"Never a bare file dropped into a room"),
+            ("links follow", r"inbound links"),
+            ("filing log", r"`99_Meta/filing-log\.md`"),
+            ("report outputs", r"report's outputs"),
+        ],
+    )
+    need(
+        "third backstop refusals",
+        body,
+        [
+            ("no new room, family or key", r"\*\*Never a new room, a new family or a new key from here\.\*\*"),
+            ("only this session's finished tasks", r"\*\*Only what the tasks this session finished left behind\.\*\*"),
+            ("nothing to move is usual", r"\"Nothing to move\" is the usual answer"),
+            ("the project question is not asked here", r"\*\*Whether the project itself is finished is not asked here\.\*\*"),
+            ("no repeat of question 3", r"is not raised again"),
+        ],
+    )
+    need(
+        "third backstop, the read-only way out",
+        body,
+        [("names it in the report", r"cannot write to the vault")],
+    )
+    # No room list quoted: the rooms are the vault's own, read from its §1.
+    quoted = re.findall(r"`(Clients|Vendors|Employees|Company-Docs|Marketing-Assets|IT-Systems)/`", body)
+    if quoted:
+        fail("no room list quoted", f"rooms spelled out in the section: {sorted(set(quoted))}")
+    else:
+        ok("no room list quoted", "rooms are read from the vault's §1")
+
+    baton = section(text, "## The baton") or ""
+    if not re.search(r"asset notes it wrote or updated", baton):
+        fail("outputs name the asset notes", "the baton's outputs line never mentions them")
+    else:
+        ok("outputs name the asset notes")
+    if "asset room" not in description(REPORT):
+        fail("description names the third backstop", "the frontmatter description does not name it")
+    else:
+        ok("description names the third backstop")
+    if not re.search(r"A thing you now own.*third backstop", text):
+        fail("question 3 lands the same way", "its second destination never points at the third backstop")
+    else:
+        ok("question 3 lands the same way")
+    return body
+
+
+# ---------------------------------------------- 7 · the method, offered here
+
+
+def check_method_offer():
+    text = read(REPORT)
+    q2 = section(text, "### 2 ·") or ""
+    if "Say `breakthrough-method-builder` whenever" in text or "hand the action back" in text:
+        fail("method offer", "question 2 still hands the action back to the owner")
+    else:
+        ok("method offer", "the action is no longer handed back")
+    need(
+        "method offer, called from here",
+        q2,
+        [
+            ("offers", r"Want it written now\?"),
+            ("calls the builder itself", r"you call `breakthrough-method-builder` yourself"),
+            ("after the close", r"after the spoken close"),
+            ("not before the report", r"Not before the report is written"),
+            ("adds the output line", r"one more line to the\s+report's outputs"),
+            ("later is complete", r"that is a complete answer"),
+            ("no method written here", r"no\s+Method is written from here"),
+        ],
+    )
+    close = section(text, "## Close") or ""
+    if not re.search(r"A yes at question 2 starts here", close):
+        fail("method offer, the close says when", "the close never names where the call happens")
+    else:
+        ok("method offer, the close says when")
+
+    method = description(METHOD)
+    need(
+        "method builder agrees",
+        method,
+        [
+            ("a yes to the offer counts", r"a yes to a closeout's offer counts"),
+            ("closing words alone still do not", r"Work-closing phrasing alone"),
+        ],
+    )
+    for rel in (REPORT, METHOD, CONSULT):
+        n = len(description(rel))
+        if n > DESCRIPTION_LIMIT:
+            fail("descriptions fit", f"{rel}: {n} characters, limit {DESCRIPTION_LIMIT}")
+    if not any(n == "descriptions fit" for n, _ in failures):
+        ok("descriptions fit", f"all three under {DESCRIPTION_LIMIT} characters")
+
+    consult = read(CONSULT)
+    if "vault's general project close-out" in consult:
+        fail("consultant", "Step 5 still points at a general close-out that nothing performs")
+    elif not re.search(r"closes nothing.*`breakthrough-session-report`.*command-base", consult, re.S):
+        fail("consultant", "Step 5 does not say who moves the outputs and who asks about the project")
+    else:
+        ok("consultant", "Step 5 names who moves the outputs and who asks about the project")
+
+    for rel in (ROUTER, SETUP):
+        if "never fire at the same moment" in read(rel):
+            fail("the pair is described the same way", f"{rel} still says the two never fire at the same moment")
+    if not any(n == "the pair is described the same way" for n, _ in failures):
+        ok("the pair is described the same way", "router and setup both say the closeout calls it")
 
 
 # -------------------------------------------------------- 4 · the retrofit
@@ -509,10 +737,13 @@ def main():
     if net is not None:
         check_template_content(net)
     road = check_report()
+    third = check_third()
+    check_method_offer()
     retrofit = check_retrofit()
     guide = check_guide()
+    q2 = section(read(REPORT), "### 2 ·")
     check_red_lines_standing(
-        [(TEMPLATE, net), (REPORT, road), (ROUTER, retrofit), (GUIDE, guide)]
+        [(TEMPLATE, net), (REPORT, road), (REPORT, third), (REPORT, q2), (ROUTER, retrofit), (GUIDE, guide)]
     )
     if args.base:
         check_red_lines_added(args.base)

@@ -5,6 +5,7 @@ the end-of-day reconcile acceptance runs against.
 
     $ python3 dev/eod-reconcile-fixture.py <dest>            # the end-of-day vault
     $ python3 dev/eod-reconcile-fixture.py <dest> --worker   # the closeout vault
+    $ python3 dev/eod-reconcile-fixture.py <dest> --assets   # the asset closeout vault
 
 WHAT IT BUILDS
     A small coffee shop's vault, rendered from the shipped templates, rigged so
@@ -21,8 +22,14 @@ WHAT IT BUILDS
                                 its project folder)
       waiting, and it arrived   Get-menu-proofs-from-the-printer
       part done, stays open     Write-the-menu-page (copy drafted, photos not taken)
-      briefs describing         _Website-Refresh-Brief, _Spring-Menu-Brief
-      yesterday
+      briefs describing         _Website-Refresh-Brief, _Spring-Menu-Brief,
+      yesterday                 _Card-Reader-Brief
+      asked, and asked last     "is this project finished?" for Card-Reader only
+                                (its one task closes and nothing is still to come).
+                                On a yes the brief's status is patched and nothing
+                                else happens: the folder stays, nothing is archived.
+                                Not asked for Website-Refresh (tasks still open) nor
+                                for Spring-Menu (the menu is still to be printed).
 
     and leave these alone:
 
@@ -38,6 +45,28 @@ WHAT IT BUILDS
     Tasks/ folder, ask before closing the finished one, keep the half finished
     one open, create no task, and name the patched records in the report.
 
+    The asset closeout vault (--assets). A handoff with three pieces of work
+    on a launch project, in a vault whose asset rooms already hold notes. Give
+    a session the handoff path, let it do the work and nothing else, then say
+    "wrap up" with the session report skill. Beside closing the two finished
+    tasks and keeping the half finished one open, it should work out, without
+    asking the owner where anything goes, and propose:
+
+      update a note that exists   Gula-Melaka-Latte in Products-Services: the
+                                  price in the body and the `price:` key both go
+                                  to the new number, in place, no second section
+      a new note in a room        Kertas-Cups in Vendors, from the Vendor
+                                  template, carrying the terms
+      stays with the project      Counter-Menu-Draft, Cup-Supplier-Notes,
+                                  Launch-Post-Draft
+
+    and it should not raise Old-Flyer-Copy (an older output no task of this
+    session left), not ask whether the project is finished, open no room, and
+    drop no bare file into one. The price change is also a decision, and the
+    decisions backstop catching it is right, not a miss.
+    `dev/asset-closeout-judge.py <dest>` reads the vault afterwards and says
+    which of these a machine can see.
+
 WHAT IT IS NOT
     ⛔ Not a test. Nothing here judges the session; a person, or a session that
     did not write the text under test, reads what came back against the lists
@@ -52,6 +81,7 @@ from pathlib import Path
 repo = Path(__file__).resolve().parent.parent
 args = [a for a in sys.argv[1:] if not a.startswith("--")]
 worker = "--worker" in sys.argv
+assets = "--assets" in sys.argv
 if len(args) != 1:
     sys.exit(__doc__)
 dest = Path(args[0]).resolve()
@@ -149,8 +179,16 @@ put(
 - {D1} 16:05 · Paid the espresso machine deposit this afternoon, receipt is in the mail folder [[_New-Outlet-Brief]]
 - {D0} 10:12 · The printer finally sent the menu proofs, they look right [[_Spring-Menu-Brief]]
 - {D0} 15:40 · Talked with Arif about the loyalty card idea, nothing decided yet [[_Loyalty-Card-Brief]]
+- {D0} 13:05 · The new card reader is in at the counter and took its first real payment at lunch [[_Card-Reader-Brief]]
 """,
 )
+
+# --- Card Reader: its one task finished today and nothing is still to come
+put(f"{W}/Build/Card-Reader/_Card-Reader-Brief.md",
+    brief("Card Reader", "The counter takes cards on the new reader.",
+          "Install the new card reader at the counter (Mei's move)."))
+put(f"{W}/Build/Card-Reader/Tasks/Install-the-new-card-reader.md",
+    task("in-progress", D9, "Install the new card reader at the counter and take one real payment on it."))
 
 # --- Website Refresh: one finished, one half finished, one that only sounds related
 put(f"{W}/Grow/Website-Refresh/_Website-Refresh-Brief.md",
@@ -255,6 +293,168 @@ Two pieces of work on the website refresh, both in this folder.
 
 1. The footer of `Booking-Confirmation-Email.md` still shows the old address. The shop moved; the address is now 8 Jalan Baru, Petaling Jaya. Fix the footer.
 2. Write the copy for all four sections of the menu page (Espresso, Filter, Cold, Pastry), two sentences each, into a new file `Menu-Page-Copy.md`. The photos of the six signature drinks have to be taken at the shop by Mei, so leave those.
+
+**Report back to**
+
+- This session cannot receive messages.
+""")
+
+
+if assets:
+    for rel in (
+        f"98_Archive/{D0}-website-refresh-booking-page-live-session-report.md",
+        f"00_Inbox/{D0}-spring-menu-pricing-session-report.md",
+    ):
+        (vault / rel).unlink()
+    (vault / "02_Command-Base/Decisions").mkdir(parents=True)
+
+    def template(name):
+        """One block of the shipped note templates, as setup writes it."""
+        text = (repo / "my-second-brain/templates/note-templates.md").read_text(encoding="utf-8")
+        at = text.index(f"\n## {name}\n")
+        start = text.index("```markdown\n", at) + len("```markdown\n")
+        return text[start:text.index("\n```", start)] + "\n"
+
+    for name in ("Guide.md", "Vendor.md", "Product-Service.md", "Marketing-Asset.md"):
+        put(f"99_Meta/Templates/{name}", template(name))
+
+    def guide(name, sign, test):
+        return f"""---
+type: guide
+guide_family: room
+updated: {D9}
+---
+
+# {name}
+
+{sign}
+
+**Files here when:** {test}
+
+## Observations
+"""
+
+    A = "04_Aroma-Business-Wing/01_Assets"
+    put(f"{A}/Vendors/_Vendors-Guide.md", guide(
+        "Vendors",
+        "Everyone you buy from or depend on to deliver. One vendor, one note. Landlords, lessors and platforms you sell through are vendors too.",
+        "the vendor as an entity (contract, contacts, terms) lives here; the purchasing process lives in `03_SOP/`; a platform's account health and login custody lives in `IT-Systems/`."))
+    put(f"{A}/Vendors/Bean-Importer.md", f"""---
+type: vendor
+status: active
+status_since: {D9}
+supplies: green coffee beans
+terms: 14 days, minimum 20 kg
+contact: Arif at the importer
+tags: []
+---
+
+# Bean Importer
+
+## What they supply
+
+Green beans, two origins, delivered every second Tuesday.
+
+## Terms and history
+
+14 days to pay. Minimum order 20 kg.
+
+## Notes
+""")
+    put(f"{A}/Aroma-Brand-Assets/Products-Services/_Products-Services-Guide.md", guide(
+        "Products-Services",
+        "What this brand sells. One offer, one note: definition, pricing source of truth, spec pointers.",
+        "spec and costing live here, and this note is the single source of price truth; how to make or deliver it lives in `03_SOP/`; a price change is a decision note plus an update here, in the same breath."))
+    put(f"{A}/Aroma-Brand-Assets/Products-Services/Gula-Melaka-Latte.md", f"""---
+type: product-service
+status: active
+status_since: {D9}
+price: RM 12
+cost: RM 3.80
+tags: []
+---
+
+# Gula Melaka Latte
+
+## What it is
+
+A latte sweetened with gula melaka syrup made in the shop. The best seller since it was added.
+
+## Pricing (source of truth)
+
+RM 12 a cup.
+
+## Specs / recipe pointer
+(spec and costing live here; the how-to-make-it steps live in an SOP)
+
+Double shot, 20 ml syrup, 180 ml milk.
+""")
+    put(f"{A}/Aroma-Brand-Assets/Products-Services/Flat-White.md", f"""---
+type: product-service
+status: active
+status_since: {D9}
+price: RM 11
+cost: RM 3.10
+tags: []
+---
+
+# Flat White
+
+## What it is
+
+Double shot, steamed milk, no syrup.
+
+## Pricing (source of truth)
+
+RM 11 a cup.
+
+## Specs / recipe pointer
+(spec and costing live here; the how-to-make-it steps live in an SOP)
+""")
+    put(f"{A}/Marketing-Assets/_Marketing-Assets-Guide.md", guide(
+        "Marketing-Assets",
+        "Marketing output the business owns and can reuse: posts that worked, photos, videos, testimonials, brochures, decks, plus channel notes and reports.",
+        "the reusable asset or a pointer to it lives here; producing content is a `02_Work/Grow/` project while it runs; the process for producing it lives in `03_SOP/`; platform logins and account health live in `IT-Systems/`."))
+
+    L = f"{W}/Grow/Spring-Launch"
+    put(f"{L}/_Spring-Launch-Brief.md",
+        brief("Spring Launch", "The spring counter menu is live on the first of the month, with the new price, cups to serve in and a post announcing it.",
+              "Reprice the Gula Melaka Latte, pick the cup supplier, write the launch post, then book the tasting evening."))
+    put(f"{L}/Tasks/Reprice-the-gula-melaka-latte.md",
+        task("in-progress", D9, "Settle the spring price of the Gula Melaka Latte and put it on the counter menu draft."))
+    put(f"{L}/Tasks/Pick-the-cup-supplier.md",
+        task("in-progress", D9, "Compare the three cup suppliers and pick one."))
+    put(f"{L}/Tasks/Write-the-launch-post.md",
+        task("in-progress", D9, "Write the launch post for the spring menu.\n\n- ⬜ Copy, about 60 words\n- ⬜ Photo of the drinks at the counter"))
+    put(f"{L}/Tasks/Book-the-tasting-evening.md",
+        task("not-started", D9, "Book an evening for regulars to taste the spring menu."))
+    put(f"{L}/Counter-Menu-Draft.md", """
+# Counter menu, spring draft
+
+- Flat White · RM 11
+- Gula Melaka Latte · RM 12
+- Cold Brew · RM 12
+""")
+    put(f"{L}/Cup-Supplier-Notes.md", """
+# Cup supplier notes (Mei)
+
+- Kertas Cups: 28 sen a cup, compostable, one week lead time
+- Polycup: 19 sen a cup, plastic lined, three weeks lead time
+- GreenServe: 35 sen a cup, compostable, minimum order 10,000
+""")
+    put(f"{L}/Old-Flyer-Copy.md", """
+# Flyer copy, last autumn
+
+Warm up with our autumn menu. Three new drinks, all month.
+""")
+    put(f"{L}/Spring-Launch-Handoff.md", """
+# Spring Launch · handoff
+
+Three pieces of work on the spring launch, all in this folder.
+
+1. Mei has decided the Gula Melaka Latte goes from RM 12 to RM 13 from the first of next month, because the gula melaka supplier raised their price. Change the line in `Counter-Menu-Draft.md` to show RM 13.
+2. Mei has picked Kertas Cups as the cup supplier. What she agreed with them: 30 days to pay, minimum order 2,000 cups, one week lead time, 28 sen a cup. Her comparison is in `Cup-Supplier-Notes.md`; add two sentences at the top saying which one won and why.
+3. Write the copy for the launch post, about 60 words, into a new file `Launch-Post-Draft.md`. The photo of the drinks has to be taken at the shop by Mei, so leave that.
 
 **Report back to**
 
