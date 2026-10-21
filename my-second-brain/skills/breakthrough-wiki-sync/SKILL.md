@@ -32,7 +32,7 @@ The owner's brain holds the company's shared knowledge in four layers that are w
 
 ## The tool
 
-Everything mechanical lives in this payload at `scripts/wiki-sync/wikisync.py`. Resolve the running skill's folder the way the setup mode does (via a global install it is `~/.claude/skills/my-second-brain/`, resolved at runtime); call that folder `<payload>`. Five verbs, every one read-only on the vault except for the manifest:
+Everything mechanical lives in this payload at `scripts/wiki-sync/wikisync.py`. Resolve the running skill's folder the way the setup mode does (via a global install it is `~/.claude/skills/my-second-brain/`, resolved at runtime); call that folder `<payload>`. ⛔ If `<payload>/scripts/wiki-sync/wikisync.py` is not there, the installed `my-second-brain` is older than this skill (the tool ships from `v4.6.0`): say so, point the owner at the product's update route, and stop; do not look for the script anywhere else. Five verbs, every one read-only on the vault except for the manifest:
 
 ```bash
 python3 "<payload>/scripts/wiki-sync/wikisync.py" init "<vault>" --provider lark --space-id <S> --base-url <U> --roots <a,b,c> --owner-name "<name>"
@@ -42,7 +42,7 @@ python3 "<payload>/scripts/wiki-sync/wikisync.py" verify "<vault>"
 python3 "<payload>/scripts/wiki-sync/wikisync.py" convert "<vault>" "<note>"
 ```
 
-`plan` says what would go up (new, changed, unchanged, removed). `push` converts each new or changed note, creates or overwrites its wiki page, **reads the page back and checks it carries the fingerprint of what was pushed**, and only then records it in the manifest. `verify` re-reads every published page and reports drift. `convert` shows one note's converted form, for a look before a first push. Exit codes: `0` clean, `2` a page failed its read-back, `3` the provider refused (binary missing, not logged in), `4` not connected. ⛔ Never report a push by its exit code alone: read the summary line it prints and say that.
+`plan` says what would go up (new, changed, unchanged, removed). `push` converts each new or changed note, creates or overwrites its wiki page, **reads the page back and checks it carries the fingerprint of what was pushed**, and only then records it in the manifest. `verify` re-reads every published page and reports drift. `convert` shows one note's converted form, for a look before a first push. Exit codes: `0` clean, `1` a usage problem (for example `init` on a vault that already has a manifest, which is the reconnect case), `2` a page failed its read-back, `3` the provider refused (binary missing, not logged in), `4` not connected. ⛔ Never report a push by its exit code alone: read the summary line it prints and say that.
 
 ⭐ **A page keeps its address.** The first push creates the page under the node that mirrors its folder; every later push overwrites that same page, so links between published pages and the team's bookmarks never break. ⛔ Never delete and recreate a page to "refresh" it.
 
@@ -63,11 +63,11 @@ Then one question: **which wiki?**
 **On a provider:**
 
 1. Ask once whose name goes on every page as its owner (law 7: the brain's owner; a company with several brains has one owner per page). That is `--owner-name`.
-2. Read the publishable roots off §4 law 7 for this vault, as vault-relative paths, and show them. Those are `--roots`.
+2. Read the publishable roots off §4 law 7 for this vault, as vault-relative paths, and show them. Those are `--roots`. The law names the brand layer as a pattern (`<Brand>-Brand-Assets/`) and keeps out brand assets held for somebody else's company, so list `01_Assets/` for every `*-Brand-Assets/` folder and confirm with the owner which are their own brands; the others stay home.
 3. Run `init`. It writes `99_Meta/wiki-sync.md` and refuses to overwrite one that exists (a reconnect reuses it, so published pages keep their addresses).
 4. Run `plan` and read the count out loud: this is the first push's size. A vault whose layers are still stubs pushes nothing, and that is a correct result rather than a problem to fix.
 5. Run `push`. Report its summary line.
-6. ⭐ **The acceptance, and it is not optional:** change one line in one published note (the owner picks the line), run `push` again, and open that page in the wiki. The line is there, or it is not. `wiki_provider:` is recorded only after the owner has seen the line in the wiki; a connection that has not moved one real line is not connected, however green the exit codes were. Put the line back afterwards if it was a test edit.
+6. ⭐ **The acceptance, and it is not optional:** change one line in one published note (the owner picks the line), run `push` again, and open that page through the url recorded for it in `99_Meta/wiki-sync.md`, in a browser. The line is there, or it is not. ⛔ A CLI fetch proves the content; only the browser proves the address (a wrong base url pushes green, see the adapter reference). `wiki_provider:` is recorded only after the owner has seen the line in the wiki; a connection that has not moved one real line is not connected, however green the exit codes were. If it was a test edit, put the line back and push once more, so the team never reads the test line: a page is what its last push made it.
 7. Record in `99_Meta/bootstrap-progress.md`: `wiki_provider: lark`, `wiki_space_id: <S>`, `wiki_connected_on: <date>`, and `wiki_lark_bin: <path>` only when the binary is not on PATH. ⛔ Nothing is written there before step 6 passed.
 8. Say the two things the owner now has to do in the wiki itself, because this skill does not touch permissions: make the team readers of the space (read, not edit), and give them edit on the Contribution Space node only. The adapter reference says where those settings live.
 
@@ -80,7 +80,7 @@ When `wiki_provider:` names a provider, the closeout skill (`breakthrough-sessio
 3. **Removed pages are listed, never deleted on their own.** A note that left a publishable layer (moved, archived, deleted) shows as `removed` in the plan. Say so and ask once; on a yes, `push --delete-removed`. ⛔ A page the team may be reading disappears only on the owner's word.
 4. **Fail-soft at a closeout.** A push that cannot run (binary missing, login expired, network) is named in the session report's paragraph in one plain sentence and the closeout goes on. ⛔ Never block or delay a closeout for the wiki, and ⛔ never retry in a loop; "sync my wiki" tomorrow is the retry.
 
-**"Is the wiki up to date?"** runs `verify` and reports drift by page. **"What gets published?"** reads law 7 and the roots from the manifest and answers from them. ⛔ Never from memory of an earlier session.
+**"Is the wiki up to date?"** runs both `plan` (what the brain has that the wiki does not yet: new, changed, removed) and `verify` (what the wiki lost or somebody edited there: drift), and reports the two numbers; either alone answers half the question. **"What gets published?"** reads law 7 and the roots from the manifest and answers from them. ⛔ Never from memory of an earlier session.
 
 ## Disconnect
 

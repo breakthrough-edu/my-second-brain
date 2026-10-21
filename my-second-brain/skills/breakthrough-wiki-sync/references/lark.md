@@ -20,7 +20,7 @@ Two legal answers, and the owner picks:
 
 ⛔ Not the owner's personal library (`my_library`): the team cannot be given read on that, and the point of the space is that they can.
 
-**The base url** is the tenant's wiki host, the part of any wiki link before `/wiki/` (for example `https://<tenant>.larksuite.com` or `https://<tenant>.feishu.cn`). Read it off any existing wiki link in that tenant, or off the url `lark-cli wiki +node-get --node-token <any node> --as user --format json` returns.
+**The base url** is the tenant's wiki host, the part of any wiki link before `/wiki/` (for example `https://<tenant>.larksuite.com` or `https://<tenant>.feishu.cn`). Read it off any wiki link the owner has in that tenant (ask for one), or, with none at hand, off the `url` fields of `lark-cli drive +search --query "<any document title>" --as user --format json`. ⛔ `wiki +node-get` and `wiki +node-create` return no url, so there is nothing to read there. ⚠️ A wrong host still pushes green: the CLI reads only the token out of a `/wiki/<token>` url, so every write lands while every link the manifest records points at the wrong tenant. The acceptance step catches it only if the owner opens the page through the url in `99_Meta/wiki-sync.md`, in a browser, not through a CLI fetch.
 
 ## 3. Init, push, prove
 
