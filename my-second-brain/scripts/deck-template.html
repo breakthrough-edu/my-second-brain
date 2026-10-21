@@ -12,6 +12,8 @@
     --glass:rgba(255,255,255,.055);
     --ease:cubic-bezier(.32,.72,0,1); --easeio:cubic-bezier(.52,0,.22,1);
     --st-ns:#8b929c; --st-ip:#9dc0ff; --st-wf:#f0b45e; --st-bl:#ff9d9d; --st-dn:#7fd8a6;
+    --st-cx:#6c747e;   /* cancelled: closed like done, drawn beside it */
+    --meet:#c9b8ff;    /* the meeting chip */
     --dep:#7fd7c4;
     --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",sans-serif;
   }
@@ -272,7 +274,7 @@
   .tcard.open .tcx{display:block}
   .tcard .tcx b{color:var(--ink2)}
   .td-ns{background:var(--st-ns)}.td-ip{background:var(--st-ip)}.td-wf{background:var(--st-wf)}
-  .td-bl{background:var(--st-bl)}.td-dn{background:var(--st-dn)}
+  .td-bl{background:var(--st-bl)}.td-dn{background:var(--st-dn)}.td-cx{background:var(--st-cx)}
 
   /* ===== Kanban ===== */
   .kb{margin-top:14px;display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;align-items:flex-start}
@@ -547,6 +549,50 @@
   .retired s{color:var(--faint);text-decoration-color:rgba(255,255,255,.22)}
   .retired i{font-style:normal;padding:0 2px}
 
+  /* ===== Task detail, meeting chip, reason prompt, overdue chip =====
+     The meeting chip and its popover, the reason prompt a status drag opens,
+     the expandable kanban card and the L1 overdue chip. */
+  .chip.meet{color:var(--meet);background:rgba(201,184,255,.12);box-shadow:inset 0 0 0 1px rgba(201,184,255,.35);
+    text-transform:none;letter-spacing:.02em;font-variant-numeric:tabular-nums;cursor:pointer}
+  .chip.meet:hover{background:rgba(201,184,255,.22)}
+  .chip.meet.n2::after{content:attr(data-n);margin-left:4px;opacity:.7}
+  .kcard .kx{display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1);font-size:10.5px;color:var(--muted);line-height:1.7}
+  .kcard.open{background:rgba(20,23,28,.8);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 24px 50px -26px rgba(0,0,0,.92)}
+  .kcard.open .kx{display:block}
+  .kx b,.tcx b{color:var(--ink2)}
+  .kx .lastq,.tcx .lastq,.calpop .lastq{display:block;margin-top:5px;padding:6px 8px;border-radius:7px;background:rgba(255,255,255,.04);
+    color:var(--ink2);font-size:10.5px;line-height:1.55;border-left:2px solid rgba(201,184,255,.45)}
+  .kx .lastq em,.tcx .lastq em,.calpop .lastq em{font-style:normal;color:var(--faint);margin-right:6px;font-variant-numeric:tabular-nums}
+  .mini{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:7px;font-size:10.5px;cursor:pointer;color:var(--ink2);
+    background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);margin:6px 6px 0 0;white-space:nowrap}
+  .mini:hover{background:rgba(255,255,255,.11);color:var(--ink)}
+  .mini.acc{color:var(--accent-ink);box-shadow:inset 0 0 0 1px rgba(255,146,72,.4)}
+  .ovchip{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--st-bl);cursor:pointer;padding:3px 9px;border-radius:99px;
+    background:rgba(255,157,157,.08);box-shadow:inset 0 0 0 1px rgba(255,157,157,.3)}
+  .ovchip:hover{background:rgba(255,157,157,.16)}
+  .ovchip b{color:var(--st-bl);font-weight:650}
+  .ovchip.off{color:var(--faint);background:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+  .ovchip.off b{color:var(--muted)}
+  .rsnbox{width:min(560px,92vw)}
+  .rsnbox .chg{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--ink2);padding:9px 12px;border-radius:12px;
+    background:rgba(0,0,0,.28);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);font-variant-numeric:tabular-nums}
+  .rsnbox .chg .arrow{color:var(--faint)}
+  .rsnbox .chg .path{flex-basis:100%;font-size:10px;color:var(--faint);word-break:break-all;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .rsnbox label{display:block;font-size:10.5px;color:var(--muted);margin:4px 0 5px;letter-spacing:.04em}
+  .rsnbox input,.rsnbox textarea{width:100%;font-family:var(--font);font-size:12.5px;color:var(--ink);background:rgba(0,0,0,.32);border:none;
+    border-radius:10px;padding:9px 11px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);outline:none}
+  .rsnbox input:focus,.rsnbox textarea:focus{box-shadow:inset 0 0 0 1px rgba(255,146,72,.55)}
+  .rsnbox textarea{min-height:64px;resize:vertical;line-height:1.5}
+  .rsnbox .err{font-size:11px;color:var(--st-bl);min-height:14px}
+  .ctl.primary{background:rgba(255,122,31,.22);color:#ffdcb9;box-shadow:inset 0 0 0 1px rgba(255,146,72,.5)}
+  .meetpop{width:300px}
+  .meetpop .cp-row{display:flex;align-items:baseline;gap:8px}
+  .meetpop .cp-row .d{font-variant-numeric:tabular-nums;color:var(--ink2);font-weight:600;flex:0 0 auto}
+  .meetpop .cp-row .s{color:var(--muted);word-break:break-all;flex:1 1 auto;min-width:0}
+  .meetpop a{color:var(--accent-ink);text-decoration:none;font-size:10.5px;white-space:nowrap}
+  .meetpop a:hover{text-decoration:underline}
+  #pendtext{min-height:260px}
+
   /* ===== Position labels =====
      ⛔ These SHIP. The JS prints a `span.lbl` in fourteen places: L1 L2 L3 down
      the left column, R1 R2 R3 down the right, E on the tabs, F on the control
@@ -600,6 +646,21 @@
     <div class="pendbtns">
       <span class="ctl" id="pendclear"></span><span class="sp"></span>
       <span class="ctl" id="pendcopy"></span><span class="ctl" id="pendclose"></span>
+    </div>
+  </div>
+</div>
+
+<!-- The reason prompt a status drag opens. Same overlay family as Pending edits. -->
+<div class="pendov" id="rsnov">
+  <div class="pendbox rsnbox">
+    <div class="pendh" id="rsnh"></div>
+    <div class="pendb" id="rsnb"></div>
+    <div class="chg" id="rsnchg"></div>
+    <div id="rsnwrap"></div>
+    <div class="err" id="rsnerr"></div>
+    <div class="pendbtns">
+      <span class="ctl" id="rsncancel"></span><span class="sp"></span>
+      <span class="ctl" id="rsnskip"></span><span class="ctl primary" id="rsnsave"></span>
     </div>
   </div>
 </div>
@@ -677,13 +738,25 @@ const DICT = {
   dragHintTask:"drag a card to change a task's status",
   dragHintProj:"drag a card to change a project's stage",
   pend:"Pending edits", pendH:"These edits are not in your vault yet",
-  pendBody:"The deck is generated, it never writes a file itself. Hand the block below to your assistant, or just say \"update my deck\".",
+  pendBody:"The deck is generated, it never writes a file itself. Copy the block below and paste it to your assistant: it checks every from-value against the file as it is now, writes the change, then rebuilds the deck. One == block per file, each changed key with its from-value, and + append lines for sentences to add to the note's body.",
   pendCopy:"Copy", pendClear:"Discard", pendClose:"Close",
   emptyGates:"No milestone yet.<br>A Brief with a due date and no start date, or one that declares milestone: true, is a point in time and counts down here.",
   emptyPrio:"Nothing open under priority 1 and 2.",
   emptyDec:"No decisions yet. The first one you record becomes rule number one.",
   emptyRen:"Nothing expires yet. Add a renewal date to any document and it lands here.",
-  emptyPulse:"No journal backlinks yet. Link a project from a daily note and it starts moving."
+  emptyPulse:"No journal backlinks yet. Link a project from a daily note and it starts moving.",
+
+  st_cx:"cancelled", k_overdue:"overdue", overdueChipTip:"click to show only overdue tasks",
+  colMeeting:"meeting", meetingWord:"meeting", meetingsWord:"meetings", meetChip:"meeting",
+  meetTitle:"Where this task was discussed", meetFoot:"Read from the note's own [[...-meeting-summary]] links, newest first.",
+  openObsidian:"open", lastNote:"latest note", noLastNote:"no dated note yet",
+  snooze1:"+1 day", snooze7:"+1 week", snoozeTip:"stages a new due date, nothing is written",
+  reasonH:"Why this change?", reasonBody:"One sentence. It is appended to the note with today's date when the edit is applied; leave it empty to stage the change alone.",
+  reasonLabel:"reason (one sentence)", reasonWaitingOn:"waiting on (fills waiting_on)",
+  reasonBlockedNeeds:"A blocked task needs its blocker named before it can be staged.",
+  reasonSave:"Stage with note", reasonSkip:"Stage without note", reasonCancel:"Cancel",
+  pendHeader:"# Deck edits", pendAppend:"+ append:", pendNoteFrom:"(Deck)",
+  pendGuide:"# For the assistant: apply each == block to the file it names. Stop and ask instead of writing when (1) a from-value does not match the file as it is now; (2) the file is not at that path; (3) a new value is not one doctrine section 8 allows; (4) an + append line says something different from what the note already says about the same thing. A line the note already carries is not written twice."
 };
 
 
@@ -699,7 +772,10 @@ const S = { tab:"lane", showRail:true,
   showEmptyLanes:true, showTaskCards:true, showDeps:true,
   showEmptyCols:true, kbGroup:"status",
   calLayers:{task:true, proj:true, ren:true}, weekStartMon:true, calMonth:"{{THIS_MONTH}}",
-  gridCollapsed:false, gridCols:{start:true, priority:true},
+  /* The meeting column starts on only when some task links a meeting, so a vault
+     with none gets the grid it always had. */
+  gridCollapsed:false, gridCols:{start:true, priority:true,
+    meeting:DECK.projects.some(p => p.tasks.some(t => t.meetings && t.meetings.length))},
   laneFold:new Set(),   // project ids whose task cards are folded away on the swimlane
   openMenu:null };
 
@@ -714,10 +790,25 @@ const DATA = () => DECK;
 
 const ST = {
   "not-started":{c:"td-ns", key:"st_ns"}, "in-progress":{c:"td-ip", key:"st_ip"},
-  "waiting":{c:"td-wf", key:"st_wf"}, "blocked":{c:"td-bl", key:"st_bl"}, "done":{c:"td-dn", key:"st_dn"}
+  "waiting":{c:"td-wf", key:"st_wf"}, "blocked":{c:"td-bl", key:"st_bl"}, "done":{c:"td-dn", key:"st_dn"},
+  "cancelled":{c:"td-cx", key:"st_cx"}
 };
-const ST_ORDER = ["not-started","in-progress","waiting","blocked","done"];
+/* The columns a status board offers come from deck.py (SETUP.taskStatuses), which
+   leaves cancelled out wherever this vault's section 8 does not list it, so a drag
+   cannot stage a value the vault refuses. A payload without the key predates it
+   and gets the five original columns. */
+const ST_ORDER = ["not-started","in-progress","waiting","blocked","done","cancelled"]
+  .filter(k => SETUP.taskStatuses ? SETUP.taskStatuses.includes(k) : k !== "cancelled");
 const stName = k => L()[ST[k].key];
+/* One predicate for "this task is finished", so done and cancelled are treated
+   alike everywhere: hidden unless Show done, struck through, not open. */
+const isClosed = s => s === "done" || s === "cancelled";
+const isOpenT = t => !isClosed(t.status);
+/* The task note's real path, shipped by deck.py; the title-derived guess stays
+   only as a fallback for a payload that predates the key. */
+const taskFile = (p, t) => t.file || `${projPath(p)}Tasks/${t.title.replace(/\s+/g,"-").toLowerCase()}.md`;
+/* deck.py ships a task's meetings newest first. */
+const meetLatest = t => (t.meetings && t.meetings.length) ? t.meetings[0] : null;
 /* stage lives on the Brief, not on a task (doctrine §8), so grouping by stage drags the project. */
 const STAGE_ORDER = ["pending","planning","pursuing","executing","closed"];
 const sgName = k => L()["sg_" + (k || "none")];
@@ -732,14 +823,41 @@ const PENDING = [];
    nothing, so a vault whose personal wing is `01_Personal-Wing` (or any other
    prefix) would be handed a path that does not exist on disk, and every pending
    edit copied out of the deck would point a session at the wrong file. */
-const projPath = p => p.wing === "personal"
+/* deck.py ships each project's real folder (dir) and Brief (file); the paths
+   rebuilt from the title below are only the fallback for a payload that predates
+   those keys, because a title is not a folder name. */
+const projPath = p => p.dir ? `${p.dir}/` : (p.wing === "personal"
   ? `${SETUP.personalWing}/Personal-Projects/${p.name.replace(/\s+/g,"-")}/`
-  : `${SETUP.business.wing}/02_Work/${p.lane}/${p.name.replace(/\s+/g,"-")}/`;
-const briefPath = p => `${projPath(p)}_${p.name.replace(/\s+/g,"-")}-Brief.md`;
+  : `${SETUP.business.wing}/02_Work/${p.lane}/${p.name.replace(/\s+/g,"-")}/`);
+const briefPath = p => p.file || `${projPath(p)}_${p.name.replace(/\s+/g,"-")}-Brief.md`;
 function addPending(file, key, from, to){
   const hit = PENDING.find(e => e.file === file && e.key === key);
   if(hit){ hit.to = to; if(hit.from === hit.to) PENDING.splice(PENDING.indexOf(hit),1); }
   else PENDING.push({file, key, from, to});
+}
+/* A sentence to append to a note's body, dated today, staged beside the key
+   edits. Never merged: two notes on one file are two lines in the body. */
+const NOTES = [];
+function addNote(file, text){
+  const t = String(text || "").trim();
+  if(!t) return;
+  NOTES.push({file, text:`${TODAY} ${L().pendNoteFrom} ${t}`});
+}
+const pendingCount = () => PENDING.length + NOTES.length;
+/* The paste-back text: a dated header, one line telling the assistant when to
+   stop, then one `==` block per file holding its key lines (`key: from  ->  to`)
+   and its `+ append:` lines. The same block grammar any other paste-back page
+   uses, so the assistant applies all of them under one rule. */
+function pendingText(){
+  const l = L(), files = [];
+  PENDING.forEach(e => { if(!files.includes(e.file)) files.push(e.file); });
+  NOTES.forEach(n => { if(!files.includes(n.file)) files.push(n.file); });
+  const blocks = files.map(f => {
+    const lines = PENDING.filter(e => e.file === f).map(e => `  ${e.key}: ${e.from}  ->  ${e.to}`)
+      .concat(NOTES.filter(n => n.file === f).map(n => `  ${l.pendAppend} ${n.text}`));
+    return `== ${f}\n${lines.join("\n")}`;
+  });
+  return `${l.pendHeader} ${TODAY} · ${SETUP.business.name}\n${l.pendGuide}\n\n${blocks.join("\n\n")}`;
 }
 
 /* ---- Lane matrix: derived from SETUP, never from the data. Empty lanes still appear ---- */
@@ -826,7 +944,7 @@ function projSpan(p){
   if(dayDiff(a,b) < 7) b = ISO(new Date(D(a).getTime() + 7*86400000));
   return [a,b];
 }
-const isOver = t => t.due && t.status !== "done" && dayDiff(TODAY, t.due) < 0;
+const isOver = t => t.due && isOpenT(t) && dayDiff(TODAY, t.due) < 0;
 
 /* The canonical set: the whole Deck counts one thing, projects that are still alive.
    Two exclusions: Briefs that declare hide_on_deck, and projects already closed.
@@ -847,7 +965,7 @@ function visibleProjects(){
 }
 function visibleTasks(){
   return visibleProjects().flatMap(p => p.tasks
-    .filter(t => (S.showDone || t.status !== "done") && (!S.overdueOnly || isOver(t)))
+    .filter(t => (S.showDone || isOpenT(t)) && (!S.overdueOnly || isOver(t)))
     .map(t => ({...t, proj:p})));
 }
 const allTasks = () => deckScope().flatMap(p => p.tasks);
@@ -861,21 +979,26 @@ const dleft = iso => dayDiff(TODAY, iso);
 /* Top of the left column: L1 health as the standfirst, L2 next action as the only filled panel */
 function renderTop(){
   const l = L(), ps = deckProjects();
-  const open = ps.flatMap(p => p.tasks).filter(t => t.status !== "done");
+  const open = ps.flatMap(p => p.tasks).filter(isOpenT);
   const cnt = k => open.filter(t => t.status === k).length;
   const key = [[l.k_actionable, cnt("not-started")+cnt("in-progress"), "var(--st-ip)"],
                [l.k_waiting,    cnt("waiting"), "var(--st-wf)"],
                [l.k_blocked,    cnt("blocked"), "var(--st-bl)"]];
+  /* Overdue is not a fourth slice of the bar (it overlaps the three), so it
+     is a chip beside the key; clicking it turns on the Overdue only filter. */
+  const nOver = open.filter(isOver).length;
 
   $("#p-health").innerHTML = `<div class="ledger">
       <div class="lg-l"><span class="lbl">L1</span><b class="hn hn-l num">${open.length}</b><span>${l.openTasks}</span></div>
       <div class="lg-bar">${key.map(k => `<i style="flex:${k[1]};background:${k[2]}"></i>`).join("")}</div>
       <div class="lg-key">${key.map(k =>
-        `<span><em style="background:${k[2]}"></em><b class="num">${k[1]}</b> ${k[0]}</span>`).join("")}</div>
+        `<span><em style="background:${k[2]}"></em><b class="num">${k[1]}</b> ${k[0]}</span>`).join("")}
+        <span class="ovchip${nOver?"":" off"}" id="ovchip" title="${l.overdueChipTip}"><b class="num">${nOver}</b> ${l.k_overdue}</span></div>
     </div>`;
+  $("#ovchip").onclick = () => { S.overdueOnly = !S.overdueOnly; if(S.overdueOnly && S.tab === "lane") S.tab = "kanban"; renderAll(); };
 
   const prio = ps.filter(p => (p.priority||9) <= 2)
-    .flatMap(p => p.tasks.filter(t => t.status !== "done").map(t => ({...t, proj:p})))
+    .flatMap(p => p.tasks.filter(isOpenT).map(t => ({...t, proj:p})))
     .sort((a,b) => {
       const oa = isOver(a)?0:1, ob = isOver(b)?0:1;
       if(oa !== ob) return oa - ob;
@@ -895,7 +1018,7 @@ function renderTop(){
         <h2>${esc(L0.title)}</h2>
         <div class="meta"><b>${esc(L0.proj.name)}</b> &nbsp;·&nbsp; ${l.dueWord} <span class="num">${L0.due?md(L0.due):l.none}</span></div>
         <div class="blk"><i class="schip" style="--c:${getComputedStyle(document.documentElement).getPropertyValue(
-            {"not-started":"--st-ns","in-progress":"--st-ip","waiting":"--st-wf","blocked":"--st-bl","done":"--st-dn"}[L0.status])}">${stName(L0.status)}</i>
+            {"not-started":"--st-ns","in-progress":"--st-ip","waiting":"--st-wf","blocked":"--st-bl","done":"--st-dn","cancelled":"--st-cx"}[L0.status])}">${stName(L0.status)}</i>
           ${L0.waiting_on?`<span>${l.waiting} <b>${esc(L0.waiting_on)}</b></span>`:""}</div>
       </div>
       <div class="n"><div class="hn hn-xl num ${Ld!==null&&Ld<0?"":"acc"}">${Ld===null?"·":Math.abs(Ld)}</div>
@@ -1002,7 +1125,8 @@ function renderControls(){
     (S.tab === "grid" ? chk(!S.gridCollapsed, l.expandGroups, "gridCollapsed") +
                         `<div class="mh">${l.columns}</div>` +
                         chk(S.gridCols.start, l.colStart, "col:start") +
-                        chk(S.gridCols.priority, l.colPriority, "col:priority") : "") +
+                        chk(S.gridCols.priority, l.colPriority, "col:priority") +
+                        chk(S.gridCols.meeting, l.colMeeting, "col:meeting") : "") +
     `<div class="mfoot">${l.displayFoot}</div>`;
 
   M.layers = `<div class="mh">${l.mLayers}</div>` +
@@ -1135,7 +1259,7 @@ function renderLaneView(){
            knows whether it has anything to fold (only then does it get a caret and
            react to a click), and reused by the layout loop below. */
         const cardTasks = S.showTaskCards
-          ? p.tasks.filter(t => t.due && (S.showDone || t.status !== "done") && (!S.overdueOnly || isOver(t)))
+          ? p.tasks.filter(t => t.due && (S.showDone || isOpenT(t)) && (!S.overdueOnly || isOver(t)))
                    .sort((m,n) => m.due < n.due ? -1 : 1)
           : [];
         const foldable = cardTasks.length > 0;
@@ -1167,13 +1291,10 @@ function renderLaneView(){
             rows[r] = cx + 158; maxRow = Math.max(maxRow, r);
             const ty = top + 46 + r*54, over = isOver(t);
             body += `<div class="conn" data-row="${r}" style="left:${cx}px;top:${top+38}px;height:${ty-top-38}px"></div>
-              <div class="tcard${t.status==="done"?" fin":""}" data-row="${r}" style="left:${cx}px;top:${ty}px">
+              <div class="tcard${isClosed(t.status)?" fin":""}" data-row="${r}" data-t="${t.id}" style="left:${cx}px;top:${ty}px">
                 <div class="tcl"><span class="tdot ${ST[t.status].c}"></span>${esc(t.title)}</div>
-                <div class="tcd${over?" over":""}">${fmt(t.due)}${over?" · "+l.overdue:""}</div>
-                <div class="tcx"><b>status</b> ${stName(t.status)}<br>
-                  <b>start</b> ${t.start||l.none} &nbsp; <b>due</b> ${t.due}
-                  ${t.waiting_on?`<br><b>waiting_on</b> ${esc(t.waiting_on)}`:""}
-                  <br><span style="color:var(--faint)">${esc(p.name)}/Tasks/</span></div></div>`;
+                <div class="tcd${over?" over":""}">${fmt(t.due)}${over?" · "+l.overdue:""}${meetChipHtml(t, " style='margin-left:6px'")}</div>
+                <div class="tcx">${taskDetailHtml(p, t)}</div></div>`;
           });
         }
         top += 46 + (maxRow+1)*54 + 12;
@@ -1202,8 +1323,10 @@ function renderLaneView(){
   const _bd = $("#board"), _ai = $("#axisinner");
   _bd.addEventListener("scroll", () => { _ai.style.transform = `translateX(${-_bd.scrollLeft}px)`; }, {passive:true});
   $("#inner").style.width = (bodyW + LABW) + "px";
+  wireDetailControls();
   $("#viewhost").querySelectorAll(".tcard").forEach(el => el.onclick = e => {
     e.stopPropagation();
+    if(e.target.closest(".mini, .chip.meet")) return;   // buttons inside the card
     const was = el.classList.contains("open");
     document.querySelectorAll(".tcard.open").forEach(o => o.classList.remove("open"));
     if(!was) el.classList.add("open");
@@ -1542,7 +1665,7 @@ function renderKanbanView(){
   if(S.kbGroup === "status"){
     unit = "task";
     const ts = visibleTasks();
-    cols = ST_ORDER.filter(k => S.showDone || k !== "done").map(k => ({
+    cols = ST_ORDER.filter(k => S.showDone || !isClosed(k)).map(k => ({
       key:k, name:stName(k), dot:ST[k].c,
       items:ts.filter(t => t.status === k).sort((a,b) => (a.due||"9999") < (b.due||"9999") ? -1 : 1)
     }));
@@ -1560,14 +1683,18 @@ function renderKanbanView(){
   const card = it => {
     if(unit === "task"){
       const over = isOver(it);
-      return `<div class="kcard${it.status==="done"?" fin":""}" draggable="true" data-id="${it.id}">
+      /* The meeting chip on the card face; a click on the card opens its detail
+         (latest note, meetings, snooze). */
+      return `<div class="kcard${isClosed(it.status)?" fin":""}${KB_OPEN.has(it.id)?" open":""}" draggable="true" data-id="${it.id}">
         <div class="kt">${esc(it.title)}</div>
         <div class="km"><span class="chip">${esc(it.proj.lane ? (l[it.proj.lane] || it.proj.lane) : l.personal)}</span>
+          ${meetChipHtml(it, "")}
           <span class="kp">${esc(it.proj.name)}</span>
-          <span class="kd${over?" over":""}">${it.due ? (over ? l.overdue : fmt(it.due)) : "·"}</span></div></div>`;
+          <span class="kd${over?" over":""}">${it.due ? (over ? l.overdue : fmt(it.due)) : "·"}</span></div>
+        <div class="kx">${taskDetailHtml(it.proj, it)}</div></div>`;
     }
     const left = it.due ? dayDiff(TODAY, it.due) : null;
-    const open = it.tasks.filter(t => t.status !== "done").length;
+    const open = it.tasks.filter(isOpenT).length;
     return `<div class="kcard proj${it.status==="done"?" fin":""}" draggable="true" data-id="${it.id}">
       <div class="kt">${esc(it.name)}</div>
       <div class="km"><span class="chip">${esc(it.lane ? (l[it.lane] || it.lane) : l.personal)}</span>
@@ -1589,7 +1716,15 @@ function renderKanbanView(){
       e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", el.dataset.id); });
     el.addEventListener("dragend", () => { el.classList.remove("dragging");
       $("#viewhost").querySelectorAll(".kcol").forEach(c => c.classList.remove("over")); });
+    /* A click toggles the card's detail block (task cards only). */
+    if(unit === "task") el.addEventListener("click", e => {
+      if(e.target.closest(".mini, .chip.meet")) return;
+      const id = el.dataset.id;
+      if(KB_OPEN.has(id)) KB_OPEN.delete(id); else KB_OPEN.add(id);
+      el.classList.toggle("open", KB_OPEN.has(id));
+    });
   });
+  wireDetailControls();
   $("#viewhost").querySelectorAll(".kcol").forEach(col => {
     col.addEventListener("dragover", e => { e.preventDefault(); col.classList.add("over"); });
     col.addEventListener("dragleave", () => col.classList.remove("over"));
@@ -1600,9 +1735,10 @@ function renderKanbanView(){
       if(unit === "task"){
         for(const p of DATA().projects){
           const t = p.tasks.find(t => t.id === id);
-          if(t){ if(t.status === to) return;
-            addPending(`${projPath(p)}Tasks/${t.title.replace(/\s+/g,"-").toLowerCase()}.md`, "status", t.status, to);
-            t.status = to; break; }
+          /* The drop does not stage the edit by itself. It opens the
+             reason prompt, which stages status (+ waiting_on, + a note) on Stage
+             and leaves the card where it was on Cancel. */
+          if(t){ if(t.status === to) return; openReason(p, t, to); return; }
         }
       } else {
         const p = DATA().projects.find(p => p.id === id);
@@ -1617,13 +1753,125 @@ function renderKanbanView(){
 function renderPending(){
   const l = L(), host = $("#pendhost");
   if(!host) return;
-  if(!PENDING.length){ host.innerHTML = ""; return; }
-  host.innerHTML = `<span class="ctl pendbtn" id="pendbtn">${l.pend} <span class="num">${PENDING.length}</span></span>`;
+  if(!pendingCount()){ host.innerHTML = ""; return; }
+  host.innerHTML = `<span class="ctl pendbtn" id="pendbtn">${l.pend} <span class="num">${pendingCount()}</span></span>`;
   $("#pendbtn").onclick = () => {
-    $("#pendtext").value = PENDING.map(e => `${e.file}\n  ${e.key}: ${e.from}  ->  ${e.to}`).join("\n\n");
+    $("#pendtext").value = pendingText();   // grouped by file, with + append lines
     $("#pendov").classList.add("on");
   };
 }
+
+/* ======================= Shared task detail, meeting chip, reason prompt ======================= */
+const KB_OPEN = new Set();          // kanban cards whose detail block is open
+/* The detail block a task shows when opened, on the swimlane card and the kanban
+   card alike: the keys it already showed, then the meetings it was discussed in,
+   the latest dated line of its body, and two snooze buttons that stage `due`. */
+function taskDetailHtml(p, t){
+  const l = L();
+  const ms = t.meetings || [];
+  return `<b>status</b> ${stName(t.status)}<br>
+    <b>start</b> ${t.start||l.none} &nbsp; <b>due</b> ${t.due||l.none}
+    ${t.waiting_on?`<br><b>waiting_on</b> ${esc(t.waiting_on)}`:""}
+    ${ms.length?`<br><b>${ms.length>1?l.meetingsWord:l.meetingWord}</b>
+      <span class="chip meet" data-meet="${t.id}" title="${esc(l.meetTitle)}">${ms.map(m => `<span class="num">${fmt(m.date)}</span>`).join(", ")} ▸</span>`:""}
+    <span class="lastq">${t.last?`<em class="num">${fmt(t.last.date)}</em>${esc(t.last.text)}`:`<em>${l.noLastNote}</em>`}</span>
+    ${t.due && isOpenT(t)?`<span class="mini acc" data-snooze="1" data-t="${t.id}" title="${l.snoozeTip}">${l.snooze1}</span><span class="mini acc" data-snooze="7" data-t="${t.id}" title="${l.snoozeTip}">${l.snooze7}</span>`:""}
+    <br><span style="color:var(--faint)">${esc(t.file || (p.name + "/Tasks/"))}</span>`;
+}
+function meetChipHtml(t, attrs){
+  const m = meetLatest(t); if(!m) return "";
+  const n = t.meetings.length;
+  return `<span class="chip meet${n>1?" n2":""}" data-meet="${t.id}" data-n="+${n-1}"${attrs||""}>${L().meetChip} <span class="num">${fmt(m.date)}</span></span>`;
+}
+function findTask(id){
+  for(const p of DATA().projects){ const t = p.tasks.find(t => t.id === id); if(t) return {p, t}; }
+  return null;
+}
+/* Wires every meeting chip and snooze button currently on the page. Called after
+   each view render; both live inside cards whose own click must not fire. */
+function wireDetailControls(){
+  $("#viewhost").querySelectorAll(".chip.meet[data-meet]").forEach(el => el.onclick = e => {
+    e.stopPropagation(); const f = findTask(el.dataset.meet); if(f) openMeetPop(f.t, el);
+  });
+  $("#viewhost").querySelectorAll(".mini[data-snooze]").forEach(el => el.onclick = e => {
+    e.stopPropagation(); const f = findTask(el.dataset.t); if(!f || !f.t.due) return;
+    const v = shiftISO(f.t.due, +el.dataset.snooze);
+    addPending(taskFile(f.p, f.t), "due", f.t.due, v); f.t.due = v; renderAll();
+  });
+}
+/* The meeting popover: every meeting the note links, newest first, each with an
+   Obsidian link built from the vault folder's name. Reuses the calendar popover. */
+function openMeetPop(t, anchor){
+  closeCalPop();
+  const l = L(), pop = document.createElement("div");
+  pop.className = "calpop meetpop"; pop.id = "calpop";
+  const rows = (t.meetings || []).map(m =>
+    `<div class="cp-row"><span class="d">${esc(m.date)}</span><span class="s">${esc(m.slug.replace(/^\d{4}-\d{2}-\d{2}-/, "").replace(/-meeting-summary$/, "").replace(/-/g, " "))}</span>
+      ${SETUP.vaultName?`<a href="obsidian://open?vault=${encodeURIComponent(SETUP.vaultName)}&file=${encodeURIComponent(m.slug)}">${l.openObsidian} ↗</a>`:""}</div>`).join("");
+  pop.innerHTML = `<div class="cp-h"><span class="sq" style="background:var(--meet)"></span>${esc(l.meetTitle)}</div>${rows}
+    <div class="cp-path">${esc(l.meetFoot)}</div>`;
+  document.body.appendChild(pop);
+  const r = anchor.getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
+  let left = Math.min(Math.max(12, r.left), window.innerWidth - 12 - pw);
+  let top = r.bottom + 6;
+  if(top + ph > window.innerHeight - 12) top = Math.max(12, r.top - 6 - ph);
+  pop.style.left = left + "px"; pop.style.top = top + "px";
+  pop.addEventListener("pointerdown", e => e.stopPropagation());
+  pop.addEventListener("click", e => e.stopPropagation());
+  setTimeout(() => {
+    document.addEventListener("pointerdown", closeCalPop, {once:true});
+    document.addEventListener("keydown", e => { if(e.key === "Escape") closeCalPop(); }, {once:true});
+  }, 0);
+}
+/* The reason prompt. A status drag lands here instead of straight in addPending.
+     · blocked  -> the note is required (a blocked task with no blocker named is a
+                   dark cell the owner has to come back for)
+     · waiting  -> an extra field for waiting_on, the section 8 key the status needs
+     · others   -> the note is optional; Stage without note stages the status alone
+   Cancel changes nothing: the card goes back to its column on the re-render. */
+let RSN = null;
+function openReason(p, t, to){
+  const l = L();
+  RSN = {p, t, to};
+  $("#rsnh").textContent = l.reasonH;
+  $("#rsnb").textContent = l.reasonBody;
+  $("#rsnchg").innerHTML = `<span class="tdot ${ST[t.status].c}"></span>${stName(t.status)}<span class="arrow">→</span>
+    <span class="tdot ${ST[to].c}"></span><b>${stName(to)}</b><span style="color:var(--faint)">·</span><span>${esc(t.title)}</span>
+    <span class="path">${esc(taskFile(p, t))}</span>`;
+  $("#rsnwrap").innerHTML =
+    (to === "waiting" ? `<label>${l.reasonWaitingOn}</label><input id="rsnwo" value="${esc(t.waiting_on || "")}" placeholder="[[Name]]">` : "") +
+    `<label>${l.reasonLabel}</label><textarea id="rsntext" placeholder="${to === "blocked" ? esc(l.reasonBlockedNeeds) : ""}"></textarea>`;
+  $("#rsnerr").textContent = "";
+  $("#rsnsave").textContent = l.reasonSave; $("#rsnskip").textContent = l.reasonSkip; $("#rsncancel").textContent = l.reasonCancel;
+  $("#rsnskip").style.display = to === "blocked" ? "none" : "";
+  $("#rsnov").classList.add("on");
+  setTimeout(() => ($("#rsnwo") || $("#rsntext")).focus(), 30);
+}
+function closeReason(){ $("#rsnov").classList.remove("on"); RSN = null; }
+function stageReason(withNote){
+  if(!RSN) return;
+  const {p, t, to} = RSN, l = L();
+  const note = withNote ? ($("#rsntext").value || "").trim() : "";
+  if(to === "blocked" && !note){ $("#rsnerr").textContent = l.reasonBlockedNeeds; return; }
+  const file = taskFile(p, t);
+  addPending(file, "status", t.status, to);
+  if(to === "waiting"){
+    const wo = ($("#rsnwo").value || "").trim();
+    if(wo && wo !== (t.waiting_on || "")){ addPending(file, "waiting_on", t.waiting_on || "(none)", wo); t.waiting_on = wo; }
+  }
+  if(note) addNote(file, note);
+  t.status = to;
+  closeReason(); renderAll();
+}
+$("#rsnsave").onclick = () => stageReason(true);
+$("#rsnskip").onclick = () => stageReason(false);
+$("#rsncancel").onclick = () => { closeReason(); renderAll(); };
+$("#rsnov").onclick = e => { if(e.target.id === "rsnov"){ closeReason(); renderAll(); } };
+document.addEventListener("keydown", e => {
+  if(!RSN) return;
+  if(e.key === "Escape"){ closeReason(); renderAll(); }
+  if(e.key === "Enter" && (e.metaKey || e.ctrlKey)) stageReason(true);
+});
 
 /* ======================= I · Table ======================= */
 function renderGridView(){
@@ -1634,11 +1882,11 @@ function renderGridView(){
      other wording. */
   const head = `<tr><th style="width:36%">${l.colTask}</th><th>${l.colStatus}</th>${
     c.start?`<th>${l.colStart}</th>`:""}<th>${l.colDue}</th><th>${l.colWaitingOn}</th>${
-    c.priority?`<th>${l.colPriority}</th>`:""}</tr>`;
-  const span = 4 + (c.start?1:0) + (c.priority?1:0);
+    c.priority?`<th>${l.colPriority}</th>`:""}${c.meeting?`<th>${l.colMeeting}</th>`:""}</tr>`;
+  const span = 4 + (c.start?1:0) + (c.priority?1:0) + (c.meeting?1:0);
   $("#viewhost").innerHTML = `<div class="axishead"><span class="lbl">I</span></div><div class="grid">` +
     ps.map(p => {
-      const ts = p.tasks.filter(t => (S.showDone || t.status !== "done") && (!S.overdueOnly || isOver(t)))
+      const ts = p.tasks.filter(t => (S.showDone || isOpenT(t)) && (!S.overdueOnly || isOver(t)))
         .sort((a,b) => (a.due||"9999") < (b.due||"9999") ? -1 : 1);
       return `<details class="grp"${S.gridCollapsed?"":" open"}>
         <summary><span class="car">▶</span><span class="gname">${esc(p.name)}</span>
@@ -1647,16 +1895,18 @@ function renderGridView(){
           <span class="gpath">${esc(projPath(p))}</span>
           <span class="gcnt">${ts.length} ${l.tasksWord} · ${l.colDue} ${p.due||l.none} · ${l.colPriority} ${p.priority||l.none}</span></summary>
         <table class="gt"><thead>${head}</thead><tbody>` +
-        (ts.length ? ts.map(t => `<tr class="${t.status==="done"?"fin":""}">
+        (ts.length ? ts.map(t => `<tr class="${isClosed(t.status)?"fin":""}">
           <td class="t">${esc(t.title)}</td>
           <td><span class="tdot ${ST[t.status].c}"></span>${stName(t.status)}</td>
           ${c.start?`<td class="d">${t.start||"·"}</td>`:""}
           <td class="d${isOver(t)?" over":""}">${t.due||"·"}</td>
           <td class="w">${t.waiting_on?esc(t.waiting_on):""}</td>
-          ${c.priority?`<td class="d">${t.priority||""}</td>`:""}</tr>`).join("")
+          ${c.priority?`<td class="d">${t.priority||""}</td>`:""}
+          ${c.meeting?`<td class="d">${meetLatest(t)?meetChipHtml(t, ""):"·"}</td>`:""}</tr>`).join("")
           : `<tr><td colspan="${span}" style="color:var(--faint)">${l.empty}</td></tr>`) +
         `</tbody></table></details>`;
     }).join("") + `</div>`;
+  wireDetailControls();
 }
 
 /* ======================= J · Calendar ======================= */
@@ -1714,7 +1964,9 @@ function calPopHtml(d){
       <div class="cp-row"><b>${l.colStart}</b> ${t.start||l.none} &nbsp; <b>${l.colDue}</b> ${t.due||l.none}</div>
       ${t.priority?`<div class="cp-row"><b>${l.colPriority}</b> ${t.priority}</div>`:""}
       ${t.waiting_on?`<div class="cp-row"><b>${l.colWaitingOn}</b> ${esc(t.waiting_on)}</div>`:""}
-      <div class="cp-path">${esc(t.proj.name)}/Tasks/</div>`;
+      ${meetLatest(t)?`<div class="cp-row"><b>${l.colMeeting}</b> ${t.meetings.map(m => `<span class="num">${esc(m.date)}</span>`).join(", ")}</div>`:""}
+      ${t.last?`<span class="lastq"><em class="num">${fmt(t.last.date)}</em>${esc(t.last.text)}</span>`:""}
+      <div class="cp-path">${esc(t.file || (t.proj.name + "/Tasks/"))}</div>`;
   }
   if(d.type === "proj"){
     const p = d.p;
@@ -1906,7 +2158,7 @@ $("#railbtn").onclick = () => {
 };
 $("#pendclose").onclick = () => $("#pendov").classList.remove("on");
 $("#pendcopy").onclick = () => { $("#pendtext").select(); document.execCommand("copy"); };
-$("#pendclear").onclick = () => { PENDING.length = 0; $("#pendov").classList.remove("on"); renderPending(); };
+$("#pendclear").onclick = () => { PENDING.length = 0; NOTES.length = 0; $("#pendov").classList.remove("on"); renderPending(); };
 $("#pendov").onclick = e => { if(e.target.id === "pendov") $("#pendov").classList.remove("on"); };
 document.addEventListener("click", e => {
   if(!e.target.closest(".menuwrap") && S.openMenu){ S.openMenu = null; renderControls(); }

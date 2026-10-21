@@ -363,8 +363,71 @@ def _find_brief(project_dir):
 # The statuses the template can draw (its ST table). ⛔ This is NOT the list of
 # legal statuses: that list is section 8 of the vault's own doctrine, read live
 # by `_read_task_law`, and a vault may list a value the deck has no column for.
-TASK_STATUSES = ("not-started", "in-progress", "waiting", "blocked", "done")
+# `cancelled` is drawable, beside `done` and hidden with it unless Show done, so
+# a vault whose section 8 lists it sees those tasks and counts them; a vault
+# whose section 8 does not list it still gets the task reported, not drawn.
+TASK_STATUSES = ("not-started", "in-progress", "waiting", "blocked", "done", "cancelled")
 TASK_MARKER = "cb: task"
+
+# A meeting record, named the way meeting summaries are named and linked from a
+# task's body: `[[YYYY-MM-DD-<slug>-meeting-summary]]`. Read from the BODY, never
+# from a frontmatter key: the link is already written once, so the deck derives
+# the card's meetings from it rather than asking for a second copy (link once,
+# derive the rest). A task body that links no meeting simply has none.
+MEETING_LINK_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})-.+-meeting-summary$")
+# A dated progress line in a task body: a line that opens with a date, after
+# any quote, bullet or bold markup. A date later in the line does not count.
+DATED_LINE_RE = re.compile(r"^[\s>*\-•]*\**\s*(\d{4}-\d{2}-\d{2})")
+LEADING_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}[\s:·\-]*")
+MD_NOISE_RE = re.compile(r"[*`>]+|\[\[([^\]|#]+)(?:\|[^\]]*)?\]\]")
+MEETING_PAREN_RE = re.compile(
+    r"\s*\(\s*\[\[\d{4}-\d{2}-\d{2}-[^\]]*meeting-summary[^\]]*\]\]\s*\)")
+
+
+def _task_meetings(body_lines):
+    """Every meeting the task body links, one entry per meeting, newest first."""
+    seen = {}
+    for ln in body_lines:
+        for m in WIKILINK_RE.finditer(ln):
+            target = m.group(1).strip()
+            mm = MEETING_LINK_RE.match(target)
+            if mm and target not in seen:
+                seen[target] = {"date": mm.group(1), "slug": target}
+    return sorted(seen.values(), key=lambda d: (d["date"], d["slug"]), reverse=True)
+
+
+def _task_last_note(body_lines, limit=170):
+    """The newest dated line in the body, markup stripped and shortened.
+
+    This is what a card shows as its latest note. The body is the task's own
+    history already, so nothing new is asked of the owner: a reason staged on
+    the deck and applied by the assistant is appended as a dated line, and it
+    is this line on the next rebuild.
+    """
+    best = None
+    for ln in body_lines:
+        m = DATED_LINE_RE.match(ln)
+        if not m:
+            continue
+        if best is None or m.group(1) > best[0]:
+            # The meeting itself is shown as a chip, so drop a bracketed meeting
+            # link from the sentence rather than print the slug.
+            clean = MEETING_PAREN_RE.sub("", ln)
+            text = MD_NOISE_RE.sub(lambda k: k.group(1) or "", clean).strip(" -•:·")
+            # The card prints the date beside the sentence, so it is not repeated.
+            text = LEADING_DATE_RE.sub("", text, count=1)
+            best = (m.group(1), text)
+    if best is None:
+        return None
+    text = best[1]
+    if len(text) > limit:
+        text = text[:limit - 1].rstrip() + "…"
+    return {"date": best[0], "text": text}
+
+
+def _vault_rel(path, vault):
+    """A vault-relative path with forward slashes, the form a pasted edit names."""
+    return os.path.relpath(path, vault).replace(os.sep, "/")
 
 
 def _read_task_law(scan, vault):
@@ -426,6 +489,16 @@ def _read_tasks(scan, project_dir, vault):
                 scan.off_list.append((rel, "status: %s is not on the task list section 8 "
                                            "declares (%s)" % (status, ", ".join(scan.task_law))))
             continue
+        # The deck can draw `cancelled`, and a vault's section 8 may not list it.
+        # Drawing it there would put an illegal value on the board as if it were
+        # fine, so the law, when it was read, still decides. Only `cancelled` is
+        # judged this way: the five original columns behave exactly as before.
+        if (status == "cancelled" and not scan.task_law_unread
+                and scan.task_law is not None and status not in scan.task_law):
+            scan.off_list.append((rel, "status: %s is not on the task list section 8 "
+                                       "declares (%s)" % (status, ", ".join(scan.task_law))))
+            continue
+        body = _body_lines(text)
         tasks.append({
             "id": "t-" + _slug(rel),
             "title": _title_from(text, _first_body_line(text, _pretty(name[:-3]))),
@@ -434,6 +507,13 @@ def _read_tasks(scan, project_dir, vault):
             "due": str(fm.get("due", "")).strip() or None,
             "waiting_on": str(fm.get("waiting_on", "")).strip() or None,
             "priority": _int_or_none(fm.get("priority")),
+            # The note's real vault-relative path reaches the page, so a staged
+            # edit names the file that exists. A path rebuilt from the title
+            # names a file that often does not.
+            "file": _vault_rel(path, vault),
+            # Both derived from the body (see MEETING_LINK_RE, _task_last_note).
+            "meetings": _task_meetings(body),
+            "last": _task_last_note(body),
             "_path": rel,
         })
     return tasks
@@ -495,6 +575,10 @@ def scan_vault(vault, shape):
             # on its own, with no flag, so this only adds a path, it removes none.
             "milestone": _truthy(fm.get("milestone")),
             "tasks": tasks,
+            # The Brief's real path and the project folder, for the edits a drag
+            # stages on a project (dates, stage, depends_on).
+            "file": _vault_rel(brief, vault),
+            "dir": _vault_rel(pdir, vault),
             "_path": os.path.relpath(brief, vault),
             "_key": _slug(os.path.basename(pdir)),
             "_broken": brief_broken,
@@ -665,6 +749,16 @@ def build_payload(shape, scan, now):
         "brands": list(shape.brands),
         "lanes": [l.lower() for l in shape.lanes],
         "personalWing": shape.personal_wing or "",
+        # The vault folder's name, which is what Obsidian calls the vault unless
+        # the owner renamed it, so a meeting chip can offer an
+        # `obsidian://open?vault=...&file=<note>` link.
+        "vaultName": os.path.basename(os.path.normpath(shape.root)) if shape.root else "",
+        # The task statuses the board offers as columns: every one it can draw,
+        # `cancelled` only where this vault's section 8 lists it (the same rule
+        # `_read_tasks` applies), so a drag cannot stage a value the law refuses.
+        "taskStatuses": [s for s in TASK_STATUSES
+                         if s != "cancelled" or scan.task_law_unread
+                         or scan.task_law is None or s in scan.task_law],
     }
     data = {
         "meta": {
@@ -862,7 +956,8 @@ def _dark_cells(scan, shape):
                                "kanban, grid or the health ring",
                         "fix": "one cb: task note in <Project>/Tasks/"})
         for t in p["tasks"]:
-            if not t["due"]:
+            # A cancelled task is closed for good; it needs no date to land on.
+            if not t["due"] and t["status"] != "cancelled":
                 out.append({"cell": "Calendar", "subject": "%s / %s" % (p["name"], t["title"]),
                             "path": t["_path"],
                             "why": "the task carries no due date, so it never lands on a day",

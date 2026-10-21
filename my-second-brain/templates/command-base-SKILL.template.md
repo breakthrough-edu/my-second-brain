@@ -1,6 +1,6 @@
 ---
 name: {{SLUG}}-command-base
-description: '{{YOUR_NAME}}''s personal operating system on the two-wing second brain vault: routes daily interactions into cb: records, the daily journal, and end-of-day compilation. Use when {{YOUR_NAME}} opens the day ("morning", "what''s on my plate"), sends an in-the-moment capture (a short diary-style log of what is happening), logs a decision ("we decided", "log a decision", "remember this"), reports a blocker or a waiting-for ("I''m stuck", "follow up with"), ends the day ("compile", "done for today", "daily note"), works the dashboard ("deck", "rebuild my deck", "fix my deck", "why isn''t X on my deck"), connects a calendar, opens a growth retro ("how has this year gone"), says "fix my jarvis", or mentions the Command Base, the Command Deck, Tasks, Decisions, or {{BUSINESS_NAME}} operations. Load BEFORE any read or write of cb: records or the daily notes.'
+description: '{{YOUR_NAME}}''s personal operating system on the two-wing second brain vault: routes daily interactions into cb: records, the daily journal, and end-of-day compilation. Use when {{YOUR_NAME}} opens the day ("morning", "what''s on my plate"), sends an in-the-moment capture (a short diary-style log of what is happening), logs a decision ("we decided", "log a decision", "remember this"), reports a blocker or a waiting-for ("I''m stuck", "follow up with"), ends the day ("compile", "done for today", "daily note"), works the dashboard ("deck", "rebuild my deck", "fix my deck", "why isn''t X on my deck") or pastes the Pending edits copied out of it (a block that starts "# Deck edits"), connects a calendar, opens a growth retro ("how has this year gone"), says "fix my jarvis", or mentions the Command Base, the Command Deck, Tasks, Decisions, or {{BUSINESS_NAME}} operations. Load BEFORE any read or write of cb: records or the daily notes.'
 ---
 
 # {{YOUR_NAME}} Command Base
@@ -65,7 +65,8 @@ Run these in parallel, then respond:
 | "compile" / "done for today" / "let's end the day" | Run `## End-of-day reconcile` (further down) first. Then write today's daily note in `01_Daily/` from the session's captures plus today's `capture-buffer.md` lines, keeping each line's anchor link intact; then clear today's lines from the buffer |
 | "we decided X" / "log a decision" | Write a `cb: decision` note in `02_Command-Base/Decisions/`, with **every key doctrine §8 requires for a decision, read from §8 at the time of writing** (⛔ never from a list quoted here: any list quoted in this row reads like the whole set, which is how a decision lands short a required key). If it changes a stored value like a price, update that note in the same breath. ⛔ **Before the note lands, check the active set** (`02_Command-Base/Decisions/` filtered to `status: active` and the same `lane:`): if this contradicts one that still stands, ask {{YOUR_NAME}} the one question, **change the rule, or break it once?** On "change the rule" the new note carries `supersedes:` and the old one flips to `status: superseded`; on "break it once" nothing is filed as a rule at all. ⭐ **The guardrail's whole value is the word BEFORE** (doctrine §7): run it after the fact and two contradicting rules are both standing until a human trips over them |
 | "follow up with X" / "waiting for Y" | Write or patch a `cb: task` in its project's `Tasks/` folder (status `waiting`, `waiting_on` filled). No project fits? Propose opening one first |
-| "deck" / "rebuild my deck" / "fix my deck" / "update my deck" / "why isn't X on my deck" | One entry, not four. Rebuild first and report the one line it prints. If it errored, or if {{YOUR_NAME}} is asking why something is missing, run the same script's `doctor` next, turn its case notes into proposals one at a time, and rebuild on the spot after a fix so the panel lights up while they are watching. The engine lives in the `my-second-brain` payload; this row is the door |
+| A pasted block that starts with `# Deck edits` (copied out of the dashboard's Pending edits) | Run `## Applying pasted Deck edits` (further down). ⛔ Not a rebuild: the staged edits live only in the page that was copied, and a rebuild before they are written throws them away. The apply step rebuilds at its end |
+| "deck" / "rebuild my deck" / "fix my deck" / "update my deck" / "why isn't X on my deck" | One entry, not four. ⚠️ When the message carries a pasted `# Deck edits` block, the row above runs instead. Rebuild first and report the one line it prints. If it errored, or if {{YOUR_NAME}} is asking why something is missing, run the same script's `doctor` next, turn its case notes into proposals one at a time, and rebuild on the spot after a fix so the panel lights up while they are watching. The engine lives in the `my-second-brain` payload; this row is the door |
 | "I'm stuck" | Ask for the root cause before any fix; a stuck-with-no-next-action is a blocker worth its own note |
 | "let's talk about how I've grown" / "how has this year gone" | Read the review layer: `02_Command-Base/Reviews/` (the weekly reviews, and the monthly themes, which are filed as a chain, each one linked to the theme it replaced and to the theme that replaced it, so they read as a line rather than a pile) together with `02_Command-Base/Decisions/`. Mirror the growth back, in {{YOUR_NAME}}'s own words wherever the record carries them. ⭐ **The monthly retro is this conversation, not a filed note:** what a retro is for is already sitting in the layer, and a report nobody rereads is just a fourth thing to write. ⛔ **Do not give it a skill of its own:** the layer already exists, so the capability costs nothing to have. ⛔ **Do not narrate more than the record supports:** when a source is empty, name it and say what empty means there, which is usually that those weeks went unwritten rather than that nothing happened |
 
@@ -87,11 +88,34 @@ Decisions live in `02_Command-Base/Decisions/`, reviews in `02_Command-Base/Revi
 rg -l '^cb: task' --glob '!**/99_Meta/Templates/**' "{{VAULT_PATH}}"
 ```
 
-Boot windows: This Week (`cb: task`, status not `done`) · Today (due <= today) · Waiting For (status `waiting`, surface `waiting_on`) · Red Flags (due < today) · Renewals (`renew_by` within 30 days, across every family that carries it).
+Boot windows: This Week (`cb: task`, status not `done`, and not `cancelled` where doctrine §8 lists it) · Today (due <= today) · Waiting For (status `waiting`, surface `waiting_on`) · Red Flags (due < today) · Renewals (`renew_by` within 30 days, across every family that carries it).
 
 **Writing a record:** start from the matching `99_Meta/Templates/` file; fill every required key for that family in doctrine §8; enums exact and on-list; dates unquoted `YYYY-MM-DD`. Re-read after write to confirm the shape. §8 is the only place these shapes are written, so read it rather than trusting memory. Off-list values get flagged, never silently written. New enum values and tags go through propose, approve, update `99_Meta/tagging-vocabulary.md` first.
 
 **Domain rule for decisions:** `domain:` answers **who this decision binds**, not who it is for. A pricing decision binds the business (`domain: {{BUSINESS_TAG}}`); a "no work Sundays" decision binds {{YOUR_NAME}} (`domain: personal`) even though the business feels it. `lane:` is a different question: it is the lane of the work the decision governs.
+
+## Applying pasted Deck edits
+
+<!-- deck-apply-rev: 1 -->
+⚠️ Same rules as the markers above: the marker and its number belong to the `my-second-brain` skill, which reads it to tell which version of this section this machine actually loads. Leave both alone.
+
+The dashboard never writes a file. A drag, a snooze or a reason typed on it is **staged** in its Pending edits, and {{YOUR_NAME}} copies that text and pastes it here. This section is how it gets written. ⭐ The text uses one block grammar, the same one any other paste-back page this vault makes uses, so one rule applies them all:
+
+```
+# Deck edits 2026-03-18 · <business name>
+# For the assistant: apply each == block to the file it names. Stop and ask instead of writing when (1) ... (4) ...
+
+== <vault-relative path of one note>
+  status: waiting  ->  blocked
+  waiting_on: (none)  ->  [[Supplier]]
+  + append: 2026-03-18 (Deck) <the sentence {{YOUR_NAME}} typed>
+```
+
+1. **Check every block before writing any.** For each `== <path>`: the file must exist at that path (the deck ships each note's real path, so a miss means the note moved or was renamed since the page was built). For each `key: from  ->  to` line, read that key's current value from the file's frontmatter: it must equal `from` (`(none)` means the key is absent or empty). Every `to` value must be one doctrine §8 allows for that family **read from §8 at the moment of writing** (a `status: ... -> cancelled` lands only in a vault whose §8 lists `cancelled`; `(none)` as a `to` means empty the key).
+2. **Stop and ask, never force.** The block's own `# For the assistant:` line names the four stops: a `from` that does not match the file as it is now, a file not at that path, a value §8 does not allow, and an `+ append:` sentence that contradicts what the note already says about the same thing. A stopped block writes nothing at all, its other lines included; the blocks that passed are written. Say which block stopped, what the file says now, and what the block expected.
+3. **Write the keys.** Patch each key in place, keep the frontmatter's shape (dates unquoted `YYYY-MM-DD`), and move `updated:` when the note carries that key.
+4. **Write the appended lines.** Each `+ append:` line becomes one dated line in the note's body, keeping its date and `(Deck)` exactly as pasted, in the note's own style: a note that keeps a dated log gets the line in that log, a bulleted section gets a bullet, anything else gets it at the end of the body. A line the note already carries (same fact, same date) is not written twice. ⛔ A date inside an appended sentence never moves `due:`; only an explicit `due: from  ->  to` line does.
+5. **Rebuild, then report.** Press the dashboard doorbell (Session start step 9) so the board shows the new state, then report one line per file changed and every block that stopped. ⭐ The appended reason is what the card shows as its latest note on that rebuild, which is how {{YOUR_NAME}} sees it landed.
 
 ## End-of-day reconcile
 
