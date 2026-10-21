@@ -424,13 +424,18 @@ def check_third():
     at = next(i for i, h in enumerate(h2) if h.startswith(THIRD_HEADING))
     before = h2[at - 1] if at else "(top of file)"
     after = h2[at + 1] if at + 1 < len(h2) else "(end of file)"
-    if not before.startswith(BACKSTOP_HEADING) or not after.startswith("## The baton"):
+    # Since the wiki backstop joined (breakthrough-wiki-sync), one more H2 may sit
+    # between the third backstop and the baton: the fourth backstop, which pushes
+    # the publishable layers only while a wiki is connected. Nothing else may.
+    after2 = h2[at + 2] if at + 2 < len(h2) else "(end of file)"
+    wiki_between = after.startswith("## The fourth backstop") and after2.startswith("## The baton")
+    if not before.startswith(BACKSTOP_HEADING) or not (after.startswith("## The baton") or wiki_between):
         fail(
             "third backstop order",
-            f"it sits between `{before}` and `{after}`; it belongs after the closing step and before the baton",
+            f"it sits between `{before}` and `{after}`; it belongs after the closing step and before the baton (only the fourth backstop, the wiki, may sit between)",
         )
     else:
-        ok("third backstop order", "after the closing step, before the baton")
+        ok("third backstop order", "after the closing step, before the baton" + (" (the wiki backstop sits between)" if wiki_between else ""))
 
     need(
         "third backstop is tied to the tasks this session finished",
@@ -612,10 +617,13 @@ def check_retrofit():
         return None
     number = int(line.split(".", 1)[0])
     run = next(r for r in runs if number in r)
-    if run != list(range(run[0], run[-1] + 1)) or number != run[-1]:
-        fail("retrofit step numbering", f"step {number} is not the last of an unbroken run: {run}")
+    # The reconcile retrofit was the last routing rule until the companion-skill
+    # retrofit (rule 10, breakthrough-wiki-sync) joined after it; the run still
+    # has to be unbroken, the reconcile step no longer has to close it.
+    if run != list(range(run[0], run[-1] + 1)):
+        fail("retrofit step numbering", f"step {number} is not inside an unbroken run: {run}")
     else:
-        ok("retrofit step", f"step {number}, last of an unbroken run from {run[0]}")
+        ok("retrofit step", f"step {number}, inside an unbroken run from {run[0]} to {run[-1]}")
 
     need(
         "retrofit is keyed on the marker",

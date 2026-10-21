@@ -83,6 +83,7 @@
 - **指针按用途命名, 不按东西本身。** 「WhatsApp 群头像」不叫「社群头像」; banner 是哪个社群的, wordmark 是哪个品牌的, 写清楚。名字清楚, 指针才清楚。
 - **子品牌不抄母品牌**: 各自的 brand guide 放一个指针「先 reference 母品牌的 brand style」, 不各自抄一份颜色跟字体。
 - **指外面 (Lark Base / wiki / 本机资料夹 / 线上页): 重物住外面, vault 只留一行指针加地址, 顺手把外面那边的命名规矩定了。** 例如广告图: 本机开一个夹放原档跟 prompt, 一份上你的 Lark Base, 档名定一个格式, vault 里一行指针。
+- **团队 wiki 是镜子, 不是正本; 方向只有一个, 从你的脑推出去。** 宪法 §4 第 7 条写死了哪四层是给团队读的 (SOP · Methodology · IT-Systems · 自家品牌的资产), 只有这四层会上 wiki, Command Base、`02_Work`、个人翼永远不上。它平时睡着; 你说「connect my company wiki」才接上, 接上之后每次收工自动把这四层改过的页推上去, 团队只读, 意见写在 wiki 里的 Contribution Space, 你读了改回脑里, 下次收工再推。没开 session 手改了一行, 说「sync my wiki」补推。⛔ wiki 上改的东西下一次推送会被盖掉, 所以团队在 wiki 上不该有编辑权, 只有 Contribution Space 那一页例外。
 - **给 session 东西的方式是贴绝对路径或链接**, 不描述「那个档」。
 - **vault 也是手动步骤的贴板**: 要你手贴进某个后台的 code, 让它先开在 vault 那份 kit 档里、Obsidian 打开, 你贴完它再替换正本。
 

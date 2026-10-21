@@ -42,6 +42,8 @@ One thing the update command cannot do: the machine guards and session memory ar
 
 For the same reason, the weekly rhythm's doorbell lives in the command-base skill Setup generated for you, and an update never touches generated skills. A vault built before the rhythm changed keeps the doorbell it was born with; say **"update my maintenance doorbell"** and the skill brings the current one over, verifying through the installed path before it reports anything.
 
+One more thing an update brings but cannot switch on: a companion skill that joined the box after your setup night is refreshed in the payload but never linked into place. Say **"install the missing skills"** (or ask for one by name, such as **"connect my company wiki"**) and the skill installs what is not there yet, the same way Setup would have, and leaves everything already installed alone.
+
 ## The idea underneath
 
 AI execution is cheap now. What is scarce is your judgment having a home.
@@ -190,6 +192,7 @@ Setup also installs a few smaller skills that travel inside this one's payload, 
 - **`breakthrough-method-builder`** writes one Method when a whole job closes: how you did that kind of thing, in your words. The other half of the closeout pair. When several of those turn out to be one way of working and you say so, it writes them up as a playbook (see [How a way of working gets written down](#how-a-way-of-working-gets-written-down)). It ships because it is the only thing in the box that writes a playbook folder's door, and the doctrine makes that door mandatory.
 - **`breakthrough-vault-guardian`** carries one change to your vault's own law through every file that change touches, and afterwards proves the guard can still read the law. It ships because the doctrine names it.
 - **`breakthrough-vault-migrator`** moves what you already have into the vault without breaking the links between your documents: an old vault, an export from another tool, or years of loose folders. You freeze what is coming across so the boundary stops moving, you approve where things go before anything moves, and it works in batches over as many short sittings as it takes, picking up where it left off each time. Nothing is deleted and your originals are never touched.
+- **`breakthrough-wiki-sync`** gives your team a read-only mirror of the parts of your brain written for them: your SOPs, your methodology, your systems, your own brands' assets. One way, never back; your brain stays the source, the wiki is always the latest copy, and the team's suggestions come in through a Contribution Space you read. It is asleep until you say "connect my company wiki", and after that it pushes what changed each time a session closes out, with no background process on your machine. Lark is the first wiki it speaks to; the rules are written so another could follow.
 
 ## Tools that live outside the box
 

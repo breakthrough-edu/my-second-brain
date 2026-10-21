@@ -4,7 +4,8 @@ description: >
   Close out a working session in the owner's second-brain vault while whoever
   was in it still remembers: the Lesson it earned, the decision made but never
   written, the task it finished but never closed, what that task left that an
-  asset room should hold, anything reusable, and one
+  asset room should hold, anything reusable, the push of the publishable
+  layers to the team wiki when one is connected, and one
   baton note in `00_Inbox/` for the next session to read and archive. Use when the user says "wrap up", "close out",
   or otherwise ends a working session that produced something worth keeping.
   ⛔ NOT the end of the day, which is the owner's own command-base skill
@@ -141,6 +142,14 @@ On a yes, patch `status:` (the value read from §8 at the time), empty `waiting_
 ⛔ **Whether the project itself is finished is not asked here.** A task ending is not a project ending. That call is the owner's, and their command-base asks it at the end of a day, with the whole project in view.
 
 ⚠️ **A session that cannot write to the vault** names each item, its room and the verdict in the report's paragraph, in plain words, the way the step above does.
+
+## The fourth backstop: the team wiki, when one is connected
+
+⭐ **This runs after the three backstops above and before the baton is written, and it runs only while `wiki_provider:` in `99_Meta/bootstrap-progress.md` names a provider.** Absent, or `none`: nothing happens and nothing is said. A vault whose owner never connected a wiki never hears about one from this skill.
+
+When it is connected, the publishable layers of this vault (doctrine §4, law 7) are mirrored into a team wiki, one way, and a closeout is the moment the mirror catches up: everything this session changed in those layers, and everything the three backstops just landed there, goes up now. Hand the step to `breakthrough-wiki-sync`, its "Push" section, and say the one line it gives back (how many pages went up, and any page whose read-back failed). The pages it published go into the report's outputs by their wiki address, one line each, beside the vault address they came from.
+
+⛔ **Fail-soft, always.** A push that cannot run (the binary is missing, the login expired, the network is down) is one plain sentence in the report's paragraph and the closeout goes on; "sync my wiki" in any later session is the retry. ⛔ Never block, delay or repeat a closeout for the wiki, and ⛔ never delete a wiki page from here: a removed page is named by that skill and taken down only on the owner's word.
 
 ## The baton: one report note, parked in the Inbox
 

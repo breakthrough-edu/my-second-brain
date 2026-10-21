@@ -85,3 +85,11 @@ jobs:
         working-directory: my-second-brain/scripts
         run: |
           python checkup.py --help
+
+      - name: Wiki sync unit tests (converter, manifest, push against the fake provider)
+        working-directory: my-second-brain/scripts/wiki-sync
+        # Standard library only, no Lark call anywhere in the suite: the fake
+        # provider stands in for the wiki, so a green run says the converter and
+        # the manifest behave, and nothing about a real tenant.
+        run: |
+          python -m unittest discover -s tests -v
