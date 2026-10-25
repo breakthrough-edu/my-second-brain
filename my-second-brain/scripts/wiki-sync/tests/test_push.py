@@ -19,6 +19,7 @@ NOTES = {
     METH + "/Lessons/Pit.md": "---\ntype: lesson\n---\n# The pit we fell into\n\nNever again.\n",
     METH + "/Lessons/Empty.md": "---\ntype: lesson\nstatus: empty\n---\n# Not yet\n",
     METH + "/Lessons/.hidden.md": "# hidden\n",
+    "99_Meta/structure-doctrine.md": "# Doctrine\n\n## 4 · Iron laws\n\n1. **Rows stay home.**\n2. **The publishable layers are written for the team to read.** SOPs and methodology.\n",
 }
 
 

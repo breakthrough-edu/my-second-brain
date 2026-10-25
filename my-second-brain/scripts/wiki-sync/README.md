@@ -11,6 +11,7 @@ Standard library only, Python 3.9 or newer. Lark calls go through `lark-cli` (ve
 ## Verbs
 
 ```
+python3 wikisync.py law <vault>
 python3 wikisync.py init <vault> --provider lark|fake --space-id S --base-url U --roots a,b,c --owner-name NAME [--lark-bin PATH] [--force]
 python3 wikisync.py plan <vault> [--json]
 python3 wikisync.py convert <vault> <file> [--stdout]
@@ -18,7 +19,8 @@ python3 wikisync.py push <vault> [--dry-run] [--only <vault path>] [--delete-rem
 python3 wikisync.py verify <vault>
 ```
 
-- `init` writes the manifest; refuses to overwrite one unless `--force`.
+- `law` finds the publishable-layers law in `<vault>/99_Meta/structure-doctrine.md` by its words, not its number: the numbered item in §4 whose bold opening names "publishable layers". Prints `law N: <opening>` and the law's text, or exits 5 with the reason (no doctrine, no §4, no such law).
+- `init` refuses with exit 5 when `law` would, so a vault whose law does not name the publishable layers is never connected. Otherwise it writes the manifest; refuses to overwrite one unless `--force`.
 - `plan` lists every `.md` under the roots (recursive), skipping notes with `status: empty` and anything dot-prefixed, and classes each as new, changed, unchanged or removed (in the manifest, gone from disk). Fingerprint = first 12 hex of sha256 over the file bytes.
 - `convert` prints the DocxXML for one note, wikilinks resolved through the manifest. One stderr line per construct that fell back to escaped text.
 - `push` creates the mirrored folder nodes as needed (one node per vault folder below a root, plus the root itself, titled by the folder name with a leading `NN_` stripped), reserves a node for every new page first (titled by its first H1, fallback: file stem) so that links between pages pushed in the same run resolve, then overwrites new and changed pages, and after every overwrite reads the page back and checks for the fingerprint line. The manifest is updated only for pages whose read-back verified; a new node that fails verification is deleted again so the next push can recreate it. Removed pages are listed, and deleted only with `--delete-removed`. Every write is logged to stderr in one line.
@@ -33,6 +35,7 @@ python3 wikisync.py verify <vault>
 | 2 | at least one read-back failed (push) or drift found (verify) |
 | 3 | provider error: binary missing, not logged in, command refused |
 | 4 | not connected: no manifest in the vault |
+| 5 | no publishable-layers law in the vault's doctrine (`law`, `init`) |
 
 ## What the converter emits
 

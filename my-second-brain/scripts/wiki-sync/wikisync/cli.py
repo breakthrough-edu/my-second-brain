@@ -1,10 +1,10 @@
-"""Command line: init, plan, convert, push, verify.
+"""Command line: law, init, plan, convert, push, verify.
 
 ``main(argv, provider_factory=None)`` returns the exit code instead of
 exiting, so tests can drive it and inject a provider that keeps state
 between runs. Exit codes: 0 clean, 2 read-back failed or drift, 3 provider
 error (binary missing, not logged in, command refused), 4 not connected
-(no manifest).
+(no manifest), 5 the vault's doctrine holds no publishable-layers law.
 """
 import argparse
 import datetime
@@ -16,6 +16,7 @@ import sys
 import tempfile
 
 from . import __version__, manifest as manifest_mod
+from .law import LawNotFound, find_law
 from .convert import convert_note, fingerprint_of, footer_marker, page_title, read_frontmatter
 from .providers import PROVIDER_NAMES, ProviderError, get_provider
 
@@ -23,6 +24,7 @@ EXIT_OK = 0
 EXIT_UNVERIFIED = 2
 EXIT_PROVIDER = 3
 EXIT_NOT_CONNECTED = 4
+EXIT_NO_LAW = 5
 
 PREFIX_RE = re.compile(r"^\d+_")
 
@@ -128,11 +130,28 @@ def convert_file(vault, rel_path, manifest, resolver, publish_date=None):
 
 # [verbs]
 
+def cmd_law(args):
+    vault = os.path.abspath(args.vault)
+    try:
+        number, lead, text = find_law(vault)
+    except LawNotFound as exc:
+        print("no publishable-layers law: %s" % exc, file=sys.stderr)
+        return EXIT_NO_LAW
+    print("law %d: %s" % (number, lead))
+    print(text)
+    return EXIT_OK
+
+
 def cmd_init(args):
     vault = os.path.abspath(args.vault)
     if not os.path.isdir(vault):
         print("not a folder: %s" % vault, file=sys.stderr)
         return EXIT_PROVIDER
+    try:
+        find_law(vault)
+    except LawNotFound as exc:
+        print("refusing to connect, no publishable-layers law: %s" % exc, file=sys.stderr)
+        return EXIT_NO_LAW
     path = manifest_mod.manifest_path(vault)
     if os.path.exists(path) and not args.force:
         print("manifest already exists: %s (use --force to overwrite)" % path, file=sys.stderr)
@@ -452,6 +471,9 @@ def build_parser():
     sub = p.add_subparsers(dest="verb")
     sub.required = True
 
+    s = sub.add_parser("law", help="find the publishable-layers law in the vault's doctrine")
+    s.add_argument("vault")
+
     s = sub.add_parser("init", help="connect a vault: write 99_Meta/wiki-sync.md")
     s.add_argument("vault")
     s.add_argument("--provider", choices=PROVIDER_NAMES, default="lark")
@@ -484,6 +506,8 @@ def build_parser():
 
 def main(argv=None, provider_factory=None):
     args = build_parser().parse_args(argv)
+    if args.verb == "law":
+        return cmd_law(args)
     if args.verb == "init":
         return cmd_init(args)
     if args.verb == "plan":
