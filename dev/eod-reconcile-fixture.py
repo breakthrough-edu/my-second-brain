@@ -6,6 +6,7 @@ the end-of-day reconcile acceptance runs against.
     $ python3 dev/eod-reconcile-fixture.py <dest>            # the end-of-day vault
     $ python3 dev/eod-reconcile-fixture.py <dest> --worker   # the closeout vault
     $ python3 dev/eod-reconcile-fixture.py <dest> --assets   # the asset closeout vault
+    $ python3 dev/eod-reconcile-fixture.py <dest> --lesson   # the Lesson landing vault
 
 WHAT IT BUILDS
     A small coffee shop's vault, rendered from the shipped templates, rigged so
@@ -67,6 +68,64 @@ WHAT IT BUILDS
     `dev/asset-closeout-judge.py <dest>` reads the vault afterwards and says
     which of these a machine can see.
 
+    The Lesson landing vault (--lesson). Two handoffs, each for its own clean
+    session, run one after the other in the same vault. The vault carries
+    this clone's rendered doctrine and CLAUDE.md, the Lesson and SOP
+    templates in `99_Meta/Templates/`, and a copy of this clone's session
+    report skill at `99_Meta/Skills/breakthrough-session-report/SKILL.md`.
+    Beside the vault sits `<dest>/_test-memory/`, which stands in for the
+    session's own memory: its `MEMORY.md` already holds one reminder line for
+    each of the two Lessons below.
+
+    Before the first session, record the snapshot the judge compares against:
+    `python3 dev/lesson-landing-judge.py <dest> --record`.
+
+    Tell each session at its start, in these words or close: "Your own memory
+    for this session lives in <dest>/_test-memory/ (MEMORY.md is the index);
+    the session report skill is vault/99_Meta/Skills/breakthrough-session-
+    report/SKILL.md." Give it the handoff path, let it do the work and
+    nothing else, then say "wrap up". When it asks whether anything bit,
+    answer as Mei: yes, with what the handoff says it cost. Say yes to the
+    text it shows you and to the home it proposes for each rule; ⛔ do not
+    tell it about the old Lesson.
+
+      the repeat       `02_Work/Run/Weekly-Ordering/Weekly-Ordering-Handoff.md`.
+                       The oat milk came as 12 cases instead of 2 because the
+                       quantity was typed from memory. That is the pit the
+                       Lesson Order-Quantities-Typed-From-Memory already holds,
+                       and the handoff names no Lesson and never says it
+                       happened before. The session should find that Lesson by
+                       searching and then:
+                         write no second Lesson;
+                         rewrite its living half, so the count sheet rule
+                         moves from `(lives in: memory only)` to
+                         `(lives in: [[Weekly-Supplier-Order]] step 3)`, the
+                         step where quantities are entered;
+                         rewrite that SOP step to read the count sheet first,
+                         in the step's own words, with no mention of a Lesson;
+                         leave `## What happened` byte for byte as it was;
+                         add a dated line under `## Related` naming this fall;
+                         keep one reminder line for it in `_test-memory/`.
+      the fresh pit    `02_Work/Grow/Iced-Latte-Promo/Iced-Latte-Promo-Handoff.md`.
+                       The promo price went up on the counter board before the
+                       till was changed, and customers paid the old price. No
+                       Lesson covers it. The session should write exactly one
+                       new Lesson: legal frontmatter by the vault's own
+                       doctrine section 8, `confirmed_by_owner: true`, a living
+                       half that opens with a `**Trigger:**` line, every rule
+                       ending with `(lives in: ...)`, and one new line in
+                       `_test-memory/` carrying that trigger line.
+
+    and in both it should leave alone the decoy Lesson
+    Deliveries-Left-Outside-In-The-Rain and its reminder line, and put no
+    Lesson reminder into `99_Meta/memory.md` (a memory exists, so the line
+    goes there and only there; the session's own log line in memory.md is
+    expected). `dev/lesson-landing-judge.py <dest>` reads the vault
+    afterwards; `--only repeat` or `--only fresh` judges one half.
+    ⚠️ The test session still carries its real memory too. A session that
+    writes its reminder there instead of `_test-memory/` fails the reminder
+    checks, and that stray line has to be found and removed by hand.
+
 WHAT IT IS NOT
     ⛔ Not a test. Nothing here judges the session; a person, or a session that
     did not write the text under test, reads what came back against the lists
@@ -82,6 +141,7 @@ repo = Path(__file__).resolve().parent.parent
 args = [a for a in sys.argv[1:] if not a.startswith("--")]
 worker = "--worker" in sys.argv
 assets = "--assets" in sys.argv
+lesson = "--lesson" in sys.argv
 if len(args) != 1:
     sys.exit(__doc__)
 dest = Path(args[0]).resolve()
@@ -96,6 +156,9 @@ D0 = today.isoformat()
 D1 = (today - datetime.timedelta(days=1)).isoformat()
 D2 = (today - datetime.timedelta(days=2)).isoformat()
 D9 = (today - datetime.timedelta(days=9)).isoformat()
+D3 = (today - datetime.timedelta(days=3)).isoformat()
+D24 = (today - datetime.timedelta(days=24)).isoformat()
+D40 = (today - datetime.timedelta(days=40)).isoformat()
 
 SUB = {
     "YOUR_NAME": "Mei",
@@ -118,6 +181,14 @@ def put(rel, text):
     p = vault / rel
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(text.lstrip("\n"), encoding="utf-8")
+
+
+def template(name):
+    """One block of the shipped note templates, as setup writes it."""
+    text = (repo / "my-second-brain/templates/note-templates.md").read_text(encoding="utf-8")
+    at = text.index(f"\n## {name}\n")
+    start = text.index("```markdown\n", at) + len("```markdown\n")
+    return text[start:text.index("\n```", start)] + "\n"
 
 
 def task(status, created, body, waiting_on=""):
@@ -308,13 +379,6 @@ if assets:
         (vault / rel).unlink()
     (vault / "02_Command-Base/Decisions").mkdir(parents=True)
 
-    def template(name):
-        """One block of the shipped note templates, as setup writes it."""
-        text = (repo / "my-second-brain/templates/note-templates.md").read_text(encoding="utf-8")
-        at = text.index(f"\n## {name}\n")
-        start = text.index("```markdown\n", at) + len("```markdown\n")
-        return text[start:text.index("\n```", start)] + "\n"
-
     for name in ("Guide.md", "Vendor.md", "Product-Service.md", "Marketing-Asset.md"):
         put(f"99_Meta/Templates/{name}", template(name))
 
@@ -455,6 +519,171 @@ Three pieces of work on the spring launch, all in this folder.
 1. Mei has decided the Gula Melaka Latte goes from RM 12 to RM 13 from the first of next month, because the gula melaka supplier raised their price. Change the line in `Counter-Menu-Draft.md` to show RM 13.
 2. Mei has picked Kertas Cups as the cup supplier. What she agreed with them: 30 days to pay, minimum order 2,000 cups, one week lead time, 28 sen a cup. Her comparison is in `Cup-Supplier-Notes.md`; add two sentences at the top saying which one won and why.
 3. Write the copy for the launch post, about 60 words, into a new file `Launch-Post-Draft.md`. The photo of the drinks has to be taken at the shop by Mei, so leave that.
+
+**Report back to**
+
+- This session cannot receive messages.
+""")
+
+
+if lesson:
+    for rel in (
+        f"98_Archive/{D0}-website-refresh-booking-page-live-session-report.md",
+        f"00_Inbox/{D0}-spring-menu-pricing-session-report.md",
+    ):
+        (vault / rel).unlink()
+    (vault / "02_Command-Base/Decisions").mkdir(parents=True)
+    (vault / "04_Aroma-Business-Wing/04_Methodology/Playbooks").mkdir(parents=True)
+
+    def fill(text, old, new):
+        """Replace one piece of a shipped template, loudly if the template moved."""
+        if old not in text:
+            sys.exit(f"the shipped template no longer carries {old!r}; update the --lesson fixture")
+        return text.replace(old, new, 1)
+
+    # This clone's text under test: the law, the house rules, the closeout skill.
+    put("CLAUDE.md", render("templates/CLAUDE.template.md"))
+    put("99_Meta/Skills/breakthrough-session-report/SKILL.md",
+        (repo / "my-second-brain/skills/breakthrough-session-report/SKILL.md").read_text(encoding="utf-8"))
+    for name in ("Lesson.md", "SOP.md", "Brief.md"):
+        put(f"99_Meta/Templates/{name}", template(name))
+
+    # --- the SOP: step 3 enters the quantities and says nothing about the count sheet
+    S = "04_Aroma-Business-Wing/03_SOP"
+    put(f"{S}/_SOP-Menu.md", f"""---
+type: menu
+updated: {D40}
+---
+
+# SOP menu
+
+- [[Weekly-Supplier-Order]]: every Sunday close, the order for the week's milk, beans and dry stock
+""")
+    sop = template("SOP.md")
+    sop = sop[:sop.index("<!--")].rstrip() + "\n"
+    sop = fill(sop, "lane:\n", "lane: run\n")
+    sop = fill(sop, "owner:\n", "owner: Mei\n")
+    sop = fill(sop, "last_verified:\n", f"last_verified: {D40}\n")
+    sop = fill(sop, "# <What this process achieves>", "# Weekly supplier order: the week's milk, beans and dry stock ordered, delivered and checked")
+    sop = fill(sop, "**Trigger**: <the event that starts it>", "**Trigger**: Sunday close, every week")
+    sop = fill(sop, "**Finished when**: <the test that says it is done>",
+               "**Finished when**: Tuesday's delivery has been checked against the supplier's confirmation")
+    sop = fill(sop, "| 1 |  |  |  |  |  |  |\n| 2 |  |  |  |  |  |  |", """| 1 | Walk the stockroom after close and fill in this week's count sheet: on the shelf, par, to order | Counter lead |  |  | Mei | The count sheet is saved in the Weekly-Ordering folder, named with today's date |
+| 2 | Check the supplier's price list for anything that changed since last week | Mei |  |  |  | A changed price is written on the count sheet |
+| 3 | Enter the order quantities in the supplier's online order form and send the order | Mei |  |  | Counter lead | The supplier's confirmation email arrives |
+| 4 | File the supplier's confirmation in the Weekly-Ordering folder | Mei |  |  |  | The confirmation sits beside the count sheet |
+| 5 | When the delivery comes, check it line by line against the confirmation | Counter lead |  |  | Mei | Anything short or extra is messaged to the supplier the same day |""")
+    sop = fill(sop, "(one line per step, tagged authority / skill / access. Empty is a finding, not a gap.)",
+               "- Step 3, access: the supplier account is in Mei's name.")
+    sop = fill(sop, "(branches that are real but do not belong in the main line)",
+               "- A public holiday week: the supplier delivers on Wednesday, so the order goes out by Sunday noon.")
+    sop = fill(sop, "(raised, not settled. Kept on purpose so the next reader sees it too.)", "None.")
+    sop = fill(sop, "(the swimlane and any blank forms live in the folder next to this note)", "None yet.")
+    put(f"{S}/Weekly-Supplier-Order.md", sop)
+
+    # --- the two confirmed Lessons, new shape, from the shipped template
+    def lesson_note(title, date, source, happened, trigger, rule, related):
+        t = template("Lesson.md")
+        t = fill(t, "date: {{DATE}}", f"date: {date}")
+        t = fill(t, "source:\n", f'source: "{source}"\n')
+        t = fill(t, "lane:\n", "lane: run\n")
+        t = fill(t, "confirmed_by_owner: false", "confirmed_by_owner: true")
+        t = fill(t, "# Lesson: <one line>", f"# Lesson: {title}")
+        t = fill(t, "record, it is a story. Wrong facts get a correcting sentence here, never a rewrite. -->\n",
+                 f"record, it is a story. Wrong facts get a correcting sentence here, never a rewrite. -->\n\n{happened}\n")
+        t = fill(t, "**Trigger:** <the situation> → <what to do first>", f"**Trigger:** {trigger}")
+        t = fill(t, "- <one rule a session can actually do> (lives in: memory only | [[<the SOP, the door, the skill>]] <step>)",
+                 f"- {rule} (lives in: memory only)")
+        if "\n## Related\n" in t:
+            # the template carries the section: fill it under its own comment
+            head, tail = t.split("\n## Related\n", 1)
+            cut = tail.index("-->\n") + len("-->\n")
+            return head + "\n## Related\n" + tail[:cut] + f"\n{related}\n" + tail[cut:]
+        return fill(t, "\n<!--\n04_Methodology/Lessons/", f"\n## Related\n\n{related}\n\n<!--\n04_Methodology/Lessons/")
+
+    LS = "04_Aroma-Business-Wing/04_Methodology/Lessons"
+    order_trigger = "an order quantity is about to be typed in from memory → open this week's count sheet first and copy the number off it"
+    put(f"{LS}/Order-Quantities-Typed-From-Memory.md", lesson_note(
+        "Order quantities typed from memory go wrong",
+        D24, "[[_Weekly-Ordering-Brief]]",
+        "The weekly order went to the supplier with 10 kg of caster sugar instead of 1 kg. The number was typed in from memory of a busy week, and the supplier's form took it without a question. Eight bags sat in the stockroom for a month, the supplier would not take them back, and RM 54 of stock went to the staff kitchen.",
+        order_trigger,
+        "Before the order is sent, every quantity on it is read off this week's count sheet, never typed from memory",
+        "- [[_Weekly-Ordering-Brief]]: the work it happened in"))
+    rain_trigger = "a delivery is due before the shop opens → the day before, agree with the driver who will be at the back door to take it in"
+    put(f"{LS}/Deliveries-Left-Outside-In-The-Rain.md", lesson_note(
+        "Deliveries left outside before opening get ruined",
+        D40, "[[_Weekly-Ordering-Brief]]",
+        "The dairy delivery came at 6 in the morning, an hour before anyone was in. The driver left four crates at the back door, it rained, and two crates of fresh milk had to be thrown away: RM 160.",
+        rain_trigger,
+        "The day before an early delivery, message the driver the name of whoever will be at the back door to receive it",
+        "- [[_Weekly-Ordering-Brief]]: the work it happened in"))
+
+    # --- the stand-in for Claude's own memory, outside the vault on purpose
+    mem = dest / "_test-memory"
+    mem.mkdir(parents=True)
+    (mem / "MEMORY.md").write_text(f"""# Memory
+
+- Lesson (Aroma, run): {order_trigger} · [[Order-Quantities-Typed-From-Memory]]
+- Lesson (Aroma, run): {rain_trigger} · [[Deliveries-Left-Outside-In-The-Rain]]
+""", encoding="utf-8")
+
+    # --- the repeat: Weekly Ordering, a Run project
+    O = f"{W}/Run/Weekly-Ordering"
+    put(f"{O}/_Weekly-Ordering-Brief.md",
+        brief("Weekly Ordering", "The week's milk, beans and dry stock arrive in the right amounts, every week.",
+              "Place this week's supplier order (Mei's move)."))
+    put(f"{O}/Tasks/Place-this-weeks-supplier-order.md",
+        task("in-progress", D3, "Place this week's supplier order, by the Weekly-Supplier-Order SOP, and check the delivery when it comes."))
+    put(f"{O}/{D3}-count-sheet.md", f"""
+# Count sheet · {D3}
+
+| Item | On the shelf | Par | To order |
+|---|---|---|---|
+| Oat milk (cases of 12) | 1 | 3 | 2 |
+| Fresh milk (crates) | 2 | 6 | 4 |
+| House blend beans (kg) | 4 | 10 | 6 |
+| Caster sugar (kg) | 2 | 3 | 1 |
+""")
+    put(f"{O}/{D3}-order-sent.md", f"""
+# Order sent to the supplier · {D3}
+
+| Item | Quantity |
+|---|---|
+| Oat milk (cases of 12) | 12 |
+| Fresh milk (crates) | 4 |
+| House blend beans (kg) | 6 |
+| Caster sugar (kg) | 1 |
+""")
+    put(f"{O}/Weekly-Ordering-Handoff.md", f"""
+# Weekly Ordering · handoff
+
+One piece of work on this week's supplier order, in this folder.
+
+This week's oat milk arrived as 12 cases instead of 2. Mei says the oat milk quantity was typed in from memory of a busy week rather than read off anything, and the supplier's form took it without a question. The supplier will take back the 10 extra cases, unopened, against a corrected order note, and charges RM 40 for the collection; meanwhile they fill half the stockroom. The rest of the order was right. The order that went out is `{D3}-order-sent.md` and this week's count is `{D3}-count-sheet.md`.
+
+Write the corrected order note for the supplier into a new file `Corrected-Order-Note.md`: the order date, the line that was wrong, the right quantity, and the 10 cases to be collected. Mei will send it herself.
+
+**Report back to**
+
+- This session cannot receive messages.
+""")
+
+    # --- the fresh pit: the Iced Latte Promo, a Grow project
+    P = f"{W}/Grow/Iced-Latte-Promo"
+    put(f"{P}/_Iced-Latte-Promo-Brief.md",
+        brief("Iced Latte Promo", "A month of the iced latte at RM 9 brings new faces in on weekday afternoons.",
+              "Run the promo to the end of the month, then count the weekday afternoon covers."))
+    put(f"{P}/Tasks/Run-the-iced-latte-promo.md",
+        task("in-progress", D9, "Run the iced latte promo, RM 9 instead of RM 12, to the end of the month."))
+    put(f"{P}/Iced-Latte-Promo-Handoff.md", """
+# Iced Latte Promo · handoff
+
+One piece of work on the iced latte promo, in this folder.
+
+The promo price, RM 9 instead of RM 12, went up on the counter board on Monday morning. The till was not changed until Wednesday afternoon, so for two and a half days customers who ordered off the board were charged RM 12. Mei found out when a regular showed her the receipt. She knows of nine cups charged the old price, RM 27 in all, and she wants every one refunded at the counter.
+
+Write a short note for the counter staff into a new file `Promo-Price-Fix-Note.md`: what happened in two sentences, the refund to give anyone who shows a receipt from those days, and what to say to them.
 
 **Report back to**
 

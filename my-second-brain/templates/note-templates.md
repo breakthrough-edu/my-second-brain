@@ -854,6 +854,11 @@ tags: []
      the owner's yes: memory only, or the owner's own file that runs this work (an SOP's step,
      the command-base skill, a playbook folder's door, doctrine §8). -->
 
+## Related
+
+<!-- Siblings in the same family of pits, and one dated line per later fall into this same
+     pit: "another fall, YYYY-MM-DD, from <the work>". -->
+
 <!--
 04_Methodology/Lessons/, grouped in a subfolder when a string of pits shares a subject
   (one folder for a tool, a client, a platform).

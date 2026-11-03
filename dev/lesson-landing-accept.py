@@ -57,7 +57,11 @@ GUIDE = "my-second-brain/references/operating-the-second-brain-student-guide.md"
 TARGETS = [REPORT, NOTES, DOCTRINE, CLAUDE, ROUTER, GUIDE]
 
 # Maintainer files allowed to change beside the targets.
-ALLOWED_EXTRA = ["dev/lesson-landing-accept.py"]
+ALLOWED_EXTRA = [
+    "dev/lesson-landing-accept.py",
+    "dev/lesson-landing-judge.py",
+    "dev/eod-reconcile-fixture.py",
+]
 
 # Words that would put the author's own house into the public text.
 PRIVATE = [r"Jia Wei", r"\bJW\b", r"/Users/", r"jiawei", r"Breakthrough"]
@@ -125,6 +129,7 @@ def standing():
     check("**Trigger:**" in living, "template: trigger line in the living half")
     check("(lives in:" in living, "template: rule ends with where it lives")
     check("second fall" in living.lower(), "template: second fall rewrites here")
+    check("## Related" in lesson, "template: a Related section for siblings and later falls")
     head = lesson.split("---")[1] if lesson.count("---") >= 2 else ""
     check(all(k in head for k in ["type: lesson", "date:", "source:", "lane:",
                                   "confirmed_by_owner:"]) and "enforced_in" not in head,
