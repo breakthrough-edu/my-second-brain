@@ -840,7 +840,19 @@ tags: []
 <!-- ALIVE. This is the part that gets edited, and there is exactly one reason to edit it:
      the world changed and the old handling stopped working. ⛔ If the reason is that YOU got
      better at this, that is not an edit here, that is a Method (§7). Mixing the two is how a
-     lesson quietly turns into a half-written playbook nobody trusts. -->
+     lesson quietly turns into a half-written playbook nobody trusts.
+     A second fall into the same pit IS the old handling having stopped working: rewrite here,
+     never open a second Lesson (doctrine §7). -->
+
+**Trigger:** <the situation> → <what to do first>
+
+- <one rule a session can actually do> (lives in: memory only | [[<the SOP, the door, the skill>]] <step>)
+
+<!-- Line one is the trigger: a situation and a first move, never a past scene, because a list
+     of what happened last time does not fire on the next variation. The memory pointer carries
+     this line. Every rule ends with where it lives, asked at closeout rule by rule right after
+     the owner's yes: memory only, or the owner's own file that runs this work (an SOP's step,
+     the command-base skill, a playbook folder's door, doctrine §8). -->
 
 <!--
 04_Methodology/Lessons/, grouped in a subfolder when a string of pits shares a subject
