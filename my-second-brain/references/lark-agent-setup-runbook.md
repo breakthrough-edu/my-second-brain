@@ -1,10 +1,10 @@
 # Lark AI Agent Setup Runbook
 
-Version: 1.2 (2026-10; written against Claude Code 2.1.240 and lark-cli 1.0.89)  
+Version: 1.3 (2026-11; written against Claude Code 2.1.240 and lark-cli 1.0.99)  
 Audience: Business owners building their first bounded AI agent  
 Outcome: An owner-only Lark bot can receive one bounded request, return a draft or approval request, survive a restart, and stop safely.
 
-What changed in 1.2: Stage 2 names a read-only command for listing Lark CLI profiles, rule 4 says the learner runs the cage check in their own terminal, and the Stage 7 turn-limit line says what replaces it.
+What changed in 1.3: every Lark call checks its result and retries a rate limit with a cap (Stage 5, Stage 10), Stage 9 warns about parallel table reads, a section on reusing the bot credential sits before Stage 11, and Stage 12 allows the listeners time to reconnect.
 
 What changed in 1.1: a section on running headless Claude Code safely, placed before Stage 7, and new lines in Stages 4, 5, 6, 7, 10 and 11.
 
@@ -123,7 +123,7 @@ Claude Code must inspect, not assume:
 - Whether this is an always-on desktop, a laptop, or a VPS.
 - Whether the chosen folder is local and dedicated to this bot.
 
-Do not place the project inside the learner's Second Brain. Do not give the bot unrestricted access to the Second Brain or the whole computer.
+Do not place the project inside the learner's 2nd Brain. Do not give the bot unrestricted access to the 2nd Brain or the whole computer.
 
 If `lark-cli` is missing, Claude Code must verify the current official installation method before proposing it. Do not rely on a copied package name or an old command.
 
@@ -210,7 +210,8 @@ Claude Code must implement and prove:
 5. Reject messages outside the approved chat and sender allowlists.
 6. In a group, require a bot mention before continuing.
 7. For a message that passed the chat, sender and mention filters but is of a type you do not handle (sticker, image, voice, file), reply with one line naming the type. A message that failed the filters stays silent, as before; one that passed and is dropped with no reply and no log line looks exactly like a dead bot.
-8. Return a static reply as the bot.
+8. Check the result of every Lark call and say so when it fails. The JSON result of a `lark-cli` command reports success or an error. When the error is a rate limit (`HTTP 429`, or a message containing `rate limit`), wait and run the same command again with a growing delay and a fixed number of attempts (Stage 10 sets the numbers); a rate-limited request was never executed, so the retry cannot send twice. When the last attempt still fails, write one log line with the command and the error, then carry on. Do not write `return sendCard(...)` and move on: a reply that fails with no log line is indistinguishable from a reply the bot never computed, and the first place a rate limit bites is inside the command itself, when `lark-cli` requests the bot's credential (Stage 10 explains).
+9. Return a static reply as the bot.
 
 The long connection does not replay messages sent while the listener was offline. A test message sent before the ready signal is not a valid test.
 
@@ -221,6 +222,7 @@ Proof required:
 - An unapproved sender or chat did not call the agent.
 - A group message without a mention did not call the agent.
 - An approved sender's sticker or voice message got a reply naming the type.
+- A send made to fail on purpose (for example to a wrong chat id) produced one log line naming the error, and the bot kept answering afterwards.
 - The audit log records time, event type, result, and correlation ID without secrets.
 
 Status after proof: Channel connected.
@@ -342,6 +344,7 @@ Rules:
 - Default to read-only access.
 - Do not write to a Mirror.
 - Fetch the Base schema before coding field names.
+- Read tables one after another, or with a small limit on how many run at once. Every table read through `lark-cli` as the bot is one more credential request against the same per-app limit (Stage 10), and a handler that reads many tables at once is the usual way a bot first hits it.
 - Resolve records by stable IDs, not display text alone.
 - After every create or update, read the record back and compare intended fields.
 - Prevent duplicate writes with an idempotency key or equivalent guard.
@@ -354,8 +357,9 @@ No write counts as successful until read-back verification passes.
 Before background operation, implement:
 
 - A health signal for the event listener and agent path.
-- Rate limits and abuse protection.
-- Timeouts and bounded retries.
+- Rate limits. Any Lark call, reads included, can be answered with `HTTP 429` or a rate-limit code. Lark counts the limit per app, so the bot shares it with every other process using the same app, including a copy of the bot on another computer. Retry with a growing delay and a cap (a reasonable start: five attempts, 1.5 seconds doubling, with a random jitter), then log once and tell the owner. A rate-limited request was never executed, so retrying it is safe; a timed-out request may have been, so it goes through the duplicate guard first.
+- The bot credential. Every `lark-cli` command run `--as bot` requests a bot credential (`tenant_access_token`) of its own, and that request has the tightest limit of all. Below the retry cap this shows as slow replies; above it, as lost replies. Keep the number of bot commands running at once small, and when the log shows repeated rate-limit retries, do the section "Reuse the bot credential" below.
+- Timeouts, and retries bounded by the constants above (rule 10 of the headless section: every limit is a named constant in one place).
 - Duplicate-event protection keyed on `message_id`, not `event_id` (the same message can be delivered again under a new `event_id`); card taps have no message of their own and are keyed on their event id. Persist the handled ids to disk, bounded, written before you act: an in-memory set is empty after every restart, which is when a redelivery is most likely.
 - An append-only audit trail without secrets or unnecessary message bodies.
 - A visible disable switch.
@@ -364,6 +368,23 @@ Before background operation, implement:
 - Secret rotation instructions.
 
 The owner must be able to stop the service without asking the agent itself.
+
+## Reuse the bot credential (do this when the log shows rate-limit retries)
+
+Skip this section until the log shows rate-limit retries or replies have become slow; then do it before you broaden access. It applies when the bot runs its Lark calls through `lark-cli` as the bot.
+
+Why it works: a bot credential is valid for two hours, but `lark-cli` does not keep one between commands. Every command run as the bot requests a new one, and the endpoint that issues them is rate limited per app. The fix is for your runtime to request one credential, hold it in memory, refresh it ten minutes before it expires, and hand it to every `lark-cli` command it runs as the bot, which then uses it instead of requesting its own. On the version this runbook was checked against, `lark-cli` takes the credential from its environment (`LARKSUITE_CLI_APP_ID`, `LARKSUITE_CLI_TENANT_ACCESS_TOKEN`, and `LARKSUITE_CLI_BRAND` set to your brand); these names are not in `--help`, so prove them with the first test below, and prove them again after every upgrade. `lark-cli config tenant-access-token set --help` describes a stored-credential variant on your version. If no credential can be had, run the command the old way: slower, still correct. The bot must never stop working because this section broke.
+
+What the runtime needs in order to request a credential is the App Secret, which is a password (Stage 3). The runtime reads it at startup from the operating system's credential store, under an entry only the runtime's own user can read; never from a file, the project folder, an environment file or the service definition, and it never prints the secret or the credential. Commands run as a user (`--as user`) are left as they are.
+
+Claude Code must prove, with the learner running each command in their own terminal:
+
+1. Hand a made-up credential to one read-only command: the reply names an invalid credential and no rate-limit error appears. That shows `lark-cli` used what it was given instead of requesting its own. If it requests its own anyway, stop: the variable names have changed on this version.
+2. With the real path on, run the same read several times in a row: one credential request in the log, no rate-limit retries.
+3. Remove the secret from the store and restart the bot: the bot still answers, and the log says it fell back.
+4. Search the log for the secret and for the credential: neither appears.
+
+Known limit: the long-connection listeners (`lark-cli event consume`) request their own credential at startup, outside your runtime's hands. Several listeners starting at the same instant can get one of them rate limited; it reconnects on its own after about a minute. Start listeners a few seconds apart, and after a restart allow about two minutes before judging a button or an event dead (Stage 12).
 
 ## Stage 11: Create the background service
 
@@ -389,7 +410,7 @@ Prove the runtime can restart from saved files:
 
 1. Stop the listener through its documented control.
 2. Start it through the intended service path.
-3. Wait for the ready signal.
+3. Wait for the ready signal from every listener. A listener refused on its credential request at startup reconnects after about a minute, so a button may take two minutes to answer after a restart; a test sent before its ready signal is not a valid test.
 4. Send a fresh owner message.
 5. Confirm all filters and approval rules still apply.
 6. Confirm old pending approvals cannot execute after restart.
@@ -422,7 +443,7 @@ These are not part of the first completion:
 - Lark Base writes with read-back verification.
 - Rich interactive cards.
 - Multiple bot identities through separate apps and profiles.
-- Read-only access to part of your Second Brain, as a second build after Restart proven, and only once the exclusions are enforced by the runtime, not just written down. Shape: working directory set to a folder of the vault the bot may read (a bot-specific subfolder if that is all the job needs, the vault itself only if the job needs it), `--tools Read,Glob` (no `Grep`: a `Read` deny rule is enforced on `Read` and only best-effort on the search tools, so leave `Grep` out, or prove every excluded folder against `Grep` as well), `--permission-mode manual`, owner-only, the cage logged on every run, and a `permissions.deny` list in the bot's own `--settings` file with one rule per excluded folder, written as a path pattern such as `Read(./<private-folder>/**)` relative to the working directory (or `Read(~/path/**)`, `Read(//absolute/**)`), proved by a `denied: Read <path>` line when you ask the bot to read a file in each excluded folder, and by a `Glob` request on the same folder returning nothing. Accept the consequences before you build it: with the rule 5 switches on, neither the vault's `CLAUDE.md` nor a parent folder's `CLAUDE.md` loads as instructions; if the bot needs the vault's own guidance, have it read those files with `Read`. The vault's project settings and hooks still load from that working directory, with the global settings file merged on top; if the vault sits under a protected folder, the service's binary needs Full Disk Access (macOS); and everything not denied is readable by whoever can message the bot, which is why it stays owner-only. A bot that can also write to the vault is a third build, through the approval gate.
+- Read-only access to part of your 2nd Brain, as a second build after Restart proven, and only once the exclusions are enforced by the runtime, not just written down. Shape: working directory set to a folder of the vault the bot may read (a bot-specific subfolder if that is all the job needs, the vault itself only if the job needs it), `--tools Read,Glob` (no `Grep`: a `Read` deny rule is enforced on `Read` and only best-effort on the search tools, so leave `Grep` out, or prove every excluded folder against `Grep` as well), `--permission-mode manual`, owner-only, the cage logged on every run, and a `permissions.deny` list in the bot's own `--settings` file with one rule per excluded folder, written as a path pattern such as `Read(./<private-folder>/**)` relative to the working directory (or `Read(~/path/**)`, `Read(//absolute/**)`), proved by a `denied: Read <path>` line when you ask the bot to read a file in each excluded folder, and by a `Glob` request on the same folder returning nothing. Accept the consequences before you build it: with the rule 5 switches on, neither the vault's `CLAUDE.md` nor a parent folder's `CLAUDE.md` loads as instructions; if the bot needs the vault's own guidance, have it read those files with `Read`. The vault's project settings and hooks still load from that working directory, with the global settings file merged on top; if the vault sits under a protected folder, the service's binary needs Full Disk Access (macOS); and everything not denied is readable by whoever can message the bot, which is why it stays owner-only. A bot that can also write to the vault is a third build, through the approval gate.
 
 Add one extension at a time and repeat the permission, failure, restart, and stop tests.
 
@@ -442,8 +463,10 @@ Add one extension at a time and repeat the permission, failure, restart, and sto
 - [ ] Handled message ids are persisted on disk, keyed on `message_id`.
 - [ ] External consequences stop for approval.
 - [ ] Every Lark write is read back.
+- [ ] Every Lark call checks its result; a rate limit is retried with a capped, growing delay; the final failure writes one log line.
 - [ ] Reject, expiry, duplicate, and failure paths were tested.
 - [ ] Health, logs, disable, and stop controls exist.
+- [ ] If the bot reuses its credential: the made-up-credential test showed `lark-cli` using the supplied one, the fallback was proved, and neither the secret nor the credential appears in the log.
 - [ ] A real message succeeded after restart.
 - [ ] `SETUP-STATUS.md` contains evidence and the honest current status.
 
